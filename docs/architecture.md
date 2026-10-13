@@ -41,7 +41,7 @@ GarmentPulse is made of **four parts** that talk to each other.
 | Database | PostgreSQL (through Supabase) |
 | AI chatbot | Google Gemini API (called securely from the Supabase backend) |
 | Camera | IP cameras with a presence-detection service |
-| Code and hosting | Git, GitHub, Vercel, AWS |
+| Code and hosting | Git, GitHub, Vercel |
 | Tools | Postman (API testing), Figma (design) |
 
 ---
