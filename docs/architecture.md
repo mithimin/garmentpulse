@@ -8,6 +8,9 @@
 
 - [prd.md](prd.md) - **what** the app does and **who** uses it (features, users, pricing).
 - [plan.md](plan.md) - **who** builds it and **when** (schedule, team, risks).
+- [mvp.md](mvp.md) - **which part** of this architecture is built first (the MVP).
+
+> **Note:** This file describes the **full** system. The first version (the MVP) builds only part of it. See section 6 for what is in and what waits.
 
 ---
 
@@ -81,3 +84,25 @@ These rules come from the features in [prd.md](prd.md) and shape how the system 
 - **Reports must travel fast.** A new report appears on the manager's dashboard within **5 seconds**.
 - **The owner's expense limit is a setting, not fixed code.** The owner can change it from the app, so the amount is stored as data.
 - **Camera monitoring is a subscription feature.** It is switched on only for factories on the paid version.
+
+---
+
+## 6. What the MVP builds from this architecture
+
+The MVP is the first working version (see [mvp.md](mvp.md)). It uses the same technology and rules as above, but builds only these parts.
+
+| Part | In the MVP? | Notes |
+|---|---|---|
+| Mobile app (React Native) | **Yes** | Worker, technician and a **read-only owner view**. Tested on Android and iPhone. |
+| Manager web dashboard (Next.js) | **Yes** | Live report list, technician free/busy, assign, queue. |
+| Owner web app (Next.js) | Later | The owner uses the mobile app only in the MVP. |
+| Backend and database (Supabase, PostgreSQL) | **Yes** | Login, roles, reports, dispatch, queue, job status. |
+| Expenses, invoices and owner approval | Later | Comes after the report-and-repair flow works. |
+| AI chatbot (Google Gemini) | Later | Still called only from the backend when it is built. |
+| Camera system | Later | Paid feature, not needed to prove the main idea. |
+
+**Quality rules in the MVP:**
+
+- NFR-01 (speed) and NFR-02 (role checks on the server) apply fully.
+- NFR-03 (platforms) applies with one change: owner features are **mobile only** for now.
+- NFR-04 (history) is not needed for the first test.
