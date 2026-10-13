@@ -3,7 +3,12 @@
 **Project:** GarmentPulse
 **Course:** CSE327, Group 2
 **Tagline:** Better Systems for a Stronger Garment Industry
-**Document purpose:** This file explains, in simple words, what GarmentPulse is, who uses it, and what features it must have. Anyone reading it later should understand the project without asking the team.
+**Document purpose:** This file explains, in simple words, **what** GarmentPulse is, **who** uses it, and **what features** it must have. Anyone reading it later should understand the product without asking the team.
+
+**Related documents:**
+
+- [architecture.md](architecture.md) - **how** the app is built (technology, structure, quality rules).
+- [plan.md](plan.md) - **who** builds it and **when** (schedule, team, risks).
 
 ---
 
@@ -11,9 +16,9 @@
 
 GarmentPulse is an app for garment factories. A factory has many sewing, cutting and pressing machines, and many workers sitting at seats.
 
-When a machine breaks, or a seat is empty, nobody often knows. Reports travel by word of mouth or paper. Repair money is spent without proof.
+**The problem:** When a machine breaks, or a seat is empty, often nobody knows. Reports travel by word of mouth or on paper. Repair money is spent without proof.
 
-GarmentPulse fixes this with one platform:
+**The solution:** GarmentPulse puts the whole process on one platform:
 
 1. A **worker** reports a broken machine (by dropdown or voice).
 2. The **manager** sees the report and assigns a free **technician**.
@@ -80,7 +85,7 @@ Every feature below is marked **MUST** (needed for the first version) or **SHOUL
 ### 4.5 Owner approval
 
 - **FR-05 (MUST):** Any expense **above a limit** must be approved by the **owner** before the manager can go ahead.
-- The owner sees: who asked, the amount, the reason, and the receipt before deciding.
+- The owner sees who asked, the amount, the reason, and the receipt before deciding.
 - Expenses above the limit are **blocked** until the owner decides.
 - The manager is notified after the owner decides, and can only proceed after approval.
 - **The limit is set in the owner's settings.** The owner can change it from the app. No fixed amount is written in this document.
@@ -88,13 +93,13 @@ Every feature below is marked **MUST** (needed for the first version) or **SHOUL
 ### 4.6 Camera presence monitoring (Subscription feature)
 
 - **FR-06 (MUST):** IP cameras watch each monitored seat and report whether a **person** or **no person** is there.
-- If **no one** is detected at a seat for **10 minutes**, the **manager is alerted** and the **worker is notified**.
+- If **no one** is detected at a seat for **10 minutes**, the **manager is alerted** and the **worker is notified** automatically.
 - **Detection only.** The camera does not identify who a person is. It only checks if a seat is occupied.
 - Camera presence monitoring is available **only in the paid subscription version**.
 
 ### 4.7 AI chatbot (All roles)
 
-- **FR-07 (MUST):** One AI chatbot (powered by the **Google Gemini API**) helps every role:
+- **FR-07 (MUST):** One AI chatbot helps every role:
   - **Worker:** turns a voice note or text into a clean, categorized report.
   - **Technician:** suggests troubleshooting steps for the reported fault.
   - **Manager and Owner:** answers questions about reports, costs and presence alerts.
@@ -108,25 +113,12 @@ Every feature below is marked **MUST** (needed for the first version) or **SHOUL
 - Every screen has a **Bangla / EN toggle**.
 - Voice input works in **both Bangla and English**.
 - **Big icon buttons** and a **simple dropdown** are used, so no screen is confusing.
-- **Color-coded status** (for example, waiting, in progress, resolved) helps everyone see the state at a glance.
+- **Color-coded status** (for example: waiting, in progress, resolved) helps everyone see the state at a glance.
 - **Must-have rule:** Every important button must be easy to find and easy to understand. No hidden or confusing button flows.
-- The worker gets an **automatic notification** when a seat is detected empty.
 
 ---
 
-## 6. Non-functional requirements (quality rules)
-
-- **NFR-01 (SPEED, MUST):** The app responds within **2 seconds**. It supports at least **100 users at the same time** per factory site.
-- **NFR-02 (SECURITY, MUST):** Access is checked by **role on the server**. A worker must not be able to do an owner's job, even by trying.
-- **NFR-03 (PLATFORMS, MUST):**
-  - Worker and technician features: **mobile app**.
-  - Manager features: **web app**.
-  - Owner features: **web and mobile**.
-- **NFR-04 (HISTORY, SHOULD):** Keep reports, assignments and expense history for at least **12 months**.
-
----
-
-## 7. Free and paid versions
+## 6. Free and paid versions
 
 | | Free version | Subscription version |
 |---|---|---|
@@ -140,29 +132,7 @@ Every feature below is marked **MUST** (needed for the first version) or **SHOUL
 
 ---
 
-## 8. Technology
-
-| Part | Technology |
-|---|---|
-| Mobile app (worker, technician, owner) | React Native |
-| Web app (manager, owner) | Next.js (React) |
-| Backend, login and API | Supabase (auth and auto-generated REST API) |
-| Database | PostgreSQL (through Supabase) |
-| AI chatbot | Google Gemini API (called securely from the Supabase backend) |
-| Camera | IP cameras with a presence-detection service |
-| Code and hosting | Git, GitHub, Vercel, AWS |
-| Tools | Postman (API testing), Figma (design) |
-
-### High-level architecture
-
-- **Client layer:** Worker and technician app (React Native), manager web dashboard (Next.js), owner web and mobile (Next.js and React Native).
-- **Backend layer (Supabase):** Login and role checks, problem reports, dispatch and expenses, owner approval, presence alerts, and the AI chatbot connection.
-- **Database:** PostgreSQL stores users, reports and expenses.
-- **Camera system:** IP cameras send presence data to the backend.
-
----
-
-## 9. Out of scope (not in the first version)
+## 7. Out of scope (not in the first version)
 
 To keep the first version small, these are **not** included:
 
@@ -173,52 +143,7 @@ To keep the first version small, these are **not** included:
 
 ---
 
-## 10. Risks and how we handle them
-
-| Risk | How we handle it |
-|---|---|
-| A technician misuses money | Every expense needs an invoice and receipt. Owner approves expenses above the limit. |
-| All technicians are busy at once | Reports wait in a queue. The manager sees technician availability. |
-| Camera accuracy and privacy | Only detect presence, not identity. Tune the 10-minute rule. Inform workers that cameras are used. |
-| Scope creep (too many features) | Keep the first version to reporting, dispatch and approval. Camera and chatbot are add-on modules. |
-
----
-
-## 11. Plan (8 weeks)
-
-Review checkpoint every 2 weeks.
-
-| Weeks | Phase | What happens |
-|---|---|---|
-| 1-2 | Requirements and design | Workflows, database design, permissions |
-| 3-4 | Backend development | Login, dispatch, expenses and approval, presence alerts |
-| 5-6 | Frontend development | Mobile app, web dashboards, expense and approval screens |
-| 7-8 | Integration and deployment | Testing (week 7). Deployment, documentation and demo (week 8). |
-
-The camera module and AI chatbot are built inside the backend, frontend and integration phases.
-
----
-
-## 12. Team and work split
-
-One owner per layer of the stack. All members help with system design, testing and the final presentation.
-
-| Member | Role | Main work |
-|---|---|---|
-| Rubaiya Binte Reza | Mobile app developer | React Native apps for workers, technicians and owners |
-| Rukaia Minhaz Mithi | Web app developer | Next.js manager and owner dashboards, expense and invoice screens |
-| Md. Sakibuzzaman | Backend developer | Supabase schema, login, role logic, technician dispatch |
-
----
-
-## 13. Open items
-
-- **Owner expense limit:** The actual BDT amount is not decided yet. The owner sets it in the app settings.
-- **Subscription price:** The BDT 3,000 to 10,000 range is an estimate and must be confirmed.
-
----
-
-## 14. Competitors and our difference
+## 8. Competitors and our difference
 
 - **SmartERP:** Manages many factory parts (merchandising, production, inventory, purchasing, quality, finance, workforce) in one platform.
 - **GarmentFlow:** Production software for garment factories.
@@ -233,3 +158,12 @@ One owner per layer of the stack. All members help with system design, testing a
 4. **Receipt-backed expenses:** every repair cost needs an invoice and receipt.
 5. **Camera presence alerts:** alert after 10 minutes with no one at a seat.
 6. **One AI chatbot for all roles:** report helper, troubleshooting and cost answers.
+
+---
+
+## 9. Open items
+
+These product decisions are not final yet:
+
+- **Owner expense limit:** The actual BDT amount is not decided yet. The owner sets it in the app settings.
+- **Subscription price:** The BDT 3,000 to 10,000 range is an estimate and must be confirmed.
