@@ -1076,3 +1076,35 @@ html[lang='bn'] .btn-small,
 html[lang='bn'] .menu-link {
   font-size: 15px;
 }
+
+/* ---------- Filter tabs on the Reports page ---------- */
+
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.filter-tab {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  border: 1px solid #8c9db0;
+  border-radius: 3px;
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filter-tab:hover {
+  border-color: var(--main-button);
+}
+.filter-tab-active {
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
+}
+html[lang='bn'] .filter-tab {
+  font-size: 15px;
+}

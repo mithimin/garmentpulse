@@ -2,18 +2,21 @@
 
 // apps/web/components/ReportsCard.tsx
 //
-// The big "Reports" card on the manager screen (like the design picture). It is
-// ONE table with every report. Reports that need a technician (the queue:
-// waiting, nobody assigned) come FIRST, oldest first because they have waited
-// longest, marked with a gold edge and an "Assign" button. All other reports
-// follow, newest first, with an "Open" button that shows their details.
-// Owned by Mithi.
+// The table of reports on the manager screens. It has two modes:
+//   - mode "queue" (Dashboard): only the reports that need a technician (waiting,
+//     nobody assigned), oldest first, because they have waited longest. Title
+//     "Needs attention" and a link to the Reports page.
+//   - mode "all" (Reports page): every report, with filter tabs (All, Waiting,
+//     In progress, Resolved). The queue comes first, marked with a gold edge.
+// Rows in the queue have an "Assign" button; all other rows have an "Open" button
+// that shows read-only details. Owned by Mithi.
 
 import { useState } from 'react';
-import type { Report, Technician } from '@garmentpulse/shared';
-import { isInQueue } from '@garmentpulse/shared';
+import Link from 'next/link';
+import type { Report, ReportStatus, Technician } from '@garmentpulse/shared';
+import { isInQueue, STATUS_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
-import { formatDateTime } from '../language/format';
+import { formatDateTime, localizeDigits } from '../language/format';
 import { screenText } from '../language/screenText';
 import { AssignDialog } from './AssignDialog';
 import { Button } from './Button';
@@ -24,11 +27,15 @@ import { EmptyMessage } from './StateMessage';
 import { StatusLabel } from './StatusLabel';
 
 type ReportsCardProps = {
+  mode: 'queue' | 'all';
   reports: readonly Report[];
   technicians: readonly Technician[];
   /** Asks the page to reload its lists after an assign. */
   onAssigned: () => void;
 };
+
+type Filter = 'all' | ReportStatus;
+const FILTERS: Filter[] = ['all', 'waiting', 'in_progress', 'resolved'];
 
 /** Queue first (oldest first), then the rest (newest first). */
 function orderForManager(reports: readonly Report[]): Report[] {
@@ -39,21 +46,59 @@ function orderForManager(reports: readonly Report[]): Report[] {
   return [...queue, ...others];
 }
 
-export function ReportsCard({ reports, technicians, onAssigned }: ReportsCardProps) {
+export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsCardProps) {
   const { language } = useLanguage();
   const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
+  const [filter, setFilter] = useState<Filter>('all');
 
-  const rows = orderForManager(reports);
+  const ordered = orderForManager(reports);
+  const rows =
+    mode === 'queue'
+      ? ordered.filter(isInQueue)
+      : ordered.filter((r) => filter === 'all' || r.status === filter);
+
+  const countFor = (f: Filter) =>
+    f === 'all' ? reports.length : reports.filter((r) => r.status === f).length;
+  const filterLabel = (f: Filter) =>
+    f === 'all' ? screenText('filterAll', language) : STATUS_LABELS[f][language];
 
   return (
-    <Card id="reports" className="card-list">
-      <div className="card-head">
-        <h2>{screenText('reportsCardTitle', language)}</h2>
-      </div>
+    <Card className="card-list">
+      {mode === 'queue' ? (
+        <div className="card-head">
+          <h2>{screenText('needsAttentionTitle', language)}</h2>
+          <Link href="/manager/reports" className="card-link">
+            {screenText('viewAllReports', language)}
+          </Link>
+        </div>
+      ) : null}
+
+      {mode === 'all' ? (
+        <div className="filter-tabs" role="group" aria-label={screenText('filterName', language)}>
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              className={f === filter ? 'filter-tab filter-tab-active' : 'filter-tab'}
+              aria-pressed={f === filter}
+              onClick={() => setFilter(f)}
+            >
+              {filterLabel(f)} {localizeDigits(String(countFor(f)), language)}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       {rows.length === 0 ? (
-        <EmptyMessage />
+        mode === 'queue' ? (
+          <div className="state">
+            <h3>{screenText('nothingNeedsAttention', language)}</h3>
+            <p>{screenText('nothingNeedsAttentionText', language)}</p>
+          </div>
+        ) : (
+          <EmptyMessage />
+        )
       ) : (
         <DataTable>
           <thead>

@@ -2,32 +2,24 @@
 
 // apps/web/app/manager/page.tsx
 //
-// The manager's start page. From the top it has:
-//   - the denim top bar with a menu (Dashboard, Reports, Technicians) that scrolls
-//     to a part of this same page (the MVP has one manager screen),
+// The manager's DASHBOARD (the start page). From the top it has:
 //   - a greeting ("Good morning, Farhan") with today's date and how many reports
 //     are waiting for a technician (the queue),
-//   - three count boxes, the list of all reports, and the technicians with
-//     free / busy.
-// The four count boxes at the top are New reports, In progress, Resolved today and
-// Free technicians, each with a small tag (see data/stats.ts for how they are
-// worked out).
-// The data comes from the real backend when it is connected (lib/backend.ts), and
-// from the fake data otherwise. It updates live. The "Assign" button comes in a
-// later step. Owned by Mithi.
+//   - four count boxes: New reports, In progress, Resolved today, Free technicians
+//     (data/stats.ts says how they are worked out),
+//   - "Needs attention": only the queue, with an Assign button, and a compact
+//     technicians panel. The full lists are on the Reports and Technicians pages.
+// The top bar and the role door come from app/manager/layout.tsx.
+// Owned by Mithi.
 
-import { LayoutDashboard, Users, Wrench } from 'lucide-react';
 import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared';
 import type { Language } from '@garmentpulse/shared';
-import { RoleGate } from '../../auth/RoleGate';
 import { useAuth } from '../../auth/AuthContext';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
 import { ReportsCard } from '../../components/ReportsCard';
 import { TechniciansPanel } from '../../components/TechniciansPanel';
-import { TopBar } from '../../components/TopBar';
-import type { MenuItem } from '../../components/TopBar';
-import { useReports, useTechnicians } from '../../data/useDashboardData';
+import { useManagerData } from '../../data/ManagerData';
 import {
   averageFixMs,
   countFree,
@@ -38,14 +30,6 @@ import {
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
-
-export default function ManagerPage() {
-  return (
-    <RoleGate role="manager">
-      <ManagerContent />
-    </RoleGate>
-  );
-}
 
 /** "Good morning", "Good afternoon" or "Good evening", from the clock. */
 function greetingKey(now: Date) {
@@ -65,11 +49,10 @@ function formatToday(now: Date, language: Language): string {
   return localizeDigits(text, language);
 }
 
-function ManagerContent() {
-  const { profile, logOut } = useAuth();
+export default function DashboardPage() {
+  const { profile } = useAuth();
   const { language } = useLanguage();
-  const reports = useReports();
-  const technicians = useTechnicians();
+  const { reports, technicians, reloadAll } = useManagerData();
   const list = reports.data ?? [];
   const summary = summarizeReports(list);
   const queueCount = list.filter(isInQueue).length;
@@ -87,111 +70,83 @@ function ManagerContent() {
       (result, [key, value]) => result.replace(`{${key}}`, localizeDigits(String(value), language)),
       text,
     );
-  /** After an assign, ask for fresh lists so every number and row is up to date. */
-  const reloadAll = () => {
-    void reports.reload();
-    void technicians.reload();
-  };
   const queueText =
     queueCount === 0
       ? screenText('queueNone', language)
       : queueCount === 1
         ? screenText('queueOne', language)
-        : screenText('queueMany', language).replace(
-            '{n}',
-            localizeDigits(String(queueCount), language),
-          );
-
-  const menu: MenuItem[] = [
-    {
-      label: screenText('menuDashboard', language),
-      href: '#top',
-      icon: <LayoutDashboard size={18} strokeWidth={1.8} aria-hidden="true" />,
-      active: true,
-    },
-    {
-      label: screenText('menuReports', language),
-      href: '#reports',
-      icon: <Wrench size={18} strokeWidth={1.8} aria-hidden="true" />,
-      count: queueCount,
-    },
-    {
-      label: screenText('menuTechnicians', language),
-      href: '#technicians',
-      icon: <Users size={18} strokeWidth={1.8} aria-hidden="true" />,
-    },
-  ];
+        : fill(screenText('queueMany', language), { n: queueCount });
 
   return (
     <>
-      <TopBar role="manager" menu={menu} onLogOut={logOut} />
-      <main className="page" id="top">
-        <div className="greeting">
-          <h1>
-            {screenText(greetingKey(now), language)}, {firstName}
-          </h1>
-          <p className="greeting-line">
-            {formatToday(now, language)} · {queueText}
-          </p>
-        </div>
+      <div className="greeting">
+        <h1>
+          {screenText(greetingKey(now), language)}, {firstName}
+        </h1>
+        <p className="greeting-line">
+          {formatToday(now, language)} · {queueText}
+        </p>
+      </div>
 
-        <div className="count-grid">
-          <CountBox
-            label={screenText('labelNewReports', language)}
-            count={summary.waiting}
-            tag={
-              queueCount === 0
-                ? screenText('tagNobodyWaiting', language)
-                : fill(screenText('tagNeedTechnician', language), { n: queueCount })
-            }
-          />
-          <CountBox
-            label={STATUS_LABELS.in_progress[language]}
-            count={summary.in_progress}
-            tone="green"
-            tag={fill(screenText('tagStartedHour', language), {
-              n: startedInLastHour(list, now),
-            })}
-          />
-          <CountBox
-            label={screenText('labelResolvedToday', language)}
-            count={resolvedList.length}
-            tone="blue"
-            tag={
-              averageFix === null
-                ? screenText('tagNoFixes', language)
-                : screenText('tagAverageFix', language).replace(
-                    '{t}',
-                    formatDuration(averageFix, language),
-                  )
-            }
-          />
-          <CountBox
-            label={screenText('labelFreeTechnicians', language)}
-            count={freeCount}
-            tone="green"
-            tag={fill(screenText('tagBusyOf', language), {
-              busy: technicianList.length - freeCount,
-              total: technicianList.length,
-            })}
-          />
-        </div>
+      <div className="count-grid">
+        <CountBox
+          label={screenText('labelNewReports', language)}
+          count={summary.waiting}
+          tag={
+            queueCount === 0
+              ? screenText('tagNobodyWaiting', language)
+              : fill(screenText('tagNeedTechnician', language), { n: queueCount })
+          }
+        />
+        <CountBox
+          label={STATUS_LABELS.in_progress[language]}
+          count={summary.in_progress}
+          tone="green"
+          tag={fill(screenText('tagStartedHour', language), { n: startedInLastHour(list, now) })}
+        />
+        <CountBox
+          label={screenText('labelResolvedToday', language)}
+          count={resolvedList.length}
+          tone="blue"
+          tag={
+            averageFix === null
+              ? screenText('tagNoFixes', language)
+              : screenText('tagAverageFix', language).replace(
+                  '{t}',
+                  formatDuration(averageFix, language),
+                )
+          }
+        />
+        <CountBox
+          label={screenText('labelFreeTechnicians', language)}
+          count={freeCount}
+          tone="green"
+          tag={fill(screenText('tagBusyOf', language), {
+            busy: technicianList.length - freeCount,
+            total: technicianList.length,
+          })}
+        />
+      </div>
 
-        <div className="dashboard-grid">
-          <DataGate state={reports}>
-            {(rows) => (
-              <DataGate state={technicians}>
-                {(people) => (
-                  <>
-                    <ReportsCard reports={rows} technicians={people} onAssigned={reloadAll} />
-                    <TechniciansPanel technicians={people} reports={rows} />
-                  </>
-                )}
-              </DataGate>
-            )}
-          </DataGate>
-        </div>
-      </main>
+      <div className="dashboard-grid">
+        <DataGate state={reports}>
+          {(rows) => (
+            <DataGate state={technicians}>
+              {(people) => (
+                <>
+                  <ReportsCard
+                    mode="queue"
+                    reports={rows}
+                    technicians={people}
+                    onAssigned={reloadAll}
+                  />
+                  <TechniciansPanel technicians={people} reports={rows} />
+                </>
+              )}
+            </DataGate>
+          )}
+        </DataGate>
+      </div>
     </>
   );
 }

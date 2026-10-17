@@ -1,0 +1,70 @@
+'use client';
+
+// apps/web/app/manager/layout.tsx
+//
+// The frame shared by ALL manager pages (Dashboard, Reports, Technicians):
+//   - the role door (only a manager gets in; others are sent away),
+//   - one shared copy of the reports and technicians (data/ManagerData.tsx),
+//   - the denim top bar with the menu. The menu link of the page you are on is
+//     highlighted, and "Reports" shows a bubble with how many reports wait for a
+//     technician (the queue).
+// Each page then only draws its own content. Owned by Mithi.
+
+import type { ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Users, Wrench } from 'lucide-react';
+import { isInQueue } from '@garmentpulse/shared';
+import { RoleGate } from '../../auth/RoleGate';
+import { useAuth } from '../../auth/AuthContext';
+import { TopBar } from '../../components/TopBar';
+import type { MenuItem } from '../../components/TopBar';
+import { ManagerDataProvider, useManagerData } from '../../data/ManagerData';
+import { useLanguage } from '../../language/LanguageContext';
+import { screenText } from '../../language/screenText';
+
+export default function ManagerLayout({ children }: { children: ReactNode }) {
+  return (
+    <RoleGate role="manager">
+      <ManagerDataProvider>
+        <ManagerFrame>{children}</ManagerFrame>
+      </ManagerDataProvider>
+    </RoleGate>
+  );
+}
+
+function ManagerFrame({ children }: { children: ReactNode }) {
+  const { logOut } = useAuth();
+  const { language } = useLanguage();
+  const pathname = usePathname();
+  const { reports } = useManagerData();
+  const queueCount = (reports.data ?? []).filter(isInQueue).length;
+
+  const menu: MenuItem[] = [
+    {
+      label: screenText('menuDashboard', language),
+      href: '/manager',
+      icon: <LayoutDashboard size={18} strokeWidth={1.8} aria-hidden="true" />,
+      active: pathname === '/manager',
+    },
+    {
+      label: screenText('menuReports', language),
+      href: '/manager/reports',
+      icon: <Wrench size={18} strokeWidth={1.8} aria-hidden="true" />,
+      count: queueCount,
+      active: pathname.startsWith('/manager/reports'),
+    },
+    {
+      label: screenText('menuTechnicians', language),
+      href: '/manager/technicians',
+      icon: <Users size={18} strokeWidth={1.8} aria-hidden="true" />,
+      active: pathname.startsWith('/manager/technicians'),
+    },
+  ];
+
+  return (
+    <>
+      <TopBar role="manager" menu={menu} onLogOut={logOut} />
+      <main className="page">{children}</main>
+    </>
+  );
+}

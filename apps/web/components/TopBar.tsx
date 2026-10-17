@@ -12,6 +12,7 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { LogOut } from 'lucide-react';
 import type { Role } from '@garmentpulse/shared';
 import { ROLE_LABELS } from '@garmentpulse/shared';
@@ -51,7 +52,7 @@ export function TopBar({ role, menu, onLogOut }: TopBarProps) {
       {menu && menu.length > 0 ? (
         <nav className="topbar-menu" aria-label={screenText('menuName', language)}>
           {menu.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className={item.active ? 'menu-link menu-link-active' : 'menu-link'}
@@ -62,7 +63,7 @@ export function TopBar({ role, menu, onLogOut }: TopBarProps) {
               {item.count !== undefined && item.count > 0 ? (
                 <span className="count-bubble">{localizeDigits(String(item.count), language)}</span>
               ) : null}
-            </a>
+            </Link>
           ))}
         </nav>
       ) : null}
