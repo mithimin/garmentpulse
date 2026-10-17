@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Please add sign-up and one-time manager codes to `docs/api-contract.md` and the backend. This answers the open question "How do accounts and roles get created?" in section 8 of the contract. What I built on the website (with fake data) works like this:
@@ -24,3 +24,7 @@ The owner wants managers to need the owner's say-so before they can get in. Also
 
 ## What I am doing meanwhile
 I use fake sign-up and fake codes saved in the browser. The files are `apps/web/auth/fakeAuth.ts` and `apps/web/auth/fakeAccounts.ts`. When the real functions exist, only those two files change.
+
+## Done
+
+Decided on 2026-10-18: sign-up and one-time manager codes are NOT in the MVP. Sakib creates all accounts by hand. They are now listed as "later" in `docs/mvp.md` section 3 and in `docs/api-contract.md` sections 2.7 and 8. Details: `requests/mithi/2026-10-18-signup-is-later.md`. (Sakib)
