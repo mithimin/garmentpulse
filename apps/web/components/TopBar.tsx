@@ -43,7 +43,10 @@ export function TopBar({ role, menu, onLogOut }: TopBarProps) {
   return (
     <header className="topbar">
       <div className="topbar-brand">
-        <Logo size={40} light />
+        {/* The logo keeps its login colour (dark navy) on a pale tile, so it stands out. */}
+        <span className="logo-tile">
+          <Logo size={34} />
+        </span>
         <div>
           <div className="topbar-name">{screenText('appName', language)}</div>
           {role ? <div className="topbar-role">{ROLE_LABELS[role][language]}</div> : null}

@@ -1108,3 +1108,19 @@ html[lang='bn'] .menu-link {
 html[lang='bn'] .filter-tab {
   font-size: 15px;
 }
+
+/* ---------- Logo tile in the top bar ---------- */
+
+/* A small pale rectangle behind the logo, so the dark logo shows on the dark bar. */
+.logo-tile {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #e1e8f1;
+  border: 1px solid #b9c6d8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
