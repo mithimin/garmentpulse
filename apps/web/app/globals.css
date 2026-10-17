@@ -488,17 +488,51 @@ html[lang='bn'] .table th {
   left: 0;
   right: 0;
   height: 56px;
-  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: var(--bar);
+  /* The two choices sit in the middle of the bar. */
+  justify-content: center;
+  /* Denim jeans cloth: a mid blue with a fine diagonal twill weave. */
+  background-color: #3f6192;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.12) 0,
+      rgba(255, 255, 255, 0.12) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(10, 25, 60, 0.18) 0,
+      rgba(10, 25, 60, 0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  box-shadow: 0 2px 6px rgba(20, 35, 63, 0.35);
   /* Above the two stitch lines. */
   z-index: 1;
 }
+/* Gold jeans stitching along the bottom edge of the bar. */
+.login-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  border-top: 2px dashed #e0b765;
+  pointer-events: none;
+}
+.login-bar .lang-switch {
+  position: absolute;
+  right: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+}
 .login-tabs {
   display: flex;
-  height: 100%;
+  /* Stops above the stitch line so the gold underline does not touch it. */
+  height: calc(100% - 10px);
 }
 /* The two choices: Manager and Owner. The chosen one is white with a gold line. */
 .login-tab {
@@ -506,10 +540,10 @@ html[lang='bn'] .table th {
   align-items: center;
   padding: 0 var(--space-5);
   border-bottom: 3px solid transparent;
-  color: var(--bar-text);
-  font-size: 14px;
+  color: #dbe6f5;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-decoration: none;
 }
 .login-tab:hover {
@@ -547,8 +581,8 @@ html[lang='bn'] .table th {
 /* In the login bar the language switch is a solid button in the Login blue, with a
    light edge so it still shows on the dark bar. */
 .login-bar .lang-switch {
-  background: var(--main-button);
-  border-color: var(--bar-text);
+  background: #1f2b47;
+  border-color: #dbe6f5;
   color: #ffffff;
 }
 .login-bar .lang-switch:hover {
