@@ -150,6 +150,8 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  /* Lets the grids inside ask how wide the page is (the sidebar takes some room). */
+  container: page / inline-size;
 }
 .page-header {
   display: flex;
@@ -534,8 +536,19 @@ html[lang='bn'] .count-tag {
 /* The row of count boxes: four across when there is room, fewer when narrow. */
 .count-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-6);
+}
+/* The page width left beside the sidebar decides: 4 across, then 2 by 2, then 1. */
+@container page (max-width: 760px) {
+  .count-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container page (max-width: 460px) {
+  .count-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ---------- Tables (design system 9.7) ---------- */
@@ -857,7 +870,7 @@ html {
   gap: var(--space-6);
   align-items: start;
 }
-@media (max-width: 1100px) {
+@container page (max-width: 1000px) {
   .dashboard-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -979,7 +992,7 @@ html {
 
 .tech-list {
   list-style: none;
-  margin: var(--space-3) 0 0;
+  margin: 0;
   padding: 0;
 }
 .tech-row {
@@ -1158,6 +1171,8 @@ html[lang='bn'] .filter-tab {
 .shell {
   display: flex;
   align-items: stretch;
+  /* The sidebar always reaches the bottom of the window, even on a short page. */
+  min-height: calc(100vh - 76px);
 }
 .shell > .page {
   flex: 1;
@@ -1260,5 +1275,84 @@ html[lang='bn'] .filter-tab {
   /* The sidebar has its own Log out, so the bar's one is hidden to save room. */
   .topbar-has-sidebar .topbar-right .btn {
     display: none;
+  }
+}
+
+/* ---------- Stacked table rows when the page is narrow (for example beside the sidebar) ---------- */
+
+@container page (max-width: 720px) {
+  .table-stack thead {
+    display: none;
+  }
+  .table-stack,
+  .table-stack tbody,
+  .table-stack tr,
+  .table-stack td {
+    display: block;
+    width: 100%;
+  }
+  .table-stack tr {
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px dashed #6f8296;
+  }
+  .table-stack tr:last-child {
+    border-bottom: none;
+  }
+  .table-stack td,
+  .card-list .table-stack td {
+    padding: var(--space-1) 0;
+    border-bottom: none;
+    background: transparent;
+  }
+  .table-stack td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #3f4d5f;
+  }
+  html[lang='bn'] .table-stack td[data-label]::before {
+    font-size: 14px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .table-stack td.actions {
+    text-align: left;
+    margin-top: var(--space-2);
+  }
+  /* The gold "needs a technician" edge moves from the first cell to the whole card. */
+  .card-list .table-stack tr.row-attention td:first-child {
+    box-shadow: none;
+  }
+  .card-list .table-stack tr.row-attention {
+    box-shadow: inset 4px 0 0 #c99a45;
+    padding-left: var(--space-4);
+  }
+}
+
+/* ---------- Login and sign-up pages on a phone ---------- */
+
+@media (max-width: 520px) {
+  /* Settings becomes an icon only, so it never covers the Manager / Owner tabs. */
+  .settings-label {
+    display: none;
+  }
+  .settings-btn {
+    min-width: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+  .settings-wrap {
+    right: var(--space-4);
+  }
+  .login-tab {
+    padding: 0 var(--space-4);
+  }
+  /* Keep the page content inside the two stitch lines. */
+  .login-page {
+    padding-left: 36px;
+    padding-right: 36px;
   }
 }

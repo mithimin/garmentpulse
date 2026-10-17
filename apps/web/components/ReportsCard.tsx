@@ -101,7 +101,7 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
           <EmptyMessage />
         )
       ) : (
-        <DataTable>
+        <DataTable stack>
           <thead>
             <tr>
               <th>{screenText('colMachine', language)}</th>
@@ -120,15 +120,15 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
                   <td>
                     <strong>{report.machine.name}</strong>
                   </td>
-                  <td>{report.description}</td>
-                  <td>
+                  <td data-label={screenText('colProblem', language)}>{report.description}</td>
+                  <td data-label={screenText('colReportedBy', language)}>
                     {report.reported_by.display_name}
                     <div className="cell-sub nowrap">
                       {formatDateTime(report.created_at, language)}
                     </div>
                   </td>
                   {mode === 'all' ? (
-                    <td>
+                    <td data-label={screenText('colTechnician', language)}>
                       {report.technician
                         ? report.technician.display_name
                         : needsTechnician
@@ -136,7 +136,7 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
                           : '-'}
                     </td>
                   ) : null}
-                  <td>
+                  <td data-label={screenText('colStatus', language)}>
                     <StatusLabel status={report.status} />
                   </td>
                   <td className="actions">
