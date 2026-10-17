@@ -458,19 +458,29 @@ html[lang='bn'] .table th {
       transparent 4px
     );
 }
-/* A faint stitch line sewn just inside the edge, in the same blue. */
-.login-page::before {
+/* TWO stitch lines sewn just inside the edge, like the double stitching on jeans.
+   They use the same blue as the main button, strong enough to see easily. */
+.login-page::before,
+.login-page::after {
   content: '';
   position: absolute;
-  inset: 14px;
-  border: 2px dashed color-mix(in srgb, var(--main-button) 30%, transparent);
-  border-radius: 10px;
+  border: 2px dashed color-mix(in srgb, var(--main-button) 60%, transparent);
   pointer-events: none;
+}
+.login-page::before {
+  inset: 12px;
+  border-radius: 12px;
+}
+.login-page::after {
+  inset: 22px;
+  border-radius: 8px;
 }
 .login-corner {
   position: absolute;
   top: var(--space-5);
   right: var(--space-5);
+  /* Above the two stitch lines. */
+  z-index: 1;
 }
 .login-box {
   width: 100%;
