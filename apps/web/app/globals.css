@@ -1,0 +1,675 @@
+/*
+  apps/web/app/globals.css
+
+  The look of GarmentPulse Web, written down once. It follows docs/design-system.md.
+  The manager AND the owner use the same blue colours (section 3.2 and 3.3).
+  Every colour, size and gap is a named value ("variable") at the top, so a colour
+  only has to be fixed in one place. The small classes below (.card, .btn, .status ...)
+  are the building blocks that the React components in /components use.
+  Owned by Mithi.
+*/
+
+:root {
+  /* Blue colours (design system 3.2) */
+  --page: #dde3ea;
+  --bar: #1f2b47;
+  --bar-text: #d3d9e8;
+  --bar-text-chosen: #ffffff;
+  --bar-stitch: #d6ac68;
+  --card: #f7f9fb;
+  --card-border: #c9d2de;
+  --card-stitch: #98a6ba;
+  --list-card: #b4c1cf;
+  --number-box: #5f7387;
+  --number-box-border: #4c5e71;
+  --text: #1e2430;
+  --heading: #1a202b;
+  --soft-text: #55606f;
+  --main-button: #2e4670;
+  --main-button-border: #1c2d4c;
+  --main-button-hover: #36527f;
+  --link: #2a3a5c;
+  --link-hover: #6e1f2e;
+
+  /* Colours shared by every role (design system 3.6) */
+  --second-button: #f7f9fb;
+  --input-border: #aeb9c8;
+  --input-bg: #fcfdfe;
+  --input-hint: #7a8495;
+  --error-bg: #f2d6cf;
+  --error-text: #8a2a1a;
+  --error-border: #d9afa4;
+
+  /* Report statuses (design system 4.1) */
+  --waiting-bg: #f3e2b8;
+  --waiting-text: #6e4e0e;
+  --progress-bg: #dce2ee;
+  --progress-text: #263b66;
+  --resolved-bg: #e1e5cc;
+  --resolved-text: #4a5320;
+
+  /* Tables (design system 9.7) */
+  --table-head: #26324f;
+  --table-head-text: #efe3c8;
+  --table-row: #e8edf3;
+  --table-row-hover: #dce3ec;
+
+  /* Spacing steps (design system 7.1) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 48px;
+
+  /* Fonts (design system 5). Bangla letters use Tiro Bangla, a classy
+     Bangla serif font: it is listed right after each English font, so the browser uses
+     it for any Bangla letter. */
+  --font-title:
+    var(--font-cormorant), 'Cormorant Garamond', var(--font-tiro-bangla), Georgia, serif;
+  --font-body:
+    var(--font-plex-sans), 'IBM Plex Sans', var(--font-tiro-bangla), system-ui, sans-serif;
+  --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Bangla letters are taller, so they get a little more line height. */
+html[lang='bn'] body {
+  line-height: 1.6;
+}
+
+a {
+  color: var(--link);
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+/* A clear ring when someone moves with the keyboard (design system 12). */
+:focus-visible {
+  outline: 2px solid var(--bar);
+  outline-offset: 2px;
+}
+
+h1,
+h2 {
+  font-family: var(--font-title);
+  font-weight: 600;
+  color: var(--heading);
+  margin: 0;
+}
+h1 {
+  font-size: 42px;
+  line-height: 1.1;
+}
+h2 {
+  font-size: 25px;
+  line-height: 1.2;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ---------- Page frame ---------- */
+
+.page {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+
+/* ---------- Top bar (design system 9.5) ---------- */
+
+.topbar {
+  position: relative;
+  background: var(--bar);
+  color: var(--bar-text);
+  padding: var(--space-3) var(--space-7);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+/* The stitch line along the bottom edge. */
+.topbar::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  border-bottom: 1.5px dashed var(--bar-stitch);
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.topbar-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--bar-text-chosen);
+}
+.topbar-role {
+  font-size: 12px;
+  color: var(--bar-text);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---------- Language switch ---------- */
+
+.lang-switch {
+  min-height: 36px;
+  min-width: 52px;
+  padding: 0 16px;
+  /* A rectangle with only slightly softened corners, not a round pill. */
+  border-radius: 3px;
+  border: 1px solid var(--bar-stitch);
+  background: transparent;
+  color: var(--bar-text-chosen);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+/* Bangla letters join up, so they get no extra spacing. */
+html[lang='bn'] .lang-switch {
+  letter-spacing: 0;
+  font-size: 14px;
+}
+.lang-switch:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Card with a stitch line (design system 9.2) ---------- */
+
+.card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: var(--space-5);
+  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed var(--card-stitch);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Buttons (design system 9.1) ---------- */
+
+.btn {
+  position: relative;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 6px;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+.btn-small {
+  min-height: 36px;
+}
+.btn-main {
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
+}
+.btn-main:hover {
+  background: var(--main-button-hover);
+}
+/* The stitch line inside the main button. */
+.btn-main::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  border-radius: 3px;
+  pointer-events: none;
+}
+.btn-danger {
+  color: var(--error-text);
+  border-color: var(--error-border);
+}
+.btn-danger:hover {
+  background: var(--error-bg);
+}
+/* A button that cannot be used yet. */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Status labels (design system 4 and 9.3) ---------- */
+
+.status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  padding: 5px 11px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.status::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed currentColor;
+  opacity: 0.4;
+  border-radius: 2px;
+}
+/* Bangla has no capital letters, and spaced-out letters break apart. */
+html[lang='bn'] .status {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.status-waiting {
+  background: var(--waiting-bg);
+  color: var(--waiting-text);
+}
+.status-in_progress,
+.status-busy {
+  background: var(--progress-bg);
+  color: var(--progress-text);
+}
+.status-resolved,
+.status-free {
+  background: var(--resolved-bg);
+  color: var(--resolved-text);
+}
+
+/* ---------- Inputs (design system 9.4) ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+.input {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+}
+.input::placeholder {
+  color: var(--input-hint);
+}
+.field-error {
+  font-size: 12px;
+  color: var(--error-text);
+}
+
+/* ---------- Summary count boxes (design system 3.2, "number box") ---------- */
+
+.count-box {
+  background: var(--number-box);
+  border: 1px solid var(--number-box-border);
+  border-radius: 10px;
+  padding: var(--space-5);
+  color: #ffffff;
+}
+.count-number {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.count-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---------- Tables (design system 9.7) ---------- */
+
+/* On a narrow screen the table scrolls sideways inside its card. */
+.table-wrap {
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th {
+  background: var(--table-head);
+  color: var(--table-head-text);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  padding: 13px 16px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+html[lang='bn'] .table th {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.table td {
+  background: var(--table-row);
+  padding: 13px 16px;
+  border-bottom: 1px dashed var(--input-border);
+  vertical-align: middle;
+}
+.table tr:hover td {
+  background: var(--table-row-hover);
+}
+/* The action button sits at the right end of the row. */
+.table td.actions {
+  text-align: right;
+}
+.code {
+  font-family: var(--font-code);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ---------- Loading, empty and error messages ---------- */
+
+.state {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  color: var(--soft-text);
+}
+.state-error {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
+  border-radius: 8px;
+}
+
+/* ---------- Login page ---------- */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Extra room on top so a tall form (sign-up) never slides under the bar. */
+  padding: 84px var(--space-6) var(--space-6);
+  position: relative;
+  /* The SAME blue as the main button, but very faint: it was white before, and
+     now it is a soft blue wash with a barely-there denim weave on top. */
+  background-color: color-mix(in srgb, var(--main-button) 16%, #f7f9fb);
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.55), transparent 70%),
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--main-button) 7%, transparent) 0,
+      color-mix(in srgb, var(--main-button) 7%, transparent) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--main-button) 5%, transparent) 0,
+      color-mix(in srgb, var(--main-button) 5%, transparent) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+/* TWO stitch lines sewn just inside the edge, like the double stitching on jeans.
+   They use the same blue as the main button, strong enough to see easily. */
+.login-page::before,
+.login-page::after {
+  content: '';
+  position: absolute;
+  border: 2px dashed color-mix(in srgb, var(--main-button) 60%, transparent);
+  pointer-events: none;
+}
+.login-page::before {
+  inset: 68px 12px 12px;
+  border-radius: 12px;
+}
+.login-page::after {
+  inset: 78px 22px 22px;
+  border-radius: 8px;
+}
+.login-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  /* The two choices sit in the middle of the bar. */
+  justify-content: center;
+  /* Denim jeans cloth: a mid blue with a fine diagonal twill weave. */
+  background-color: #22395f;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.09) 0,
+      rgba(255, 255, 255, 0.09) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(5, 12, 35, 0.25) 0,
+      rgba(5, 12, 35, 0.25) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  /* A soft shadow under the bar makes a smooth, lifted edge. */
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 14px -2px rgba(20, 35, 63, 0.5);
+  /* Above the two stitch lines. */
+  z-index: 1;
+}
+/* Settings button at the right end of the bar, and the box it opens. */
+.settings-wrap {
+  position: absolute;
+  right: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 3px;
+  border: 1px solid #dbe6f5;
+  background: #1f2b47;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.settings-btn:hover {
+  background: var(--main-button-hover);
+}
+.settings-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 190px;
+  padding: var(--space-3);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px -12px rgba(20, 35, 63, 0.55);
+}
+.settings-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--soft-text);
+  margin-bottom: var(--space-2);
+}
+.settings-choices {
+  display: flex;
+  gap: var(--space-2);
+}
+.settings-choice {
+  flex: 1;
+  min-height: 36px;
+  border-radius: 3px;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+}
+.settings-choice-active {
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
+}
+/* The page title in the middle of the bar on the sign-up page. */
+.login-bar-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.login-tabs {
+  display: flex;
+  height: 100%;
+}
+/* The two choices: Manager and Owner. The chosen one is white with a gold line. */
+.login-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  border-bottom: 3px solid transparent;
+  color: #dbe6f5;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.login-tab:hover {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.08);
+}
+.login-tab-active {
+  color: var(--bar-text-chosen);
+  border-bottom-color: var(--bar-stitch);
+}
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+}
+.login-brand h1,
+.login-brand p {
+  margin: 0;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* The sign-up instruction and link under the login card. */
+.login-help {
+  text-align: center;
+  color: var(--soft-text);
+  font-size: 14px;
+}
+.login-help p {
+  margin: 0 0 var(--space-2);
+}
+.login-link {
+  color: var(--link);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.login-link:hover {
+  color: var(--link-hover);
+}
+
+/* The list of manager codes on the owner page. */
+.code-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.code-list li {
+  padding: var(--space-2) var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: 20px;
+  letter-spacing: 0.12em;
+}

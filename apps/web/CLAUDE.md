@@ -17,7 +17,7 @@ This file is read when a session works inside `apps/web/`. It adds to the root [
 - Only **manager and owner accounts** work here. A worker or technician who logs in must be signed out with a clear message (error code `WRONG_PLATFORM`). Workers and technicians use the phone app.
 - A worker must not be able to open manager or owner pages, **even by typing the address**. The backend enforces this, but the pages must also redirect or refuse.
 - **Both languages (Bangla and English)** are needed on the main pages. The language switch is a small pill button in the **top-right corner of every page**.
-- Follow [`docs/design-system.md`](../../docs/design-system.md) for colours (manager blue, owner dark red), fonts and status labels.
+- Follow [`docs/design-system.md`](../../docs/design-system.md) for colours (manager and owner both use the manager blue), fonts and status labels.
 - Not in the MVP: expense approval, the AI chatbot, camera alerts, dark mode. Do not build them.
 
 ## Read before you build
