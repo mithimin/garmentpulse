@@ -3,8 +3,7 @@
 // The GarmentPulse logo, drawn as a small picture (SVG) so it stays sharp at any
 // size. It is a sewing machine (the thing GarmentPulse looks after) with a
 // heartbeat ("pulse") line running along its arm.
-//   - gold square: the same gold as the design system's logo tile
-//   - dashed frame: the "stitch line" that gives the app its cloth look
+//   - no background: the logo sits straight on the white/light page, with no tile
 //   - dark blue machine: arm, pillar, base, thread spool, presser foot and needle
 //   - gold zig-zag on the arm: the pulse (the machine is alive and healthy)
 //   - gold dashes on the base: the line of stitches the machine sews
@@ -17,21 +16,7 @@ const NAVY = '#1F2B47';
 
 export function Logo({ size = 72 }: { size?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 64 64" accessibilityLabel="GarmentPulse logo">
-      <Rect width="64" height="64" rx="16" fill={GOLD} />
-      {/* Stitch frame */}
-      <Rect
-        x="4"
-        y="4"
-        width="56"
-        height="56"
-        rx="12"
-        fill="none"
-        stroke={NAVY}
-        strokeWidth="1.5"
-        strokeDasharray="3 3"
-        opacity="0.55"
-      />
+    <Svg width={size} height={size} viewBox="6 5 52 52" accessibilityLabel="GarmentPulse logo">
       {/* Thread spool on top of the arm */}
       <Rect x="30" y="10" width="8" height="6" rx="1.5" fill={NAVY} />
       {/* Arm (reaches left) and pillar (stands on the right) */}
