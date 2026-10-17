@@ -39,8 +39,9 @@ This file is read when a session works inside `apps/mobile/`. It adds to the roo
 
 ## Needs something outside this folder?
 
-- A new or changed backend function, a database change, or a change in `packages/shared`: **ask Sakib.** Write a short, plain note in `requests/sakib/` (layout in `requests/README.md`), tell Rubaiya about it, and keep going with fake data from `@garmentpulse/shared`. Do not edit those folders yourself.
-- A change to the plan documents or the root `CLAUDE.md`: suggest it in a pull request and mark it as needing Sakib's review.
+- A new or changed backend function or a database change: **ask Sakib.** Write a short, plain note in `requests/sakib/` (layout in `requests/README.md`), tell Rubaiya about it, and keep going with fake data from `@garmentpulse/shared`. Do not edit `supabase/` yourself.
+- A change in `packages/shared/` or `docs/` (shared areas, nobody's lane): you may do it, but first **warn Rubaiya** that a teammate editing the same file at the same time could cause a clash, and go ahead only if Rubaiya says yes.
+- A change to the root `CLAUDE.md`: suggest it in a pull request and mark it as needing Sakib's review.
 
 ## Working style for this folder
 
