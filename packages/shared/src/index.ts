@@ -4,6 +4,7 @@
 // '@garmentpulse/shared', and this file decides what is available.
 // Owned by Sakib.
 
+export * from './api';
 export * from './errors';
 export * from './fixtures';
 export * from './helpers';
