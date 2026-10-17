@@ -24,7 +24,7 @@
   --number-box-border: #4c5e71;
   --text: #1e2430;
   --heading: #1a202b;
-  --soft-text: #55606f;
+  --soft-text: #3f4a59;
   --main-button: #2e4670;
   --main-button-border: #1c2d4c;
   --main-button-hover: #36527f;
@@ -98,7 +98,7 @@ body {
     );
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -136,7 +136,7 @@ h2 {
   line-height: 1.2;
 }
 h3 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
@@ -218,7 +218,7 @@ h3 {
   border: 1px dashed transparent;
   border-radius: 6px;
   color: var(--bar-text);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   text-decoration: none;
 }
@@ -240,7 +240,7 @@ h3 {
   border-radius: 999px;
   background: #a8622b;
   color: #fff7ec;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -253,11 +253,11 @@ h3 {
 }
 .topbar-name {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--bar-text-chosen);
 }
 .topbar-role {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--bar-text);
 }
 .topbar-right {
@@ -278,7 +278,7 @@ h3 {
   background: transparent;
   color: var(--bar-text-chosen);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.14em;
   cursor: pointer;
@@ -286,7 +286,7 @@ h3 {
 /* Bangla letters join up, so they get no extra spacing. */
 html[lang='bn'] .lang-switch {
   letter-spacing: 0;
-  font-size: 14px;
+  font-size: 15px;
 }
 .lang-switch:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -326,7 +326,7 @@ html[lang='bn'] .lang-switch {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -376,7 +376,7 @@ html[lang='bn'] .lang-switch {
   white-space: nowrap;
   padding: 5px 11px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -417,7 +417,7 @@ html[lang='bn'] .status {
   gap: var(--space-1);
 }
 .field-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .input {
@@ -428,14 +428,14 @@ html[lang='bn'] .status {
   background: var(--input-bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .input::placeholder {
   color: var(--input-hint);
 }
 .field-error {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--error-text);
 }
 
@@ -480,14 +480,14 @@ html[lang='bn'] .status {
   pointer-events: none;
 }
 .count-number {
-  font-size: 38px;
+  font-size: 44px;
   font-weight: 700;
   line-height: 1.1;
 }
 /* The small spaced-out capital label at the top of the box. */
 .count-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -507,7 +507,7 @@ html[lang='bn'] .count-label {
   align-items: center;
   padding: 4px 10px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -557,8 +557,8 @@ html[lang='bn'] .count-tag {
 .table th {
   background: var(--table-head);
   color: var(--table-head-text);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-align: left;
   padding: 13px 16px;
   letter-spacing: 0.07em;
@@ -583,7 +583,7 @@ html[lang='bn'] .table th {
 }
 .code {
   font-family: var(--font-code);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -700,7 +700,7 @@ html[lang='bn'] .table th {
   background: #1f2b47;
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -719,7 +719,7 @@ html[lang='bn'] .table th {
   box-shadow: 0 10px 24px -12px rgba(20, 35, 63, 0.55);
 }
 .settings-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--soft-text);
   margin-bottom: var(--space-2);
@@ -736,7 +736,7 @@ html[lang='bn'] .table th {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
 }
 .settings-choice-active {
@@ -803,7 +803,7 @@ html[lang='bn'] .table th {
 .login-help {
   text-align: center;
   color: var(--soft-text);
-  font-size: 14px;
+  font-size: 15px;
 }
 .login-help p {
   margin: 0 0 var(--space-2);
@@ -843,7 +843,7 @@ html[lang='bn'] .table th {
 .greeting-line {
   margin: var(--space-2) 0 0;
   color: var(--soft-text);
-  font-size: 15px;
+  font-size: 17px;
 }
 /* A menu link that scrolls to a card should not hide the card under the top bar. */
 #reports,
@@ -873,7 +873,7 @@ html {
 .card-list {
   background: var(--list-card);
   border-color: #8c9db0;
-  color: #2f3c4c;
+  color: #1e2a38;
 }
 .card-list::after {
   border-color: #6f8296;
@@ -894,7 +894,7 @@ html {
 }
 .card-link {
   color: var(--link);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   text-decoration: underline;
 }
@@ -903,8 +903,8 @@ html {
 }
 /* A smaller line under a cell's main text (for example the time under a name). */
 .cell-sub {
-  font-size: 12px;
-  color: #3f4d5f;
+  font-size: 14px;
+  color: #2c3a4b;
 }
 
 /* ---------- Pop-up box (Assign) ---------- */
@@ -954,7 +954,7 @@ html {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
 }
 .dialog-choice:hover:not(:disabled) {
@@ -1011,7 +1011,7 @@ html {
   color: var(--link);
   border: 2px solid #ffffff;
   box-shadow: 0 0 0 1px var(--card-border);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
 }
 .tech-text {
@@ -1038,7 +1038,7 @@ html {
 }
 .details dt {
   color: var(--soft-text);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1063,18 +1063,18 @@ html[lang='bn'] .details dt {
 html[lang='bn'] .count-label,
 html[lang='bn'] .cell-sub,
 html[lang='bn'] .details dt {
-  font-size: 14px;
+  font-size: 16px;
 }
 html[lang='bn'] .count-tag,
 html[lang='bn'] .status,
 html[lang='bn'] .table th,
 html[lang='bn'] .field-label,
 html[lang='bn'] .settings-title {
-  font-size: 13px;
+  font-size: 15px;
 }
 html[lang='bn'] .btn-small,
 html[lang='bn'] .menu-link {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 /* ---------- Filter tabs on the Reports page ---------- */
@@ -1093,7 +1093,7 @@ html[lang='bn'] .menu-link {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -1106,7 +1106,7 @@ html[lang='bn'] .menu-link {
   color: #ffffff;
 }
 html[lang='bn'] .filter-tab {
-  font-size: 15px;
+  font-size: 17px;
 }
 
 /* ---------- Logo tile in the top bar ---------- */
