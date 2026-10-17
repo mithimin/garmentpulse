@@ -1,8 +1,8 @@
 # GarmentPulse API Contract
 
-**Status:** Draft v1 (the backend does not exist yet; every function below is `planned`)
-**Owner:** Sakib (backend). Changes need Sakib's review. Rubaiya and Mithi review this draft too (plan step ★2).
-**Last updated:** 2026-10-16
+**Status:** v1 confirmed by Sakib and **built**. All 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). Rubaiya and Mithi still review it (plan step ★2).
+**Owner:** Sakib (backend). Changes need Sakib's review.
+**Last updated:** 2026-10-18
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -81,7 +81,7 @@ Everyone uses the same three words: `waiting`, `in_progress`, `resolved`.
 
 ### 2.7 Not in the MVP
 
-Invoices and receipts, owner approval and the expense limit, the AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, and the 12-month history limit.
+Invoices and receipts, owner approval and the expense limit, the AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, the 12-month history limit, and **sign-up with one-time manager codes** (accounts are created by hand in the MVP; see section 8).
 
 ---
 
@@ -265,19 +265,24 @@ These codes live in `packages/shared/src/errors.ts`.
 
 ## 8. Decisions and Open Questions
 
-### Proposed while writing this contract (Sakib must confirm)
+### Decided while writing this contract (confirmed by Sakib on 2026-10-18)
 
 1. **Accepting a job does not change the status.** `accept_job` sets `accepted_at`; the status stays `waiting` until the technician moves it to `in_progress`. This keeps the "3 statuses only" rule from the design system.
 2. **The queue is not a status.** A queued report is `waiting` with no technician.
 3. **One factory in the MVP.** Everyone belongs to one factory, so no function takes a factory id. Several factories can be added later.
 4. **No auto-assign.** When a technician becomes free, the manager assigns the next queued report by hand.
 
+### Answered (by Sakib, 2026-10-18)
+
+- **How do accounts and roles get created?** In the MVP, **Sakib creates every account by hand** in the Supabase dashboard. There is no sign-up screen and no function for it. Sign-up with one-time manager codes (`sign_up`, `create_manager_code`, `list_manager_codes`, and the error codes `EMAIL_TAKEN` and `INVALID_CODE`) is **later**, so the owner stays read-only in the MVP.
+- **Where do the machines come from?** Typed in by hand as test data (`supabase/seed.sql`). No function adds machines in the MVP.
+- **Can a manager reassign a report** after it was assigned? **No**, not in the MVP.
+- **Which status moves are allowed for a technician?** Any forward move after the job is accepted: `waiting` to `in_progress` to `resolved`, and also straight from `waiting` to `resolved`. Backwards moves and repeats give `INVALID_STATUS_CHANGE`.
+- **One unfinished job per technician.** The database enforces it, so a second assignment gives `TECHNICIAN_BUSY` even if two managers try at the same moment.
+
 ### Still open (the team must answer before the related step)
 
-- **How do accounts and roles get created?** Does the owner or manager add people, or do people sign up and get a role later? The PRD does not say. (Affects Round 1, login and roles.)
-- **Where do the machines come from?** Is the machine list typed in by hand into the database for the MVP? (Proposed answer: yes, as test data.)
 - **Word list (plan step ★3):** the exact Bangla and English words for the three statuses and the free/busy labels are still to be agreed.
-- **Can a manager reassign a report** after it was assigned? Not in this draft.
 
 ---
 
