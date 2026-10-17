@@ -20,7 +20,7 @@ import { TopBar } from '../components/TopBar';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
 import { useAuth } from './AuthContext';
-import { homePathFor } from './homePath';
+import { homePathFor, loginPathFor } from './homePath';
 
 export function RoleGate({ role, children }: { role: Role; children: ReactNode }) {
   const { profile, ready, logOut } = useAuth();
@@ -28,8 +28,8 @@ export function RoleGate({ role, children }: { role: Role; children: ReactNode }
   const router = useRouter();
 
   useEffect(() => {
-    if (ready && !profile) router.replace('/login');
-  }, [ready, profile, router]);
+    if (ready && !profile) router.replace(loginPathFor(role));
+  }, [ready, profile, router, role]);
 
   if (!ready || !profile) {
     return (

@@ -11,7 +11,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { Profile } from '@garmentpulse/shared';
+import type { Profile, Role } from '@garmentpulse/shared';
 import { fakeLogin } from './fakeAuth';
 
 const STORAGE_KEY = 'garmentpulse-web-user';
@@ -19,7 +19,7 @@ const STORAGE_KEY = 'garmentpulse-web-user';
 type AuthValue = {
   profile: Profile | null;
   ready: boolean;
-  logIn: (email: string, password: string) => Promise<Profile>;
+  logIn: (email: string, password: string, loginFor: Role) => Promise<Profile>;
   logOut: () => void;
 };
 
@@ -39,8 +39,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setReady(true);
   }, []);
 
-  const logIn = useCallback(async (email: string, password: string) => {
-    const person = await fakeLogin(email, password);
+  const logIn = useCallback(async (email: string, password: string, loginFor: Role) => {
+    const person = await fakeLogin(email, password, loginFor);
     setProfile(person);
     try {
       window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(person));
