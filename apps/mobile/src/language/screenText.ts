@@ -31,12 +31,6 @@ export const LOGIN_TEXT = {
   loading: { en: 'Loading…', bn: 'লোড হচ্ছে…' },
 } satisfies Record<string, Words>;
 
-export const HOME_TEXT = {
-  signedInAs: { en: 'You are logged in as', bn: 'আপনি লগ ইন করেছেন' },
-  comingSoon: { en: 'Your screens are coming soon.', bn: 'আপনার স্ক্রিনগুলো শীঘ্রই আসছে।' },
-  logoutButton: { en: 'Log out', bn: 'লগ আউট' },
-} satisfies Record<string, Words>;
-
 /** Words on the worker screens (tabs, report form, report list and detail). */
 export const WORKER_TEXT = {
   tabHome: { en: 'Home', bn: 'হোম' },
@@ -97,6 +91,40 @@ export const WORKER_TEXT = {
   },
   progressLabel: { en: 'Progress', bn: 'অগ্রগতি' },
   loadingList: { en: 'Loading…', bn: 'লোড হচ্ছে…' },
+} satisfies Record<string, Words>;
+
+/** Words on the technician screens (tabs, job list, job page, history). */
+export const TECH_TEXT = {
+  tabJobs: { en: 'Jobs', bn: 'কাজ' },
+  tabHistory: { en: 'History', bn: 'ইতিহাস' },
+
+  jobsTitle: { en: 'My jobs', bn: 'আমার কাজ' },
+  historyTitle: { en: 'Past jobs', bn: 'আগের কাজ' },
+  jobTitle: { en: 'Job details', bn: 'কাজের বিবরণ' },
+
+  youAre: { en: 'You are', bn: 'আপনি এখন' },
+  freeHint: {
+    en: 'No open job. Waiting for the manager.',
+    bn: 'কোনো খোলা কাজ নেই। ম্যানেজারের অপেক্ষায়।',
+  },
+  busyHint: { en: 'You have a job to finish.', bn: 'আপনার একটি কাজ শেষ করা বাকি।' },
+  noJobs: { en: 'You have no open jobs right now.', bn: 'এখন আপনার কোনো খোলা কাজ নেই।' },
+  noHistory: { en: 'You have no finished jobs yet.', bn: 'আপনার এখনো কোনো শেষ করা কাজ নেই।' },
+  needsAccept: { en: 'New: please accept', bn: 'নতুন: গ্রহণ করুন' },
+  logoutButton: { en: 'Log out', bn: 'লগ আউট' },
+
+  reportedByLabel: { en: 'Reported by', bn: 'জানিয়েছেন' },
+  problemLabel: { en: 'Problem', bn: 'সমস্যা' },
+  reportedAtLabel: { en: 'Reported', bn: 'জানানো হয়েছে' },
+  acceptedAtLabel: { en: 'Accepted', bn: 'গ্রহণ করা হয়েছে' },
+  notAcceptedYet: { en: 'Not accepted yet', bn: 'এখনো গ্রহণ করা হয়নি' },
+  progressLabel: { en: 'Progress', bn: 'অগ্রগতি' },
+
+  acceptButton: { en: 'Accept job', bn: 'কাজটি গ্রহণ করুন' },
+  startButton: { en: 'Start work', bn: 'কাজ শুরু করুন' },
+  fixedButton: { en: 'Mark as fixed', bn: 'ঠিক হয়েছে' },
+  working: { en: 'Saving…', bn: 'সংরক্ষণ হচ্ছে…' },
+  doneNote: { en: 'This job is finished. Well done!', bn: 'কাজটি শেষ হয়েছে। চমৎকার!' },
 } satisfies Record<string, Words>;
 
 /**

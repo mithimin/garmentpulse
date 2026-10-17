@@ -25,14 +25,20 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - Shared building blocks in `src/components/` (cards, buttons, top bar, tab bar, status label, step tracker) that the technician screens will reuse.
   - Dates and numbers show in Bangla digits in Bangla mode (`src/language/format.ts`).
 
+- Step 3 (technician screens), built on branch `features/mobile-technician-screens`:
+  - Technician app with a bottom bar: Jobs, History (`src/screens/technician/`).
+  - Jobs: a Free/Busy card, then open jobs. A job page has one button for the next step: Accept job, then Start work (Waiting to In progress), then Mark as fixed (to Resolved). Status only moves forward.
+  - History: the finished (past) jobs.
+  - The fake store (`src/data/ReportsContext.tsx`) now also copies `list_my_jobs`, `accept_job` and `update_job_status`, with the contract's error codes. A worker who logs in afterwards sees the new status.
+  - The old temporary home screen was removed.
+
 ## In progress
 
 - Nothing right now.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. Technician: my jobs, accept, change status, past jobs.
-2. The custom fonts (Cormorant Garamond, Jost). Fonts are not loaded yet, so text uses the phone's normal font for now.
+1. The custom fonts (Cormorant Garamond, Jost). Fonts are not loaded yet, so text uses the phone's normal font for now.
 
 ## Waiting on someone else
 
