@@ -2,9 +2,9 @@
 
 // apps/web/components/LanguageSwitch.tsx
 //
-// The small pill button in the top-right corner of every page. It shows
-// "EN · বাং" and flips the whole site between English and Bangla
-// (design system section 6).
+// The small pill button in the top-right corner of every page. It shows ONLY the
+// language the site is using now ("EN" for English, "বাং" for Bangla), and a click
+// flips the whole site to the other language (design system section 6).
 // Owned by Mithi.
 
 import { useLanguage } from '../language/LanguageContext';
@@ -19,7 +19,7 @@ export function LanguageSwitch() {
       aria-label={screenText('languageSwitchName', language)}
       onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
     >
-      EN · বাং
+      {language === 'en' ? 'EN' : 'বাং'}
     </button>
   );
 }

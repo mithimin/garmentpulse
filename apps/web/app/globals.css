@@ -477,8 +477,9 @@ html[lang='bn'] .table th {
 }
 .login-corner {
   position: absolute;
-  top: var(--space-5);
-  right: var(--space-5);
+  /* Sits INSIDE the inner stitch line (which is 22px from the edge), not on it. */
+  top: 38px;
+  right: 38px;
   /* Above the two stitch lines. */
   z-index: 1;
 }
@@ -506,12 +507,13 @@ html[lang='bn'] .table th {
   gap: var(--space-5);
 }
 
-/* The language switch is white by default (made for the dark top bar), so on the
-   light login background it gets the theme blue as its colour. */
+/* On the login pages the language switch is a solid button in the same blue as
+   the Login button. */
 .login-corner .lang-switch {
-  color: var(--main-button);
-  border-color: var(--main-button);
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
 }
 .login-corner .lang-switch:hover {
-  background: rgba(46, 70, 112, 0.1);
+  background: var(--main-button-hover);
 }
