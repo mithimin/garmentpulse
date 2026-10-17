@@ -55,7 +55,7 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
       </div>
       <div className="login-box">
         <div className="login-brand">
-          <Logo size={72} light />
+          <Logo size={72} />
           <h1>{screenText('appName', language)}</h1>
           <p>{screenText(role === 'owner' ? 'ownerTagline' : 'managerTagline', language)}</p>
         </div>

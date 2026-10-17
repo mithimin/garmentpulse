@@ -439,20 +439,20 @@ html[lang='bn'] .table th {
   padding: var(--space-6);
   position: relative;
   /* Denim cloth: a deep blue with a fine diagonal twill weave and a soft glow. */
-  background-color: #2b4468;
+  background-color: #6d93c2;
   background-image:
-    radial-gradient(ellipse at 50% 35%, rgba(120, 160, 210, 0.28), transparent 65%),
+    radial-gradient(ellipse at 50% 35%, rgba(200, 222, 245, 0.55), transparent 70%),
     repeating-linear-gradient(
       45deg,
-      rgba(255, 255, 255, 0.045) 0,
-      rgba(255, 255, 255, 0.045) 1px,
+      rgba(255, 255, 255, 0.22) 0,
+      rgba(255, 255, 255, 0.22) 1px,
       transparent 1px,
       transparent 4px
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(0, 0, 0, 0.1) 0,
-      rgba(0, 0, 0, 0.1) 1px,
+      rgba(30, 55, 100, 0.22) 0,
+      rgba(30, 55, 100, 0.22) 1px,
       transparent 1px,
       transparent 4px
     );
@@ -462,15 +462,15 @@ html[lang='bn'] .table th {
   content: '';
   position: absolute;
   inset: 14px;
-  border: 2px dashed rgba(214, 172, 104, 0.7);
+  border: 2px dashed #a97a25;
   border-radius: 10px;
   pointer-events: none;
 }
-.login-brand h1 {
-  color: #ffffff;
+.-brand h1 {
+  color: #14233f;
 }
 .login-brand p {
-  color: #d3d9e8;
+  color: #1f3252;
 }
 .login-corner {
   position: absolute;
@@ -499,4 +499,14 @@ html[lang='bn'] .table th {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+}
+/* The language switch is white by default (made for the dark top bar), so on the
+   light denim it gets a dark colour and a pale pill behind it. */
+.login-corner .lang-switch {
+  color: #14233f;
+  background: rgba(255, 255, 255, 0.6);
+  border-color: #8a6a2c;
+}
+.login-corner .lang-switch:hover {
+  background: rgba(255, 255, 255, 0.85);
 }
