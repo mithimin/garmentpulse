@@ -54,7 +54,7 @@ export function Sidebar({ menu, onLogOut, onNavigate }: SidebarProps) {
           </Link>
         ))}
       </nav>
-      <button type="button" className="menu-link sidebar-logout" onClick={onLogOut}>
+      <button type="button" className="sidebar-logout" onClick={onLogOut}>
         <LogOut size={18} strokeWidth={1.8} aria-hidden="true" />
         {screenText('logOut', language)}
       </button>
