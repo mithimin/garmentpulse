@@ -2,13 +2,14 @@
 //
 // The colours and sizes used by the phone app, copied from docs/design-system.md.
 // Keeping them in one place means every screen looks the same, and a colour only
-// has to be fixed once. For now it holds the login screen colours (the "manager
-// blue", section 10.1 of the design system) and the shared error colours.
-// More roles (worker purple, technician green) are added when their screens come.
+// has to be fixed once.
+// DECISION (Rubaiya): the whole phone app, for workers AND technicians, uses the
+// denim "manager blue" of the login screen. The worker purple and technician
+// green from the design system are NOT used.
 // Owned by Rubaiya.
 
-/** Colours of the login screen (manager blue, design system section 3.2). */
-export const LOGIN_COLORS = {
+/** The blue colours used on every phone screen (design system section 3.2). */
+export const COLORS = {
   page: '#DDE3EA',
   bar: '#1F2B47',
   barText: '#D3D9E8',
@@ -21,6 +22,18 @@ export const LOGIN_COLORS = {
   mainButton: '#2E4670',
   mainButtonBorder: '#1C2D4C',
   mainButtonText: '#FFFFFF',
+  /** Bar text of the chosen tab, and the soft pill behind it. */
+  barTextChosen: '#FFFFFF',
+  tabPill: 'rgba(255,255,255,0.16)',
+  /** The darker blue card used for lists (design system 3.2, "second card"). */
+  listCard: '#B4C1CF',
+} as const;
+
+/** Colours of the three report statuses (design system section 4.1). */
+export const STATUS_COLORS = {
+  waiting: { background: '#F3E2B8', text: '#6E4E0E' },
+  in_progress: { background: '#DCE2EE', text: '#263B66' },
+  resolved: { background: '#E1E5CC', text: '#4A5320' },
 } as const;
 
 /** Colours shared by every role (design system section 3.6). */

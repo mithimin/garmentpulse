@@ -11,7 +11,7 @@ import type { Profile } from '@garmentpulse/shared';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import { useLanguage } from '../language/LanguageContext';
 import { HOME_TEXT, LOGIN_TEXT } from '../language/screenText';
-import { LOGIN_COLORS as C, SIZES } from '../theme';
+import { COLORS as C, SIZES } from '../theme';
 
 type Props = {
   profile: Profile;

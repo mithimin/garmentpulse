@@ -31,7 +31,7 @@ import { LanguageSwitch } from '../components/LanguageSwitch';
 import { Logo } from '../components/Logo';
 import { useLanguage } from '../language/LanguageContext';
 import { ERROR_TEXT, LOGIN_TEXT } from '../language/screenText';
-import { LOGIN_COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
+import { COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
 
 /** The two roles that may use the phone app. */
 type ChoosableRole = Extract<Role, 'worker' | 'technician'>;

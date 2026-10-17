@@ -37,6 +37,68 @@ export const HOME_TEXT = {
   logoutButton: { en: 'Log out', bn: 'লগ আউট' },
 } satisfies Record<string, Words>;
 
+/** Words on the worker screens (tabs, report form, report list and detail). */
+export const WORKER_TEXT = {
+  tabHome: { en: 'Home', bn: 'হোম' },
+  tabReport: { en: 'Report', bn: 'রিপোর্ট' },
+  tabMyReports: { en: 'My reports', bn: 'আমার রিপোর্ট' },
+
+  homeHello: { en: 'Hello', bn: 'হ্যালো' },
+  homeIntro: {
+    en: 'If a machine is broken, tell us here. A technician will be sent to fix it.',
+    bn: 'কোনো মেশিন নষ্ট হলে এখানে জানান। ঠিক করতে একজন টেকনিশিয়ান পাঠানো হবে।',
+  },
+  homeReportButton: { en: 'Report a problem', bn: 'সমস্যা জানান' },
+  homeLatestTitle: { en: 'Your latest report', bn: 'আপনার সর্বশেষ রিপোর্ট' },
+  homeNoReports: {
+    en: 'You have not reported anything yet.',
+    bn: 'আপনি এখনো কোনো রিপোর্ট করেননি।',
+  },
+  logoutButton: { en: 'Log out', bn: 'লগ আউট' },
+
+  reportTitle: { en: 'Report a problem', bn: 'সমস্যা জানান' },
+  machineLabel: { en: 'Which machine?', bn: 'কোন মেশিন?' },
+  machineHint: { en: 'Choose a machine', bn: 'একটি মেশিন বেছে নিন' },
+  machineMissing: { en: 'Choose a machine first.', bn: 'আগে একটি মেশিন বেছে নিন।' },
+  descriptionLabel: { en: 'What is wrong?', bn: 'সমস্যাটি কী?' },
+  descriptionHint: {
+    en: 'For example: the needle keeps breaking',
+    bn: 'যেমন: সুই বারবার ভেঙে যাচ্ছে',
+  },
+  descriptionMissing: {
+    en: 'Write a few words about the problem.',
+    bn: 'সমস্যাটি নিয়ে কয়েকটি কথা লিখুন।',
+  },
+  descriptionTooLong: {
+    en: 'This is too long. Please use 500 letters or fewer.',
+    bn: 'লেখাটি খুব বড়। ৫০০ অক্ষর বা তার কম লিখুন।',
+  },
+  sendButton: { en: 'Send report', bn: 'রিপোর্ট পাঠান' },
+  sending: { en: 'Sending…', bn: 'পাঠানো হচ্ছে…' },
+  sentTitle: { en: 'Report sent', bn: 'রিপোর্ট পাঠানো হয়েছে' },
+  sentBody: {
+    en: 'The manager can now see it. You can follow it in My reports.',
+    bn: 'ম্যানেজার এখন এটি দেখতে পারবেন। আমার রিপোর্ট-এ এর অবস্থা দেখুন।',
+  },
+  sentViewButton: { en: 'See my reports', bn: 'আমার রিপোর্ট দেখুন' },
+  sentAnotherButton: { en: 'Report another problem', bn: 'আরেকটি সমস্যা জানান' },
+  closeButton: { en: 'Close', bn: 'বন্ধ করুন' },
+
+  myReportsTitle: { en: 'My reports', bn: 'আমার রিপোর্ট' },
+  myReportsEmpty: { en: 'You have no reports yet.', bn: 'আপনার এখনো কোনো রিপোর্ট নেই।' },
+  detailTitle: { en: 'Report details', bn: 'রিপোর্টের বিবরণ' },
+  back: { en: 'Back', bn: 'ফিরে যান' },
+  problemLabel: { en: 'Problem', bn: 'সমস্যা' },
+  reportedAtLabel: { en: 'Reported', bn: 'জানানো হয়েছে' },
+  technicianLabel: { en: 'Technician', bn: 'টেকনিশিয়ান' },
+  noTechnicianYet: {
+    en: 'Nobody is assigned yet. Your report is waiting in the queue.',
+    bn: 'এখনো কাউকে দেওয়া হয়নি। আপনার রিপোর্ট সারিতে অপেক্ষা করছে।',
+  },
+  progressLabel: { en: 'Progress', bn: 'অগ্রগতি' },
+  loadingList: { en: 'Loading…', bn: 'লোড হচ্ছে…' },
+} satisfies Record<string, Words>;
+
 /**
  * One friendly sentence for each error code, in both languages.
  * The app never shows a raw code like WRONG_PLATFORM to a person.
