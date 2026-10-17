@@ -13,17 +13,25 @@
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Field, TextInput } from '../components/Field';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import { Logo } from '../components/Logo';
+import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
 import { useLanguage } from '../language/LanguageContext';
 import { errorSentence } from '../language/errorText';
 import { screenText } from '../language/screenText';
+
+/** The two choices in the bar at the top: which kind of person is logging in. */
+const LOGIN_TABS = [
+  { role: 'manager', href: '/login' },
+  { role: 'owner', href: '/owner-login' },
+] as const;
 
 export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
   const { logIn } = useAuth();
@@ -50,9 +58,21 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
 
   return (
     <main className="login-page">
-      <div className="login-corner">
+      <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
+        <div className="login-tabs">
+          {LOGIN_TABS.map((tab) => (
+            <Link
+              key={tab.role}
+              href={tab.href}
+              className={tab.role === role ? 'login-tab login-tab-active' : 'login-tab'}
+              aria-current={tab.role === role ? 'page' : undefined}
+            >
+              {ROLE_LABELS[tab.role][language]}
+            </Link>
+          ))}
+        </div>
         <LanguageSwitch />
-      </div>
+      </nav>
       <div className="login-box">
         <div className="login-brand">
           <Logo size={72} />

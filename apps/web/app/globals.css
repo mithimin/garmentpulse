@@ -475,20 +475,50 @@ html[lang='bn'] .table th {
   pointer-events: none;
 }
 .login-page::before {
-  inset: 12px;
+  inset: 68px 12px 12px;
   border-radius: 12px;
 }
 .login-page::after {
-  inset: 22px;
+  inset: 78px 22px 22px;
   border-radius: 8px;
 }
-.login-corner {
+.login-bar {
   position: absolute;
-  /* Sits INSIDE the inner stitch line (which is 22px from the edge), not on it. */
-  top: 38px;
-  right: 38px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bar);
   /* Above the two stitch lines. */
   z-index: 1;
+}
+.login-tabs {
+  display: flex;
+  height: 100%;
+}
+/* The two choices: Manager and Owner. The chosen one is white with a gold line. */
+.login-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  border-bottom: 3px solid transparent;
+  color: var(--bar-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+.login-tab:hover {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.08);
+}
+.login-tab-active {
+  color: var(--bar-text-chosen);
+  border-bottom-color: var(--bar-stitch);
 }
 .login-box {
   width: 100%;
@@ -514,13 +544,13 @@ html[lang='bn'] .table th {
   gap: var(--space-5);
 }
 
-/* On the login pages the language switch is a solid button in the same blue as
-   the Login button. */
-.login-corner .lang-switch {
+/* In the login bar the language switch is a solid button in the Login blue, with a
+   light edge so it still shows on the dark bar. */
+.login-bar .lang-switch {
   background: var(--main-button);
-  border-color: var(--main-button-border);
+  border-color: var(--bar-text);
   color: #ffffff;
 }
-.login-corner .lang-switch:hover {
+.login-bar .lang-switch:hover {
   background: var(--main-button-hover);
 }
