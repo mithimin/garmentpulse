@@ -69,7 +69,7 @@ export function TechniciansPanel({
   }
 
   return (
-    <Card>
+    <Card className="card-list">
       {detailed ? null : (
         <div className="card-head">
           <h2>{screenText('techniciansTitle', language)}</h2>

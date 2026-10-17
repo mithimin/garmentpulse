@@ -1124,3 +1124,11 @@ html[lang='bn'] .filter-tab {
   border: 1px solid #b9c6d8;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+
+/* The technicians card uses the same darker blue as the reports card. */
+.card-list .tech-row {
+  border-bottom-color: #6f8296;
+}
+.card-list .tech-row:last-child {
+  border-bottom: none;
+}
