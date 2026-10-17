@@ -1050,3 +1050,29 @@ html[lang='bn'] .details dt {
 .details dd {
   margin: 0;
 }
+
+/* ---------- Bangla reading size and no-wrap helpers ---------- */
+
+/* Buttons and dates stay on ONE line, even in long Bangla words. */
+.btn,
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Tiro Bangla draws small letters, so every small text gets 2px bigger in Bangla. */
+html[lang='bn'] .count-label,
+html[lang='bn'] .cell-sub,
+html[lang='bn'] .details dt {
+  font-size: 14px;
+}
+html[lang='bn'] .count-tag,
+html[lang='bn'] .status,
+html[lang='bn'] .table th,
+html[lang='bn'] .field-label,
+html[lang='bn'] .settings-title {
+  font-size: 13px;
+}
+html[lang='bn'] .btn-small,
+html[lang='bn'] .menu-link {
+  font-size: 15px;
+}

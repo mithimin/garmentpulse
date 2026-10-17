@@ -94,7 +94,7 @@ export const SCREEN_TEXT = {
   close: { en: 'Close', bn: 'বন্ধ করুন' },
   assignButton: { en: 'Assign', bn: 'নিয়োগ দিন' },
   assignTitle: { en: 'Assign a technician', bn: 'টেকনিশিয়ান নিয়োগ দিন' },
-  assignFor: { en: 'For {machine}', bn: '{machine}-এর জন্য' },
+  assignFor: { en: 'For {machine}', bn: 'মেশিন: {machine}' },
   assignBusyTag: { en: 'Busy', bn: 'ব্যস্ত' },
   assignFreeTag: { en: 'Free', bn: 'ফ্রি' },
   assignNoFree: {
@@ -104,7 +104,7 @@ export const SCREEN_TEXT = {
   assigning: { en: 'Assigning...', bn: 'নিয়োগ হচ্ছে...' },
   cancel: { en: 'Cancel', bn: 'বাতিল' },
   techReady: { en: 'Ready for a job', bn: 'কাজের জন্য প্রস্তুত' },
-  techOnJob: { en: 'On {machine}', bn: '{machine}-এ কাজ করছেন' },
+  techOnJob: { en: 'On {machine}', bn: 'কাজ করছেন: {machine}' },
   managerTagline: { en: 'Manager login', bn: 'ম্যানেজার লগ ইন' },
   ownerTagline: { en: 'Owner login', bn: 'মালিকের লগ ইন' },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },

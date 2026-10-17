@@ -77,7 +77,9 @@ export function ReportsCard({ reports, technicians, onAssigned }: ReportsCardPro
                   <td>{report.description}</td>
                   <td>
                     {report.reported_by.display_name}
-                    <div className="cell-sub">{formatDateTime(report.created_at, language)}</div>
+                    <div className="cell-sub nowrap">
+                      {formatDateTime(report.created_at, language)}
+                    </div>
                   </td>
                   <td>
                     {report.technician
