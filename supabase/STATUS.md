@@ -4,24 +4,32 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-16 by the project setup
+**Last updated:** 2026-10-18 by Sakib
 
 ## Done
 
 - Project scaffold, checks (`npm run check`) and the GitHub robot (CI).
 - `docs/api-contract.md` draft v1 (still to be reviewed by all three; see its section 8).
 - `packages/shared` has: data shapes, error codes, a **draft** English/Bangla word list (`labels.ts`), helper rules (`helpers.ts`), and fake data (`fixtures.ts`).
+- **The real backend is built and tested** in a Supabase cloud project (written as migration files in `supabase/migrations/`):
+  - Tables: `profiles`, `machines`, `reports`. All locked by default (Row Level Security).
+  - Security rules: who may see which report; live updates (Realtime) switched on for `reports`.
+  - **All 12 functions from `docs/api-contract.md`** with the exact names, inputs and error codes: `get_my_profile`, `list_machines`, `create_report`, `list_my_reports`, `list_reports`, `get_report`, `list_technicians`, `assign_technician`, `list_my_jobs`, `accept_job`, `update_job_status`, `get_owner_summary`.
+  - Test data in `supabase/seed.sql`: 5 people, 5 machines, 4 reports.
+  - A rules check in `supabase/tests/api_rules_check.sql` (run by hand in the SQL Editor). Last run: **all 46 checks passed**.
+- **Ready-made wrappers** in `packages/shared/src/api.ts`: `createApi(supabase)` gives typed methods for all 12 functions (for example `api.listMyReports()`). Failures become an `ApiError` with a known `code`. Both apps should use these instead of typing `supabase.rpc('...')` by hand.
 
 ## In progress
 
-- Nothing yet.
+- Nothing right now.
 
-## Next (in build order from `docs/mvp.md` section 4)
+## Next
 
-1. Review the API contract with Rubaiya and Mithi and answer its open questions (how accounts and roles are created, where machines come from, reassigning).
-2. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
-3. Create the Supabase project and give Rubaiya and Mithi the two public values for their `.env` files.
-4. Round 1: login and roles, role checks on the server, tables for machines and reports, test data.
+1. Give Rubaiya and Mithi the two public values (project URL and anon key) and the test accounts, through a private message (never in git). This starts shared step ★4.
+2. Answer Rubaiya's note in `requests/sakib/` (it asks for the real backend and wrapper functions).
+3. Postman collection, so the apps can be checked against the real backend.
+4. Check live updates (the 5-second rule) with two screens open.
+5. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
 
 ## Waiting on someone else
 
@@ -29,8 +37,17 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## Decisions made in this lane
 
-- None final yet. The proposed ones are listed in `docs/api-contract.md` section 8.
+- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen.
+- Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
+- The owner uses the **Web** app (as in the contract).
+- A manager cannot reassign a report in the MVP.
+- `reports` holds the technician and `accepted_at` directly. There is no separate assignments table.
+- A technician can have only one unfinished job at a time. This is a database rule, so no app can break it.
+- `update_job_status` allows any forward move (`waiting` to `in_progress` to `resolved`, and also straight to `resolved` once accepted). Backwards and repeats are rejected.
 
 ## Good to know for the other lanes
 
-- Fake data for screens lives in `packages/shared/src/fixtures.ts`. Use it instead of inventing your own.
+- Fake data for screens lives in `packages/shared/src/fixtures.ts`. Use it until you switch to the real backend.
+- Call the real backend with `createApi(supabase)` from `@garmentpulse/shared` (see `packages/shared/src/api.ts`). Under the hood it uses `supabase.rpc(...)`. Every error becomes an `ApiError` whose `code` is a capital-letter code from the contract.
+- The 5 test people use `@example.com` emails (`nila`, `tariq`, `hasan`, `farhan`, `owner`). Their passwords are shared privately, not in git.
+- Local running with Docker is not set up yet. The backend currently lives in the cloud project only.
