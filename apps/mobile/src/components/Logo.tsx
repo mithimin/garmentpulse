@@ -1,16 +1,16 @@
 // apps/mobile/src/components/Logo.tsx
 //
 // The GarmentPulse logo, drawn as a small picture (SVG) so it stays sharp at any
-// size. The idea: a line of stitches that turns into a heartbeat ("pulse") and
-// ends in the eye of a sewing needle. Sewing + pulse = GarmentPulse.
+// size. It is a T-shirt (the garment) with a heartbeat ("pulse") line across the
+// chest, sewn with a dashed hem stitch.
 //   - gold square: the same gold as the design system's logo tile
 //   - dashed frame: the "stitch line" that gives the app its cloth look
-//   - dashed start of the line: the thread being sewn
-//   - the zig-zag: the heartbeat
-//   - the ring at the end: the eye of the needle
+//   - dark blue T-shirt: the garment
+//   - gold zig-zag on the chest: the pulse
+//   - gold dashes along the bottom: the hem stitching
 // Owned by Rubaiya.
 
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { G, Path, Rect } from 'react-native-svg';
 
 const GOLD = '#DCC593';
 const NAVY = '#1F2B47';
@@ -32,25 +32,33 @@ export function Logo({ size = 72 }: { size?: number }) {
         strokeDasharray="3 3"
         opacity="0.55"
       />
-      {/* Thread being sewn (dashed) */}
-      <Path
-        d="M9 36 H21"
-        stroke={NAVY}
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeDasharray="4 4"
-      />
-      {/* Heartbeat */}
-      <Path
-        d="M21 36 L26 36 L31 20 L37 48 L42 36 L47 36"
-        fill="none"
-        stroke={NAVY}
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Eye of the needle */}
-      <Circle cx="53" cy="36" r="4.5" fill="none" stroke={NAVY} strokeWidth="3" />
+      {/* T-shirt, drawn on a 64 grid and shrunk a little to sit inside the frame */}
+      <G transform="translate(8 8) scale(0.75)">
+        <Path
+          d="M22 12 L12 17 L5 29 L14 34 L18 29 L18 52 L46 52 L46 29 L50 34 L59 29 L52 17 L42 12 Q32 20 22 12 Z"
+          fill={NAVY}
+          stroke={NAVY}
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        {/* Hem stitching */}
+        <Path
+          d="M21 47 H43"
+          stroke={GOLD}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeDasharray="3 3"
+        />
+        {/* Heartbeat on the chest */}
+        <Path
+          d="M21 35 L27 35 L30 27 L34 42 L37 35 L43 35"
+          fill="none"
+          stroke={GOLD}
+          strokeWidth="2.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </G>
     </Svg>
   );
 }
