@@ -980,3 +980,44 @@ html {
   justify-content: flex-end;
   margin-top: var(--space-5);
 }
+
+/* ---------- Technicians panel: avatars and rows (design system 9.8) ---------- */
+
+.tech-list {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+}
+.tech-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed var(--input-border);
+}
+.tech-row:last-child {
+  border-bottom: none;
+}
+/* The round circle with a person's initials. */
+.avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dce3ec;
+  color: var(--link);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--card-border);
+  font-size: 13px;
+  font-weight: 700;
+}
+.tech-text {
+  flex: 1;
+  min-width: 0;
+}
+.tech-name {
+  font-weight: 600;
+}

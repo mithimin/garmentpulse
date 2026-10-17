@@ -105,6 +105,8 @@ export const SCREEN_TEXT = {
     en: 'Every report has a technician.',
     bn: 'প্রতিটি রিপোর্টে একজন টেকনিশিয়ান আছেন।',
   },
+  techReady: { en: 'Ready for a job', bn: 'কাজের জন্য প্রস্তুত' },
+  techOnJob: { en: 'On {machine}', bn: '{machine}-এ কাজ করছেন' },
   managerTagline: { en: 'Manager login', bn: 'ম্যানেজার লগ ইন' },
   ownerTagline: { en: 'Owner login', bn: 'মালিকের লগ ইন' },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },

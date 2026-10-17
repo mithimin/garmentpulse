@@ -26,7 +26,7 @@ import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
 import { NeedsAttention } from '../../components/NeedsAttention';
 import { ReportsTable } from '../../components/ReportsTable';
-import { AvailabilityLabel } from '../../components/StatusLabel';
+import { TechniciansPanel } from '../../components/TechniciansPanel';
 import { TopBar } from '../../components/TopBar';
 import type { MenuItem } from '../../components/TopBar';
 import { useReports, useTechnicians } from '../../data/useDashboardData';
@@ -184,24 +184,14 @@ function ManagerContent() {
             {(rows) => (
               <DataGate state={technicians}>
                 {(people) => (
-                  <NeedsAttention reports={rows} technicians={people} onAssigned={reloadAll} />
+                  <>
+                    <NeedsAttention reports={rows} technicians={people} onAssigned={reloadAll} />
+                    <TechniciansPanel technicians={people} reports={rows} />
+                  </>
                 )}
               </DataGate>
             )}
           </DataGate>
-
-          <Card id="technicians">
-            <h2>{screenText('techniciansTitle', language)}</h2>
-            <DataGate state={technicians}>
-              {(rows) =>
-                rows.map((tech) => (
-                  <p key={tech.id}>
-                    {tech.display_name} <AvailabilityLabel availability={tech.availability} />
-                  </p>
-                ))
-              }
-            </DataGate>
-          </Card>
         </div>
 
         <Card id="reports">
