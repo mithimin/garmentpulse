@@ -8,6 +8,7 @@
 
 import type { ReactNode } from 'react';
 import { Cormorant_Garamond, IBM_Plex_Mono, Jost } from 'next/font/google';
+import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
 
@@ -38,7 +39,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable} ${plexMono.variable}`}>
       <body>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

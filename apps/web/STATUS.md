@@ -10,19 +10,19 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 - The Next.js project exists and shows a "hello" page connected to `@garmentpulse/shared`.
 - Building blocks (branch `features/web-screens`, pushed, waiting for review): fonts, one blue theme (`app/globals.css`), the web logo, top bar with Log out, language switch (English / Bangla, Bangla digits), card, buttons, status and free/busy labels, inputs, count box, table, loading / empty / error messages, and a "page not found" page.
+- Login (fake, branch `features/web-screens`): `/login` page, fake login in `auth/fakeAuth.ts` (any password works; manager and owner emails log in; a worker or technician email shows the `WRONG_PLATFORM` sentence), a session memory in `auth/AuthContext.tsx`, and a role door in `auth/RoleGate.tsx` that sends logged-out people to `/login` and shows "You cannot open this page" for the wrong role. `/manager` and `/owner` are placeholders for now.
+- Friendly sentences for every error code, in both languages (`language/errorText.ts`).
 - `/preview` is a temporary page that shows all the blocks. It will be deleted before the final pull request.
 
 ## In progress
 
-- Building blocks are finished. Next up: lists 3 to 7 of the Puja holiday plan (friendly error sentences, login, manager screens, owner screen, final checks).
+- Login is finished. Next up: the manager screens, then the owner screen, then the final checks.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. Login page (fake login first).
-2. Manager: live list of all reports (use `FAKE_REPORTS` from `@garmentpulse/shared`).
-3. Manager: technician free/busy list, assign button, queue view (use `FAKE_TECHNICIANS`, `isInQueue`).
-4. Owner: one read-only screen with three count boxes (use `summarizeReports`).
-5. Friendly sentences for every error code, in both languages.
+1. Manager: live list of all reports (use `FAKE_REPORTS` from `@garmentpulse/shared`).
+2. Manager: technician free/busy list, assign button, queue view (use `FAKE_TECHNICIANS`, `isInQueue`).
+3. Owner: one read-only screen with three count boxes (use `summarizeReports`).
 
 ## Waiting on someone else
 

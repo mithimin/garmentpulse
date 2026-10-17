@@ -25,6 +25,17 @@ export const SCREEN_TEXT = {
     bn: 'এই পেজটি খুঁজে পাওয়া যায়নি। ঠিকানাটি ভুল হতে পারে।',
   },
   goToStart: { en: 'Go to the start', bn: 'শুরুতে ফিরে যান' },
+  loginTagline: { en: 'For managers and the owner', bn: 'ম্যানেজার ও মালিকের জন্য' },
+  emailLabel: { en: 'Email', bn: 'ইমেইল' },
+  emailHint: { en: 'name@example.com', bn: 'name@example.com' },
+  passwordLabel: { en: 'Password', bn: 'পাসওয়ার্ড' },
+  passwordHint: { en: 'Type your password', bn: 'আপনার পাসওয়ার্ড লিখুন' },
+  loginButton: { en: 'Log in', bn: 'লগ ইন' },
+  hello: { en: 'Hello', bn: 'হ্যালো' },
+  comingSoon: {
+    en: 'Your screen is being built. It will appear here soon.',
+    bn: 'আপনার স্ক্রিন তৈরি হচ্ছে। শিগগিরই এখানে দেখা যাবে।',
+  },
   notAllowedTitle: { en: 'You cannot open this page', bn: 'আপনি এই পেজ খুলতে পারবেন না' },
   notAllowedText: {
     en: 'Your account is not allowed to see this page.',

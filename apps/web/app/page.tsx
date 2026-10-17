@@ -1,26 +1,29 @@
+'use client';
+
 // apps/web/app/page.tsx
 //
-// The home page of GarmentPulse Web (managers and the owner).
-// For now it is only a "hello" page. It also reads one value from the shared
-// toolbox (@garmentpulse/shared) to prove the two projects are connected.
-// Real pages come later. Owned by Mithi.
+// The front door of GarmentPulse Web. It shows nothing itself: it sends a
+// logged-in person to their start page (manager or owner) and everyone else to
+// the login page. Owned by Mithi.
 
-import { ERROR_CODES } from '@garmentpulse/shared';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../auth/AuthContext';
+import { homePathFor } from '../auth/homePath';
+import { LoadingMessage } from '../components/StateMessage';
 
 export default function HomePage() {
+  const { profile, ready } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!ready) return;
+    router.replace(profile ? homePathFor(profile.role) : '/login');
+  }, [ready, profile, router]);
+
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <h1 style={{ marginBottom: 8 }}>GarmentPulse</h1>
-      <p>For managers and the owner</p>
-      <p style={{ color: '#666' }}>Shared toolbox connected: {ERROR_CODES.length} error codes</p>
+    <main className="page">
+      <LoadingMessage />
     </main>
   );
 }
