@@ -438,39 +438,34 @@ html[lang='bn'] .table th {
   justify-content: center;
   padding: var(--space-6);
   position: relative;
-  /* Denim cloth: a deep blue with a fine diagonal twill weave and a soft glow. */
-  background-color: #6d93c2;
+  /* The SAME blue as the main button, but very faint: it was white before, and
+     now it is a soft blue wash with a barely-there denim weave on top. */
+  background-color: color-mix(in srgb, var(--main-button) 16%, #f7f9fb);
   background-image:
-    radial-gradient(ellipse at 50% 35%, rgba(200, 222, 245, 0.55), transparent 70%),
+    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.55), transparent 70%),
     repeating-linear-gradient(
       45deg,
-      rgba(255, 255, 255, 0.22) 0,
-      rgba(255, 255, 255, 0.22) 1px,
+      color-mix(in srgb, var(--main-button) 7%, transparent) 0,
+      color-mix(in srgb, var(--main-button) 7%, transparent) 1px,
       transparent 1px,
       transparent 4px
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(30, 55, 100, 0.22) 0,
-      rgba(30, 55, 100, 0.22) 1px,
+      color-mix(in srgb, var(--main-button) 5%, transparent) 0,
+      color-mix(in srgb, var(--main-button) 5%, transparent) 1px,
       transparent 1px,
       transparent 4px
     );
 }
-/* A gold stitch line sewn just inside the edge of the denim. */
+/* A faint stitch line sewn just inside the edge, in the same blue. */
 .login-page::before {
   content: '';
   position: absolute;
   inset: 14px;
-  border: 2px dashed #a97a25;
+  border: 2px dashed color-mix(in srgb, var(--main-button) 30%, transparent);
   border-radius: 10px;
   pointer-events: none;
-}
-.-brand h1 {
-  color: #14233f;
-}
-.login-brand p {
-  color: #1f3252;
 }
 .login-corner {
   position: absolute;
@@ -500,13 +495,13 @@ html[lang='bn'] .table th {
   flex-direction: column;
   gap: var(--space-5);
 }
+
 /* The language switch is white by default (made for the dark top bar), so on the
-   light denim it gets a dark colour and a pale pill behind it. */
+   light login background it gets the theme blue as its colour. */
 .login-corner .lang-switch {
-  color: #14233f;
-  background: rgba(255, 255, 255, 0.6);
-  border-color: #8a6a2c;
+  color: var(--main-button);
+  border-color: var(--main-button);
 }
 .login-corner .lang-switch:hover {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(46, 70, 112, 0.1);
 }
