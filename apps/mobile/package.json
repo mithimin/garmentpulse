@@ -14,6 +14,7 @@
     "@garmentpulse/shared": "*",
     "expo": "~57.0.30",
     "expo-status-bar": "~57.0.1",
+    "lucide-react-native": "^1.59.0",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-svg": "15.15.4"
