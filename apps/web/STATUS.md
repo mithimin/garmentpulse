@@ -12,6 +12,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 - Building blocks (branch `features/web-screens`, pushed, waiting for review): fonts, one blue theme (`app/globals.css`), the web logo, top bar with Log out, language switch (English / Bangla, Bangla digits), card, buttons, status and free/busy labels, inputs, count box, table, loading / empty / error messages, and a "page not found" page.
 - Login (fake, branch `features/web-screens`): `/login` page, fake login in `auth/fakeAuth.ts` (any password works; manager and owner emails log in; a worker or technician email shows the `WRONG_PLATFORM` sentence), a session memory in `auth/AuthContext.tsx`, and a role door in `auth/RoleGate.tsx` that sends logged-out people to `/login` and shows "You cannot open this page" for the wrong role. `/manager` and `/owner` are placeholders for now.
 - Friendly sentences for every error code, in both languages (`language/errorText.ts`).
+- Manager start page (`/manager`, fake data): three count boxes, a table of all reports (`components/ReportsTable.tsx`, shows "In the queue" when nobody is assigned) and the technician free/busy list. No Assign button or live updates yet.
 - `/preview` is a temporary page that shows all the blocks. It will be deleted before the final pull request.
 
 ## In progress
