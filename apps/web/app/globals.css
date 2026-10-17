@@ -438,6 +438,39 @@ html[lang='bn'] .table th {
   justify-content: center;
   padding: var(--space-6);
   position: relative;
+  /* Denim cloth: a deep blue with a fine diagonal twill weave and a soft glow. */
+  background-color: #2b4468;
+  background-image:
+    radial-gradient(ellipse at 50% 35%, rgba(120, 160, 210, 0.28), transparent 65%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.045) 0,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.1) 0,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+/* A gold stitch line sewn just inside the edge of the denim. */
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  border: 2px dashed rgba(214, 172, 104, 0.7);
+  border-radius: 10px;
+  pointer-events: none;
+}
+.login-brand h1 {
+  color: #ffffff;
+}
+.login-brand p {
+  color: #d3d9e8;
 }
 .login-corner {
   position: absolute;
