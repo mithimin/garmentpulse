@@ -7,7 +7,7 @@
 // (design system section 10.1).
 //
 // What happens when the person presses "Log in":
-//   1. We call the (fake) login and show "Loading…" while we wait.
+//   1. We call the login and show "Loading…" while we wait.
 //   2. If it works, we hand the person's profile to the app (`onLoggedIn`).
 //   3. If it fails, we show a friendly sentence under the boxes. The sentence
 //      comes from the error code, in the language currently chosen.
@@ -26,7 +26,7 @@ import {
 } from 'react-native';
 import { ROLE_LABELS, getErrorCode } from '@garmentpulse/shared';
 import type { Profile, Role } from '@garmentpulse/shared';
-import { fakeLogin } from '../auth/fakeAuth';
+import { login } from '../auth/realAuth';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import { Logo } from '../components/Logo';
 import { useLanguage } from '../language/LanguageContext';
@@ -61,7 +61,7 @@ export function LoginScreen({ onLoggedIn }: Props) {
     setRoleMismatch(false);
     setLoading(true);
     try {
-      const profile = await fakeLogin(email, password);
+      const profile = await login(email, password);
       if (profile.role !== chosenRole) {
         // The account exists but is the other role. Do not log in; ask them to choose again.
         setRoleMismatch(true);
