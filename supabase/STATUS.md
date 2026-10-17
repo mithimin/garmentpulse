@@ -4,12 +4,12 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-18 by Sakib
+**Last updated:** 2026-10-18 by Sakib (contract confirmed)
 
 ## Done
 
 - Project scaffold, checks (`npm run check`) and the GitHub robot (CI).
-- `docs/api-contract.md` draft v1 (still to be reviewed by all three; see its section 8).
+- `docs/api-contract.md` v1 is confirmed by Sakib and built (Rubaiya and Mithi still review it; see its section 8).
 - `packages/shared` has: data shapes, error codes, a **draft** English/Bangla word list (`labels.ts`), helper rules (`helpers.ts`), and fake data (`fixtures.ts`).
 - **The real backend is built and tested** in a Supabase cloud project (written as migration files in `supabase/migrations/`):
   - Tables: `profiles`, `machines`, `reports`. All locked by default (Row Level Security).
@@ -25,19 +25,20 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## Next
 
-1. Give Rubaiya and Mithi the two public values (project URL and anon key) and the test accounts, through a private message (never in git). This starts shared step ★4.
-2. Answer Rubaiya's note in `requests/sakib/` (it asks for the real backend and wrapper functions).
+1. Wait for Rubaiya and Mithi to confirm a real test login works (the URL, key and passwords were sent privately). This starts shared step ★4.
+2. Check live updates (the 5-second rule) with two screens open.
 3. Postman collection, so the apps can be checked against the real backend.
-4. Check live updates (the 5-second rule) with two screens open.
-5. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
+4. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
+5. Later: sign-up with one-time manager codes (Mithi's idea, see `requests/sakib/2026-10-18-signup-and-manager-code.md`).
 
 ## Waiting on someone else
 
+- Rubaiya and Mithi: switch their apps to the real backend and confirm a login works.
 - The team's review of the API contract and the Bangla words.
 
 ## Decisions made in this lane
 
-- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen.
+- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up with one-time manager codes is **later** (decided 2026-10-18), so the owner stays read-only.
 - Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
 - The owner uses the **Web** app (as in the contract).
 - A manager cannot reassign a report in the MVP.
