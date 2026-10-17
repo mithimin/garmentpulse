@@ -12,7 +12,7 @@ type Words = Record<Language, string>;
 
 export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   NOT_AUTHENTICATED: {
-    en: 'We could not log you in. Check your email and password.',
+    en: 'We could not sign you in. Check your email and password.',
     bn: 'আপনাকে লগ ইন করা গেল না। ইমেইল ও পাসওয়ার্ড দেখে নিন।',
   },
   WRONG_PLATFORM: {

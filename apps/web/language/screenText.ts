@@ -31,7 +31,7 @@ export const SCREEN_TEXT = {
   emailHint: { en: 'name@example.com', bn: 'name@example.com' },
   passwordLabel: { en: 'Password', bn: 'পাসওয়ার্ড' },
   passwordHint: { en: 'Type your password', bn: 'আপনার পাসওয়ার্ড লিখুন' },
-  loginButton: { en: 'Log in', bn: 'লগ ইন' },
+  loginButton: { en: 'Login', bn: 'লগ ইন' },
   reportsTitle: { en: 'All reports', bn: 'সব রিপোর্ট' },
   techniciansTitle: { en: 'Technicians', bn: 'টেকনিশিয়ান' },
   colMachine: { en: 'Machine', bn: 'মেশিন' },
