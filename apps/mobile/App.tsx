@@ -1,32 +1,32 @@
 // apps/mobile/App.tsx
 //
-// The main screen of GarmentPulse Mobile (workers and technicians).
-// For now it is only a "hello" screen. It also reads one value from the shared
-// toolbox (@garmentpulse/shared) to prove the two projects are connected.
-// Real screens come later. Owned by Rubaiya.
+// The main component of GarmentPulse Mobile (workers and technicians).
+// It decides which screen to show:
+//   - nobody logged in  -> the login screen
+//   - somebody logged in -> a temporary home screen (real worker and technician
+//     screens come in the next steps)
+// It also wraps everything in the language holder, so every screen can read and
+// change the chosen language (English or Bangla).
+// Owned by Rubaiya.
 
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { ERROR_CODES } from '@garmentpulse/shared';
+import type { Profile } from '@garmentpulse/shared';
+import { LanguageProvider } from './src/language/LanguageContext';
+import { HomePlaceholderScreen } from './src/screens/HomePlaceholderScreen';
+import { LoginScreen } from './src/screens/LoginScreen';
 
 export default function App() {
+  const [profile, setProfile] = useState<Profile | null>(null);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>GarmentPulse</Text>
-      <Text>For workers and technicians</Text>
-      <Text style={styles.small}>Shared toolbox connected: {ERROR_CODES.length} error codes</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LanguageProvider>
+      {profile ? (
+        <HomePlaceholderScreen profile={profile} onLogout={() => setProfile(null)} />
+      ) : (
+        <LoginScreen onLoggedIn={setProfile} />
+      )}
+      <StatusBar style="light" />
+    </LanguageProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: { fontSize: 24, fontWeight: '600', marginBottom: 8 },
-  small: { marginTop: 16, color: '#666' },
-});
