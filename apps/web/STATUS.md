@@ -23,9 +23,9 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. Manager: live list of all reports (use `FAKE_REPORTS` from `@garmentpulse/shared`).
-2. Manager: technician free/busy list, assign button, queue view (use `FAKE_TECHNICIANS`, `isInQueue`).
-3. Owner: one read-only screen with three count boxes (use `summarizeReports`).
+1. Get the two public values from Sakib, put them in `apps/web/.env.local`, and test the real login and the live list (5-second rule).
+2. Manager: assign button (`assignTechnician`) and queue view (`isInQueue`).
+3. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
 
