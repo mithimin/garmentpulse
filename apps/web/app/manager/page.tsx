@@ -9,6 +9,9 @@
 //     are waiting for a technician (the queue),
 //   - three count boxes, the list of all reports, and the technicians with
 //     free / busy.
+// The four count boxes at the top are New reports, In progress, Resolved today and
+// Free technicians, each with a small tag (see data/stats.ts for how they are
+// worked out).
 // The data comes from the real backend when it is connected (lib/backend.ts), and
 // from the fake data otherwise. It updates live. The "Assign" button comes in a
 // later step. Owned by Mithi.
@@ -26,6 +29,13 @@ import { AvailabilityLabel } from '../../components/StatusLabel';
 import { TopBar } from '../../components/TopBar';
 import type { MenuItem } from '../../components/TopBar';
 import { useReports, useTechnicians } from '../../data/useDashboardData';
+import {
+  averageFixMs,
+  countFree,
+  formatDuration,
+  resolvedToday,
+  startedInLastHour,
+} from '../../data/stats';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
@@ -67,6 +77,17 @@ function ManagerContent() {
 
   const now = new Date();
   const firstName = profile?.display_name.split(' ')[0] ?? '';
+  const technicianList = technicians.data ?? [];
+  const resolvedList = resolvedToday(list, now);
+  const averageFix = averageFixMs(resolvedList);
+  const freeCount = countFree(technicianList);
+
+  /** Puts numbers into a sentence like "{n} waiting", in the right digits. */
+  const fill = (text: string, values: Record<string, string | number>) =>
+    Object.entries(values).reduce(
+      (result, [key, value]) => result.replace(`{${key}}`, localizeDigits(String(value), language)),
+      text,
+    );
   const queueText =
     queueCount === 0
       ? screenText('queueNone', language)
@@ -110,10 +131,46 @@ function ManagerContent() {
           </p>
         </div>
 
-        <div className="grid-cards">
-          <CountBox label={STATUS_LABELS.waiting[language]} count={summary.waiting} />
-          <CountBox label={STATUS_LABELS.in_progress[language]} count={summary.in_progress} />
-          <CountBox label={STATUS_LABELS.resolved[language]} count={summary.resolved} />
+        <div className="count-grid">
+          <CountBox
+            label={screenText('labelNewReports', language)}
+            count={summary.waiting}
+            tag={
+              queueCount === 0
+                ? screenText('tagNobodyWaiting', language)
+                : fill(screenText('tagNeedTechnician', language), { n: queueCount })
+            }
+          />
+          <CountBox
+            label={STATUS_LABELS.in_progress[language]}
+            count={summary.in_progress}
+            tone="green"
+            tag={fill(screenText('tagStartedHour', language), {
+              n: startedInLastHour(list, now),
+            })}
+          />
+          <CountBox
+            label={screenText('labelResolvedToday', language)}
+            count={resolvedList.length}
+            tone="blue"
+            tag={
+              averageFix === null
+                ? screenText('tagNoFixes', language)
+                : screenText('tagAverageFix', language).replace(
+                    '{t}',
+                    formatDuration(averageFix, language),
+                  )
+            }
+          />
+          <CountBox
+            label={screenText('labelFreeTechnicians', language)}
+            count={freeCount}
+            tone="green"
+            tag={fill(screenText('tagBusyOf', language), {
+              busy: technicianList.length - freeCount,
+              total: technicianList.length,
+            })}
+          />
         </div>
 
         <Card id="reports">

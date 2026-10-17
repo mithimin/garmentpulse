@@ -442,20 +442,106 @@ html[lang='bn'] .status {
 /* ---------- Summary count boxes (design system 3.2, "number box") ---------- */
 
 .count-box {
-  background: var(--number-box);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  background-color: var(--number-box);
+  /* Quilted: two sets of crossing lines make a diamond grid, like padded cloth. */
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.07) 0,
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.1) 0,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 14px
+    );
   border: 1px solid var(--number-box-border);
   border-radius: 10px;
-  padding: var(--space-5);
+  padding: var(--space-5) var(--space-6);
   color: #ffffff;
+  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
+}
+/* The stitch line, 7px inside the edge (design system 8). */
+.count-box::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  pointer-events: none;
 }
 .count-number {
   font-size: 38px;
   font-weight: 700;
   line-height: 1.1;
 }
+/* The small spaced-out capital label at the top of the box. */
 .count-label {
   font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* Bangla has no capital letters, and spaced-out letters break apart. */
+html[lang='bn'] .count-label {
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* The small tag under the number (same woven-label look as the status labels). */
+.count-tag,
+.count-tag-space {
+  min-height: 26px;
+}
+.count-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.count-tag::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed currentColor;
+  opacity: 0.4;
+  border-radius: 2px;
+}
+html[lang='bn'] .count-tag {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.count-tag-plain {
+  background: #eef2f6;
+  color: #26324f;
+}
+.count-tag-green {
+  background: #cfeede;
+  color: #1c5a3d;
+}
+.count-tag-blue {
+  background: #c7e2f2;
+  color: #1d4b6d;
+}
+
+/* The row of count boxes: four across when there is room, fewer when narrow. */
+.count-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--space-6);
 }
 
 /* ---------- Tables (design system 9.7) ---------- */

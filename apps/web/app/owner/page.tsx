@@ -48,7 +48,7 @@ function OwnerContent() {
       <main className="page">
         <DataGate state={summary}>
           {(counts) => (
-            <div className="grid-cards">
+            <div className="count-grid">
               <CountBox label={STATUS_LABELS.waiting[language]} count={counts.waiting} />
               <CountBox label={STATUS_LABELS.in_progress[language]} count={counts.in_progress} />
               <CountBox label={STATUS_LABELS.resolved[language]} count={counts.resolved} />
