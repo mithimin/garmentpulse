@@ -24,7 +24,7 @@
   --number-box-border: #4c5e71;
   --text: #1e2430;
   --heading: #1a202b;
-  --soft-text: #55606f;
+  --soft-text: #3f4a59;
   --main-button: #2e4670;
   --main-button-border: #1c2d4c;
   --main-button-hover: #36527f;
@@ -69,8 +69,7 @@
      it for any Bangla letter. */
   --font-title:
     var(--font-cormorant), 'Cormorant Garamond', var(--font-tiro-bangla), Georgia, serif;
-  --font-body:
-    var(--font-plex-sans), 'IBM Plex Sans', var(--font-tiro-bangla), system-ui, sans-serif;
+  --font-body: var(--font-jost), Jost, var(--font-tiro-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -80,10 +79,26 @@
 
 body {
   margin: 0;
-  background: var(--page);
+  /* The page is pale cloth: the page colour with a very fine crosshatch weave. */
+  background-color: var(--page);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(30, 50, 80, 0.035) 0,
+      rgba(30, 50, 80, 0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(30, 50, 80, 0.035) 0,
+      rgba(30, 50, 80, 0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -121,7 +136,7 @@ h2 {
   line-height: 1.2;
 }
 h3 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
@@ -135,6 +150,8 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  /* Lets the grids inside ask how wide the page is (the sidebar takes some room). */
+  container: page / inline-size;
 }
 .page-header {
   display: flex;
@@ -153,14 +170,31 @@ h3 {
 
 .topbar {
   position: relative;
-  background: var(--bar);
+  min-height: 76px;
   color: var(--bar-text);
   padding: var(--space-3) var(--space-7);
-  display: flex;
+  /* Three zones: sidebar button on the left, nameplate in the middle, actions on the right. */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
   gap: var(--space-3);
+  /* Dark denim: the bar colour with a fine diagonal twill weave. */
+  background-color: var(--bar);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.22) 0,
+      rgba(0, 0, 0, 0.22) 1px,
+      transparent 1px,
+      transparent 3px
+    );
 }
 /* The stitch line along the bottom edge. */
 .topbar::after {
@@ -168,8 +202,45 @@ h3 {
   position: absolute;
   left: 12px;
   right: 12px;
-  bottom: 4px;
+  bottom: 6px;
   border-bottom: 1.5px dashed var(--bar-stitch);
+}
+.menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  color: var(--bar-text);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.menu-link:hover {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.07);
+}
+/* The page the person is on: white, with a soft white background and a dashed outline. */
+.menu-link-active {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+/* The small number next to a menu word (design system 3.2, count bubble). */
+.count-bubble {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #a8622b;
+  color: #fff7ec;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .topbar-brand {
   display: flex;
@@ -178,11 +249,11 @@ h3 {
 }
 .topbar-name {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--bar-text-chosen);
 }
 .topbar-role {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--bar-text);
 }
 .topbar-right {
@@ -203,7 +274,7 @@ h3 {
   background: transparent;
   color: var(--bar-text-chosen);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.14em;
   cursor: pointer;
@@ -211,7 +282,7 @@ h3 {
 /* Bangla letters join up, so they get no extra spacing. */
 html[lang='bn'] .lang-switch {
   letter-spacing: 0;
-  font-size: 14px;
+  font-size: 15px;
 }
 .lang-switch:hover {
   background: rgba(255, 255, 255, 0.12);
@@ -251,7 +322,7 @@ html[lang='bn'] .lang-switch {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -301,7 +372,7 @@ html[lang='bn'] .lang-switch {
   white-space: nowrap;
   padding: 5px 11px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -342,7 +413,7 @@ html[lang='bn'] .status {
   gap: var(--space-1);
 }
 .field-label {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
 }
 .input {
@@ -353,34 +424,131 @@ html[lang='bn'] .status {
   background: var(--input-bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .input::placeholder {
   color: var(--input-hint);
 }
 .field-error {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--error-text);
 }
 
 /* ---------- Summary count boxes (design system 3.2, "number box") ---------- */
 
 .count-box {
-  background: var(--number-box);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  background-color: var(--number-box);
+  /* Quilted: two sets of crossing lines make a diamond grid, like padded cloth. */
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.07) 0,
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.1) 0,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 14px
+    );
   border: 1px solid var(--number-box-border);
   border-radius: 10px;
-  padding: var(--space-5);
+  padding: var(--space-5) var(--space-6);
   color: #ffffff;
+  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
+}
+/* The stitch line, 7px inside the edge (design system 8). */
+.count-box::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  pointer-events: none;
 }
 .count-number {
-  font-size: 38px;
+  font-size: 44px;
   font-weight: 700;
   line-height: 1.1;
 }
+/* The small spaced-out capital label at the top of the box. */
 .count-label {
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* Bangla has no capital letters, and spaced-out letters break apart. */
+html[lang='bn'] .count-label {
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* The small tag under the number (same woven-label look as the status labels). */
+.count-tag,
+.count-tag-space {
+  min-height: 26px;
+}
+.count-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 13px;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.count-tag::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed currentColor;
+  opacity: 0.4;
+  border-radius: 2px;
+}
+html[lang='bn'] .count-tag {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.count-tag-plain {
+  background: #eef2f6;
+  color: #26324f;
+}
+.count-tag-green {
+  background: #cfeede;
+  color: #1c5a3d;
+}
+.count-tag-blue {
+  background: #c7e2f2;
+  color: #1d4b6d;
+}
+
+/* The row of count boxes: four across when there is room, fewer when narrow. */
+.count-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+/* The page width left beside the sidebar decides: 4 across, then 2 by 2, then 1. */
+@container page (max-width: 760px) {
+  .count-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container page (max-width: 460px) {
+  .count-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* ---------- Tables (design system 9.7) ---------- */
@@ -396,8 +564,8 @@ html[lang='bn'] .status {
 .table th {
   background: var(--table-head);
   color: var(--table-head-text);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-align: left;
   padding: 13px 16px;
   letter-spacing: 0.07em;
@@ -422,7 +590,7 @@ html[lang='bn'] .table th {
 }
 .code {
   font-family: var(--font-code);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -539,7 +707,7 @@ html[lang='bn'] .table th {
   background: #1f2b47;
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -558,7 +726,7 @@ html[lang='bn'] .table th {
   box-shadow: 0 10px 24px -12px rgba(20, 35, 63, 0.55);
 }
 .settings-title {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--soft-text);
   margin-bottom: var(--space-2);
@@ -575,7 +743,7 @@ html[lang='bn'] .table th {
   background: var(--second-button);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
 }
 .settings-choice-active {
@@ -642,7 +810,7 @@ html[lang='bn'] .table th {
 .login-help {
   text-align: center;
   color: var(--soft-text);
-  font-size: 14px;
+  font-size: 15px;
 }
 .login-help p {
   margin: 0 0 var(--space-2);
@@ -672,4 +840,519 @@ html[lang='bn'] .table th {
   border-radius: 4px;
   font-size: 20px;
   letter-spacing: 0.12em;
+}
+
+/* ---------- Manager page greeting ---------- */
+
+.greeting h1 {
+  font-size: 42px;
+}
+.greeting-line {
+  margin: var(--space-2) 0 0;
+  color: var(--soft-text);
+  font-size: 17px;
+}
+/* A menu link that scrolls to a card should not hide the card under the top bar. */
+#reports,
+#technicians {
+  scroll-margin-top: 16px;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+/* ---------- Two-column dashboard and the darker list card ---------- */
+
+/* "Needs attention" on the left (wide), technicians on the right (narrow). */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+@container page (max-width: 1000px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The darker blue card used for lists (design system 3.2, "second card"). */
+.card-list {
+  background: var(--list-card);
+  border-color: #8c9db0;
+  color: #1e2a38;
+}
+.card-list::after {
+  border-color: #6f8296;
+}
+.card-list .table td {
+  background: transparent;
+  border-bottom: 1px dashed #6f8296;
+}
+.card-list .table tr:hover td {
+  background: rgba(255, 255, 255, 0.25);
+}
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.card-link {
+  color: var(--link);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.card-link:hover {
+  color: var(--link-hover);
+}
+/* A smaller line under a cell's main text (for example the time under a name). */
+.cell-sub {
+  font-size: 14px;
+  color: #2c3a4b;
+}
+
+/* ---------- Pop-up box (Assign) ---------- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: rgba(20, 30, 50, 0.55);
+}
+.dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-6);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  box-shadow: 0 24px 48px -16px rgba(20, 30, 50, 0.6);
+  color: var(--text);
+}
+.dialog-sub {
+  margin: var(--space-1) 0 var(--space-4);
+  color: var(--soft-text);
+}
+.dialog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.dialog-choice {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  cursor: pointer;
+}
+.dialog-choice:hover:not(:disabled) {
+  border-color: var(--main-button);
+  background: #ffffff;
+}
+.dialog-choice:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.dialog-choice-name {
+  font-weight: 600;
+}
+.dialog-note {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  border-radius: 6px;
+  background: var(--waiting-bg);
+  color: var(--waiting-text);
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-5);
+}
+
+/* ---------- Technicians panel: avatars and rows (design system 9.8) ---------- */
+
+.tech-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tech-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px dashed var(--input-border);
+}
+.tech-row:last-child {
+  border-bottom: none;
+}
+/* The round circle with a person's initials. */
+.avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #dce3ec;
+  color: var(--link);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px var(--card-border);
+  font-size: 15px;
+  font-weight: 700;
+}
+.tech-text {
+  flex: 1;
+  min-width: 0;
+}
+.tech-name {
+  font-weight: 600;
+}
+
+/* ---------- Reports card extras ---------- */
+
+/* A report that needs a technician has a gold edge on the left of its row. */
+.card-list .table tr.row-attention td:first-child {
+  box-shadow: inset 4px 0 0 #c99a45;
+}
+
+/* The read-only details box: names on the left, values on the right. */
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-4) 0 0;
+}
+.details dt {
+  color: var(--soft-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+html[lang='bn'] .details dt {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.details dd {
+  margin: 0;
+}
+
+/* ---------- Bangla reading size and no-wrap helpers ---------- */
+
+/* Buttons and dates stay on ONE line, even in long Bangla words. */
+.btn,
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Tiro Bangla draws small letters, so every small text gets 2px bigger in Bangla. */
+html[lang='bn'] .count-label,
+html[lang='bn'] .cell-sub,
+html[lang='bn'] .details dt {
+  font-size: 16px;
+}
+html[lang='bn'] .count-tag,
+html[lang='bn'] .status,
+html[lang='bn'] .table th,
+html[lang='bn'] .field-label,
+html[lang='bn'] .settings-title {
+  font-size: 15px;
+}
+html[lang='bn'] .btn-small,
+html[lang='bn'] .menu-link {
+  font-size: 17px;
+}
+
+/* ---------- Filter tabs on the Reports page ---------- */
+
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.filter-tab {
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  border: 1px solid #8c9db0;
+  border-radius: 3px;
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filter-tab:hover {
+  border-color: var(--main-button);
+}
+.filter-tab-active {
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
+}
+html[lang='bn'] .filter-tab {
+  font-size: 17px;
+}
+
+/* ---------- Logo tile in the top bar ---------- */
+
+/* A small pale rectangle behind the logo, so the dark logo shows on the dark bar. */
+.logo-tile {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #e1e8f1;
+  border: 1px solid #b9c6d8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* The technicians card uses the same darker blue as the reports card. */
+.card-list .tech-row {
+  border-bottom-color: #6f8296;
+}
+.card-list .tech-row:last-child {
+  border-bottom: none;
+}
+
+/* ---------- Top bar zones, sidebar button, sidebar (manager pages) ---------- */
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+.topbar-right {
+  justify-self: end;
+}
+/* The square button that opens and closes the sidebar. */
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--bar-text-chosen);
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* The sidebar and the page sit side by side. The sidebar PUSHES the page, so the
+   page always stays fully visible next to it. */
+.shell {
+  display: flex;
+  align-items: stretch;
+  /* The sidebar always reaches the bottom of the window, even on a short page. */
+  min-height: calc(100vh - 76px);
+}
+.shell > .page {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  max-width: none;
+}
+.sidebar {
+  flex: none;
+  width: 264px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background-color: var(--bar);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.22) 0,
+      rgba(0, 0, 0, 0.22) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+/* The gold stitch line down the right edge of the sidebar. */
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  right: 6px;
+  border-right: 1.5px dashed var(--bar-stitch);
+  pointer-events: none;
+}
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /* The menu stays in view while a long page scrolls. */
+  position: sticky;
+  top: var(--space-5);
+}
+.sidebar .menu-link {
+  width: 100%;
+  min-height: 48px;
+  justify-content: flex-start;
+  background: transparent;
+  font-family: var(--font-body);
+}
+.sidebar .menu-link-active {
+  background: rgba(255, 255, 255, 0.12);
+}
+/* Log out at the bottom of the sidebar. */
+.sidebar-logout {
+  margin-top: auto;
+  cursor: pointer;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  position: sticky;
+  bottom: var(--space-5);
+}
+/* The dark area behind a sliding sidebar exists only on phones. */
+.sidebar-backdrop {
+  display: none;
+}
+
+/* On a phone there is no room beside the page, so the sidebar slides OVER it. */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    z-index: 20;
+    top: 76px;
+    bottom: 0;
+    left: 0;
+    box-shadow: 8px 0 24px -8px rgba(10, 20, 40, 0.6);
+  }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    z-index: 15;
+    inset: 76px 0 0 0;
+    background: rgba(20, 30, 50, 0.45);
+  }
+  .topbar {
+    padding: var(--space-3) var(--space-4);
+  }
+  .topbar-name {
+    font-size: 16px;
+  }
+  .topbar-role {
+    display: none;
+  }
+  /* The sidebar has its own Log out, so the bar's one is hidden to save room. */
+  .topbar-has-sidebar .topbar-right .btn {
+    display: none;
+  }
+}
+
+/* ---------- Stacked table rows when the page is narrow (for example beside the sidebar) ---------- */
+
+@container page (max-width: 720px) {
+  .table-stack thead {
+    display: none;
+  }
+  .table-stack,
+  .table-stack tbody,
+  .table-stack tr,
+  .table-stack td {
+    display: block;
+    width: 100%;
+  }
+  .table-stack tr {
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px dashed #6f8296;
+  }
+  .table-stack tr:last-child {
+    border-bottom: none;
+  }
+  .table-stack td,
+  .card-list .table-stack td {
+    padding: var(--space-1) 0;
+    border-bottom: none;
+    background: transparent;
+  }
+  .table-stack td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #3f4d5f;
+  }
+  html[lang='bn'] .table-stack td[data-label]::before {
+    font-size: 14px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .table-stack td.actions {
+    text-align: left;
+    margin-top: var(--space-2);
+  }
+  /* The gold "needs a technician" edge moves from the first cell to the whole card. */
+  .card-list .table-stack tr.row-attention td:first-child {
+    box-shadow: none;
+  }
+  .card-list .table-stack tr.row-attention {
+    box-shadow: inset 4px 0 0 #c99a45;
+    padding-left: var(--space-4);
+  }
+}
+
+/* ---------- Login and sign-up pages on a phone ---------- */
+
+@media (max-width: 520px) {
+  /* Settings becomes an icon only, so it never covers the Manager / Owner tabs. */
+  .settings-label {
+    display: none;
+  }
+  .settings-btn {
+    min-width: 44px;
+    justify-content: center;
+    padding: 0;
+  }
+  .settings-wrap {
+    right: var(--space-4);
+  }
+  .login-tab {
+    padding: 0 var(--space-4);
+  }
+  /* Keep the page content inside the two stitch lines. */
+  .login-page {
+    padding-left: 36px;
+    padding-right: 36px;
+  }
 }

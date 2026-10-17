@@ -6,13 +6,16 @@
 // in the browser tab's session memory, so a page refresh does not log them out,
 // but closing the tab does. `ready` is false for a moment while we check that
 // memory, so pages do not flash the wrong screen.
-// This is fake-login wiring: when the real backend arrives, the real session
-// from Supabase replaces the memory trick. Owned by Mithi.
+// With the real backend connected (lib/backend.ts) the login is Supabase Auth and
+// Supabase remembers the session itself. Without it, the fake login and the tab's
+// session memory are used. Owned by Mithi.
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Profile, Role } from '@garmentpulse/shared';
+import { backendIsReal } from '../lib/backend';
 import { fakeLogin, fakeSignUp } from './fakeAuth';
+import { realLogin, realLogOut, realRestore } from './realAuth';
 import type { SignUpInput } from './fakeAuth';
 
 const STORAGE_KEY = 'garmentpulse-web-user';
@@ -32,6 +35,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (backendIsReal) {
+      // Real backend: Supabase remembers the session itself.
+      void realRestore().then((person) => {
+        setProfile(person);
+        setReady(true);
+      });
+      return;
+    }
     try {
       const saved = window.sessionStorage.getItem(STORAGE_KEY);
       if (saved) setProfile(JSON.parse(saved) as Profile);
@@ -42,6 +53,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logIn = useCallback(async (email: string, password: string, loginFor: Role) => {
+    if (backendIsReal) {
+      const person = await realLogin(email, password, loginFor);
+      setProfile(person);
+      return person;
+    }
     const person = await fakeLogin(email, password, loginFor);
     setProfile(person);
     try {
@@ -53,6 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = useCallback(async (input: SignUpInput) => {
+    // Sign-up is fake only for now: the real backend has no sign-up (accounts are
+    // made by Sakib). The sign-up page is closed in real mode, so this is a safety net.
+    if (backendIsReal) throw new Error('NOT_ALLOWED');
     const person = await fakeSignUp(input);
     setProfile(person);
     try {
@@ -65,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logOut = useCallback(() => {
     setProfile(null);
+    if (backendIsReal) void realLogOut();
     try {
       window.sessionStorage.removeItem(STORAGE_KEY);
     } catch {

@@ -23,6 +23,7 @@ import { LoginBar } from '../components/LoginBar';
 import { Logo } from '../components/Logo';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
+import { backendIsReal } from '../lib/backend';
 import { useLanguage } from '../language/LanguageContext';
 import { errorSentence } from '../language/errorText';
 import { screenText } from '../language/screenText';
@@ -95,15 +96,19 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
             </Button>
           </form>
         </Card>
-        <div className="login-help">
-          <p>
-            {screenText('newHere', language)}{' '}
-            <Link href="/signup" className="login-link">
-              {screenText('signupLink', language)}
-            </Link>
-          </p>
-          <p>{screenText(role === 'owner' ? 'ownerSignupHelp' : 'managerSignupHelp', language)}</p>
-        </div>
+        {backendIsReal ? null : (
+          <div className="login-help">
+            <p>
+              {screenText('newHere', language)}{' '}
+              <Link href="/signup" className="login-link">
+                {screenText('signupLink', language)}
+              </Link>
+            </p>
+            <p>
+              {screenText(role === 'owner' ? 'ownerSignupHelp' : 'managerSignupHelp', language)}
+            </p>
+          </div>
+        )}
       </div>
     </main>
   );

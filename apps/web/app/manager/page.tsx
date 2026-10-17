@@ -2,64 +2,151 @@
 
 // apps/web/app/manager/page.tsx
 //
-// The manager's start page: three count boxes (Waiting, In progress, Resolved),
-// the list of all reports, and the technicians with free / busy next to each name.
-// For now it reads the FAKE data from @garmentpulse/shared; the live data and the
-// "Assign" button come in the next piece of work. Owned by Mithi.
+// The manager's DASHBOARD (the start page). From the top it has:
+//   - a greeting ("Good morning, Farhan") with today's date and how many reports
+//     are waiting for a technician (the queue),
+//   - four count boxes: New reports, In progress, Resolved today, Free technicians
+//     (data/stats.ts says how they are worked out),
+//   - "Needs attention": only the queue, with an Assign button, and a compact
+//     technicians panel. The full lists are on the Reports and Technicians pages.
+// The top bar and the role door come from app/manager/layout.tsx.
+// Owned by Mithi.
 
-import {
-  FAKE_REPORTS,
-  FAKE_TECHNICIANS,
-  STATUS_LABELS,
-  summarizeReports,
-} from '@garmentpulse/shared';
-import { RoleGate } from '../../auth/RoleGate';
+import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared';
+import type { Language } from '@garmentpulse/shared';
 import { useAuth } from '../../auth/AuthContext';
-import { AvailabilityLabel } from '../../components/StatusLabel';
-import { Card } from '../../components/Card';
 import { CountBox } from '../../components/CountBox';
-import { ReportsTable } from '../../components/ReportsTable';
-import { TopBar } from '../../components/TopBar';
+import { DataGate } from '../../components/DataGate';
+import { ReportsCard } from '../../components/ReportsCard';
+import { TechniciansPanel } from '../../components/TechniciansPanel';
+import { useManagerData } from '../../data/ManagerData';
+import {
+  averageFixMs,
+  countFree,
+  formatDuration,
+  resolvedToday,
+  startedInLastHour,
+} from '../../data/stats';
 import { useLanguage } from '../../language/LanguageContext';
+import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
 
-export default function ManagerPage() {
-  return (
-    <RoleGate role="manager">
-      <ManagerContent />
-    </RoleGate>
-  );
+/** "Good morning", "Good afternoon" or "Good evening", from the clock. */
+function greetingKey(now: Date) {
+  const hour = now.getHours();
+  if (hour < 12) return 'greetMorning';
+  if (hour < 18) return 'greetAfternoon';
+  return 'greetEvening';
 }
 
-function ManagerContent() {
-  const { logOut } = useAuth();
+/** "Friday 9 October" (or the Bangla version). */
+function formatToday(now: Date, language: Language): string {
+  const text = new Intl.DateTimeFormat(language === 'bn' ? 'bn-BD' : 'en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).format(now);
+  return localizeDigits(text, language);
+}
+
+export default function DashboardPage() {
+  const { profile } = useAuth();
   const { language } = useLanguage();
-  const summary = summarizeReports(FAKE_REPORTS);
+  const { reports, technicians, reloadAll } = useManagerData();
+  const list = reports.data ?? [];
+  const summary = summarizeReports(list);
+  const queueCount = list.filter(isInQueue).length;
+
+  const now = new Date();
+  const firstName = profile?.display_name.split(' ')[0] ?? '';
+  const technicianList = technicians.data ?? [];
+  const resolvedList = resolvedToday(list, now);
+  const averageFix = averageFixMs(resolvedList);
+  const freeCount = countFree(technicianList);
+
+  /** Puts numbers into a sentence like "{n} waiting", in the right digits. */
+  const fill = (text: string, values: Record<string, string | number>) =>
+    Object.entries(values).reduce(
+      (result, [key, value]) => result.replace(`{${key}}`, localizeDigits(String(value), language)),
+      text,
+    );
+  const queueText =
+    queueCount === 0
+      ? screenText('queueNone', language)
+      : queueCount === 1
+        ? screenText('queueOne', language)
+        : fill(screenText('queueMany', language), { n: queueCount });
 
   return (
     <>
-      <TopBar role="manager" onLogOut={logOut} />
-      <main className="page">
-        <div className="grid-cards">
-          <CountBox label={STATUS_LABELS.waiting[language]} count={summary.waiting} />
-          <CountBox label={STATUS_LABELS.in_progress[language]} count={summary.in_progress} />
-          <CountBox label={STATUS_LABELS.resolved[language]} count={summary.resolved} />
-        </div>
+      <div className="greeting">
+        <h1>
+          {screenText(greetingKey(now), language)}, {firstName}
+        </h1>
+        <p className="greeting-line">
+          {formatToday(now, language)} · {queueText}
+        </p>
+      </div>
 
-        <Card>
-          <h2>{screenText('reportsTitle', language)}</h2>
-          <ReportsTable reports={FAKE_REPORTS} />
-        </Card>
+      <div className="count-grid">
+        <CountBox
+          label={screenText('labelNewReports', language)}
+          count={summary.waiting}
+          tag={
+            queueCount === 0
+              ? screenText('tagNobodyWaiting', language)
+              : fill(screenText('tagNeedTechnician', language), { n: queueCount })
+          }
+        />
+        <CountBox
+          label={STATUS_LABELS.in_progress[language]}
+          count={summary.in_progress}
+          tone="green"
+          tag={fill(screenText('tagStartedHour', language), { n: startedInLastHour(list, now) })}
+        />
+        <CountBox
+          label={screenText('labelResolvedToday', language)}
+          count={resolvedList.length}
+          tone="blue"
+          tag={
+            averageFix === null
+              ? screenText('tagNoFixes', language)
+              : screenText('tagAverageFix', language).replace(
+                  '{t}',
+                  formatDuration(averageFix, language),
+                )
+          }
+        />
+        <CountBox
+          label={screenText('labelFreeTechnicians', language)}
+          count={freeCount}
+          tone="green"
+          tag={fill(screenText('tagBusyOf', language), {
+            busy: technicianList.length - freeCount,
+            total: technicianList.length,
+          })}
+        />
+      </div>
 
-        <Card>
-          <h2>{screenText('techniciansTitle', language)}</h2>
-          {FAKE_TECHNICIANS.map((tech) => (
-            <p key={tech.id}>
-              {tech.display_name} <AvailabilityLabel availability={tech.availability} />
-            </p>
-          ))}
-        </Card>
-      </main>
+      <div className="dashboard-grid">
+        <DataGate state={reports}>
+          {(rows) => (
+            <DataGate state={technicians}>
+              {(people) => (
+                <>
+                  <ReportsCard
+                    mode="queue"
+                    reports={rows}
+                    technicians={people}
+                    onAssigned={reloadAll}
+                  />
+                  <TechniciansPanel technicians={people} reports={rows} />
+                </>
+              )}
+            </DataGate>
+          )}
+        </DataGate>
+      </div>
     </>
   );
 }

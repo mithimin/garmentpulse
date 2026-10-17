@@ -44,12 +44,13 @@ export function SettingsMenu() {
       <button
         type="button"
         className="settings-btn"
+        aria-label={screenText('settings', language)}
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((value) => !value)}
       >
         <Settings size={16} strokeWidth={1.8} aria-hidden="true" />
-        {screenText('settings', language)}
+        <span className="settings-label">{screenText('settings', language)}</span>
       </button>
       {open ? (
         <div className="settings-panel" role="group" aria-label={screenText('settings', language)}>
