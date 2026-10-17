@@ -17,6 +17,12 @@ type Words = Record<Language, string>;
 export const LOGIN_TEXT = {
   appName: { en: 'GarmentPulse', bn: 'গার্মেন্টপালস' },
   tagline: { en: 'For workers and technicians', bn: 'শ্রমিক ও টেকনিশিয়ানদের জন্য' },
+  roleLabel: { en: 'I am a', bn: 'আমি একজন' },
+  /** Shown when the chosen role (worker/technician) does not match the account. */
+  roleMismatch: {
+    en: 'This account is for the other role. Please choose the other button above.',
+    bn: 'এই অ্যাকাউন্টটি অন্য ভূমিকার। অনুগ্রহ করে উপরের অন্য বোতামটি বেছে নিন।',
+  },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },
   emailHint: { en: 'name@example.com', bn: 'name@example.com' },
   passwordLabel: { en: 'Password', bn: 'পাসওয়ার্ড' },

@@ -1,7 +1,8 @@
 // apps/mobile/src/screens/LoginScreen.tsx
 //
 // The login screen: a dark blue top bar with the language switch in the corner,
-// and one card with the logo, an email box, a password box and one Main button.
+// and one card with the logo, a Worker / Technician chooser, an email box, a
+// password box and one Main button.
 // It uses the "manager blue" colours because nobody has a role yet
 // (design system section 10.1).
 //
@@ -23,13 +24,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { getErrorCode } from '@garmentpulse/shared';
-import type { Profile } from '@garmentpulse/shared';
+import { ROLE_LABELS, getErrorCode } from '@garmentpulse/shared';
+import type { Profile, Role } from '@garmentpulse/shared';
 import { fakeLogin } from '../auth/fakeAuth';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import { useLanguage } from '../language/LanguageContext';
 import { ERROR_TEXT, LOGIN_TEXT } from '../language/screenText';
 import { LOGIN_COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
+
+/** The two roles that may use the phone app. */
+type ChoosableRole = Extract<Role, 'worker' | 'technician'>;
+const CHOOSABLE_ROLES: readonly ChoosableRole[] = ['worker', 'technician'];
 
 type Props = {
   /** Called with the person's profile once login works. */
@@ -44,13 +49,25 @@ export function LoginScreen({ onLoggedIn }: Props) {
   // We keep the error CODE (not the sentence), so the sentence follows the
   // language if the person flips the switch after seeing the error.
   const [errorCode, setErrorCode] = useState<ReturnType<typeof getErrorCode> | null>(null);
+  // Which kind of person is logging in. Workers are the most common, so it starts there.
+  const [chosenRole, setChosenRole] = useState<ChoosableRole>('worker');
+  // True when the account's real role is different from the button the person chose.
+  const [roleMismatch, setRoleMismatch] = useState(false);
 
   async function handleLogin() {
     if (loading) return;
     setErrorCode(null);
+    setRoleMismatch(false);
     setLoading(true);
     try {
-      onLoggedIn(await fakeLogin(email, password));
+      const profile = await fakeLogin(email, password);
+      if (profile.role !== chosenRole) {
+        // The account exists but is the other role. Do not log in; ask them to choose again.
+        setRoleMismatch(true);
+        setLoading(false);
+        return;
+      }
+      onLoggedIn(profile);
     } catch (error) {
       setErrorCode(getErrorCode(error));
       setLoading(false);
@@ -80,6 +97,28 @@ export function LoginScreen({ onLoggedIn }: Props) {
           <Text style={styles.title}>{LOGIN_TEXT.appName[language]}</Text>
           <Text style={styles.tagline}>{LOGIN_TEXT.tagline[language]}</Text>
 
+          {/* Worker / Technician chooser. The chosen one is filled in with the main colour. */}
+          <Text style={styles.label}>{LOGIN_TEXT.roleLabel[language]}</Text>
+          <View style={styles.roleRow} accessibilityRole="radiogroup">
+            {CHOOSABLE_ROLES.map((role) => {
+              const chosen = role === chosenRole;
+              return (
+                <Pressable
+                  key={role}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: chosen }}
+                  disabled={loading}
+                  onPress={() => setChosenRole(role)}
+                  style={[styles.roleButton, chosen && styles.roleButtonChosen]}
+                >
+                  <Text style={[styles.roleText, chosen && styles.roleTextChosen]}>
+                    {ROLE_LABELS[role][language]}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+
           <Text style={styles.label}>{LOGIN_TEXT.emailLabel[language]}</Text>
           <TextInput
             style={styles.input}
@@ -108,9 +147,11 @@ export function LoginScreen({ onLoggedIn }: Props) {
             onSubmitEditing={handleLogin}
           />
 
-          {errorCode && (
+          {(errorCode || roleMismatch) && (
             <View style={styles.errorBox} accessibilityRole="alert">
-              <Text style={styles.errorText}>{ERROR_TEXT[errorCode][language]}</Text>
+              <Text style={styles.errorText}>
+                {errorCode ? ERROR_TEXT[errorCode][language] : LOGIN_TEXT.roleMismatch[language]}
+              </Text>
             </View>
           )}
 
@@ -190,6 +231,20 @@ const styles = StyleSheet.create({
   },
   tagline: { color: C.softText, fontSize: 15, textAlign: 'center', marginBottom: 24 },
   label: { color: C.text, fontSize: 13, fontWeight: '600', marginBottom: 4 },
+  roleRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
+  roleButton: {
+    flex: 1,
+    height: SIZES.buttonHeight,
+    backgroundColor: '#F7F9FB',
+    borderColor: S.inputBorder,
+    borderWidth: 1,
+    borderRadius: SIZES.buttonRadius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roleButtonChosen: { backgroundColor: C.mainButton, borderColor: C.mainButtonBorder },
+  roleText: { color: C.text, fontSize: 16, fontWeight: '600' },
+  roleTextChosen: { color: C.mainButtonText },
   input: {
     height: SIZES.inputHeight,
     backgroundColor: S.white,

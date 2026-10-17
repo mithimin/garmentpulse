@@ -12,6 +12,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 - Step 1 (login), built on branch `features/mobile-login`:
   - Login screen in the manager blue look, with the language switch (EN · বাং) in the top-right corner.
   - Fake login (`src/auth/fakeAuth.ts`): any password works. Worker and technician emails from the fake people list log in. A manager or owner email shows the `WRONG_PLATFORM` message.
+  - A "I am a" Worker / Technician chooser on the login screen. If the account is the other role, login stops with a friendly message. This is only a check inside the app (no new error code), because the real backend decides the role by itself.
   - Friendly error sentences in English and Bangla (`src/language/screenText.ts`).
   - A temporary home screen with a "Log out" button.
 
