@@ -863,7 +863,7 @@ html {
   gap: var(--space-6);
   align-items: start;
 }
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .dashboard-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1020,4 +1020,33 @@ html {
 }
 .tech-name {
   font-weight: 600;
+}
+
+/* ---------- Reports card extras ---------- */
+
+/* A report that needs a technician has a gold edge on the left of its row. */
+.card-list .table tr.row-attention td:first-child {
+  box-shadow: inset 4px 0 0 #c99a45;
+}
+
+/* The read-only details box: names on the left, values on the right. */
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-4) 0 0;
+}
+.details dt {
+  color: var(--soft-text);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+html[lang='bn'] .details dt {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.details dd {
+  margin: 0;
 }

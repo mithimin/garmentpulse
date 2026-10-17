@@ -21,11 +21,9 @@ import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared
 import type { Language } from '@garmentpulse/shared';
 import { RoleGate } from '../../auth/RoleGate';
 import { useAuth } from '../../auth/AuthContext';
-import { Card } from '../../components/Card';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
-import { NeedsAttention } from '../../components/NeedsAttention';
-import { ReportsTable } from '../../components/ReportsTable';
+import { ReportsCard } from '../../components/ReportsCard';
 import { TechniciansPanel } from '../../components/TechniciansPanel';
 import { TopBar } from '../../components/TopBar';
 import type { MenuItem } from '../../components/TopBar';
@@ -185,7 +183,7 @@ function ManagerContent() {
               <DataGate state={technicians}>
                 {(people) => (
                   <>
-                    <NeedsAttention reports={rows} technicians={people} onAssigned={reloadAll} />
+                    <ReportsCard reports={rows} technicians={people} onAssigned={reloadAll} />
                     <TechniciansPanel technicians={people} reports={rows} />
                   </>
                 )}
@@ -193,11 +191,6 @@ function ManagerContent() {
             )}
           </DataGate>
         </div>
-
-        <Card id="reports">
-          <h2>{screenText('reportsTitle', language)}</h2>
-          <DataGate state={reports}>{(rows) => <ReportsTable reports={rows} />}</DataGate>
-        </Card>
       </main>
     </>
   );
