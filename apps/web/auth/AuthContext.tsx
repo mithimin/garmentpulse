@@ -12,7 +12,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Profile, Role } from '@garmentpulse/shared';
-import { fakeLogin } from './fakeAuth';
+import { fakeLogin, fakeSignUp } from './fakeAuth';
+import type { SignUpInput } from './fakeAuth';
 
 const STORAGE_KEY = 'garmentpulse-web-user';
 
@@ -20,6 +21,7 @@ type AuthValue = {
   profile: Profile | null;
   ready: boolean;
   logIn: (email: string, password: string, loginFor: Role) => Promise<Profile>;
+  signUp: (input: SignUpInput) => Promise<Profile>;
   logOut: () => void;
 };
 
@@ -50,6 +52,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return person;
   }, []);
 
+  const signUp = useCallback(async (input: SignUpInput) => {
+    const person = await fakeSignUp(input);
+    setProfile(person);
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(person));
+    } catch {
+      // Not saving is fine: the person just stays logged in until refresh.
+    }
+    return person;
+  }, []);
+
   const logOut = useCallback(() => {
     setProfile(null);
     try {
@@ -59,7 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const value = useMemo(() => ({ profile, ready, logIn, logOut }), [profile, ready, logIn, logOut]);
+  const value = useMemo(
+    () => ({ profile, ready, logIn, signUp, logOut }),
+    [profile, ready, logIn, signUp, logOut],
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

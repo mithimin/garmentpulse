@@ -447,7 +447,8 @@ html[lang='bn'] .table th {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6);
+  /* Extra room on top so a tall form (sign-up) never slides under the bar. */
+  padding: 84px var(--space-6) var(--space-6);
   position: relative;
   /* The SAME blue as the main button, but very faint: it was white before, and
      now it is a soft blue wash with a barely-there denim weave on top. */
@@ -520,11 +521,74 @@ html[lang='bn'] .table th {
   /* Above the two stitch lines. */
   z-index: 1;
 }
-.login-bar .lang-switch {
+/* Settings button at the right end of the bar, and the box it opens. */
+.settings-wrap {
   position: absolute;
   right: var(--space-6);
   top: 50%;
   transform: translateY(-50%);
+}
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 3px;
+  border: 1px solid #dbe6f5;
+  background: #1f2b47;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.settings-btn:hover {
+  background: var(--main-button-hover);
+}
+.settings-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 190px;
+  padding: var(--space-3);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px -12px rgba(20, 35, 63, 0.55);
+}
+.settings-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--soft-text);
+  margin-bottom: var(--space-2);
+}
+.settings-choices {
+  display: flex;
+  gap: var(--space-2);
+}
+.settings-choice {
+  flex: 1;
+  min-height: 36px;
+  border-radius: 3px;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+}
+.settings-choice-active {
+  background: var(--main-button);
+  border-color: var(--main-button-border);
+  color: #ffffff;
+}
+/* The page title in the middle of the bar on the sign-up page. */
+.login-bar-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
 }
 .login-tabs {
   display: flex;
@@ -574,13 +638,38 @@ html[lang='bn'] .table th {
   gap: var(--space-5);
 }
 
-/* In the login bar the language switch is a solid button in the Login blue, with a
-   light edge so it still shows on the dark bar. */
-.login-bar .lang-switch {
-  background: #1f2b47;
-  border-color: #dbe6f5;
-  color: #ffffff;
+/* The sign-up instruction and link under the login card. */
+.login-help {
+  text-align: center;
+  color: var(--soft-text);
+  font-size: 14px;
 }
-.login-bar .lang-switch:hover {
-  background: var(--main-button-hover);
+.login-help p {
+  margin: 0 0 var(--space-2);
+}
+.login-link {
+  color: var(--link);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.login-link:hover {
+  color: var(--link-hover);
+}
+
+/* The list of manager codes on the owner page. */
+.code-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.code-list li {
+  padding: var(--space-2) var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  font-size: 20px;
+  letter-spacing: 0.12em;
 }

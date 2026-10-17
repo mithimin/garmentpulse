@@ -25,8 +25,8 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   },
   NOT_FOUND: { en: 'We could not find that.', bn: 'এটি খুঁজে পাওয়া যায়নি।' },
   INVALID_INPUT: {
-    en: 'Please type your email and password.',
-    bn: 'অনুগ্রহ করে ইমেইল ও পাসওয়ার্ড লিখুন।',
+    en: 'Please fill in every box.',
+    bn: 'অনুগ্রহ করে সবগুলো ঘর পূরণ করুন।',
   },
   TECHNICIAN_BUSY: {
     en: 'That technician is busy with another job.',
@@ -54,8 +54,25 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   },
 };
 
+/**
+ * Sentences for the two sign-up problems. These codes are NOT in the API contract
+ * yet (they are proposed to Sakib), so they live here and not in ERROR_TEXT.
+ */
+const SIGNUP_ERROR_TEXT: Record<string, Words> = {
+  EMAIL_TAKEN: {
+    en: 'This email already has an account. Please go to the login page.',
+    bn: 'এই ইমেইলে আগেই একটি অ্যাকাউন্ট আছে। অনুগ্রহ করে লগইন পেজে যান।',
+  },
+  INVALID_CODE: {
+    en: 'That code is wrong or was already used. Ask the owner for a new code.',
+    bn: 'কোডটি ভুল অথবা আগেই ব্যবহার করা হয়েছে। মালিকের কাছে নতুন কোড চান।',
+  },
+};
+
 /** Turns an error from a backend call into a friendly sentence. */
 export function errorSentence(error: unknown, language: Language): string {
   const message = error instanceof Error ? error.message : '';
+  const signUpSentence = SIGNUP_ERROR_TEXT[message];
+  if (signUpSentence) return signUpSentence[language];
   return ERROR_TEXT[isErrorCode(message) ? message : UNKNOWN_ERROR][language];
 }

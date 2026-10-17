@@ -7,7 +7,8 @@
 // role can get in through it (MVP 2.1). The person types an email
 // and a password. On success they go to their own start page. If the account
 // belongs to a worker or technician, we show the WRONG_PLATFORM sentence and do
-// not log them in (they use the phone app). Right now the login is FAKE (see
+// not log them in (they use the phone app). Under the form there is a short
+// "Sign up" instruction that links to /signup. Right now the login is FAKE (see
 // auth/fakeAuth.ts); the real one comes with Sakib's backend.
 // Owned by Mithi.
 
@@ -18,20 +19,13 @@ import { useRouter } from 'next/navigation';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Field, TextInput } from '../components/Field';
-import { LanguageSwitch } from '../components/LanguageSwitch';
+import { LoginBar } from '../components/LoginBar';
 import { Logo } from '../components/Logo';
-import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
 import { useLanguage } from '../language/LanguageContext';
 import { errorSentence } from '../language/errorText';
 import { screenText } from '../language/screenText';
-
-/** The two choices in the bar at the top: which kind of person is logging in. */
-const LOGIN_TABS = [
-  { role: 'manager', href: '/login' },
-  { role: 'owner', href: '/owner-login' },
-] as const;
 
 export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
   const { logIn } = useAuth();
@@ -58,21 +52,7 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
 
   return (
     <main className="login-page">
-      <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
-        <div className="login-tabs">
-          {LOGIN_TABS.map((tab) => (
-            <Link
-              key={tab.role}
-              href={tab.href}
-              className={tab.role === role ? 'login-tab login-tab-active' : 'login-tab'}
-              aria-current={tab.role === role ? 'page' : undefined}
-            >
-              {ROLE_LABELS[tab.role][language]}
-            </Link>
-          ))}
-        </div>
-        <LanguageSwitch />
-      </nav>
+      <LoginBar activeRole={role} />
       <div className="login-box">
         <div className="login-brand">
           <Logo size={72} />
@@ -115,6 +95,15 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
             </Button>
           </form>
         </Card>
+        <div className="login-help">
+          <p>
+            {screenText('newHere', language)}{' '}
+            <Link href="/signup" className="login-link">
+              {screenText('signupLink', language)}
+            </Link>
+          </p>
+          <p>{screenText(role === 'owner' ? 'ownerSignupHelp' : 'managerSignupHelp', language)}</p>
+        </div>
       </div>
     </main>
   );
