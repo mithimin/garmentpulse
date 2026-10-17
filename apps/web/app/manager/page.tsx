@@ -24,6 +24,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { Card } from '../../components/Card';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
+import { NeedsAttention } from '../../components/NeedsAttention';
 import { ReportsTable } from '../../components/ReportsTable';
 import { AvailabilityLabel } from '../../components/StatusLabel';
 import { TopBar } from '../../components/TopBar';
@@ -88,6 +89,11 @@ function ManagerContent() {
       (result, [key, value]) => result.replace(`{${key}}`, localizeDigits(String(value), language)),
       text,
     );
+  /** After an assign, ask for fresh lists so every number and row is up to date. */
+  const reloadAll = () => {
+    void reports.reload();
+    void technicians.reload();
+  };
   const queueText =
     queueCount === 0
       ? screenText('queueNone', language)
@@ -173,22 +179,34 @@ function ManagerContent() {
           />
         </div>
 
+        <div className="dashboard-grid">
+          <DataGate state={reports}>
+            {(rows) => (
+              <DataGate state={technicians}>
+                {(people) => (
+                  <NeedsAttention reports={rows} technicians={people} onAssigned={reloadAll} />
+                )}
+              </DataGate>
+            )}
+          </DataGate>
+
+          <Card id="technicians">
+            <h2>{screenText('techniciansTitle', language)}</h2>
+            <DataGate state={technicians}>
+              {(rows) =>
+                rows.map((tech) => (
+                  <p key={tech.id}>
+                    {tech.display_name} <AvailabilityLabel availability={tech.availability} />
+                  </p>
+                ))
+              }
+            </DataGate>
+          </Card>
+        </div>
+
         <Card id="reports">
           <h2>{screenText('reportsTitle', language)}</h2>
           <DataGate state={reports}>{(rows) => <ReportsTable reports={rows} />}</DataGate>
-        </Card>
-
-        <Card id="technicians">
-          <h2>{screenText('techniciansTitle', language)}</h2>
-          <DataGate state={technicians}>
-            {(rows) =>
-              rows.map((tech) => (
-                <p key={tech.id}>
-                  {tech.display_name} <AvailabilityLabel availability={tech.availability} />
-                </p>
-              ))
-            }
-          </DataGate>
         </Card>
       </main>
     </>

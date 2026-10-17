@@ -853,3 +853,130 @@ html[lang='bn'] .table th {
 html {
   scroll-behavior: smooth;
 }
+
+/* ---------- Two-column dashboard and the darker list card ---------- */
+
+/* "Needs attention" on the left (wide), technicians on the right (narrow). */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The darker blue card used for lists (design system 3.2, "second card"). */
+.card-list {
+  background: var(--list-card);
+  border-color: #8c9db0;
+  color: #2f3c4c;
+}
+.card-list::after {
+  border-color: #6f8296;
+}
+.card-list .table td {
+  background: transparent;
+  border-bottom: 1px dashed #6f8296;
+}
+.card-list .table tr:hover td {
+  background: rgba(255, 255, 255, 0.25);
+}
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.card-link {
+  color: var(--link);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.card-link:hover {
+  color: var(--link-hover);
+}
+/* A smaller line under a cell's main text (for example the time under a name). */
+.cell-sub {
+  font-size: 12px;
+  color: #3f4d5f;
+}
+
+/* ---------- Pop-up box (Assign) ---------- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background: rgba(20, 30, 50, 0.55);
+}
+.dialog {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-6);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  box-shadow: 0 24px 48px -16px rgba(20, 30, 50, 0.6);
+  color: var(--text);
+}
+.dialog-sub {
+  margin: var(--space-1) 0 var(--space-4);
+  color: var(--soft-text);
+}
+.dialog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.dialog-choice {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  cursor: pointer;
+}
+.dialog-choice:hover:not(:disabled) {
+  border-color: var(--main-button);
+  background: #ffffff;
+}
+.dialog-choice:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.dialog-choice-name {
+  font-weight: 600;
+}
+.dialog-note {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  border-radius: 6px;
+  background: var(--waiting-bg);
+  color: var(--waiting-text);
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-5);
+}

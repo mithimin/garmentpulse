@@ -9,11 +9,14 @@
 // When the real backend is connected (lib/backend.ts) they call the ready-made
 // functions from @garmentpulse/shared (`listReports`, `listTechnicians`,
 // `getOwnerSummary`). Otherwise they use the fake data from the same package.
-// Reports and technicians update live. Owned by Mithi.
+// Reports and technicians update live. Also here: `assignTechnician`, the manager's
+// "Assign" action (`assign_technician` in the contract; fake in fake mode).
+// Owned by Mithi.
 
-import { FAKE_REPORTS, FAKE_TECHNICIANS, summarizeReports } from '@garmentpulse/shared';
+import { summarizeReports } from '@garmentpulse/shared';
 import type { OwnerSummary, Report, Technician } from '@garmentpulse/shared';
 import { api } from '../lib/backend';
+import { assignFake, getFakeReports, getFakeTechnicians } from './fakeStore';
 import { useBackendData } from './useBackendData';
 
 /** Newest first, like the real backend (docs/api-contract.md 2.3). */
@@ -22,17 +25,22 @@ function newestFirst(reports: readonly Report[]): Report[] {
 }
 
 async function loadReports(): Promise<Report[]> {
-  return api ? api.listReports() : newestFirst(FAKE_REPORTS);
+  return api ? api.listReports() : newestFirst(getFakeReports());
 }
 
 async function loadTechnicians(): Promise<Technician[]> {
-  return api ? api.listTechnicians() : [...FAKE_TECHNICIANS];
+  return api ? api.listTechnicians() : getFakeTechnicians();
 }
 
 async function loadOwnerSummary(): Promise<OwnerSummary> {
-  return api ? api.getOwnerSummary() : summarizeReports(FAKE_REPORTS);
+  return api ? api.getOwnerSummary() : summarizeReports(getFakeReports());
 }
 
 export const useReports = () => useBackendData(loadReports, true);
 export const useTechnicians = () => useBackendData(loadTechnicians, true);
 export const useOwnerSummary = () => useBackendData(loadOwnerSummary, true);
+
+/** The manager gives a report to a free technician. Throws an error code if it fails. */
+export async function assignTechnician(reportId: string, technicianId: string): Promise<Report> {
+  return api ? api.assignTechnician(reportId, technicianId) : assignFake(reportId, technicianId);
+}
