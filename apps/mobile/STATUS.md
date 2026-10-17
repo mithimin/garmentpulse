@@ -15,7 +15,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - A "I am a" Worker / Technician chooser on the login screen. If the account is the other role, login stops with a friendly message. This is only a check inside the app (no new error code), because the real backend decides the role by itself.
   - Friendly error sentences in English and Bangla (`src/language/screenText.ts`).
   - A temporary home screen with a "Log out" button.
-- New logo (`src/components/Logo.tsx`): a dark blue T-shirt with a gold heartbeat line and a dashed hem stitch, replacing the plain "G" tile. It needed the `react-native-svg` library.
+- New logo (`src/components/Logo.tsx`): a dark blue sewing machine with a gold heartbeat line on its arm and a dashed stitch line on its base, replacing the plain "G" tile. It needed the `react-native-svg` library.
 
 ## In progress
 
