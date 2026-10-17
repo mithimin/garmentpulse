@@ -9,6 +9,7 @@
 - [prd.md](prd.md) - **what** the app does and **who** uses it (features, users, pricing).
 - [architecture.md](architecture.md) - **how** the app is built (technology, structure, quality rules).
 - [mvp.md](mvp.md) - **which features** are in the first version and which wait.
+- [api-contract.md](api-contract.md) - **the agreement** between the apps and the backend.
 
 ---
 
@@ -37,8 +38,8 @@ There is one owner per layer of the stack. All members help with system design, 
 
 | Member | Role | Main work |
 |---|---|---|
-| Rubaiya Binte Reza | Mobile app developer | React Native apps for workers, technicians and the owner (read-only) |
-| Rukaia Minhaz Mithi | Web app developer | Next.js manager dashboard |
+| Rubaiya Binte Reza | Mobile app developer | React Native apps for workers and technicians |
+| Rukaia Minhaz Mithi | Web app developer | Next.js manager dashboard and owner web app (read-only) |
 | Md. Sakibuzzaman | Backend developer | Supabase schema, login, role logic, technician dispatch |
 
 ---
@@ -49,7 +50,7 @@ There is one owner per layer of the stack. All members help with system design, 
 
 ### 3.1 Rules for working independently
 
-- One repository with one folder each: **/backend** (Sakib), **/mobile** (Rubaiya), **/web** (Mithi). Shared notes live in **/docs**.
+- One repository with one folder each: **supabase/** (Sakib, the backend), **apps/mobile/** (Rubaiya), **apps/web/** (Mithi). Code both apps use lives in **packages/shared/** (Sakib). Shared notes live in **docs/**. The strict rules for lanes are in the root `CLAUDE.md`.
 - Each person works on their own branch and does not edit another person's folder.
 - Rubaiya and Mithi use **fake (mock) data** until the backend is ready, so nobody waits.
 - Sakib provides **test data** and a **Postman collection** early, so the apps can be checked against the real backend.
@@ -63,7 +64,7 @@ There is one owner per layer of the stack. All members help with system design, 
 | **Report a problem** | Reports table, machine list, status rules | Worker: pick machine, describe problem, see own report status | - |
 | **Dispatch and queue** | Free/busy logic, queue when all are busy, live updates within 5 seconds | - | Manager dashboard: live list, technician free/busy, assign button, queue view |
 | **Technician jobs** | Job assignment and status-change rules, past jobs | Technician: my jobs, accept, change status, past jobs | - |
-| **Owner view** | Read-only access rules for the owner | Owner: see all reports and their status | - |
+| **Owner view** | Read-only access rules for the owner | - | Owner web app: see all reports and their status |
 | **Language and colours** | - | Language switch (top-right) and colour status on mobile | Language switch (top-right) and colour status on web |
 | **Quality** | Backend tests, test data, Postman collection | Mobile tests on Android and iPhone | Web tests |
 
@@ -72,7 +73,7 @@ There is one owner per layer of the stack. All members help with system design, 
 | Step | Shared work | Why it needs all three |
 |---|---|---|
 | ★1 | Database design and the "who can do what" table | Everyone depends on it, so we agree before any coding. |
-| ★2 | The API agreement: what each screen asks for and gets back. **Sakib drafts it, all three review.** | It lets the apps use fake data while the real backend is built. |
+| ★2 | The API agreement ([api-contract.md](api-contract.md)): what each screen asks for and gets back. **Sakib drafts it, all three review.** A first draft exists; the team still needs to review it. | It lets the apps use fake data while the real backend is built. |
 | ★3 | Word list: status names, colours and Bangla/English text | The same words must appear on mobile and web. |
 | ★4 | Connect the real backend to both apps | It is where the independent parts first meet. |
 | ★5 | Full-flow test and security test ("a worker cannot open manager screens") | It is the MVP checklist in [mvp.md](mvp.md) section 5. |
@@ -84,7 +85,7 @@ There is one owner per layer of the stack. All members help with system design, 
 |---|---|---|---|---|
 | 0 | ★1, ★2, ★3 | - | - | - |
 | 1 | - | Supabase setup, login and roles, role checks, test data | Login screen, worker report and "my reports" (fake data) | Login page, manager live list (fake data) |
-| 2 | - | Dispatch, queue, live updates, job status rules, owner read-only rules | Technician jobs and status, owner view | Assign button, technician free/busy, queue view |
+| 2 | - | Dispatch, queue, live updates, job status rules, owner read-only rules | Technician jobs and status | Assign button, technician free/busy, queue view, owner web view (read-only) |
 | 3 | - | Postman collection, backend tests | Language switch, colour status, tests on both phones | Language switch, colour status, web tests |
 | 4 | ★4 | Fix backend issues found | Switch to real backend | Switch to real backend |
 | 5 | ★5, ★6 | Together | Together | Together |
