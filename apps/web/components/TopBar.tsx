@@ -57,9 +57,14 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
       </div>
       <div className="topbar-right">
         {onLogOut ? (
-          <button type="button" className="btn btn-small" onClick={onLogOut}>
+          <button
+            type="button"
+            className="btn btn-small"
+            aria-label={screenText('logOut', language)}
+            onClick={onLogOut}
+          >
             <LogOut size={16} strokeWidth={1.8} aria-hidden="true" />
-            {screenText('logOut', language)}
+            <span className="btn-label">{screenText('logOut', language)}</span>
           </button>
         ) : null}
         <LanguageSwitch />

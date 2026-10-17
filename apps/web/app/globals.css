@@ -1356,3 +1356,31 @@ html[lang='bn'] .filter-tab {
     padding-right: 36px;
   }
 }
+
+/* ---------- Owner screen: three count boxes ---------- */
+
+/* Three boxes across (the owner has no "free technicians" box), then 1 per row. */
+.count-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@container page (max-width: 760px) {
+  .count-grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container page (max-width: 620px) {
+  .count-grid-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone the top bar's Log out (the owner's) shows only its icon, to save room. */
+@media (max-width: 767px) {
+  .topbar .btn-label {
+    display: none;
+  }
+  .topbar .btn-small {
+    min-width: 44px;
+    padding: 0;
+  }
+}

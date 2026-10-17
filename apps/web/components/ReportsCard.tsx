@@ -10,7 +10,8 @@
 //   - mode "all" (Reports page): every report, with filter tabs (All, Waiting,
 //     In progress, Resolved). The queue comes first, marked with a gold edge.
 // Rows in the queue have an "Assign" button; all other rows have an "Open" button
-// that shows read-only details. Owned by Mithi.
+// that shows read-only details. With `readOnly` (the owner) there is no Assign
+// button at all: every row only has Open. Owned by Mithi.
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -30,9 +31,14 @@ import { StatusLabel } from './StatusLabel';
 type ReportsCardProps = {
   mode: 'queue' | 'all';
   reports: readonly Report[];
-  technicians: readonly Technician[];
+  /** Needed for the Assign pop-up (manager only). */
+  technicians?: readonly Technician[];
   /** Asks the page to reload its lists after an assign. */
-  onAssigned: () => void;
+  onAssigned?: () => void;
+  /** The owner's view: no Assign button, every row only has Open (read-only details). */
+  readOnly?: boolean;
+  /** Shows a title above the table (the manager pages already have a page title). */
+  title?: string;
 };
 
 type Filter = 'all' | ReportStatus;
@@ -47,7 +53,14 @@ function orderForManager(reports: readonly Report[]): Report[] {
   return [...queue, ...others];
 }
 
-export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsCardProps) {
+export function ReportsCard({
+  mode,
+  reports,
+  technicians = [],
+  onAssigned = () => undefined,
+  readOnly = false,
+  title,
+}: ReportsCardProps) {
   const { language } = useLanguage();
   const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
@@ -72,6 +85,12 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
           <Link href="/manager/reports" className="card-link">
             {screenText('viewAllReports', language)}
           </Link>
+        </div>
+      ) : null}
+
+      {title ? (
+        <div className="card-head">
+          <h2>{title}</h2>
         </div>
       ) : null}
 
@@ -140,7 +159,7 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
                     <StatusLabel status={report.status} />
                   </td>
                   <td className="actions">
-                    {needsTechnician ? (
+                    {needsTechnician && !readOnly ? (
                       <Button small onClick={() => setAssigning(report)}>
                         {screenText('assignButton', language)}
                       </Button>
