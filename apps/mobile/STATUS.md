@@ -42,7 +42,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Waiting on someone else
 
-- Nothing yet. (If you are blocked, write a note in `requests/<owner>/` and list it here.)
+- Sakib's real backend. All phone screens are done with fake data. Note: `requests/sakib/2026-10-17-phone-app-ready-for-backend.md`. Swapping the fake data takes only two files: `src/auth/fakeAuth.ts` and `src/data/ReportsContext.tsx`.
 
 ## Decisions made in this lane
 
