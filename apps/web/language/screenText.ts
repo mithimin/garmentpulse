@@ -60,6 +60,11 @@ export const SCREEN_TEXT = {
   },
   createCode: { en: 'Create a manager code', bn: 'ম্যানেজার কোড বানান' },
   noCodes: { en: 'No unused codes yet.', bn: 'এখনো কোনো অব্যবহৃত কোড নেই।' },
+  signupClosedTitle: { en: 'Sign-up is not open yet', bn: 'সাইন আপ এখনো চালু হয়নি' },
+  signupClosedText: {
+    en: 'Accounts are created by the team for now. Please ask them to make one for you.',
+    bn: 'আপাতত টিম অ্যাকাউন্ট খুলে দেয়। অনুগ্রহ করে তাদের একটি অ্যাকাউন্ট খুলে দিতে বলুন।',
+  },
   managerTagline: { en: 'Manager login', bn: 'ম্যানেজার লগ ইন' },
   ownerTagline: { en: 'Owner login', bn: 'মালিকের লগ ইন' },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },

@@ -12,6 +12,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 - Building blocks (branch `features/web-screens`, pushed, waiting for review): fonts, one blue theme (`app/globals.css`), the web logo, top bar with Log out, language switch (English / Bangla, Bangla digits), card, buttons, status and free/busy labels, inputs, count box, table, loading / empty / error messages, and a "page not found" page.
 - Login (fake, branch `features/web-screens`): TWO login pages, `/login` for managers and `/owner-login` for the owner (shared form in `components/LoginForm.tsx`). A bar at the top of both pages lets the person pick Manager or Owner; an account from the other role still gets the normal "could not sign you in" sentence, fake login in `auth/fakeAuth.ts` (any password works; manager and owner emails log in; a worker or technician email shows the `WRONG_PLATFORM` sentence), a session memory in `auth/AuthContext.tsx`, and a role door in `auth/RoleGate.tsx` that sends logged-out people to `/login` and shows "You cannot open this page" for the wrong role. `/manager` and `/owner` are placeholders for now.
 - Sign-up (fake, branch `features/web-signup`): `/signup` page with full name, email, password and "manager or owner?". A manager needs a one-time code (OTP) that the owner makes with the "Create a manager code" button on `/owner`; an owner needs the owner code (`FAKE_OWNER_CODE` in `auth/fakeAccounts.ts`). Login pages have a Settings button (language) and sign-up instructions under the form. Needs Sakib: see `requests/sakib/2026-10-18-signup-and-manager-code.md`.
+- Real backend wiring (branch `features/web-real-backend`, NOT tested against the real backend yet): `lib/backend.ts` connects to Supabase when `apps/web/.env.local` has `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see `.env.example`); without them the site keeps using fake data. Real login in `auth/realAuth.ts`. Reports, technicians and the owner counts load through `data/useDashboardData.ts` with live updates. The owner page is now the read-only screen (three count boxes and the report list). In real mode the sign-up page is closed and the manager-codes box is hidden.
 - Friendly sentences for every error code, in both languages (`language/errorText.ts`).
 - Manager start page (`/manager`, fake data): three count boxes, a table of all reports (`components/ReportsTable.tsx`, shows "In the queue" when nobody is assigned) and the technician free/busy list. No Assign button or live updates yet.
 - The temporary `/preview` page was deleted.
@@ -22,9 +23,9 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. Manager: live list of all reports (use `FAKE_REPORTS` from `@garmentpulse/shared`).
-2. Manager: technician free/busy list, assign button, queue view (use `FAKE_TECHNICIANS`, `isInQueue`).
-3. Owner: one read-only screen with three count boxes (use `summarizeReports`).
+1. Get the two public values from Sakib, put them in `apps/web/.env.local`, and test the real login and the live list (5-second rule).
+2. Manager: assign button (`assignTechnician`) and queue view (`isInQueue`).
+3. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
 
