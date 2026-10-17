@@ -21,8 +21,6 @@ export const LOGIN_COLORS = {
   mainButton: '#2E4670',
   mainButtonBorder: '#1C2D4C',
   mainButtonText: '#FFFFFF',
-  logoTile: '#DCC593',
-  logoLetter: '#3A2E14',
 } as const;
 
 /** Colours shared by every role (design system section 3.6). */

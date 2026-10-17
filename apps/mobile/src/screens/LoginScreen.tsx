@@ -28,6 +28,7 @@ import { ROLE_LABELS, getErrorCode } from '@garmentpulse/shared';
 import type { Profile, Role } from '@garmentpulse/shared';
 import { fakeLogin } from '../auth/fakeAuth';
 import { LanguageSwitch } from '../components/LanguageSwitch';
+import { Logo } from '../components/Logo';
 import { useLanguage } from '../language/LanguageContext';
 import { ERROR_TEXT, LOGIN_TEXT } from '../language/screenText';
 import { LOGIN_COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
@@ -91,8 +92,8 @@ export function LoginScreen({ onLoggedIn }: Props) {
           {/* The stitch line: a dashed box drawn just inside the card edge. */}
           <View pointerEvents="none" style={styles.cardStitch} />
 
-          <View style={styles.logoTile}>
-            <Text style={styles.logoLetter}>G</Text>
+          <View style={styles.logo}>
+            <Logo size={72} />
           </View>
           <Text style={styles.title}>{LOGIN_TEXT.appName[language]}</Text>
           <Text style={styles.tagline}>{LOGIN_TEXT.tagline[language]}</Text>
@@ -212,16 +213,7 @@ const styles = StyleSheet.create({
     borderColor: C.cardStitch,
     borderRadius: SIZES.cardRadius - 5,
   },
-  logoTile: {
-    width: 36,
-    height: 36,
-    borderRadius: 9,
-    backgroundColor: C.logoTile,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
-  logoLetter: { color: C.logoLetter, fontSize: 20, fontWeight: '700' },
+  logo: { alignSelf: 'center' },
   title: {
     color: C.text,
     fontSize: 32,
