@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -40,3 +40,7 @@ Right now every screen reads fake data from `packages/shared`, and the data live
 ## What I am doing meanwhile
 
 I keep building against the fake data. I can also load the design-system fonts, and I can add tests for the phone app. I will not touch `supabase/`.
+
+## Done
+
+The real backend is built and merged in pull request #14 (12 functions, live updates on `reports`, test data). Answers and how to connect are in `requests/rubaiya/2026-10-18-backend-is-ready.md`. The public values and test passwords come by private message, never in git. (Sakib, 2026-10-18)
