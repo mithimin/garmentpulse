@@ -7,7 +7,7 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Cormorant_Garamond, IBM_Plex_Mono, Jost } from 'next/font/google';
+import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
@@ -19,10 +19,10 @@ const cormorant = Cormorant_Garamond({
   weight: ['600'],
   variable: '--font-cormorant',
 });
-const jost = Jost({
+const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-jost',
+  variable: '--font-plex-sans',
 });
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -37,7 +37,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${jost.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${plexSans.variable} ${plexMono.variable}`}>
       <body>
         <LanguageProvider>
           <AuthProvider>{children}</AuthProvider>

@@ -33,6 +33,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 - The manager AND the owner use the same blue colours. (The design doc was changed to match on branch `docs/owner-uses-manager-blue`, not merged yet.)
 - The web logo is a copy of the phone app's sewing-machine logo, redrawn for the website in `components/Logo.tsx`.
+- The website's normal-text font is IBM Plex Sans (not Jost, which looked too round). The language button is a small rectangle showing only the current language. The design doc still says Jost and the pill button, so it needs updating.
 - Icons come from `lucide-react`. Fonts come from `next/font/google`.
 
 ## Good to know for the other lanes

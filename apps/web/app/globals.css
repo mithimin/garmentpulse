@@ -66,7 +66,7 @@
 
   /* Fonts (design system 5). Bangla letters come from the device's own font. */
   --font-title: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
-  --font-body: var(--font-jost), Jost, system-ui, sans-serif;
+  --font-body: var(--font-plex-sans), 'IBM Plex Sans', system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -191,16 +191,23 @@ h3 {
 
 .lang-switch {
   min-height: 36px;
-  min-width: 44px;
-  padding: 0 14px;
-  border-radius: 999px;
+  min-width: 52px;
+  padding: 0 16px;
+  /* A rectangle with only slightly softened corners, not a round pill. */
+  border-radius: 3px;
   border: 1px solid var(--bar-stitch);
   background: transparent;
   color: var(--bar-text-chosen);
   font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.14em;
   cursor: pointer;
+}
+/* Bangla letters join up, so they get no extra spacing. */
+html[lang='bn'] .lang-switch {
+  letter-spacing: 0;
+  font-size: 14px;
 }
 .lang-switch:hover {
   background: rgba(255, 255, 255, 0.12);
