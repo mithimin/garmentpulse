@@ -1233,13 +1233,32 @@ html[lang='bn'] .filter-tab {
 .sidebar .menu-link-active {
   background: rgba(255, 255, 255, 0.12);
 }
-/* Log out at the bottom of the sidebar. */
+/* Log out at the bottom of the sidebar: a white button with an icon, like the
+   second buttons everywhere else. */
 .sidebar-logout {
   margin-top: auto;
-  cursor: pointer;
-  border: 1px dashed rgba(255, 255, 255, 0.25);
   position: sticky;
   bottom: var(--space-5);
+  width: 100%;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: 6px;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sidebar-logout:hover {
+  background: #ffffff;
+}
+html[lang='bn'] .sidebar-logout {
+  font-size: 17px;
 }
 /* The dark area behind a sliding sidebar exists only on phones. */
 .sidebar-backdrop {
@@ -1354,5 +1373,33 @@ html[lang='bn'] .filter-tab {
   .login-page {
     padding-left: 36px;
     padding-right: 36px;
+  }
+}
+
+/* ---------- Owner screen: three count boxes ---------- */
+
+/* Three boxes across (the owner has no "free technicians" box), then 1 per row. */
+.count-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@container page (max-width: 760px) {
+  .count-grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container page (max-width: 620px) {
+  .count-grid-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* On a phone the top bar's Log out (the owner's) shows only its icon, to save room. */
+@media (max-width: 767px) {
+  .topbar .btn-label {
+    display: none;
+  }
+  .topbar .btn-small {
+    min-width: 44px;
+    padding: 0;
   }
 }

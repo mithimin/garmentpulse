@@ -126,6 +126,16 @@ export const SCREEN_TEXT = {
   cancel: { en: 'Cancel', bn: 'বাতিল' },
   techReady: { en: 'Ready for a job', bn: 'কাজের জন্য প্রস্তুত' },
   techOnJob: { en: 'On {machine}', bn: 'কাজ করছেন: {machine}' },
+  ownerLine: {
+    en: '{waiting} waiting · {progress} in progress',
+    bn: '{waiting}টি অপেক্ষায় · {progress}টি চলমান',
+  },
+  tagResolvedToday: { en: '{n} today · avg {t}', bn: 'আজ {n}টি · গড়ে {t}' },
+  tagNoneToday: { en: 'None resolved today', bn: 'আজ কিছু সমাধান হয়নি' },
+  ownerCodeWrong: {
+    en: 'That owner code is wrong. Please check it and try again.',
+    bn: 'মালিকের কোডটি ভুল। অনুগ্রহ করে দেখে আবার চেষ্টা করুন।',
+  },
   managerTagline: { en: 'Manager login', bn: 'ম্যানেজার লগ ইন' },
   ownerTagline: { en: 'Owner login', bn: 'মালিকের লগ ইন' },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },

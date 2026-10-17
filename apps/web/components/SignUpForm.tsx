@@ -54,7 +54,12 @@ export function SignUpForm() {
       const person = await signUp({ fullName, email, password, role, code });
       router.replace(homePathFor(person.role));
     } catch (error) {
-      setErrorText(errorSentence(error, language));
+      // A wrong OWNER code gets its own sentence: "ask the owner" makes no sense to an owner.
+      const wrongOwnerCode =
+        role === 'owner' && error instanceof Error && error.message === 'INVALID_CODE';
+      setErrorText(
+        wrongOwnerCode ? screenText('ownerCodeWrong', language) : errorSentence(error, language),
+      );
       setBusy(false);
     }
   }

@@ -13,7 +13,6 @@
 // Owned by Mithi.
 
 import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared';
-import type { Language } from '@garmentpulse/shared';
 import { useAuth } from '../../auth/AuthContext';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
@@ -27,27 +26,10 @@ import {
   resolvedToday,
   startedInLastHour,
 } from '../../data/stats';
+import { formatToday, greetingKey } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
-
-/** "Good morning", "Good afternoon" or "Good evening", from the clock. */
-function greetingKey(now: Date) {
-  const hour = now.getHours();
-  if (hour < 12) return 'greetMorning';
-  if (hour < 18) return 'greetAfternoon';
-  return 'greetEvening';
-}
-
-/** "Friday 9 October" (or the Bangla version). */
-function formatToday(now: Date, language: Language): string {
-  const text = new Intl.DateTimeFormat(language === 'bn' ? 'bn-BD' : 'en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  }).format(now);
-  return localizeDigits(text, language);
-}
 
 export default function DashboardPage() {
   const { profile } = useAuth();
