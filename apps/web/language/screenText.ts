@@ -65,6 +65,7 @@ export const SCREEN_TEXT = {
     en: 'Accounts are created by the team for now. Please ask them to make one for you.',
     bn: 'আপাতত টিম অ্যাকাউন্ট খুলে দেয়। অনুগ্রহ করে তাদের একটি অ্যাকাউন্ট খুলে দিতে বলুন।',
   },
+  sidebarToggle: { en: 'Open or close the menu', bn: 'মেনু খুলুন বা বন্ধ করুন' },
   menuName: { en: 'Main menu', bn: 'প্রধান মেনু' },
   menuDashboard: { en: 'Dashboard', bn: 'ড্যাশবোর্ড' },
   menuReports: { en: 'Reports', bn: 'রিপোর্ট' },

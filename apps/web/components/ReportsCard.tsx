@@ -5,7 +5,8 @@
 // The table of reports on the manager screens. It has two modes:
 //   - mode "queue" (Dashboard): only the reports that need a technician (waiting,
 //     nobody assigned), oldest first, because they have waited longest. Title
-//     "Needs attention" and a link to the Reports page.
+//     "Needs attention" and a link to the Reports page. There is no Technician
+//     column here, because every row would only say "In the queue".
 //   - mode "all" (Reports page): every report, with filter tabs (All, Waiting,
 //     In progress, Resolved). The queue comes first, marked with a gold edge.
 // Rows in the queue have an "Assign" button; all other rows have an "Open" button
@@ -106,7 +107,7 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
               <th>{screenText('colMachine', language)}</th>
               <th>{screenText('colProblem', language)}</th>
               <th>{screenText('colReportedBy', language)}</th>
-              <th>{screenText('colTechnician', language)}</th>
+              {mode === 'all' ? <th>{screenText('colTechnician', language)}</th> : null}
               <th>{screenText('colStatus', language)}</th>
               <th />
             </tr>
@@ -126,13 +127,15 @@ export function ReportsCard({ mode, reports, technicians, onAssigned }: ReportsC
                       {formatDateTime(report.created_at, language)}
                     </div>
                   </td>
-                  <td>
-                    {report.technician
-                      ? report.technician.display_name
-                      : needsTechnician
-                        ? screenText('inQueue', language)
-                        : '-'}
-                  </td>
+                  {mode === 'all' ? (
+                    <td>
+                      {report.technician
+                        ? report.technician.display_name
+                        : needsTechnician
+                          ? screenText('inQueue', language)
+                          : '-'}
+                    </td>
+                  ) : null}
                   <td>
                     <StatusLabel status={report.status} />
                   </td>
