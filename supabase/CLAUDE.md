@@ -35,7 +35,7 @@ These folders are empty for now (they only hold a placeholder file).
 ## Backend rules
 
 - At the start of a session, follow the start checklist in the root `CLAUDE.md`, and read `requests/sakib/` for open notes from Rubaiya and Mithi. Before you finish, update [`STATUS.md`](./STATUS.md) in this folder.
-- `packages/shared/` is also yours. Keep `src/types.ts`, `src/errors.ts` and `src/labels.ts` in step with `docs/api-contract.md`, and keep the fake data in `src/fixtures.ts` realistic.
+- `packages/shared/` and `docs/` are shared areas (nobody's lane), so give the clash warning from the root `CLAUDE.md` before changing them. Keep `src/types.ts`, `src/errors.ts` and `src/labels.ts` in step with `docs/api-contract.md`, and keep the fake data in `src/fixtures.ts` realistic.
 - **Never edit an old migration.** Every change is a **new** migration file.
 - **Row Level Security (a lock on each table row) is on for every table.** A new table without it is a bug.
 - **Apps never write tables directly.** Important changes happen only through functions that check permissions and run in one step.

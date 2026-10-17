@@ -35,7 +35,9 @@ Lane table (who does what):
 |---|---|---|
 | Rubaiya | GarmentPulse Mobile (workers and technicians) | `apps/mobile/` |
 | Mithi | GarmentPulse Web (managers and the owner) | `apps/web/` |
-| Sakib | Backend and team setup | `supabase/`, `packages/shared/`, `docs/`, top-level files |
+| Sakib | Backend and team setup | `supabase/`, top-level files |
+
+`packages/shared/` and `docs/` belong to nobody. Anyone may change them, but Claude gives a clash warning first.
 
 ---
 
