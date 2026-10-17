@@ -64,9 +64,13 @@
   --space-7: 32px;
   --space-8: 48px;
 
-  /* Fonts (design system 5). Bangla letters come from the device's own font. */
-  --font-title: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
-  --font-body: var(--font-plex-sans), 'IBM Plex Sans', system-ui, sans-serif;
+  /* Fonts (design system 5). Bangla letters use Tiro Bangla, a classy
+     Bangla serif font: it is listed right after each English font, so the browser uses
+     it for any Bangla letter. */
+  --font-title:
+    var(--font-cormorant), 'Cormorant Garamond', var(--font-tiro-bangla), Georgia, serif;
+  --font-body:
+    var(--font-plex-sans), 'IBM Plex Sans', var(--font-tiro-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -493,19 +497,19 @@ html[lang='bn'] .table th {
   /* The two choices sit in the middle of the bar. */
   justify-content: center;
   /* Denim jeans cloth: a mid blue with a fine diagonal twill weave. */
-  background-color: #3f6192;
+  background-color: #22395f;
   background-image:
     repeating-linear-gradient(
       45deg,
-      rgba(255, 255, 255, 0.12) 0,
-      rgba(255, 255, 255, 0.12) 1px,
+      rgba(255, 255, 255, 0.09) 0,
+      rgba(255, 255, 255, 0.09) 1px,
       transparent 1px,
       transparent 3px
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(10, 25, 60, 0.18) 0,
-      rgba(10, 25, 60, 0.18) 1px,
+      rgba(5, 12, 35, 0.25) 0,
+      rgba(5, 12, 35, 0.25) 1px,
       transparent 1px,
       transparent 3px
     );

@@ -7,13 +7,13 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans, Tiro_Bangla } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
 
-// Fonts cannot draw Bangla letters; the device's own Bangla font fills in
-// automatically (see the font lists in globals.css).
+// The English fonts cannot draw Bangla letters, so Bangla uses Tiro Bangla,
+// a classy Bangla serif font (it has one weight; bold is made by the browser) (see the font lists in globals.css).
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['600'],
@@ -23,6 +23,11 @@ const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-plex-sans',
+});
+const tiroBangla = Tiro_Bangla({
+  subsets: ['bengali'],
+  weight: '400',
+  variable: '--font-tiro-bangla',
 });
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -37,7 +42,10 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${plexSans.variable} ${plexMono.variable}`}>
+    <html
+      lang="en"
+      className={`${cormorant.variable} ${plexSans.variable} ${tiroBangla.variable} ${plexMono.variable}`}
+    >
       <body>
         <LanguageProvider>
           <AuthProvider>{children}</AuthProvider>
