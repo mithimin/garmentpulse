@@ -69,8 +69,7 @@
      it for any Bangla letter. */
   --font-title:
     var(--font-cormorant), 'Cormorant Garamond', var(--font-tiro-bangla), Georgia, serif;
-  --font-body:
-    var(--font-plex-sans), 'IBM Plex Sans', var(--font-tiro-bangla), system-ui, sans-serif;
+  --font-body: var(--font-jost), Jost, var(--font-tiro-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -80,7 +79,23 @@
 
 body {
   margin: 0;
-  background: var(--page);
+  /* The page is pale cloth: the page colour with a very fine crosshatch weave. */
+  background-color: var(--page);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(30, 50, 80, 0.035) 0,
+      rgba(30, 50, 80, 0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(30, 50, 80, 0.035) 0,
+      rgba(30, 50, 80, 0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
   color: var(--text);
   font-family: var(--font-body);
   font-size: 14px;
@@ -153,7 +168,7 @@ h3 {
 
 .topbar {
   position: relative;
-  background: var(--bar);
+  min-height: 76px;
   color: var(--bar-text);
   padding: var(--space-3) var(--space-7);
   display: flex;
@@ -161,6 +176,23 @@ h3 {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-3);
+  /* Dark denim: the bar colour with a fine diagonal twill weave. */
+  background-color: var(--bar);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 0,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.22) 0,
+      rgba(0, 0, 0, 0.22) 1px,
+      transparent 1px,
+      transparent 3px
+    );
 }
 /* The stitch line along the bottom edge. */
 .topbar::after {
@@ -168,8 +200,51 @@ h3 {
   position: absolute;
   left: 12px;
   right: 12px;
-  bottom: 4px;
+  bottom: 6px;
   border-bottom: 1.5px dashed var(--bar-stitch);
+}
+/* The menu links in the middle of the bar. */
+.topbar-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px dashed transparent;
+  border-radius: 6px;
+  color: var(--bar-text);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.menu-link:hover {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.07);
+}
+/* The page the person is on: white, with a soft white background and a dashed outline. */
+.menu-link-active {
+  color: var(--bar-text-chosen);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+/* The small number next to a menu word (design system 3.2, count bubble). */
+.count-bubble {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #a8622b;
+  color: #fff7ec;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .topbar-brand {
   display: flex;
@@ -672,4 +747,23 @@ html[lang='bn'] .table th {
   border-radius: 4px;
   font-size: 20px;
   letter-spacing: 0.12em;
+}
+
+/* ---------- Manager page greeting ---------- */
+
+.greeting h1 {
+  font-size: 42px;
+}
+.greeting-line {
+  margin: var(--space-2) 0 0;
+  color: var(--soft-text);
+  font-size: 15px;
+}
+/* A menu link that scrolls to a card should not hide the card under the top bar. */
+#reports,
+#technicians {
+  scroll-margin-top: 16px;
+}
+html {
+  scroll-behavior: smooth;
 }
