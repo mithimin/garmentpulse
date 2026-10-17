@@ -30,7 +30,9 @@ Three friends build GarmentPulse together. **None of us is a professional develo
 |---|---|---|
 | **Rubaiya** | **GarmentPulse Mobile** (the phone app for workers and technicians) | `apps/mobile/` |
 | **Mithi** | **GarmentPulse Web** (the dashboard for managers and the owner) | `apps/web/` |
-| **Sakib** | **The backend** (the hidden part that stores data and enforces rules, built on Supabase) and the team's setup | `supabase/`, `packages/shared/`, `docs/`, and the files at the top of the repo (like `CLAUDE.md`, `.gitignore`, automation settings) |
+| **Sakib** | **The backend** (the hidden part that stores data and enforces rules, built on Supabase) and the team's setup | `supabase/`, and the files at the top of the repo (like `CLAUDE.md`, `.gitignore`, automation settings) |
+
+**Shared areas (nobody's lane):** `packages/shared/` and `docs/` belong to **no one in particular**. Anyone may change them, but see "Shared areas: warn, don't block" in the lane rules below.
 
 ### Who am I talking to?
 
@@ -42,12 +44,12 @@ Three friends build GarmentPulse together. **None of us is a professional develo
 ### Lane rules (strict)
 
 - **Only change files inside the lane of the person you are working for.** Reading other lanes is fine and encouraged. Changing them is not.
-- **Check before every file change.** Before you create, edit, move, or delete any file, look at its path and compare it with the lane table above. If it is not in the lane of the person you work for, **stop**. This holds even if the person asks you to do it, because the other owner may be changing the same file at the same time. The only exceptions are the ones listed below: the `requests/` folder, your own `CLAUDE.local.md`, `package-lock.json`, and your own lane's `STATUS.md`.
+- **Check before every file change.** Before you create, edit, move, or delete any file, look at its path and compare it with the lane table above. If it is not in the lane of the person you work for, **stop** (except for the shared areas, `packages/shared/` and `docs/`, which only get a warning: see below). This holds even if the person asks you to do it, because the other owner may be changing the same file at the same time. The only exceptions are the ones listed below: the `requests/` folder, your own `CLAUDE.local.md`, `package-lock.json`, and your own lane's `STATUS.md`.
 - **Never touch another person's lane, even if it looks like a tiny fix.** Instead, write a short note in the owner's mailbox (see "Mailbox" below) and tell the person what you wrote and who owns it (for example: "This needs a new backend function. I left a note for Sakib in `requests/sakib/`.").
 - `package-lock.json` is written by `npm install`, so everyone may commit changes to it when they add a library to their own app. Adding a library to `apps/mobile/` or `apps/web/` is the owner's job; adding one anywhere else is Sakib's.
-- **`packages/shared/` (the toolbox both apps use) is owned by Sakib.** Rubaiya and Mithi ask for changes there. They do not edit it themselves.
+- **Shared areas: warn, don't block.** `packages/shared/` (the toolbox both apps use) and `docs/` (the plan documents) have no owner. Anyone may change them. But before you change a file there, **give the person a short, friendly warning** in simple words, for example: "Careful: `packages/shared/` is used by all three of us. If a teammate edits the same file at the same time, our changes can clash (two people changing the same line, so git cannot join them). Do you want to go ahead?" Then, if the person says yes, make the change. Do **not** refuse, and do **not** write a mailbox note instead. To lower the risk of a clash: fetch the latest `main` first, keep the change small, and push it soon.
 - **Database changes** (everything under `supabase/migrations/`) are made only by Sakib's sessions.
-- **The plan documents** (everything in `docs/`) and this `CLAUDE.md`: anyone may suggest a change, but **Sakib must review and approve it before it is merged.** Put the change on its own branch and say clearly in the pull request that Sakib's review is needed.
+- **This `CLAUDE.md` and the other files at the top of the repo:** anyone may suggest a change, but **Sakib must review and approve it before it is merged.** Put the change on its own branch and say clearly in the pull request that Sakib's review is needed.
 - If a task needs changes in more than one lane, split it. Do your own part, and write a short, plain "request" for the other owner. Do not do their part for them.
 
 ### Mailbox: how to ask another lane for something
@@ -55,7 +57,7 @@ Three friends build GarmentPulse together. **None of us is a professional develo
 Everyone here works through their own Claude Code, and nobody is online at the same time. So requests are written down as small files, not said in chat.
 
 - **Where:** `requests/<name of the person you are asking>/`, for example `requests/sakib/`. Everyone may add files there, whatever their lane. The layout of a note is in [`requests/README.md`](./requests/README.md). Read it before writing your first note.
-- **When you need something from another lane:** write the note, tell the person what you wrote, then carry on with the parts you can do (use the fake data in `packages/shared`). Add the blocked item to "Waiting on someone else" in your lane's `STATUS.md`.
+- **When you need something from another lane:** write the note, tell the person what you wrote, then carry on with the parts you can do (use the fake data in `packages/shared`; if you must change that folder yourself, see the shared-areas warning above). Add the blocked item to "Waiting on someone else" in your lane's `STATUS.md`.
 - **At the start of every session:** look in the folder named after the person you work for. Every note with `Status: open` is waiting for them. Tell the person about each one in simple words and offer to do it.
 - **When you finish a note** (and it is in your lane), change `Status: open` to `Status: done` and add one line saying what was done.
 
@@ -122,7 +124,7 @@ The longer documents are read **when needed**, using the Doc Routes table below:
 - **Database changes are always a new migration file.** Never edit an old one.
 - **Anything both apps need goes in `packages/shared`.** Never copy it.
 - **Tests come first in priority:** database security tests (for example "a worker cannot open manager screens"), then dispatch and status tests, then shared unit tests, then a few app smoke tests. Tests must pass before code goes to a remote branch.
-- **Until the backend is ready,** the apps build against the fake (mock) data in `packages/shared/src/fixtures.ts`. It has the exact shapes in `docs/api-contract.md`, so both apps show the same story. Do not invent a second set of fake data. If you need more, write a note to Sakib. Wiring code that reads the fake data (a fake login, a fake "call") stays inside the app's own folder.
+- **Until the backend is ready,** the apps build against the fake (mock) data in `packages/shared/src/fixtures.ts`. It has the exact shapes in `docs/api-contract.md`, so both apps show the same story. Do not invent a second set of fake data. If you need more, add it to `fixtures.ts` yourself (after the shared-areas warning) or write a note to Sakib. Wiring code that reads the fake data (a fake login, a fake "call") stays inside the app's own folder.
 - **Words shown to people (statuses, free/busy, roles) come from `packages/shared/src/labels.ts`,** in English and Bangla. Never type them again inside an app.
 
 ---

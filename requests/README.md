@@ -6,7 +6,7 @@ This folder is how teammates ask each other for things **without waiting for a c
 
 Each person only changes their own lane (see `CLAUDE.md`). But sometimes your screen needs something from another lane, for example:
 
-- Rubaiya needs a new field in `packages/shared` (Sakib's lane).
+- Rubaiya needs a new backend function (Sakib's lane). (`packages/shared` and `docs/` are shared: change them yourself after the warning in `CLAUDE.md`.)
 - Mithi needs a backend function changed (Sakib's lane).
 - Sakib needs to tell Rubaiya and Mithi that a function name changed.
 
