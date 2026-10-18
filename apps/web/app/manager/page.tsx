@@ -30,6 +30,7 @@ import { formatToday } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
+import { personFirstName } from '../../language/localNames';
 
 export default function DashboardPage() {
   const { profile } = useAuth();
@@ -40,7 +41,7 @@ export default function DashboardPage() {
   const queueCount = list.filter(isInQueue).length;
 
   const now = new Date();
-  const firstName = profile?.display_name.split(' ')[0] ?? '';
+  const firstName = profile ? personFirstName(profile, language) : '';
   const technicianList = technicians.data ?? [];
   const resolvedList = resolvedToday(list, now);
   const averageFix = averageFixMs(resolvedList);
