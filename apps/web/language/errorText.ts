@@ -55,8 +55,8 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
 };
 
 /**
- * Sentences for the two sign-up problems. These codes are NOT in the API contract
- * yet (they are proposed to Sakib), so they live here and not in ERROR_TEXT.
+ * Sentences for the two sign-up problems. These codes are planned in the API
+ * contract (section 4.7) but not in the shared error list yet, so they live here.
  */
 const SIGNUP_ERROR_TEXT: Record<string, Words> = {
   EMAIL_TAKEN: {
@@ -64,8 +64,8 @@ const SIGNUP_ERROR_TEXT: Record<string, Words> = {
     bn: 'এই ইমেইলে আগেই একটি অ্যাকাউন্ট আছে। অনুগ্রহ করে লগইন পেজে যান।',
   },
   INVALID_CODE: {
-    en: 'That code is wrong or was already used. Ask the owner for a new code.',
-    bn: 'কোডটি ভুল অথবা আগেই ব্যবহার করা হয়েছে। মালিকের কাছে নতুন কোড চান।',
+    en: 'That code is wrong, already used or too old. Ask the owner for a new code.',
+    bn: 'কোডটি ভুল, আগেই ব্যবহার করা হয়েছে অথবা মেয়াদ শেষ। মালিকের কাছে নতুন কোড চান।',
   },
 };
 

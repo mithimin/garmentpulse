@@ -13,19 +13,24 @@
 // has a link to the Technicians page. Owned by Mithi.
 
 import Link from 'next/link';
-import type { Report, Technician } from '@garmentpulse/shared';
+import type { Language, Report, Technician } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { localizeDigits } from '../language/format';
 import { screenText } from '../language/screenText';
 import { Card } from './Card';
 import { AvailabilityLabel } from './StatusLabel';
+import { machineName, personName } from '../language/localNames';
 
-/** The first letter of the first two words: "Tariq Hasan" gives "TH". */
-export function initialsOf(name: string): string {
+/**
+ * The first letter of the first two words: "Tariq Hasan" gives "TH".
+ * In Bangla only the first letter of the first name is used, because two Bangla letters side by
+ * side read like one odd word.
+ */
+export function initialsOf(name: string, language: Language = 'en'): string {
   return name
     .trim()
     .split(/\s+/)
-    .slice(0, 2)
+    .slice(0, language === 'en' ? 2 : 1)
     .map((word) => Array.from(word)[0] ?? '')
     .join('')
     .toUpperCase();
@@ -54,7 +59,7 @@ export function TechniciansPanel({
     if (technician.availability === 'free') return screenText('techReady', language);
     const job = reports.find((r) => r.technician?.id === technician.id && r.status !== 'resolved');
     return job
-      ? screenText('techOnJob', language).replace('{machine}', job.machine.name)
+      ? screenText('techOnJob', language).replace('{machine}', machineName(job.machine, language))
       : screenText('assignBusyTag', language);
   }
 
@@ -82,10 +87,10 @@ export function TechniciansPanel({
         {sorted.map((technician) => (
           <li key={technician.id} className="tech-row">
             <span className="avatar" aria-hidden="true">
-              {initialsOf(technician.display_name)}
+              {initialsOf(personName(technician, language), language)}
             </span>
             <div className="tech-text">
-              <div className="tech-name">{technician.display_name}</div>
+              <div className="tech-name">{personName(technician, language)}</div>
               <div className="cell-sub">{smallLine(technician)}</div>
               {detailed ? <div className="cell-sub">{jobsDone(technician)}</div> : null}
             </div>

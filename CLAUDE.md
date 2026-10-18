@@ -165,7 +165,8 @@ Read the right doc before changing the matching area. Do not guess product rules
 **Quick pointers from the docs:**
 
 - The report flow: worker reports, then the manager assigns a **free** technician, then the technician accepts and updates the status (waiting, in progress, resolved). If all technicians are busy, the report waits in a **queue**. See MVP 2.2 to 2.4.
-- The owner web app is **one read-only screen** in the MVP: a list of all reports with three count boxes (Waiting, In progress, Resolved). The owner cannot change anything.
+- The owner web app has **two pages** in the MVP: **Reports** (a read-only list of all reports with three count boxes: Waiting, In progress, Resolved) and **Manager codes** (make a one-time invite code for a new manager, and see the unused codes). The owner cannot change any report.
+- **Sign-up is in the MVP, with invite codes** (decided 2026-10-19): the owner makes manager codes, a manager makes worker and technician codes, the code decides the role, a code works once and expires after 7 days. Owner accounts are made by hand. It is **planned, not built yet**; see `docs/api-contract.md` section 4.7 and `supabase/STATUS.md`.
 - Workers and technicians use the **phone app**. Managers and the owner use the **web app**. Logging into the wrong one must fail (error code `WRONG_PLATFORM`).
 - The app has **two languages (Bangla and English)** with a small switch in the top-right corner of every screen. Phone buttons are 48 px tall.
 - Statuses are colour-coded **and** always have a word next to the colour (design system rule).

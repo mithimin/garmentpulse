@@ -27,6 +27,7 @@ import { DataTable } from './DataTable';
 import { ReportDetailsDialog } from './ReportDetailsDialog';
 import { EmptyMessage } from './StateMessage';
 import { StatusLabel } from './StatusLabel';
+import { machineName, personName } from '../language/localNames';
 
 type ReportsCardProps = {
   mode: 'queue' | 'all';
@@ -137,11 +138,11 @@ export function ReportsCard({
               return (
                 <tr key={report.id} className={needsTechnician ? 'row-attention' : undefined}>
                   <td>
-                    <strong>{report.machine.name}</strong>
+                    <strong>{machineName(report.machine, language)}</strong>
                   </td>
                   <td data-label={screenText('colProblem', language)}>{report.description}</td>
                   <td data-label={screenText('colReportedBy', language)}>
-                    {report.reported_by.display_name}
+                    {personName(report.reported_by, language)}
                     <div className="cell-sub nowrap">
                       {formatDateTime(report.created_at, language)}
                     </div>
@@ -149,7 +150,7 @@ export function ReportsCard({
                   {mode === 'all' ? (
                     <td data-label={screenText('colTechnician', language)}>
                       {report.technician
-                        ? report.technician.display_name
+                        ? personName(report.technician, language)
                         : needsTechnician
                           ? screenText('inQueue', language)
                           : '-'}

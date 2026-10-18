@@ -1,8 +1,8 @@
 # GarmentPulse API Contract
 
-**Status:** v1 confirmed by Sakib and **built**. All 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). Rubaiya and Mithi still review it (plan step ★2).
+**Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is PLANNED: it was decided on 2026-10-19 and is not built yet.** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-10-18
+**Last updated:** 2026-10-19
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -81,7 +81,7 @@ Everyone uses the same three words: `waiting`, `in_progress`, `resolved`.
 
 ### 2.7 Not in the MVP
 
-Invoices and receipts, owner approval and the expense limit, the AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, the 12-month history limit, and **sign-up with one-time manager codes** (accounts are created by hand in the MVP; see section 8).
+Invoices and receipts, owner approval and the expense limit, the AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, and the 12-month history limit. (Sign-up with invite codes **is** in the MVP: see section 4.7. Only **owner** accounts are still made by hand.)
 
 ---
 
@@ -114,6 +114,10 @@ type Report = {
 type Technician = { id: string; display_name: string; availability: TechnicianAvailability };
 
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
+
+// Sign-up with invite codes (section 4.7, planned)
+type InviteRole = 'worker' | 'technician' | 'manager'; // the owner is never created by sign-up
+type InviteCode = { code: string; role: InviteRole; created_at: string; expires_at: string };
 ```
 
 A technician is **busy** when they have at least one assigned report that is not `resolved`, and **free** otherwise. The backend calculates this when reading. It is never stored.
@@ -213,7 +217,47 @@ Email and password. After login the app calls `get_my_profile()`. If the person'
 - **Returns:** `OwnerSummary` (the three count boxes: Waiting, In progress, Resolved)
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
-The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes anything.
+The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's only action that changes anything is making manager invite codes, section 4.7.)
+
+### 4.7 Sign-up with invite codes (PLANNED: decided 2026-10-19, not built yet)
+
+A new person signs up with an **invite code**. The code decides their role, so nobody can choose a role for themselves.
+
+**The code rules**
+
+- Made by the **owner** (for role `manager`) or by a **manager** (for roles `worker` and `technician`). Nobody else makes codes. **Owner** accounts are never created by sign-up with a code. Sakib approves them by hand: he writes the email, role and name into a locked table, `approved_accounts` (see `supabase/approve_test_accounts.sql`), and the sign-up guard then lets exactly that email in with exactly that role. The same table is used for the test accounts.
+- 10 letters and numbers (no look-alike characters such as `0` and `O`). People may type it in capitals or small letters.
+- Works **once**, and **expires after 7 days**.
+- A new person can log in **right away**. There is no email confirmation in the MVP.
+
+#### Sign-up itself (Supabase Auth, no custom function)
+
+Apps use the ready-made helper `signUpWithCode(...)` in `packages/shared`. Under the hood it does three things in order:
+
+1. Calls `check_invite_code(code)` to get the role, or `INVALID_CODE`.
+2. The app makes sure the role belongs to its own platform (a worker or technician code only on the phone app, a manager code only on the website). If not, it stops with `WRONG_PLATFORM`.
+3. Calls Supabase Auth's `signUp` with the email, the password and `{ display_name, invite_code }`. The database refuses any sign-up that has neither a good code nor a pre-approved email (no account is created at all), creates the profile with the **role from the code**, and marks the code as used. A session comes back, so the person is logged in. The app then calls `get_my_profile()` like after any login.
+
+Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an account), `INVALID_INPUT` (empty name, bad email, or a password that is too short), `WRONG_PLATFORM`.
+
+#### `check_invite_code(code)` — Mobile, Web (works **before** login)
+
+- **Inputs:** `code` (text)
+- **Returns:** `{ role: InviteRole }`
+- **Errors:** `INVALID_CODE` (wrong, already used, expired, empty or badly formed)
+
+#### `create_invite_code(role)` — Web (owner, manager)
+
+- **Inputs:** `role` (`manager`, `worker` or `technician`)
+- **Returns:** `InviteCode`
+- **Rules:** the owner may make `manager` codes only. A manager may make `worker` and `technician` codes only.
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED` (this person may not make that kind of code), `INVALID_INPUT` (not one of the three roles)
+
+#### `list_invite_codes()` — Web (owner, manager)
+
+- **Inputs:** none
+- **Returns:** `InviteCode[]` (only the codes **this person made** that are not yet used and not yet expired, newest first)
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
 ---
 
@@ -233,6 +277,9 @@ The owner's list of reports uses `list_reports(status?)`. The owner has no funct
 | `accept_job` | no | yes | no | no |
 | `update_job_status` | no | yes | no | no |
 | `get_owner_summary` | no | no | no | yes |
+| `check_invite_code` (planned) | before login | before login | before login | no (owners never sign up) |
+| `create_invite_code` (planned) | no | no | yes (worker and technician codes) | yes (manager codes) |
+| `list_invite_codes` (planned) | no | no | yes (own codes) | yes (own codes) |
 
 ---
 
@@ -250,6 +297,8 @@ The owner's list of reports uses `list_reports(status?)`. The owner has no funct
 | `JOB_NOT_ACCEPTED` | The technician must accept the job before changing its status. |
 | `JOB_ALREADY_ACCEPTED` | The technician already accepted this job. |
 | `INVALID_STATUS_CHANGE` | That status move is not allowed (backwards, or the report is already resolved). |
+| `INVALID_CODE` | (planned) The invite code is wrong, already used, or expired. |
+| `EMAIL_TAKEN` | (planned) That email already has an account. |
 
 These codes live in `packages/shared/src/errors.ts`.
 
@@ -274,7 +323,8 @@ These codes live in `packages/shared/src/errors.ts`.
 
 ### Answered (by Sakib, 2026-10-18)
 
-- **How do accounts and roles get created?** In the MVP, **Sakib creates every account by hand** in the Supabase dashboard. There is no sign-up screen and no function for it. Sign-up with one-time manager codes (`sign_up`, `create_manager_code`, `list_manager_codes`, and the error codes `EMAIL_TAKEN` and `INVALID_CODE`) is **later**, so the owner stays read-only in the MVP.
+- **How do accounts and roles get created?** *(Changed on 2026-10-19; it was "by hand only" on 2026-10-18.)* People **sign up with an invite code** (section 4.7). The owner makes manager codes, and a manager makes worker and technician codes. The code decides the role. A code works once and expires after 7 days. There is no email confirmation. **Owner accounts** are still made by hand by Sakib. The earlier idea of functions named `sign_up`, `create_manager_code` and `list_manager_codes` became `check_invite_code`, `create_invite_code` and `list_invite_codes`, plus the helper `signUpWithCode`.
+- **How is the code enforced?** By a guard in the database that runs at sign-up and refuses any sign-up without a good code. A small function, `check_invite_code`, lets the apps ask first, so they can show a clear `INVALID_CODE` message.
 - **Where do the machines come from?** Typed in by hand as test data (`supabase/seed.sql`). No function adds machines in the MVP.
 - **Can a manager reassign a report** after it was assigned? **No**, not in the MVP.
 - **Which status moves are allowed for a technician?** Any forward move after the job is accepted: `waiting` to `in_progress` to `resolved`, and also straight from `waiting` to `resolved`. Backwards moves and repeats give `INVALID_STATUS_CHANGE`.

@@ -4,7 +4,10 @@
 -- What this file does, in plain words:
 --   Acts as each test person (Nila the worker, Tariq and Hasan the
 --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
---   and tries about 49 things against the real functions and tables.
+--   and tries about 100 things against the real functions and tables. The
+--   last part tests SIGN-UP WITH INVITE CODES: the code functions and the
+--   sign-up guard (it adds pretend new people to the login list, and the
+--   final "error" removes them again).
 --   Allowed actions must WORK. Forbidden actions must FAIL with the exact
 --   error code from docs/api-contract.md. For example:
 --     * a worker cannot assign a technician            -> NOT_ALLOWED
@@ -12,7 +15,11 @@
 --     * nobody can write a table directly              -> permission denied
 --
 -- HOW TO RUN
---   1. The migrations and supabase/seed.sql must already be applied.
+--   1. The migrations and supabase/seed.sql must already be applied, and the
+--      reports must be exactly the 4 from the seed. Other people's test
+--      reports (a phone or website that was tried out) change the counts and
+--      make the old checks fail for no real reason. To start clean, run
+--      supabase/reset_demo_data.sql and then supabase/seed.sql first.
 --   2. Supabase dashboard > SQL Editor > New query. Paste this whole file.
 --   3. Click Run.
 --
@@ -34,12 +41,16 @@ do $test$
 declare
   -- The list of checks. Each one has:
   --   email  = who is asking (missing = nobody is logged in)
-  --   role   = database role to use (default: authenticated)
+  --   role   = database role to use (default: authenticated). "anon" = a
+  --            visitor who is not logged in. "postgres" = the database owner,
+  --            used to add pretend people to the login list.
   --   call   = the SQL to run; it must return one JSON value
   --   error  = the error we EXPECT (missing = it must succeed)
   --   check  = an extra yes/no test on the result, where $1 is the result
-  --   save   = remember the new report's id for later checks
-  -- Words starting with $ (like $NILA) are replaced by the real ids below.
+  --   save   = remember what was created (an invite code, else an id) under
+  --            this name, so later checks can use it as $NAME
+  -- Words starting with $ (like $NILA, or $CODE_WRK that an earlier check
+  -- saved) are replaced by the real values below.
   v_tests jsonb := $json$[
     {"name":"Nobody logged in cannot list reports","call":"select public.list_reports()","error":"NOT_AUTHENTICATED"},
     {"name":"Anonymous role cannot call functions at all","role":"anon","call":"select public.list_reports()","error":"permission denied for function list_reports"},
@@ -95,7 +106,61 @@ declare
     {"name":"Owner: list all reports (5)","email":"owner@example.com","call":"select public.list_reports()","check":"jsonb_array_length($1) = 5"},
     {"name":"Owner: summary counts (2 waiting, 1 in progress, 2 resolved)","email":"owner@example.com","call":"select public.get_owner_summary()","check":"$1->>'waiting' = '2' and $1->>'in_progress' = '1' and $1->>'resolved' = '2'"},
     {"name":"Owner cannot assign (read-only)","email":"owner@example.com","call":"select public.assign_technician('$R_MOTOR', '$HASAN')","error":"NOT_ALLOWED"},
-    {"name":"Owner sees all reports in the table (5)","email":"owner@example.com","call":"select to_jsonb(count(*)) from public.reports","check":"($1 #>> '{}')::int = 5"}
+    {"name":"Owner sees all reports in the table (5)","email":"owner@example.com","call":"select to_jsonb(count(*)) from public.reports","check":"($1 #>> '{}')::int = 5"},
+
+    {"name":"INVITE: owner makes a manager code (10 safe characters)","email":"owner@example.com","call":"select public.create_invite_code('manager')","save":"CODE_MGR","check":"$1->>'role' = 'manager' and $1->>'code' ~ '^[A-HJ-NP-Z2-9]{10}$'"},
+    {"name":"INVITE: owner cannot make a worker code","email":"owner@example.com","call":"select public.create_invite_code('worker')","error":"NOT_ALLOWED"},
+    {"name":"INVITE: nobody can make an OWNER code","email":"owner@example.com","call":"select public.create_invite_code('owner')","error":"INVALID_INPUT"},
+    {"name":"INVITE: a made-up role is rejected","email":"owner@example.com","call":"select public.create_invite_code('boss')","error":"INVALID_INPUT"},
+    {"name":"INVITE: a missing role is rejected","email":"owner@example.com","call":"select public.create_invite_code(null)","error":"INVALID_INPUT"},
+    {"name":"INVITE: manager makes a worker code","email":"farhan@example.com","call":"select public.create_invite_code('worker')","save":"CODE_WRK","check":"$1->>'role' = 'worker'"},
+    {"name":"INVITE: manager makes a technician code","email":"farhan@example.com","call":"select public.create_invite_code('technician')","save":"CODE_TECH","check":"$1->>'role' = 'technician'"},
+    {"name":"INVITE: manager makes a second worker code","email":"farhan@example.com","call":"select public.create_invite_code('worker')","save":"CODE_WRK2","check":"$1->>'role' = 'worker'"},
+    {"name":"INVITE: manager makes a third worker code","email":"farhan@example.com","call":"select public.create_invite_code('worker')","save":"CODE_WRK3","check":"$1->>'role' = 'worker'"},
+    {"name":"INVITE: manager cannot make a manager code","email":"farhan@example.com","call":"select public.create_invite_code('manager')","error":"NOT_ALLOWED"},
+    {"name":"INVITE: worker cannot make a code","email":"nila@example.com","call":"select public.create_invite_code('worker')","error":"NOT_ALLOWED"},
+    {"name":"INVITE: technician cannot make a code","email":"tariq@example.com","call":"select public.create_invite_code('worker')","error":"NOT_ALLOWED"},
+    {"name":"INVITE: a logged-out visitor cannot make a code","role":"anon","call":"select public.create_invite_code('worker')","error":"permission denied for function create_invite_code"},
+    {"name":"INVITE: a login with no person behind it cannot make a code","call":"select public.create_invite_code('worker')","error":"NOT_AUTHENTICATED"},
+    {"name":"INVITE: manager lists only own unused codes (4)","email":"farhan@example.com","call":"select public.list_invite_codes()","check":"jsonb_array_length($1) = 4 and exists (select 1 from jsonb_array_elements($1) e where e->>'code' = '$CODE_WRK') and not exists (select 1 from jsonb_array_elements($1) e where e->>'code' = '$CODE_MGR')"},
+    {"name":"INVITE: owner lists only the manager code (1)","email":"owner@example.com","call":"select public.list_invite_codes()","check":"jsonb_array_length($1) = 1 and $1->0->>'code' = '$CODE_MGR'"},
+    {"name":"INVITE: worker cannot list codes","email":"nila@example.com","call":"select public.list_invite_codes()","error":"NOT_ALLOWED"},
+    {"name":"INVITE: a visitor can check a good code before sign-up","role":"anon","call":"select public.check_invite_code('$CODE_WRK')","check":"$1->>'role' = 'worker'"},
+    {"name":"INVITE: checking works with small letters and spaces","role":"anon","call":"select public.check_invite_code(' ' || lower('$CODE_WRK') || ' ')","check":"$1->>'role' = 'worker'"},
+    {"name":"INVITE: a too-short code is invalid","role":"anon","call":"select public.check_invite_code('ABC')","error":"INVALID_CODE"},
+    {"name":"INVITE: an empty code is invalid","role":"anon","call":"select public.check_invite_code('')","error":"INVALID_CODE"},
+    {"name":"INVITE: a missing code is invalid","role":"anon","call":"select public.check_invite_code(null)","error":"INVALID_CODE"},
+    {"name":"INVITE: a code that was never made is invalid","role":"anon","call":"select public.check_invite_code('ABCDEFGHJK')","error":"INVALID_CODE"},
+    {"name":"INVITE: a code with a look-alike letter (O) is invalid","role":"anon","call":"select public.check_invite_code('OOOOOOOOOO')","error":"INVALID_CODE"},
+    {"name":"INVITE: nobody can read the codes table directly","email":"nila@example.com","call":"select to_jsonb(count(*)) from public.invite_codes","error":"permission denied for table invite_codes"},
+    {"name":"INVITE: nobody can read the approved accounts table directly","email":"farhan@example.com","call":"select to_jsonb(count(*)) from public.approved_accounts","error":"permission denied for table approved_accounts"},
+
+    {"name":"GUARD: sign-up with no code is refused","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'stranger@example.com', '{}'::jsonb) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: sign-up with a wrong code is refused","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'stranger@example.com', jsonb_build_object('invite_code', 'ABCDEFGHJK', 'display_name', 'Stranger')) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: sign-up with a garbage code is refused","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'stranger@example.com', jsonb_build_object('invite_code', 'hello', 'display_name', 'Stranger')) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: choosing the manager role yourself does not work (no code)","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'sneaky@example.com', jsonb_build_object('role', 'manager', 'display_name', 'Sneaky')) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: a good code but no name is refused","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'noname@example.com', jsonb_build_object('invite_code', '$CODE_WRK3')) returning id) select to_jsonb(1)","error":"INVALID_INPUT"},
+    {"name":"GUARD: a good code but a 81-letter name is refused","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'longname@example.com', jsonb_build_object('invite_code', '$CODE_WRK3', 'display_name', repeat('x', 81))) returning id) select to_jsonb(1)","error":"INVALID_INPUT"},
+    {"name":"GUARD: a refused sign-up leaves the code unused","email":"farhan@example.com","call":"select public.list_invite_codes()","check":"jsonb_array_length($1) = 4"},
+    {"name":"GUARD: a good worker code signs a worker up (the role field is ignored)","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'newworker@example.com', jsonb_build_object('invite_code', '$CODE_WRK', 'display_name', 'New Worker', 'role', 'manager')) returning id) select to_jsonb(1)"},
+    {"name":"GUARD: the new profile is a worker with the typed name","role":"postgres","call":"select to_jsonb(p) from public.profiles p where p.email = 'newworker@example.com'","check":"$1->>'role' = 'worker' and $1->>'display_name' = 'New Worker'"},
+    {"name":"GUARD: the code is now marked as used","role":"postgres","call":"select to_jsonb(c) from public.invite_codes c where c.code = '$CODE_WRK'","check":"$1->>'used_at' is not null and $1->>'used_by' is not null"},
+    {"name":"GUARD: a used code cannot be used again","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'second@example.com', jsonb_build_object('invite_code', '$CODE_WRK', 'display_name', 'Second')) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: a used code is no longer valid to check","role":"anon","call":"select public.check_invite_code('$CODE_WRK')","error":"INVALID_CODE"},
+    {"name":"GUARD: a technician code signs a technician up (the owner role field is ignored)","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'newtech@example.com', jsonb_build_object('invite_code', '$CODE_TECH', 'display_name', 'New Tech', 'role', 'owner')) returning id) select to_jsonb(1)"},
+    {"name":"GUARD: the new profile is a technician, not an owner","role":"postgres","call":"select to_jsonb(p) from public.profiles p where p.email = 'newtech@example.com'","check":"$1->>'role' = 'technician'"},
+    {"name":"GUARD: the code works typed in small letters","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'lowerworker@example.com', jsonb_build_object('invite_code', lower('$CODE_WRK2'), 'display_name', 'Lower Worker')) returning id) select to_jsonb(1)"},
+    {"name":"GUARD: the new worker can use the app (profile and own reports)","email":"newworker@example.com","call":"select public.get_my_profile()","check":"$1->>'role' = 'worker'"},
+    {"name":"GUARD: the new worker starts with no reports","email":"newworker@example.com","call":"select public.list_my_reports()","check":"jsonb_array_length($1) = 0"},
+    {"name":"GUARD: the new worker still cannot do a manager's job","email":"newworker@example.com","call":"select public.list_reports()","error":"NOT_ALLOWED"},
+    {"name":"GUARD: the new technician cannot make codes","email":"newtech@example.com","call":"select public.create_invite_code('worker')","error":"NOT_ALLOWED"},
+    {"name":"GUARD: the manager now lists only the unused code (1)","email":"farhan@example.com","call":"select public.list_invite_codes()","check":"jsonb_array_length($1) = 1 and $1->0->>'code' = '$CODE_WRK3'"},
+    {"name":"GUARD: set up an expired code","role":"postgres","call":"with x as (insert into public.invite_codes (code, role, created_by, expires_at) values ('MNPQRSTUVW', 'worker', '$FARHAN', now() - interval '1 day') returning id) select to_jsonb(1)"},
+    {"name":"GUARD: an expired code is not valid to check","role":"anon","call":"select public.check_invite_code('MNPQRSTUVW')","error":"INVALID_CODE"},
+    {"name":"GUARD: an expired code cannot sign anyone up","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'late@example.com', jsonb_build_object('invite_code', 'MNPQRSTUVW', 'display_name', 'Late')) returning id) select to_jsonb(1)","error":"INVALID_CODE"},
+    {"name":"GUARD: set up a pre-approved owner email","role":"postgres","call":"with x as (insert into public.approved_accounts (email, role, display_name) values ('newowner@example.com', 'owner', 'New Owner') returning email) select to_jsonb(1)"},
+    {"name":"GUARD: a pre-approved email gets in without a code (the typed name is ignored)","role":"postgres","call":"with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'newowner@example.com', jsonb_build_object('display_name', 'Fake Name')) returning id) select to_jsonb(1)"},
+    {"name":"GUARD: the pre-approved profile has the role and name from Sakib's list","role":"postgres","call":"select to_jsonb(p) from public.profiles p where p.email = 'newowner@example.com'","check":"$1->>'role' = 'owner' and $1->>'display_name' = 'New Owner'"}
   ]$json$;
 
   t         jsonb;
@@ -113,7 +178,12 @@ declare
   v_nila uuid; v_tariq uuid; v_hasan uuid; v_farhan uuid; v_owner uuid;
   v_r_needle uuid; v_r_thread uuid; v_r_motor uuid; v_r_press uuid;
   v_m1 uuid;
-  v_newr uuid;
+
+  -- Values remembered between checks (a "save" in a check puts one here), and
+  -- the tools to put them back into later checks.
+  v_vars  jsonb := '{}'::jsonb;
+  v_key   text;
+  v_check text;
 begin
   -- Look up the ids from the seed data.
   select id into v_nila   from public.profiles where email = 'nila@example.com';
@@ -151,7 +221,17 @@ begin
     v_call := replace(v_call, '$R_MOTOR', v_r_motor::text);
     v_call := replace(v_call, '$R_PRESS', v_r_press::text);
     v_call := replace(v_call, '$M1', v_m1::text);
-    v_call := replace(v_call, '$NEWR', coalesce(v_newr::text, 'missing'));
+
+    -- Fill in the values remembered by earlier checks (for example $NEWR, the
+    -- id of the report just made, or $CODE_WRK, an invite code). Longest names
+    -- first, so $CODE_WRK2 is never mistaken for $CODE_WRK.
+    v_check := t ->> 'check';
+    for v_key in
+      select k from jsonb_object_keys(v_vars) as k order by length(k) desc
+    loop
+      v_call := replace(v_call, '$' || v_key, v_vars ->> v_key);
+      v_check := replace(v_check, '$' || v_key, v_vars ->> v_key);
+    end loop;
 
     select id into v_sub from auth.users where email = t ->> 'email';
 
@@ -172,9 +252,12 @@ begin
     end;
     execute 'reset role';
 
-    -- Remember the id of the report that was just created.
-    if t ->> 'save' = 'NEWR' and v_result is not null then
-      v_newr := (v_result ->> 'id')::uuid;
+    -- Remember what was just created: an invite code, or else an id.
+    if (t ->> 'save') is not null and v_result is not null then
+      v_vars := v_vars || jsonb_build_object(
+        t ->> 'save',
+        coalesce(v_result ->> 'code', v_result ->> 'id')
+      );
     end if;
 
     -- Decide: pass or fail?
@@ -191,9 +274,9 @@ begin
     else
       if v_err is not null then
         v_detail := 'unexpected error: ' || v_err;
-      elsif (t ->> 'check') is not null then
+      elsif v_check is not null then
         begin
-          execute 'select (' || (t ->> 'check') || ')' into v_ok using v_result;
+          execute 'select (' || v_check || ')' into v_ok using v_result;
           v_ok := coalesce(v_ok, false);
           if not v_ok then
             v_detail := 'the result was not what we expected: ' || left(v_result::text, 200);
@@ -211,7 +294,7 @@ begin
       v_failed := v_failed + 1;
     end if;
     v_lines := v_lines || E'\n' || case when v_ok then 'PASS ' else 'FAIL ' end
-               || lpad(v_n::text, 2, '0') || '  ' || (t ->> 'name')
+               || lpad(v_n::text, 3, '0') || '  ' || (t ->> 'name')
                || case when v_ok then '' else '   <-- ' || v_detail end;
   end loop;
 

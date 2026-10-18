@@ -14,9 +14,12 @@
 --     * "The press does not heat up."  resolved by Hasan (a past job)
 --   Hasan (technician) is FREE, so the manager can assign him a queued report.
 --
--- BEFORE YOU RUN THIS FILE: create the 5 logins by hand
+-- BEFORE YOU RUN THIS FILE: approve and create the 5 logins by hand
 --   (this file never contains a password, on purpose).
---   Supabase dashboard > Authentication > Users > Add user > Create new user.
+--   First run supabase/approve_test_accounts.sql. Since the sign-up guard
+--   (migration 9) exists, a login can only be created for an approved email;
+--   the guard then also creates each profile by itself.
+--   Then: Supabase dashboard > Authentication > Users > Add user > Create new user.
 --   Tick "Auto Confirm User". Use THESE emails, and choose your own test
 --   password for each (keep them private, never write them in a file):
 --

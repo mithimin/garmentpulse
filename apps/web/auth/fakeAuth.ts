@@ -21,8 +21,8 @@ import { FAKE_PEOPLE, PLATFORM_FOR_ROLE } from '@garmentpulse/shared';
 import type { Profile, Role } from '@garmentpulse/shared';
 import {
   addSignedUpAccount,
-  consumeManagerCode,
-  FAKE_OWNER_CODE,
+  checkInviteCode,
+  crossOutInviteCode,
   listSignedUpAccounts,
 } from './fakeAccounts';
 
@@ -59,50 +59,43 @@ export async function fakeLogin(email: string, password: string, loginFor: Role)
   return person;
 }
 
-/** Local fake-only error codes for sign-up (NOT in docs/api-contract.md; proposed to Sakib). */
+/** Sign-up error codes (docs/api-contract.md 4.7). */
 export type SignUpErrorCode = 'EMAIL_TAKEN' | 'INVALID_CODE';
 
 export type SignUpInput = {
   fullName: string;
   email: string;
   password: string;
-  role: 'manager' | 'owner';
-  /** A manager needs a one-time code made by the owner. An owner needs the owner code. */
+  /** The invite code. It decides the role: nobody picks their own role. */
   code: string;
 };
 
 /**
- * A FAKE sign-up. A manager must type a one-time code the owner created
- * (it is crossed out after use). An owner must type the fixed owner code.
- * On success the new person is saved and returned, ready to be logged in.
+ * A FAKE sign-up with an invite code (docs/api-contract.md 4.7). Steps, in order:
+ * the code must be good (INVALID_CODE), its role must belong to the website
+ * (WRONG_PLATFORM for worker and technician codes), the email must be new
+ * (EMAIL_TAKEN). The code is crossed out after use. Owners never sign up.
  */
 export async function fakeSignUp(input: SignUpInput): Promise<Profile> {
   await new Promise((resolve) => setTimeout(resolve, FAKE_DELAY_MS));
 
   const fullName = input.fullName.trim();
   const email = input.email.trim().toLowerCase();
-  const code = input.code.trim();
-  if (fullName === '' || email === '' || input.password === '' || code === '') {
+  if (fullName === '' || !email.includes('@') || input.password.length < 6) {
     throw new Error('INVALID_INPUT');
   }
-  if (input.role !== 'manager' && input.role !== 'owner') {
-    throw new Error('INVALID_INPUT');
-  }
+
+  const role = checkInviteCode(input.code);
+  if (role === null) throw new Error('INVALID_CODE' satisfies SignUpErrorCode);
+  if (PLATFORM_FOR_ROLE[role] !== 'web') throw new Error('WRONG_PLATFORM');
 
   const taken = [...FAKE_PEOPLE, ...listSignedUpAccounts()].some(
     (p) => p.email.toLowerCase() === email,
   );
   if (taken) throw new Error('EMAIL_TAKEN' satisfies SignUpErrorCode);
 
-  const codeIsGood = input.role === 'owner' ? code === FAKE_OWNER_CODE : consumeManagerCode(code);
-  if (!codeIsGood) throw new Error('INVALID_CODE' satisfies SignUpErrorCode);
-
-  const profile: Profile = {
-    id: `u-new-${Date.now()}`,
-    display_name: fullName,
-    email,
-    role: input.role,
-  };
+  crossOutInviteCode(input.code);
+  const profile: Profile = { id: `u-new-${Date.now()}`, display_name: fullName, email, role };
   addSignedUpAccount(profile);
   return profile;
 }

@@ -2,14 +2,12 @@
 
 // apps/web/components/SignUpForm.tsx
 //
-// The sign-up form (page /signup). The person types a full name, an email and a
-// password, then says if they are a manager or an owner. Then one more box
-// appears for a secret code:
-//   - a MANAGER needs a one-time code (OTP) that the owner created, so a manager
-//     cannot get in without the owner's say-so;
-//   - an OWNER needs the owner code.
-// Right now this is FAKE (see auth/fakeAuth.ts and auth/fakeAccounts.ts); the
-// real sign-up comes with Sakib's backend. Owned by Mithi.
+// The sign-up form (page /signup). The person types a full name, an email, a
+// password and an INVITE CODE. The code decides the role (a manager code makes a
+// manager), so there is no "who are you?" choice and nobody can pick their own
+// role. Owners never sign up here (docs/mvp.md 2.1). Right now this is FAKE (see
+// auth/fakeAuth.ts and auth/fakeAccounts.ts); the real sign-up comes with
+// Sakib's backend. Owned by Mithi.
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
@@ -17,17 +15,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from './Button';
 import { Card } from './Card';
-import { Field, SelectInput, TextInput } from './Field';
+import { Field, TextInput } from './Field';
 import { LoginBar } from './LoginBar';
 import { Logo } from './Logo';
-import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
 import { useLanguage } from '../language/LanguageContext';
 import { errorSentence } from '../language/errorText';
 import { screenText } from '../language/screenText';
-
-type SignUpRole = '' | 'manager' | 'owner';
 
 export function SignUpForm() {
   const { signUp } = useAuth();
@@ -37,29 +32,24 @@ export function SignUpForm() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<SignUpRole>('');
   const [code, setCode] = useState('');
   const [errorText, setErrorText] = useState('');
   const [busy, setBusy] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (role === '') {
-      setErrorText(errorSentence(new Error('INVALID_INPUT'), language));
+    // A short password gets its own clear sentence (the same 6-letter rule as the fake sign-up).
+    if (password !== '' && password.length < 6) {
+      setErrorText(screenText('passwordTooShort', language));
       return;
     }
     setBusy(true);
     setErrorText('');
     try {
-      const person = await signUp({ fullName, email, password, role, code });
+      const person = await signUp({ fullName, email, password, code });
       router.replace(homePathFor(person.role));
     } catch (error) {
-      // A wrong OWNER code gets its own sentence: "ask the owner" makes no sense to an owner.
-      const wrongOwnerCode =
-        role === 'owner' && error instanceof Error && error.message === 'INVALID_CODE';
-      setErrorText(
-        wrongOwnerCode ? screenText('ownerCodeWrong', language) : errorSentence(error, language),
-      );
+      setErrorText(errorSentence(error, language));
       setBusy(false);
     }
   }
@@ -110,37 +100,17 @@ export function SignUpForm() {
                 />
               )}
             </Field>
-            <Field label={screenText('roleQuestion', language)}>
+            <Field label={screenText('inviteCodeLabel', language)}>
               {(id) => (
-                <SelectInput
+                <TextInput
                   id={id}
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as SignUpRole)}
-                >
-                  <option value="">{screenText('roleChoose', language)}</option>
-                  <option value="manager">{ROLE_LABELS.manager[language]}</option>
-                  <option value="owner">{ROLE_LABELS.owner[language]}</option>
-                </SelectInput>
+                  autoComplete="off"
+                  placeholder={screenText('codeHint', language)}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
               )}
             </Field>
-            {role !== '' ? (
-              <Field
-                label={screenText(
-                  role === 'manager' ? 'managerCodeLabel' : 'ownerCodeLabel',
-                  language,
-                )}
-              >
-                {(id) => (
-                  <TextInput
-                    id={id}
-                    autoComplete="one-time-code"
-                    placeholder={screenText('codeHint', language)}
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                  />
-                )}
-              </Field>
-            ) : null}
             {errorText ? (
               <p className="field-error" role="alert">
                 {errorText}
@@ -154,7 +124,7 @@ export function SignUpForm() {
         <div className="login-help">
           <p>
             {screenText('haveAccount', language)}{' '}
-            <Link href={role === 'owner' ? '/owner-login' : '/login'} className="login-link">
+            <Link href="/login" className="login-link">
               {screenText('loginLink', language)}
             </Link>
           </p>
