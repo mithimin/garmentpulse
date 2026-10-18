@@ -225,7 +225,7 @@ A new person signs up with an **invite code**. The code decides their role, so n
 
 **The code rules**
 
-- Made by the **owner** (for role `manager`) or by a **manager** (for roles `worker` and `technician`). Nobody else makes codes. **Owner** accounts are never created by sign-up (Sakib makes them by hand).
+- Made by the **owner** (for role `manager`) or by a **manager** (for roles `worker` and `technician`). Nobody else makes codes. **Owner** accounts are never created by sign-up with a code. Sakib approves them by hand: he writes the email, role and name into a locked table, `approved_accounts` (see `supabase/approve_test_accounts.sql`), and the sign-up guard then lets exactly that email in with exactly that role. The same table is used for the test accounts.
 - 10 letters and numbers (no look-alike characters such as `0` and `O`). People may type it in capitals or small letters.
 - Works **once**, and **expires after 7 days**.
 - A new person can log in **right away**. There is no email confirmation in the MVP.
@@ -236,7 +236,7 @@ Apps use the ready-made helper `signUpWithCode(...)` in `packages/shared`. Under
 
 1. Calls `check_invite_code(code)` to get the role, or `INVALID_CODE`.
 2. The app makes sure the role belongs to its own platform (a worker or technician code only on the phone app, a manager code only on the website). If not, it stops with `WRONG_PLATFORM`.
-3. Calls Supabase Auth's `signUp` with the email, the password and `{ display_name, invite_code }`. The database refuses any sign-up without a good code, creates the profile with the **role from the code**, and marks the code as used. A session comes back, so the person is logged in. The app then calls `get_my_profile()` like after any login.
+3. Calls Supabase Auth's `signUp` with the email, the password and `{ display_name, invite_code }`. The database refuses any sign-up that has neither a good code nor a pre-approved email (no account is created at all), creates the profile with the **role from the code**, and marks the code as used. A session comes back, so the person is logged in. The app then calls `get_my_profile()` like after any login.
 
 Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an account), `INVALID_INPUT` (empty name, bad email, or a password that is too short), `WRONG_PLATFORM`.
 

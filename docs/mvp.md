@@ -92,6 +92,7 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 | Free and paid versions (subscription) | Section 6 | No payment or billing needed to test the main idea. |
 | 12-month history limit and user limits | Section 6, NFR-04 | Not needed for the first test. |
 | Push notifications to phones | FR-05, FR-06 | Can start with in-app status updates only. |
+| Several factories in one system (an invite code would also decide the factory, and each factory would see only its own machines, reports and people) | Section 6 | The MVP proves the flow for **one** factory. Many factories would add a factory column to every table and rework every security rule and function. The invite code is the natural place to add it later, next to the role. |
 
 **Out of scope everywhere (already in PRD section 7):** stock, production planning, payroll, face recognition.
 
