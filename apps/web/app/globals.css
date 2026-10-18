@@ -384,19 +384,24 @@ html[lang='bn'] .status {
   letter-spacing: 0;
   text-transform: none;
 }
+/* Soft pastel status colours: butter yellow for waiting, sky blue for in progress / busy,
+   mint green for resolved / free. The dark text and the word keep every status easy to read. */
 .status-waiting {
-  background: var(--waiting-bg);
-  color: var(--waiting-text);
+  background: #fbe7a8;
+  color: #5a4100;
+  box-shadow: 0 0 0 1px #efd37d;
 }
 .status-in_progress,
 .status-busy {
-  background: var(--progress-bg);
-  color: var(--progress-text);
+  background: #d3e3fb;
+  color: #1d3f78;
+  box-shadow: 0 0 0 1px #a9c6f0;
 }
 .status-resolved,
 .status-free {
-  background: var(--resolved-bg);
-  color: var(--resolved-text);
+  background: #cdeedb;
+  color: #1b5a3a;
+  box-shadow: 0 0 0 1px #9fd8b8;
 }
 
 /* ---------- Inputs (design system 9.4) ---------- */
@@ -945,6 +950,10 @@ html {
   justify-content: space-between;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
+}
+/* The title of a card (Reports, Technicians) is a little bigger than normal headings. */
+.card-head h2 {
+  font-size: 32px;
 }
 .card-link {
   color: var(--link);

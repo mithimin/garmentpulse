@@ -86,7 +86,7 @@ export const SCREEN_TEXT = {
   tagAverageFix: { en: 'Avg {t} to fix', bn: 'গড়ে {t} লেগেছে' },
   tagNoFixes: { en: 'No fixes yet today', bn: 'আজ এখনো কিছু ঠিক হয়নি' },
   tagBusyOf: { en: '{busy} busy of {total}', bn: '{total} জনের মধ্যে {busy} জন ব্যস্ত' },
-  needsAttentionTitle: { en: 'Needs attention', bn: 'নজর দেওয়া দরকার' },
+  needsAttentionTitle: { en: 'Reports', bn: 'রিপোর্ট' }, // title of the queue card on the Dashboard
   viewAllReports: { en: 'View all reports', bn: 'সব রিপোর্ট দেখুন' },
   viewAllTechnicians: { en: 'View all technicians', bn: 'সব টেকনিশিয়ান দেখুন' },
   nothingNeedsAttention: { en: 'Nothing needs attention', bn: 'কিছুতেই নজর দেওয়ার দরকার নেই' },
