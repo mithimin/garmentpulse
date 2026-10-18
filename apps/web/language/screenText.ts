@@ -55,6 +55,8 @@ export const SCREEN_TEXT = {
     en: 'Give a code to a new worker or technician. They use it to sign up on the phone app. Each code works only once.',
     bn: 'নতুন শ্রমিক বা টেকনিশিয়ানকে একটি কোড দিন। তারা ফোন অ্যাপে সাইন আপ করতে এটি ব্যবহার করবে। প্রতিটি কোড মাত্র একবার কাজ করে।',
   },
+  workerCodesTitle: { en: 'Worker codes', bn: 'শ্রমিকের কোড' },
+  technicianCodesTitle: { en: 'Technician codes', bn: 'টেকনিশিয়ানের কোড' },
   createWorkerCode: { en: 'Create a worker code', bn: 'শ্রমিক কোড বানান' },
   createTechnicianCode: { en: 'Create a technician code', bn: 'টেকনিশিয়ান কোড বানান' },
   noCodes: { en: 'No unused codes yet.', bn: 'এখনো কোনো অব্যবহৃত কোড নেই।' },
