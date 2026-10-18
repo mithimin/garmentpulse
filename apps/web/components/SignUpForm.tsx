@@ -38,6 +38,11 @@ export function SignUpForm() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    // A short password gets its own clear sentence (the same 6-letter rule as the fake sign-up).
+    if (password !== '' && password.length < 6) {
+      setErrorText(screenText('passwordTooShort', language));
+      return;
+    }
     setBusy(true);
     setErrorText('');
     try {
