@@ -16,7 +16,10 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
   - Security rules: who may see which report; live updates (Realtime) switched on for `reports`.
   - **All 12 functions from `docs/api-contract.md`** with the exact names, inputs and error codes: `get_my_profile`, `list_machines`, `create_report`, `list_my_reports`, `list_reports`, `get_report`, `list_technicians`, `assign_technician`, `list_my_jobs`, `accept_job`, `update_job_status`, `get_owner_summary`.
   - Test data in `supabase/seed.sql`: 5 people, 5 machines, 4 reports.
-  - A rules check in `supabase/tests/api_rules_check.sql` (run by hand in the SQL Editor). Last run: **all 46 checks passed**.
+  - A rules check in `supabase/tests/api_rules_check.sql` (run by hand in the SQL Editor). It has 49 checks (the last three were added after the bug below).
+  - A **real client check** (`supabase/tests/real_client.check.ts`, started with `node supabase/tests/run_real_check.mjs`): it logs in like the real apps and calls everything through `createApi`. Last run: **all 16 checks passed**. A new report reached the manager in about **0.5 seconds** (the rule is 5), and an unrelated technician did not receive it.
+  - A bug found by that check and fixed: any worker or technician could open a report that was still in the queue. See migration `20261018100000_fix_get_report_queue.sql`.
+  - Public sign-up is switched **off** in the cloud project (a dashboard setting, not in any file). If the project is ever rebuilt, switch it off again.
 - **Ready-made wrappers** in `packages/shared/src/api.ts`: `createApi(supabase)` gives typed methods for all 12 functions (for example `api.listMyReports()`). Failures become an `ApiError` with a known `code`. Both apps should use these instead of typing `supabase.rpc('...')` by hand.
 
 ## In progress
@@ -26,8 +29,8 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 ## Next
 
 1. Wait for Rubaiya and Mithi to confirm a real test login works (the URL, key and passwords were sent privately). This starts shared step ★4.
-2. Check live updates (the 5-second rule) with two screens open.
-3. Postman collection, so the apps can be checked against the real backend.
+2. Check the 5-second rule again with the real phone app and the real website open at the same time.
+3. Postman collection (optional now that the real client check exists).
 4. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
 5. Later: sign-up with one-time manager codes (Mithi's idea, see `requests/sakib/2026-10-18-signup-and-manager-code.md`).
 
@@ -38,7 +41,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## Decisions made in this lane
 
-- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up with one-time manager codes is **later** (decided 2026-10-18), so the owner stays read-only.
+- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up is **later** for everyone (decided 2026-10-18), so the owner stays read-only. Mithi (manager codes, owner sidebar) and Rubaiya (worker and technician sign-up) both asked for it; the answer is "yes, right after the first end-to-end test passes", as **one invite-code design for all roles**: the owner or manager makes a code, the code decides which role it allows, and the backend refuses any other role. Sakib writes the plan and shares it before building.
 - Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
 - The owner uses the **Web** app (as in the contract).
 - A manager cannot reassign a report in the MVP.
@@ -50,5 +53,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 - Fake data for screens lives in `packages/shared/src/fixtures.ts`. Use it until you switch to the real backend.
 - Call the real backend with `createApi(supabase)` from `@garmentpulse/shared` (see `packages/shared/src/api.ts`). Under the hood it uses `supabase.rpc(...)`. Every error becomes an `ApiError` whose `code` is a capital-letter code from the contract.
+- **Live updates need the login on the connection.** In our real client check, a listener only received changes after we gave its connection the person's login with `await supabase.realtime.setAuth(session.access_token)` before subscribing. Do the same in the apps right after a person logs in, then test with two screens. See the notes in `requests/rubaiya/` and `requests/mithi/`.
+- You can run the real client check yourself with `node supabase/tests/run_real_check.mjs` (it asks for the test passwords and shows `*`). It leaves one waiting report each run; ask Sakib to remove it.
 - The 5 test people use `@example.com` emails (`nila`, `tariq`, `hasan`, `farhan`, `owner`). Their passwords are shared privately, not in git.
 - Local running with Docker is not set up yet. The backend currently lives in the cloud project only.

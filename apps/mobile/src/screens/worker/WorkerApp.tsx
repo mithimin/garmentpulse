@@ -3,6 +3,8 @@
 // Everything a logged-in WORKER sees. It holds the blue top bar, the bottom bar
 // with 3 tabs (Home, Report, My reports) and shows the screen of the chosen tab.
 // Opening a report shows its details on top, with a back arrow in the top bar.
+// The Report and My reports tabs also have a back arrow that returns to Home.
+// The Android phone's back button does the same (see useBackAction).
 //
 // There is no navigation library on purpose: with only a few screens, a simple
 // "which tab / which report is open" memory is easier to understand.
@@ -15,6 +17,7 @@ import type { Profile } from '@garmentpulse/shared';
 import { BottomTabBar } from '../../components/BottomTabBar';
 import type { TabItem } from '../../components/BottomTabBar';
 import { TopBar } from '../../components/TopBar';
+import { useBackAction } from '../../components/useBackAction';
 import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { WORKER_TEXT } from '../../language/screenText';
@@ -55,11 +58,20 @@ export function WorkerApp({ profile, onLogout }: Props) {
     setTab(next);
   }
 
+  // Where "back" goes: from a report to the list, from another tab to Home.
+  // On Home there is nowhere to go back to.
+  const goBack = openReport
+    ? () => setOpenReportId(null)
+    : tab !== 'home'
+      ? () => changeTab('home')
+      : undefined;
+  useBackAction(goBack);
+
   return (
     <View style={styles.page}>
       <TopBar
         title={openReport ? WORKER_TEXT.detailTitle[language] : titles[tab]}
-        onBack={openReport ? () => setOpenReportId(null) : undefined}
+        onBack={goBack}
       />
 
       <View style={styles.body}>
