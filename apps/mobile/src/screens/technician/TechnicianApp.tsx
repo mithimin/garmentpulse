@@ -3,6 +3,8 @@
 // Everything a logged-in TECHNICIAN sees. It holds the blue top bar, the bottom
 // bar with 2 tabs (Jobs, History) and shows the screen of the chosen tab.
 // Opening a job shows its page on top, with a back arrow in the top bar.
+// The History tab also has a back arrow that returns to Jobs. The Android phone's
+// back button does the same (see useBackAction).
 // Works the same way as WorkerApp (no navigation library on purpose).
 // Owned by Rubaiya.
 
@@ -13,6 +15,7 @@ import type { Profile } from '@garmentpulse/shared';
 import { BottomTabBar } from '../../components/BottomTabBar';
 import type { TabItem } from '../../components/BottomTabBar';
 import { TopBar } from '../../components/TopBar';
+import { useBackAction } from '../../components/useBackAction';
 import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { TECH_TEXT } from '../../language/screenText';
@@ -50,12 +53,18 @@ export function TechnicianApp({ profile, onLogout }: Props) {
     setTab(next);
   }
 
+  // Where "back" goes: from a job to the list, from History to Jobs.
+  // On Jobs there is nowhere to go back to.
+  const goBack = openJob
+    ? () => setOpenJobId(null)
+    : tab !== 'jobs'
+      ? () => changeTab('jobs')
+      : undefined;
+  useBackAction(goBack);
+
   return (
     <View style={styles.page}>
-      <TopBar
-        title={openJob ? TECH_TEXT.jobTitle[language] : titles[tab]}
-        onBack={openJob ? () => setOpenJobId(null) : undefined}
-      />
+      <TopBar title={openJob ? TECH_TEXT.jobTitle[language] : titles[tab]} onBack={goBack} />
 
       <View style={styles.body}>
         {openJob ? (
