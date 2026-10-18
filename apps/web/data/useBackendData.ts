@@ -45,14 +45,27 @@ export function useBackendData<T>(load: () => Promise<T>, live = false) {
   useEffect(() => {
     if (!live || !supabase) return;
     const client = supabase;
-    const channel = client
-      .channel(channelName)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
-        void reload();
-      })
-      .subscribe();
+    let cancelled = false;
+    let channel: ReturnType<typeof client.channel> | null = null;
+
+    void (async () => {
+      // The live connection must be given the person's login first. Without it,
+      // it acts like a logged-out visitor and the security rules hide every report.
+      const { data: sessionData } = await client.auth.getSession();
+      if (cancelled || !sessionData.session) return;
+      await client.realtime.setAuth(sessionData.session.access_token);
+      if (cancelled) return;
+      channel = client
+        .channel(channelName)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
+          void reload();
+        })
+        .subscribe();
+    })();
+
     return () => {
-      void client.removeChannel(channel);
+      cancelled = true;
+      if (channel) void client.removeChannel(channel);
     };
   }, [live, reload, channelName]);
 
