@@ -20,8 +20,8 @@ import { useEffect, useState } from 'react';
 import { isInQueue, STATUS_LABELS } from '@garmentpulse/shared';
 import { RoleGate } from '../../auth/RoleGate';
 import { useAuth } from '../../auth/AuthContext';
-import { createManagerCode, listManagerCodes } from '../../auth/fakeAccounts';
-import type { ManagerCode } from '../../auth/fakeAccounts';
+import { createInviteCode, listInviteCodes } from '../../auth/fakeAccounts';
+import type { InviteCode } from '../../auth/fakeAccounts';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { CountBox } from '../../components/CountBox';
@@ -144,16 +144,16 @@ function OwnerContent() {
 /** FAKE-mode only: the owner makes one-time codes that new managers need to sign up. */
 function ManagerCodesCard() {
   const { language } = useLanguage();
-  const [codes, setCodes] = useState<ManagerCode[]>([]);
+  const [codes, setCodes] = useState<InviteCode[]>([]);
 
   // Read the saved codes once the page is in the browser.
   useEffect(() => {
-    setCodes(listManagerCodes());
+    setCodes(listInviteCodes());
   }, []);
 
   function handleCreateCode() {
-    createManagerCode();
-    setCodes(listManagerCodes());
+    createInviteCode('manager');
+    setCodes(listInviteCodes());
   }
 
   return (
