@@ -96,7 +96,7 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
             </Button>
           </form>
         </Card>
-        {backendIsReal ? null : (
+        {backendIsReal || role === 'owner' ? null : (
           <div className="login-help">
             <p>
               {screenText('newHere', language)}{' '}
@@ -104,9 +104,7 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
                 {screenText('signupLink', language)}
               </Link>
             </p>
-            <p>
-              {screenText(role === 'owner' ? 'ownerSignupHelp' : 'managerSignupHelp', language)}
-            </p>
+            <p>{screenText('managerSignupHelp', language)}</p>
           </div>
         )}
       </div>
