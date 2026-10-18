@@ -49,6 +49,14 @@ export const SCREEN_TEXT = {
     bn: 'নতুন ম্যানেজারকে একটি কোড দিন। প্রতিটি কোড মাত্র একবার কাজ করে।',
   },
   createCode: { en: 'Create a manager code', bn: 'ম্যানেজার কোড বানান' },
+  codeValidUntil: { en: 'Works until', bn: 'মেয়াদ শেষ' },
+  menuInviteCodes: { en: 'Invite codes', bn: 'আমন্ত্রণ কোড' },
+  inviteCodesHelp: {
+    en: 'Give a code to a new worker or technician. They use it to sign up on the phone app. Each code works only once.',
+    bn: 'নতুন শ্রমিক বা টেকনিশিয়ানকে একটি কোড দিন। তারা ফোন অ্যাপে সাইন আপ করতে এটি ব্যবহার করবে। প্রতিটি কোড মাত্র একবার কাজ করে।',
+  },
+  createWorkerCode: { en: 'Create a worker code', bn: 'শ্রমিক কোড বানান' },
+  createTechnicianCode: { en: 'Create a technician code', bn: 'টেকনিশিয়ান কোড বানান' },
   noCodes: { en: 'No unused codes yet.', bn: 'এখনো কোনো অব্যবহৃত কোড নেই।' },
   signupClosedTitle: { en: 'Sign-up is not open yet', bn: 'সাইন আপ এখনো চালু হয়নি' },
   signupClosedText: {
