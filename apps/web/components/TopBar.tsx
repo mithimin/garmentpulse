@@ -52,7 +52,7 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
         <span className="logo-tile">
           <Logo size={34} />
         </span>
-        <div>
+        <div className="topbar-nameplate">
           <div className="topbar-name">{screenText('appName', language)}</div>
           {role ? <div className="topbar-role">{ROLE_LABELS[role][language]}</div> : null}
         </div>

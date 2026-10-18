@@ -230,6 +230,10 @@ h3 {
   align-items: center;
   gap: var(--space-3);
 }
+.topbar-nameplate {
+  /* The role (Manager / Owner) sits in the middle, right under the app name. */
+  text-align: center;
+}
 .topbar-name {
   font-weight: 600;
   font-size: 22px;
@@ -1162,6 +1166,18 @@ html[lang='bn'] .filter-tab {
 .logo-tile svg {
   width: 76%;
   height: 76%;
+}
+/* A very thin stitch line just inside the edge of the tile, quiet but visible. */
+.logo-tile {
+  position: relative;
+}
+.logo-tile::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed var(--card-stitch);
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 /* The technicians card uses the same darker blue as the reports card. */
