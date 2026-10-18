@@ -445,13 +445,13 @@ html[lang='bn'] .status {
   text-align: center;
   gap: var(--space-2);
   /* Plain colour with a soft light-to-dark fade (no pattern, no stitch), raised like a pillow. */
-  /* 70% solid: a good deal of the grid cloth shows through. */
+  /* Same ocean blue as the Reports card, 80% solid (20% see-through). */
   background-color: transparent;
   background-image: linear-gradient(
     180deg,
-    rgba(106, 126, 148, 0.7),
-    rgba(95, 115, 135, 0.7) 55%,
-    rgba(86, 106, 128, 0.7)
+    rgba(38, 90, 138, 0.8),
+    rgba(31, 78, 121, 0.8) 55%,
+    rgba(26, 67, 106, 0.8)
   );
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
@@ -932,17 +932,52 @@ html {
 }
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
+/* Ocean blue, 80% solid (20% see-through). Its own words (title, link, column names) are
+   light; the rows floating on it keep dark text. */
 .card-list {
-  background: linear-gradient(180deg, rgba(195, 206, 219, 0.7), rgba(180, 193, 207, 0.7) 60%);
-  border-color: #8c9db0;
+  background: rgba(31, 78, 121, 0.8);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+.card-list .card-head h2 {
+  color: #ffffff;
+}
+.card-list .card-link {
+  color: #e8d6a6;
+}
+.card-list .card-link:hover {
+  color: #ffffff;
+}
+.card-list .table td,
+.card-list .tech-row {
   color: #0b1119;
 }
-.card-list .table td {
+/* Floating rows: every report is its own soft, raised row on the card, with a little air
+   between rows and no header bar. */
+.card-list .table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  margin-top: -6px;
+}
+.card-list .table th {
   background: transparent;
-  border-bottom: 1px dashed #6f8296;
+  color: #d9c28f;
+  padding: 4px 16px;
+  font-size: 12px;
+}
+.card-list .table td {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: none;
+  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+}
+.card-list .table td:first-child {
+  border-radius: 16px 0 0 16px;
+}
+.card-list .table td:last-child {
+  border-radius: 0 16px 16px 0;
 }
 .card-list .table tr:hover td {
-  background: rgba(255, 255, 255, 0.25);
+  background: #ffffff;
 }
 .card-head {
   display: flex;
@@ -1089,7 +1124,9 @@ html {
 
 /* A report that needs a technician has a gold edge on the left of its row. */
 .card-list .table tr.row-attention td:first-child {
-  box-shadow: inset 4px 0 0 #c99a45;
+  box-shadow:
+    inset 4px 0 0 #c99a45,
+    0 8px 8px -8px rgba(31, 43, 71, 0.4);
 }
 
 /* The read-only details box: names on the left, values on the right. */
@@ -1204,12 +1241,18 @@ html[lang='bn'] .filter-tab {
   pointer-events: none;
 }
 
-/* The technicians card uses the same darker blue as the reports card. */
+/* The technicians card uses the same darker blue as the reports card, and its rows float
+   the same way as the report rows. */
 .card-list .tech-row {
-  border-bottom-color: #6f8296;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: 10px;
+  border-bottom: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
 }
 .card-list .tech-row:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 /* ---------- Top bar zones, sidebar button, sidebar (manager pages) ---------- */
@@ -1451,10 +1494,30 @@ html[lang='bn'] .sidebar-logout {
   .table-stack tr:last-child {
     border-bottom: none;
   }
+  /* Narrow screens: each stacked report is a floating card. */
+  .card-list .table-stack tr {
+    margin-bottom: 10px;
+    border-bottom: none;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+  }
+  .card-list .table-stack tr:last-child {
+    margin-bottom: 0;
+  }
+  /* Hovering a stacked report whitens the whole card, not just one of its fields. */
+  .card-list .table-stack tr:hover td {
+    background: transparent;
+  }
+  .card-list .table-stack tr:hover {
+    background: #ffffff;
+  }
   .table-stack td,
   .card-list .table-stack td {
     padding: var(--space-1) 0;
     border-bottom: none;
+    border-radius: 0;
+    box-shadow: none;
     background: transparent;
   }
   .table-stack td[data-label]::before {
