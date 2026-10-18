@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -37,3 +37,7 @@ Your screens no longer need to wait for the backend. The names, inputs and error
 ## What I am doing meanwhile
 
 Sending the private values to Rubaiya and you, then checking that live updates arrive within 5 seconds.
+
+## Done
+
+The website now runs on the real backend: real manager and owner login, the live manager list, the Reports and Technicians pages, and the owner's read-only counts and list. Wrong-role logins are refused. See `apps/web/STATUS.md`. Still to test on the real backend: the Assign button and the owner screen with live updates. (Mithi)

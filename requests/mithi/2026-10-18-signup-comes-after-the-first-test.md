@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -26,3 +26,7 @@ Manager codes and the owner sidebar stay "later" in `docs/mvp.md`. When the firs
 ## What I am doing meanwhile
 
 Backend checks, and waiting for the first two-screen test. After it passes, I will write a plan for the invite-code sign-up and share it with you and Rubaiya before building anything.
+
+## Done
+
+Done on the website: the owner screen is read-only, and with the real backend on, the manager-codes card and the sign-up link on the login pages are hidden (`backendIsReal` in `lib/backend.ts`). The fake sign-up pages stay in the code, unconnected, for later. The owner sidebar and the codes page are not built. (Mithi)

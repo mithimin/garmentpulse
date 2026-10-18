@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the website. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-18 by Mithi's session
+**Last updated:** 2026-10-19 by Mithi's session
 
 ## Done
 
@@ -23,17 +23,20 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
-- Login is finished. Next up: the manager screens, then the owner screen, then the final checks.
+- Nothing right now. Pull request 35 (the website remembers the chosen language after a refresh) is waiting for a teammate's review.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. Get the two public values from Sakib, put them in `apps/web/.env.local`, and test the real login and the live list (5-second rule).
-2. Manager: assign button (`assignTechnician`) and queue view (`isInQueue`).
+1. The full two-screen test with Sakib and Rubaiya (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Still untested on the real backend: the Assign button, and the owner screen with live updates. Also try a worker login on the website (it must be refused) and typing a manager address as a worker.
+2. Show Bangla names for people and machines when Sakib adds them (accepted 2026-10-19, after the full test). Planned fields: `display_name_bn` and `name_bn`. Until then names show exactly as the backend sends them.
 3. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
 
-- Sakib: sign-up and manager-code functions, and a decision if they are allowed in the MVP (the owner page is meant to be read-only). Note: `requests/sakib/2026-10-18-signup-and-manager-code.md`.
+- Sakib: Bangla names in the backend and the invite-code sign-up plan (both after the full two-screen test). Note: `requests/mithi/2026-10-19-bangla-names-accepted.md`.
+- Rubaiya and Sakib: the full two-screen test needs everyone at the same time.
+- A Bangla speaker: the Bangla spellings of the test names and a read of the Bangla words.
+- A teammate: review of pull request 35.
 
 ## Decisions made in this lane
 
