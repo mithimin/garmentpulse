@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-18 by Sakib (contract confirmed)
+**Last updated:** 2026-10-19 by Sakib
 
 ## Done
 
@@ -28,16 +28,20 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## Next
 
-1. Wait for Rubaiya and Mithi to confirm a real test login works (the URL, key and passwords were sent privately). This starts shared step ★4.
-2. Check the 5-second rule again with the real phone app and the real website open at the same time.
-3. Postman collection (optional now that the real client check exists).
-4. Agree the Bangla words in `packages/shared/src/labels.ts` with the team.
-5. Later: sign-up with one-time manager codes (Mithi's idea, see `requests/sakib/2026-10-18-signup-and-manager-code.md`).
+Both apps are now connected to the real backend (phone: #25, website: #18 and #20). Real logins work, and the **5-second rule is confirmed with real devices** (2026-10-18, per `apps/web/STATUS.md`: the manager page went from 7 to 9 reports without a refresh).
+
+1. **The full two-screen test** (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Also the "typing the address" test: a worker must be refused on manager and owner pages. Still untested on the real backend: the website's Assign button and the owner screen with live updates.
+2. **Bangla names** for people and machines (accepted 2026-10-19, after the full test). Optional fields `display_name_bn` and `name_bn`; write them into `docs/api-contract.md` first and tell Rubaiya and Mithi.
+3. **The invite-code sign-up plan** (promised to Rubaiya and Mithi), shared before anything is built.
+4. Agree the Bangla words in `packages/shared/src/labels.ts` with a Bangla speaker.
+5. Postman collection (optional now that the real client check exists).
 
 ## Waiting on someone else
 
-- Rubaiya and Mithi: switch their apps to the real backend and confirm a login works.
-- The team's review of the API contract and the Bangla words.
+- The full two-screen test needs Rubaiya (phone) and Mithi (website) at the same time.
+- Mithi: fix the one clash in her pull request #32 (`requests/mithi/2026-10-18-pr-32-conflict.md`).
+- A Bangla speaker: Bangla spellings of the test people and machines, and a read of the Bangla words.
+- The team's review of the API contract.
 
 ## Decisions made in this lane
 
