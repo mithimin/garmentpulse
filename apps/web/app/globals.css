@@ -10,6 +10,8 @@
 */
 
 :root {
+  /* The height of the top bar. */
+  --bar-size: 110px;
   /* Blue colours (design system 3.2) */
   --page: #dde3ea;
   --bar: #1f2b47;
@@ -170,7 +172,7 @@ h3 {
 
 .topbar {
   position: relative;
-  min-height: 76px;
+  min-height: var(--bar-size);
   color: var(--bar-text);
   padding: var(--space-3) var(--space-7);
   /* Three zones: sidebar button on the left, nameplate in the middle, actions on the right. */
@@ -178,32 +180,13 @@ h3 {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--space-3);
-  /* Dark denim: the bar colour with a fine diagonal twill weave. */
+  /* Denim with the gold stitch line already drawn at its bottom edge
+     (public/denim-topbar.png). It is stretched to the bar's height and repeated sideways. */
   background-color: var(--bar);
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0,
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.22) 0,
-      rgba(0, 0, 0, 0.22) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-}
-/* The stitch line along the bottom edge. */
-.topbar::after {
-  content: '';
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 6px;
-  border-bottom: 1.5px dashed var(--bar-stitch);
+  background-image: url('/denim-topbar.png');
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  background-size: auto 100%;
 }
 .menu-link {
   display: inline-flex;
@@ -249,11 +232,11 @@ h3 {
 }
 .topbar-name {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--bar-text-chosen);
 }
 .topbar-role {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--bar-text);
 }
 .topbar-right {
@@ -1149,15 +1132,20 @@ html[lang='bn'] .filter-tab {
 /* A small pale rectangle behind the logo, so the dark logo shows on the dark bar. */
 .logo-tile {
   flex: none;
-  width: 48px;
-  height: 48px;
+  /* Sized to fill most of the 110px top bar. The logo inside always takes 76% of the tile. */
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
+  border-radius: 14px;
   background: #e1e8f1;
   border: 1px solid #b9c6d8;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.logo-tile svg {
+  width: 76%;
+  height: 76%;
 }
 
 /* The technicians card uses the same darker blue as the reports card. */
@@ -1200,7 +1188,7 @@ html[lang='bn'] .filter-tab {
   display: flex;
   align-items: stretch;
   /* The sidebar always reaches the bottom of the window, even on a short page. */
-  min-height: calc(100vh - 76px);
+  min-height: calc(100vh - var(--bar-size));
 }
 .shell > .page {
   flex: 1;
@@ -1214,52 +1202,65 @@ html[lang='bn'] .filter-tab {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-4);
-  background-color: var(--bar);
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0,
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.22) 0,
-      rgba(0, 0, 0, 0.22) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+  gap: var(--space-4);
+  /* Roomy inside: space between the stitch line and the menu on every side. */
+  padding: var(--space-7) var(--space-6);
+  /* The denim sits on its own layer (::before), behind the menu. */
+  isolation: isolate;
 }
-/* The gold stitch line down the right edge of the sidebar. */
+/* The denim layer: plain, solid denim (public/denim-tile.png).
+   One band of the picture is as tall as one menu item (72px), so each item sits in its own band;
+   the picture starts below the top padding so the bands line up with the items. */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--bar);
+  background-image: url('/denim-tile.png');
+  background-repeat: repeat;
+  background-size: 124px 72px;
+  background-position: 0 var(--space-7);
+}
+/* A beige stitch line on all four sides, set in from the edge (like a stitched patch). */
 .sidebar::after {
   content: '';
   position: absolute;
-  top: 12px;
-  bottom: 12px;
-  right: 6px;
-  border-right: 1.5px dashed var(--bar-stitch);
+  inset: 8px;
+  border: 2px dashed #e8d8b5;
+  border-radius: 12px;
   pointer-events: none;
 }
+/* No gap and no sticky: the menu scrolls with the sidebar so the items stay inside the bands. */
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  /* The menu stays in view while a long page scrolls. */
-  position: sticky;
-  top: var(--space-5);
+  gap: 0;
 }
 .sidebar .menu-link {
   width: 100%;
-  min-height: 48px;
+  min-height: 72px;
+  padding: 0 var(--space-3);
+  border-radius: 0;
   justify-content: flex-start;
   background: transparent;
   font-family: var(--font-body);
 }
+/* The page the person is on: a soft beige glow fading to the right, with a beige bar on the
+   left edge (the same beige as the stitches), and no dashed outline. */
+.sidebar .menu-link {
+  border: 0;
+  position: relative;
+  transition: background 0.15s ease;
+}
 .sidebar .menu-link-active {
-  background: rgba(255, 255, 255, 0.12);
+  border: 0;
+  background: linear-gradient(90deg, rgba(221, 194, 145, 0.28), rgba(221, 194, 145, 0.04) 85%);
+  box-shadow: inset 4px 0 0 #ddc291;
+}
+.sidebar .menu-link-active svg:first-child {
+  color: #ddc291;
 }
 /* Log out at the bottom of the sidebar: a white button with an icon, like the
    second buttons everywhere else. */
@@ -1288,6 +1289,33 @@ html[lang='bn'] .filter-tab {
 html[lang='bn'] .sidebar-logout {
   font-size: 17px;
 }
+/* On a big screen the sidebar is a floating panel: rounded, with space around it, and only as
+   tall as its menu items (it does not stretch down the whole window). It stays in view while a
+   long page scrolls. */
+@media (min-width: 768px) {
+  .shell {
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-left: var(--space-4);
+  }
+  .sidebar {
+    align-self: flex-start;
+    position: sticky;
+    top: var(--space-4);
+    margin-top: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 12px 28px -10px rgba(15, 25, 45, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  /* Log out sits right under the last menu item, not pinned to the bottom of the window. */
+  .sidebar-logout {
+    margin-top: var(--space-3);
+    position: static;
+  }
+}
 /* The dark area behind a sliding sidebar exists only on phones. */
 .sidebar-backdrop {
   display: none;
@@ -1298,23 +1326,40 @@ html[lang='bn'] .sidebar-logout {
   .sidebar {
     position: fixed;
     z-index: 20;
-    top: 76px;
-    bottom: 0;
-    left: 0;
-    box-shadow: 8px 0 24px -8px rgba(10, 20, 40, 0.6);
+    /* A floating rounded panel, only as tall as its menu, with space around it. */
+    top: calc(var(--bar-size) + var(--space-3));
+    left: var(--space-3);
+    width: min(264px, calc(100vw - 24px));
+    border-radius: 18px;
+    overflow: hidden;
+    padding-bottom: var(--space-4);
+    box-shadow:
+      0 12px 28px -10px rgba(15, 25, 45, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  /* Log out sits right under the last menu item. */
+  .sidebar-logout {
+    margin-top: var(--space-3);
+    position: static;
   }
   .sidebar-backdrop {
     display: block;
     position: fixed;
     z-index: 15;
-    inset: 76px 0 0 0;
+    inset: var(--bar-size) 0 0 0;
     background: rgba(20, 30, 50, 0.45);
   }
   .topbar {
     padding: var(--space-3) var(--space-4);
   }
   .topbar-name {
-    font-size: 16px;
+    font-size: 17px;
+  }
+  /* A slightly smaller tile on a phone, so the bar still has room for its buttons. */
+  .logo-tile {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
   }
   .topbar-role {
     display: none;
