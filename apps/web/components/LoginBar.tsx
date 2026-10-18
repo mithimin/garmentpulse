@@ -5,12 +5,14 @@
 // The denim bar across the top of the login pages and the sign-up page.
 // On the login pages it holds the two choices in the middle (Manager | Owner).
 // On the sign-up page it shows the page title in the middle instead. The
-// Settings button is always at the right end. Owned by Mithi.
+// Settings button is always at the right end. The logo and app name sit at the left end,
+// like the top bar of the manager and owner pages. Owned by Mithi.
 
 import Link from 'next/link';
 import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
+import { Logo } from './Logo';
 import { SettingsMenu } from './SettingsMenu';
 
 /** The two choices in the bar at the top: which kind of person is logging in. */
@@ -24,6 +26,13 @@ export function LoginBar({ activeRole }: { activeRole?: 'manager' | 'owner' }) {
   const { language } = useLanguage();
   return (
     <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
+      {/* The same logo tile and name as the top bar of the manager and owner pages, on the left. */}
+      <div className="login-bar-brand">
+        <span className="logo-tile">
+          <Logo size={34} />
+        </span>
+        <span className="login-bar-brand-name">{screenText('appName', language)}</span>
+      </div>
       {activeRole ? (
         <div className="login-tabs">
           {LOGIN_TABS.map((tab) => (

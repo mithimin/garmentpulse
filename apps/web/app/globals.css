@@ -755,6 +755,39 @@ html[lang='bn'] .table th {
   color: #ffffff;
 }
 /* The page title in the middle of the bar on the sign-up page. */
+.login-bar-brand {
+  position: absolute;
+  left: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+/* A smaller logo tile so it fits the 56px login bar. */
+.login-bar-brand .logo-tile {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+.login-bar-brand .logo-tile::after {
+  inset: 3px;
+  border-radius: 8px;
+}
+.login-bar-brand-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+/* On a narrow screen only the logo tile is shown, so it never covers the Manager / Owner tabs. */
+@media (max-width: 760px) {
+  .login-bar-brand-name {
+    display: none;
+  }
+  .login-bar-brand {
+    left: var(--space-3);
+  }
+}
 .login-bar-title {
   color: #ffffff;
   font-size: 16px;
