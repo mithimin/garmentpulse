@@ -828,6 +828,13 @@ html[lang='bn'] .table th {
   color: var(--link-hover);
 }
 
+/* The buttons above the list of invite codes (the manager has two). */
+.code-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
 /* The list of invite codes on the owner's Manager codes page: the code and when it stops working. */
 .code-list {
   list-style: none;
