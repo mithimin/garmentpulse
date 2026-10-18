@@ -19,6 +19,7 @@ import { screenText } from '../language/screenText';
 import { Dialog } from './Dialog';
 import { AvailabilityLabel } from './StatusLabel';
 import { Button } from './Button';
+import { machineName, personName } from '../language/localNames';
 
 type AssignDialogProps = {
   report: Report;
@@ -54,7 +55,10 @@ export function AssignDialog({ report, technicians, onClose, onAssigned }: Assig
     <Dialog label={screenText('assignTitle', language)} onClose={onClose}>
       <h2>{screenText('assignTitle', language)}</h2>
       <p className="dialog-sub">
-        {screenText('assignFor', language).replace('{machine}', report.machine.name)}
+        {screenText('assignFor', language).replace(
+          '{machine}',
+          machineName(report.machine, language),
+        )}
       </p>
 
       <ul className="dialog-list">
@@ -68,7 +72,7 @@ export function AssignDialog({ report, technicians, onClose, onAssigned }: Assig
                 disabled={!free || busyId !== null}
                 onClick={() => void choose(technician)}
               >
-                <span className="dialog-choice-name">{technician.display_name}</span>
+                <span className="dialog-choice-name">{personName(technician, language)}</span>
                 {busyId === technician.id ? (
                   <span>{screenText('assigning', language)}</span>
                 ) : (

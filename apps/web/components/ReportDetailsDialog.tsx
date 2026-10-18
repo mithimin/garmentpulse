@@ -14,23 +14,24 @@ import { screenText } from '../language/screenText';
 import { Button } from './Button';
 import { Dialog } from './Dialog';
 import { StatusLabel } from './StatusLabel';
+import { machineName, personName } from '../language/localNames';
 
 export function ReportDetailsDialog({ report, onClose }: { report: Report; onClose: () => void }) {
   const { language } = useLanguage();
   const technician = report.technician
-    ? report.technician.display_name
+    ? personName(report.technician, language)
     : isInQueue(report)
       ? screenText('inQueue', language)
       : '-';
 
   return (
     <Dialog label={screenText('detailsTitle', language)} onClose={onClose}>
-      <h2>{report.machine.name}</h2>
+      <h2>{machineName(report.machine, language)}</h2>
       <dl className="details">
         <dt>{screenText('colProblem', language)}</dt>
         <dd>{report.description}</dd>
         <dt>{screenText('colReportedBy', language)}</dt>
-        <dd>{report.reported_by.display_name}</dd>
+        <dd>{personName(report.reported_by, language)}</dd>
         <dt>{screenText('colTechnician', language)}</dt>
         <dd>{technician}</dd>
         <dt>{screenText('colStatus', language)}</dt>

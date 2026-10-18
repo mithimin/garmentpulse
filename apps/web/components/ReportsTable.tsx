@@ -17,6 +17,7 @@ import { screenText } from '../language/screenText';
 import { DataTable } from './DataTable';
 import { EmptyMessage } from './StateMessage';
 import { StatusLabel } from './StatusLabel';
+import { machineName, personName } from '../language/localNames';
 
 type ReportsTableProps = {
   reports: readonly Report[];
@@ -44,12 +45,12 @@ export function ReportsTable({ reports, renderAction }: ReportsTableProps) {
       <tbody>
         {reports.map((report) => (
           <tr key={report.id}>
-            <td className="code">{report.machine.name}</td>
+            <td className="code">{machineName(report.machine, language)}</td>
             <td>{report.description}</td>
-            <td>{report.reported_by.display_name}</td>
+            <td>{personName(report.reported_by, language)}</td>
             <td>
               {report.technician
-                ? report.technician.display_name
+                ? personName(report.technician, language)
                 : isInQueue(report)
                   ? screenText('inQueue', language)
                   : '-'}
