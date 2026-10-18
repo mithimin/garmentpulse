@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-17 by Rubaiya's session
+**Last updated:** 2026-10-18 by Rubaiya's session
 
 ## Done
 
@@ -32,6 +32,13 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - The fake store (`src/data/ReportsContext.tsx`) now also copies `list_my_jobs`, `accept_job` and `update_job_status`, with the contract's error codes. A worker who logs in afterwards sees the new status.
   - The old temporary home screen was removed.
 
+- Step 4 (real backend), built on branch `features/mobile-real-backend`:
+  - Real login (`src/auth/realAuth.ts`): Supabase email + password, then `get_my_profile()`. A manager or owner is signed out again with `WRONG_PLATFORM`. The fake login was removed.
+  - One connection file (`src/backend/supabase.ts`) reads `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` from `apps/mobile/.env`.
+  - `src/data/ReportsContext.tsx` now uses the shared `createApi` calls and live updates (Realtime on `reports`, then a fresh download). Screens kept the same shape. Live updates are given the person's login before they subscribe (Sakib's note).
+  - Back arrows on the Report, My reports and History tabs, and the Android phone back button does the same (`src/components/useBackAction.ts`).
+  - Tested on a real phone: login, reports, jobs and the back buttons work.
+
 ## In progress
 
 - Nothing right now.
@@ -42,12 +49,12 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Waiting on someone else
 
-- Sakib's real backend. All phone screens are done with fake data. Note: `requests/sakib/2026-10-17-phone-app-ready-for-backend.md`. Swapping the fake data takes only two files: `src/auth/fakeAuth.ts` and `src/data/ReportsContext.tsx`.
+- Sakib: a decision on sign-up for workers and technicians (not in the MVP now). Note: `requests/sakib/2026-10-18-worker-technician-signup.md`.
 
 ## Decisions made in this lane
 
 - The whole phone app (workers AND technicians) uses the denim blue of the login screen. The purple worker and green technician colours in `docs/design-system.md` are NOT used. (That document still needs updating.)
-- The fake login accepts any non-empty password. It is only for building screens and is replaced when the real backend is ready.
+- The fake login and fake reports store were replaced by the real backend (step 4). Test accounts are listed in `requests/rubaiya/2026-10-18-backend-is-ready.md`.
 - Words that belong to this app only (button names, error sentences) live in `apps/mobile/src/language/screenText.ts`. Status, free/busy and role words come from the shared `labels.ts`.
 
 ## Good to know for the other lanes

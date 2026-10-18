@@ -1,40 +1,46 @@
 // apps/mobile/src/data/ReportsContext.tsx
 //
-// A FAKE copy of the reports "database", kept only in the phone's memory, so the
-// worker screens can be built before Sakib's backend exists. It starts with the
-// shared fake reports (FAKE_REPORTS) and the fake machines (FAKE_MACHINES), and
-// copies the behaviour of these functions from docs/api-contract.md:
-//   - list_machines()          -> `machines`
-//   - list_my_reports()        -> `listMyReports(profile)`
-//   - create_report(m, text)   -> `createReport(profile, machineId, description)`
-//   - list_my_jobs(past?)      -> `listMyJobs(profile, includePast)`
-//   - accept_job(report_id)    -> `acceptJob(profile, reportId)`
-//   - update_job_status(id, s) -> `updateJobStatus(profile, reportId, status)`
-// When something is wrong, these functions throw an Error whose message is an
-// error code from the contract (INVALID_INPUT, NOT_FOUND, NOT_ALLOWED,
-// JOB_ALREADY_ACCEPTED, JOB_NOT_ACCEPTED, INVALID_STATUS_CHANGE), exactly like
-// the real backend will.
-// Because workers and technicians share this one store, a worker who logs in
-// after a technician changed a status sees the change.
+// Holds the machines and reports that the phone screens show, using the REAL
+// backend (it replaced the old fake in-memory store). It is a small helper that
+// sits between the screens and the backend calls from `@garmentpulse/shared`:
+//   - list_machines()          -> `machines`            (workers only)
+//   - list_my_reports()        -> `listMyReports(...)`  (workers)
+//   - list_my_jobs(past?)      -> `listMyJobs(...)`     (technicians)
+//   - create_report(m, text)   -> `createReport(...)`
+//   - accept_job(report_id)    -> `acceptJob(...)`
+//   - update_job_status(id, s) -> `updateJobStatus(...)`
 //
-// Reports made here disappear when the app is closed. That is expected until the
-// real backend is connected. Only this file (and the screens that call it) need
-// to change then.
+// How it works, in plain words:
+//   1. When a person logs in, it downloads their list once (a worker's own
+//      reports, or a technician's jobs including past ones).
+//   2. It keeps that list in memory so the screens can read it instantly.
+//   3. It listens for LIVE UPDATES (Supabase Realtime on the `reports` table).
+//      When anything changes, it downloads the list again, so a status change
+//      made by the manager or technician shows up within a few seconds.
+//   4. Every action (create, accept, change status) asks the backend, which
+//      checks the rules. If it says no, the call throws an ApiError whose `code`
+//      is an error code from the contract. The screen turns it into a sentence.
+//
+// The list functions keep their old shape (they take the profile and return the
+// list right away), so the screens did not have to change much.
 // Owned by Rubaiya.
 
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { FAKE_MACHINES, FAKE_REPORTS } from '@garmentpulse/shared';
-import type { Machine, Profile, Report, ReportStatus } from '@garmentpulse/shared';
+import type { Machine, Profile, Report } from '@garmentpulse/shared';
+import { api, supabase } from '../backend/supabase';
 
 /** The longest description the backend accepts (docs/api-contract.md 4.3). */
 export const MAX_DESCRIPTION_LENGTH = 500;
 
-/** Pretends to wait for the network, so the "Sending…" message can be seen. */
-const FAKE_DELAY_MS = 500;
-
 type ReportsValue = {
   machines: Machine[];
+  /** True until the first download has finished (or failed). */
+  loading: boolean;
+  /** True when the last download failed (for example, no internet). */
+  loadFailed: boolean;
+  /** Downloads the list again. */
+  refresh: () => Promise<void>;
   /** Newest first, only the reports made by this person. */
   listMyReports: (profile: Profile) => Report[];
   createReport: (profile: Profile, machineId: string, description: string) => Promise<Report>;
@@ -48,130 +54,160 @@ type ReportsValue = {
   ) => Promise<Report>;
 };
 
-/** The order of the statuses; a job may only move to a later one. */
-const STATUS_ORDER: Record<ReportStatus, number> = { waiting: 0, in_progress: 1, resolved: 2 };
-
 const ReportsContext = createContext<ReportsValue | null>(null);
 
-export function ReportsProvider({ children }: { children: ReactNode }) {
-  const [reports, setReports] = useState<Report[]>(() => [...FAKE_REPORTS]);
-  // The newest list, readable inside functions that run after an await.
-  const reportsRef = useRef(reports);
-  const commit = useCallback((next: Report[]) => {
-    reportsRef.current = next;
-    setReports(next);
-  }, []);
+/** Puts the newest report first. */
+function newestFirst(reports: Report[]): Report[] {
+  return [...reports].sort((a, b) => b.created_at.localeCompare(a.created_at));
+}
+
+/** Swaps one report in a list for its newer copy (or adds it if it is new). */
+function withReport(reports: Report[], changed: Report): Report[] {
+  return reports.some((r) => r.id === changed.id)
+    ? reports.map((r) => (r.id === changed.id ? changed : r))
+    : [changed, ...reports];
+}
+
+type Props = {
+  /** The person who is logged in. Their lists are the ones we download. */
+  profile: Profile;
+  children: ReactNode;
+};
+
+export function ReportsProvider({ profile, children }: Props) {
+  const [machines, setMachines] = useState<Machine[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+
+  const refresh = useCallback(async () => {
+    try {
+      // A technician's jobs include past ones; the History screen needs them.
+      const list =
+        profile.role === 'technician' ? await api.listMyJobs(true) : await api.listMyReports();
+      setReports(list);
+      setLoadFailed(false);
+    } catch {
+      setLoadFailed(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [profile.role]);
+
+  // First download, plus the machines for the worker's dropdown.
+  useEffect(() => {
+    let cancelled = false;
+    void refresh();
+    if (profile.role === 'worker') {
+      api
+        .listMachines()
+        .then((list) => {
+          if (!cancelled) setMachines(list);
+        })
+        .catch(() => {
+          if (!cancelled) setLoadFailed(true);
+        });
+    }
+    return () => {
+      cancelled = true;
+    };
+  }, [profile.role, refresh]);
+
+  // Live updates: when any report this person may see changes, download again.
+  // (The backend only sends changes the person is allowed to see.)
+  // The live connection must be given the person's login BEFORE it subscribes.
+  // Otherwise it acts like a logged-out visitor and the security rules hide every
+  // report from it, so no update would ever arrive (Sakib's note, 2026-10-18).
+  useEffect(() => {
+    let cancelled = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (cancelled || !data.session) return;
+      await supabase.realtime.setAuth(data.session.access_token);
+      if (cancelled) return;
+      channel = supabase
+        .channel(`reports-${profile.id}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
+          void refresh();
+        })
+        .subscribe();
+    })();
+
+    return () => {
+      cancelled = true;
+      if (channel) void supabase.removeChannel(channel);
+    };
+  }, [profile.id, refresh]);
 
   const listMyReports = useCallback(
-    (profile: Profile) =>
-      reports
-        .filter((report) => report.reported_by.id === profile.id)
-        .sort((a, b) => b.created_at.localeCompare(a.created_at)),
+    (me: Profile) => newestFirst(reports.filter((report) => report.reported_by.id === me.id)),
     [reports],
-  );
-
-  const createReport = useCallback(
-    async (profile: Profile, machineId: string, description: string) => {
-      await new Promise((resolve) => setTimeout(resolve, FAKE_DELAY_MS));
-
-      if (profile.role !== 'worker') throw new Error('NOT_ALLOWED');
-      const text = description.trim();
-      if (text.length < 1 || text.length > MAX_DESCRIPTION_LENGTH) {
-        throw new Error('INVALID_INPUT');
-      }
-      const machine = FAKE_MACHINES.find((m) => m.id === machineId);
-      if (!machine) throw new Error('NOT_FOUND');
-
-      const now = new Date().toISOString();
-      const report: Report = {
-        id: `r-new-${Date.now()}`,
-        machine: { id: machine.id, name: machine.name },
-        description: text,
-        status: 'waiting',
-        reported_by: { id: profile.id, display_name: profile.display_name },
-        technician: null,
-        accepted_at: null,
-        created_at: now,
-        updated_at: now,
-      };
-      commit([report, ...reportsRef.current]);
-      return report;
-    },
-    [commit],
   );
 
   const listMyJobs = useCallback(
-    (profile: Profile, includePast: boolean) =>
-      reports
-        .filter(
+    (me: Profile, includePast: boolean) =>
+      newestFirst(
+        reports.filter(
           (report) =>
-            report.technician?.id === profile.id && (includePast || report.status !== 'resolved'),
-        )
-        .sort((a, b) => b.created_at.localeCompare(a.created_at)),
+            report.technician?.id === me.id && (includePast || report.status !== 'resolved'),
+        ),
+      ),
     [reports],
   );
 
-  /** Finds a job that is assigned to this technician, or throws the right error code. */
-  const findMyJob = useCallback((profile: Profile, reportId: string): Report => {
-    if (profile.role !== 'technician') throw new Error('NOT_ALLOWED');
-    const report = reportsRef.current.find((r) => r.id === reportId);
-    if (!report) throw new Error('NOT_FOUND');
-    // A job that is not assigned to this technician is "not allowed".
-    if (report.technician?.id !== profile.id) throw new Error('NOT_ALLOWED');
+  // The `profile` argument is kept so screens did not need to change; the
+  // backend knows who is calling from the login, so it is not sent.
+  const createReport = useCallback(async (_me: Profile, machineId: string, description: string) => {
+    const report = await api.createReport(machineId, description.trim());
+    setReports((current) => withReport(current, report));
     return report;
   }, []);
 
-  /** Saves a changed copy of one report and returns it. */
-  const replaceReport = useCallback(
-    (changed: Report) => {
-      commit(reportsRef.current.map((r) => (r.id === changed.id ? changed : r)));
-      return changed;
-    },
-    [commit],
-  );
-
-  const acceptJob = useCallback(
-    async (profile: Profile, reportId: string) => {
-      await new Promise((resolve) => setTimeout(resolve, FAKE_DELAY_MS));
-      const report = findMyJob(profile, reportId);
-      if (report.accepted_at) throw new Error('JOB_ALREADY_ACCEPTED');
-      // Accepting does not change the status (api-contract.md section 8, point 1).
-      const now = new Date().toISOString();
-      return replaceReport({ ...report, accepted_at: now, updated_at: now });
-    },
-    [findMyJob, replaceReport],
-  );
+  const acceptJob = useCallback(async (_me: Profile, reportId: string) => {
+    const report = await api.acceptJob(reportId);
+    setReports((current) => withReport(current, report));
+    return report;
+  }, []);
 
   const updateJobStatus = useCallback(
-    async (profile: Profile, reportId: string, status: 'in_progress' | 'resolved') => {
-      await new Promise((resolve) => setTimeout(resolve, FAKE_DELAY_MS));
-      if (status !== 'in_progress' && status !== 'resolved') throw new Error('INVALID_INPUT');
-      const report = findMyJob(profile, reportId);
-      if (!report.accepted_at) throw new Error('JOB_NOT_ACCEPTED');
-      // Moves go forward only; "resolved" is final.
-      if (STATUS_ORDER[status] <= STATUS_ORDER[report.status]) {
-        throw new Error('INVALID_STATUS_CHANGE');
-      }
-      return replaceReport({ ...report, status, updated_at: new Date().toISOString() });
+    async (_me: Profile, reportId: string, status: 'in_progress' | 'resolved') => {
+      const report = await api.updateJobStatus(reportId, status);
+      setReports((current) => withReport(current, report));
+      return report;
     },
-    [findMyJob, replaceReport],
+    [],
   );
 
   const value = useMemo(
     () => ({
-      machines: FAKE_MACHINES,
+      machines,
+      loading,
+      loadFailed,
+      refresh,
       listMyReports,
       createReport,
       listMyJobs,
       acceptJob,
       updateJobStatus,
     }),
-    [listMyReports, createReport, listMyJobs, acceptJob, updateJobStatus],
+    [
+      machines,
+      loading,
+      loadFailed,
+      refresh,
+      listMyReports,
+      createReport,
+      listMyJobs,
+      acceptJob,
+      updateJobStatus,
+    ],
   );
   return <ReportsContext.Provider value={value}>{children}</ReportsContext.Provider>;
 }
 
-/** Gives a screen the (fake) machines and reports functions. */
+/** Gives a screen the machines and reports functions. */
 export function useReports(): ReportsValue {
   const value = useContext(ReportsContext);
   if (!value) throw new Error('useReports must be used inside <ReportsProvider>');

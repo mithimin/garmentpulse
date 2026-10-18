@@ -12,12 +12,15 @@
   },
   "dependencies": {
     "@garmentpulse/shared": "*",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@supabase/supabase-js": "^2.118.0",
     "expo": "~57.0.30",
     "expo-status-bar": "~57.0.1",
     "lucide-react-native": "^1.59.0",
     "react": "19.2.3",
     "react-native": "0.86.3",
-    "react-native-svg": "15.15.4"
+    "react-native-svg": "15.15.4",
+    "react-native-url-polyfill": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
