@@ -14,7 +14,12 @@
 //     4. a new report reaches the manager's screen within 5 seconds
 //        (FR-01, the "5-second rule"),
 //     5. live updates respect the security rules: a technician who is not on
-//        the report does NOT receive it.
+//        the report does NOT receive it,
+//     6. SIGN-UP WITH INVITE CODES works through the real login service: the
+//        owner and a manager make codes, pretend new people sign up with
+//        them with `signUpWithCode`, and every cheat is refused (a used code,
+//        the wrong app, a made-up code, the same email twice, no code at all,
+//        and a role typed into the sign-up form).
 //
 // HOW TO RUN (on your own computer; nothing secret is ever saved in a file)
 //   1. In your terminal, type the values. `read -s` hides what you type and
@@ -42,11 +47,16 @@
 //
 //        delete from public.reports where description like 'Real client check%';
 //
+//   The sign-up part also leaves pretend accounts (realcheck-...@example.com)
+//   and invite codes. At the end of the run it prints the exact lines to
+//   delete them. Sign-up must be switched ON in the Supabase dashboard
+//   (Authentication, Email, with email confirmation OFF) for this part.
+//
 // Owned by Sakib. It is never run by `npm run check` or by CI.
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ApiError, createApi, type Api, type Role } from '@garmentpulse/shared';
+import { ApiError, createApi, signUpWithCode, type Api, type Role } from '@garmentpulse/shared';
 
 const URL = process.env.GP_SUPABASE_URL;
 const ANON_KEY = process.env.GP_SUPABASE_ANON_KEY;
@@ -271,6 +281,197 @@ describe.skipIf(missing.length > 0)('real client check', () => {
 
     it('an unrelated technician cannot open that report', async () => {
       expect(await codeOf(apis.tariq.getReport(newReportId))).toBe('NOT_FOUND');
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Sign-up with invite codes, through the REAL login service
+  // ---------------------------------------------------------------------------
+  // The owner and a manager make codes; pretend new people (realcheck-...@example.com)
+  // sign up with them; and every cheat is tried. Each run leaves a few pretend
+  // accounts and codes behind; the cleanup lines are printed at the end.
+  describe('sign-up with invite codes', () => {
+    const stamp = Date.now().toString(36);
+    const emailOf = (name: string) => `realcheck-${name}-${stamp}@example.com`;
+    // A throw-away password for the pretend people (they are deleted afterwards).
+    const password = `Rc-${crypto.randomUUID()}`;
+    const madeCodes: string[] = [];
+    const codes = {} as Record<'worker' | 'worker2' | 'technician' | 'manager', string>;
+    let workerClient: SupabaseClient;
+
+    const CODE_SHAPE = /^[A-HJ-NP-Z2-9]{10}$/;
+
+    /** True when a login with the pretend password fails (= no such account). */
+    async function loginFails(email: string): Promise<boolean> {
+      const { error } = await newClient().auth.signInWithPassword({ email, password });
+      return error !== null;
+    }
+
+    afterAll(() => {
+      console.log(
+        `\nThis run left pretend sign-ups behind. Delete them in the Supabase SQL Editor:\n` +
+          `  delete from auth.users where email like 'realcheck-%-${stamp}@example.com';\n` +
+          (madeCodes.length > 0
+            ? `  delete from public.invite_codes where code in (${madeCodes.map((c) => `'${c}'`).join(', ')});\n`
+            : ''),
+      );
+    });
+
+    it('the manager makes worker and technician codes, and the owner makes a manager code', async () => {
+      const worker = await apis.farhan.createInviteCode('worker');
+      const worker2 = await apis.farhan.createInviteCode('worker');
+      const technician = await apis.farhan.createInviteCode('technician');
+      const manager = await apis.owner.createInviteCode('manager');
+
+      codes.worker = worker.code;
+      codes.worker2 = worker2.code;
+      codes.technician = technician.code;
+      codes.manager = manager.code;
+      madeCodes.push(worker.code, worker2.code, technician.code, manager.code);
+
+      for (const made of [worker, worker2, technician, manager]) {
+        expect(made.code).toMatch(CODE_SHAPE);
+      }
+      expect([worker.role, worker2.role, technician.role, manager.role]).toEqual([
+        'worker',
+        'worker',
+        'technician',
+        'manager',
+      ]);
+    });
+
+    it('a visitor who is not logged in can check a code, even in small letters', async () => {
+      const visitor = createApi(newClient());
+      expect((await visitor.checkInviteCode(codes.worker)).role).toBe('worker');
+      expect((await visitor.checkInviteCode(` ${codes.worker.toLowerCase()} `)).role).toBe(
+        'worker',
+      );
+    });
+
+    it('a new worker signs up on the phone with a worker code, and is logged in right away', async () => {
+      workerClient = newClient();
+      const profile = await signUpWithCode(workerClient, {
+        platform: 'mobile',
+        fullName: 'Real Check Worker',
+        email: emailOf('worker'),
+        password,
+        code: codes.worker.toLowerCase(),
+      });
+
+      expect(profile.role).toBe('worker');
+      expect(profile.display_name).toBe('Real Check Worker');
+      expect(profile.email).toBe(emailOf('worker'));
+      expect(await createApi(workerClient).listMyReports()).toEqual([]);
+    });
+
+    it("the new worker still cannot do a manager's job or make codes", async () => {
+      const api = createApi(workerClient);
+      expect(await codeOf(api.listReports())).toBe('NOT_ALLOWED');
+      expect(await codeOf(api.createInviteCode('worker'))).toBe('NOT_ALLOWED');
+    });
+
+    it('a used code cannot be used again, and no account is created', async () => {
+      const failure = await codeOf(
+        signUpWithCode(newClient(), {
+          platform: 'mobile',
+          fullName: 'Second Person',
+          email: emailOf('second'),
+          password,
+          code: codes.worker,
+        }),
+      );
+      expect(failure).toBe('INVALID_CODE');
+      expect(await loginFails(emailOf('second'))).toBe(true);
+    });
+
+    it('a manager code on the phone app is refused (WRONG_PLATFORM) and nothing is created', async () => {
+      const failure = await codeOf(
+        signUpWithCode(newClient(), {
+          platform: 'mobile',
+          fullName: 'Wrong App',
+          email: emailOf('wrongapp'),
+          password,
+          code: codes.manager,
+        }),
+      );
+      expect(failure).toBe('WRONG_PLATFORM');
+      expect(await loginFails(emailOf('wrongapp'))).toBe(true);
+    });
+
+    it('a worker code on the website is refused (WRONG_PLATFORM), and the code stays unused', async () => {
+      const failure = await codeOf(
+        signUpWithCode(newClient(), {
+          platform: 'web',
+          fullName: 'Wrong App',
+          email: emailOf('wrongweb'),
+          password,
+          code: codes.worker2,
+        }),
+      );
+      expect(failure).toBe('WRONG_PLATFORM');
+      expect((await createApi(newClient()).checkInviteCode(codes.worker2)).role).toBe('worker');
+    });
+
+    it('a made-up code is refused', async () => {
+      const failure = await codeOf(
+        signUpWithCode(newClient(), {
+          platform: 'mobile',
+          fullName: 'Made Up',
+          email: emailOf('madeup'),
+          password,
+          code: 'ABCDEFGHJK',
+        }),
+      );
+      expect(failure).toBe('INVALID_CODE');
+      expect(await loginFails(emailOf('madeup'))).toBe(true);
+    });
+
+    it('the same email cannot sign up twice (EMAIL_TAKEN), and the code stays unused', async () => {
+      const failure = await codeOf(
+        signUpWithCode(newClient(), {
+          platform: 'mobile',
+          fullName: 'Same Email',
+          email: emailOf('worker'),
+          password,
+          code: codes.worker2,
+        }),
+      );
+      expect(failure).toBe('EMAIL_TAKEN');
+      expect((await createApi(newClient()).checkInviteCode(codes.worker2)).role).toBe('worker');
+    });
+
+    it('signing up straight with Supabase and no code is refused, whatever role is typed', async () => {
+      const { error } = await newClient().auth.signUp({
+        email: emailOf('nocode'),
+        password,
+        options: { data: { display_name: 'No Code', role: 'manager' } },
+      });
+      expect(error).not.toBeNull();
+      expect(await loginFails(emailOf('nocode'))).toBe(true);
+    });
+
+    it('a role typed into the sign-up is ignored: the code decides', async () => {
+      const sneaky = newClient();
+      const { data, error } = await sneaky.auth.signUp({
+        email: emailOf('tech'),
+        password,
+        options: {
+          data: { invite_code: codes.technician, display_name: 'Real Check Tech', role: 'owner' },
+        },
+      });
+      expect(error).toBeNull();
+      expect(data.session).not.toBeNull();
+
+      const profile = await createApi(sneaky).getMyProfile();
+      expect(profile.role).toBe('technician');
+      expect(profile.display_name).toBe('Real Check Tech');
+    });
+
+    it("the manager's list no longer shows the used codes, only the unused one", async () => {
+      const listed = (await apis.farhan.listInviteCodes()).map((c) => c.code);
+      expect(listed).not.toContain(codes.worker);
+      expect(listed).not.toContain(codes.technician);
+      expect(listed).toContain(codes.worker2);
     });
   });
 });

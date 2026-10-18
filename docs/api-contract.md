@@ -1,6 +1,6 @@
 # GarmentPulse API Contract
 
-**Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is PLANNED: it was decided on 2026-10-19 and is not built yet.** Rubaiya and Mithi still review it (plan step ★2).
+**Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
 **Last updated:** 2026-10-19
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
@@ -115,7 +115,7 @@ type Technician = { id: string; display_name: string; availability: TechnicianAv
 
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
 
-// Sign-up with invite codes (section 4.7, planned)
+// Sign-up with invite codes (section 4.7)
 type InviteRole = 'worker' | 'technician' | 'manager'; // the owner is never created by sign-up
 type InviteCode = { code: string; role: InviteRole; created_at: string; expires_at: string };
 ```
@@ -219,7 +219,7 @@ Email and password. After login the app calls `get_my_profile()`. If the person'
 
 The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's only action that changes anything is making manager invite codes, section 4.7.)
 
-### 4.7 Sign-up with invite codes (PLANNED: decided 2026-10-19, not built yet)
+### 4.7 Sign-up with invite codes (decided and built on 2026-10-19)
 
 A new person signs up with an **invite code**. The code decides their role, so nobody can choose a role for themselves.
 
@@ -232,7 +232,7 @@ A new person signs up with an **invite code**. The code decides their role, so n
 
 #### Sign-up itself (Supabase Auth, no custom function)
 
-Apps use the ready-made helper `signUpWithCode(client, { platform, fullName, email, password, code })` in `packages/shared` (`platform` is `'mobile'` or `'web'`). It returns the new person's `Profile`, and every failure is an `ApiError` whose `code` is one of the codes below. The helper is **written and tested with a pretend client**; it is proven against the real login service by the real client check once sign-up is switched on. Under the hood it does these things in order:
+Apps use the ready-made helper `signUpWithCode(client, { platform, fullName, email, password, code })` in `packages/shared` (`platform` is `'mobile'` or `'web'`). It returns the new person's `Profile`, and every failure is an `ApiError` whose `code` is one of the codes below. The helper is tested with a pretend client **and proven against the real login service** (the real client check, `supabase/tests/real_client.check.ts`, 12 sign-up checks). Under the hood it does these things in order:
 
 1. Calls `check_invite_code(code)` to get the role, or `INVALID_CODE`.
 2. The app makes sure the role belongs to its own platform (a worker or technician code only on the phone app, a manager code only on the website). If not, it stops with `WRONG_PLATFORM`.
@@ -277,9 +277,9 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 | `accept_job` | no | yes | no | no |
 | `update_job_status` | no | yes | no | no |
 | `get_owner_summary` | no | no | no | yes |
-| `check_invite_code` (planned) | before login | before login | before login | no (owners never sign up) |
-| `create_invite_code` (planned) | no | no | yes (worker and technician codes) | yes (manager codes) |
-| `list_invite_codes` (planned) | no | no | yes (own codes) | yes (own codes) |
+| `check_invite_code` | before login | before login | before login | no (owners never sign up) |
+| `create_invite_code` | no | no | yes (worker and technician codes) | yes (manager codes) |
+| `list_invite_codes` | no | no | yes (own codes) | yes (own codes) |
 
 ---
 
@@ -297,8 +297,8 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 | `JOB_NOT_ACCEPTED` | The technician must accept the job before changing its status. |
 | `JOB_ALREADY_ACCEPTED` | The technician already accepted this job. |
 | `INVALID_STATUS_CHANGE` | That status move is not allowed (backwards, or the report is already resolved). |
-| `INVALID_CODE` | (planned) The invite code is wrong, already used, or expired. |
-| `EMAIL_TAKEN` | (planned) That email already has an account. |
+| `INVALID_CODE` | The invite code is wrong, already used, or expired. |
+| `EMAIL_TAKEN` | That email already has an account. (Both sign-up codes live in their own list, `SIGN_UP_ERROR_CODES`, until both apps have their sentences. Read them with `getApiErrorCode`.) |
 
 These codes live in `packages/shared/src/errors.ts`.
 
