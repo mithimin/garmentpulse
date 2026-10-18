@@ -30,7 +30,7 @@ import { ReportsCard } from '../../components/ReportsCard';
 import { TopBar } from '../../components/TopBar';
 import { averageFixMs, formatDuration, resolvedToday, startedInLastHour } from '../../data/stats';
 import { useOwnerSummary, useReports } from '../../data/useDashboardData';
-import { formatToday, greetingKey } from '../../language/greeting';
+import { formatToday } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
@@ -72,7 +72,8 @@ function OwnerContent() {
       <main className="page">
         <div className="greeting">
           <h1>
-            {screenText(greetingKey(now), language)}, {name}
+            <span className="greeting-hello">{screenText('greetDay', language)}</span>{' '}
+            <span className="greeting-name">{name}</span>
           </h1>
           <p className="greeting-line">
             {formatToday(now, language)}

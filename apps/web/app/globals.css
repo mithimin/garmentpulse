@@ -844,8 +844,36 @@ html[lang='bn'] .table th {
 
 /* ---------- Manager page greeting ---------- */
 
+/* Style D in Marcellus: a quiet greeting line and the name on a soft gold highlight.
+   Marcellus has one weight, so nothing here asks for bold (the browser would fake it). */
 .greeting h1 {
-  font-size: 42px;
+  font-family: var(--font-marcellus), var(--font-tiro-bangla), Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+.greeting-hello {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+  color: #1f3a63;
+  font-size: 21px;
+  letter-spacing: 0.04em;
+}
+/* A thin gold line after the greeting words. */
+.greeting-hello::after {
+  content: '';
+  flex: 0 0 70px;
+  height: 1px;
+  background: #b8893a;
+}
+.greeting-name {
+  display: inline-block;
+  margin-top: 2px;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  padding: 0 4px;
+  background: linear-gradient(transparent 58%, #ecd9a8 58%);
 }
 .greeting-line {
   margin: var(--space-2) 0 0;
