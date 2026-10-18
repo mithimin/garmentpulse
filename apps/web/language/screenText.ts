@@ -70,9 +70,7 @@ export const SCREEN_TEXT = {
   menuDashboard: { en: 'Dashboard', bn: 'ড্যাশবোর্ড' },
   menuReports: { en: 'Reports', bn: 'রিপোর্ট' },
   menuTechnicians: { en: 'Technicians', bn: 'টেকনিশিয়ান' },
-  greetMorning: { en: 'Good morning', bn: 'শুভ সকাল' },
-  greetAfternoon: { en: 'Good afternoon', bn: 'শুভ অপরাহ্ন' },
-  greetEvening: { en: 'Good evening', bn: 'শুভ সন্ধ্যা' },
+  greetDay: { en: 'Have a good day', bn: 'আপনার দিনটি ভালো কাটুক' },
   queueOne: { en: '1 report needs a technician', bn: '১টি রিপোর্টে একজন টেকনিশিয়ান লাগবে' },
   queueMany: { en: '{n} reports need a technician', bn: '{n}টি রিপোর্টে টেকনিশিয়ান লাগবে' },
   queueNone: {

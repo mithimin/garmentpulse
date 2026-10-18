@@ -26,7 +26,7 @@ import {
   resolvedToday,
   startedInLastHour,
 } from '../../data/stats';
-import { formatToday, greetingKey } from '../../language/greeting';
+import { formatToday } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
@@ -63,7 +63,8 @@ export default function DashboardPage() {
     <>
       <div className="greeting">
         <h1>
-          {screenText(greetingKey(now), language)}, {firstName}
+          <span className="greeting-hello">{screenText('greetDay', language)}</span>{' '}
+          <span className="greeting-name">{firstName}</span>
         </h1>
         <p className="greeting-line">
           {formatToday(now, language)} · {queueText}
