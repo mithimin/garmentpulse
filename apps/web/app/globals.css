@@ -280,19 +280,29 @@ html[lang='bn'] .lang-switch {
 .card {
   position: relative;
   /* A plain, soft, raised card: no pattern and no stitch, so it never clashes with the
-     grid cloth behind it. A pale top edge and a gentle shadow make it look lifted. */
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 18px;
+     grid cloth behind it. The rounded edge is smooth like a button: a pale rim on the top,
+     a faint shade on the bottom, and a very light shadow behind. */
+  /* 70% solid: a good deal of the grid cloth shows through. */
+  background: rgba(247, 249, 251, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 24px;
   padding: var(--space-6);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 14px 26px -12px rgba(31, 43, 71, 0.38),
-    0 2px 5px rgba(31, 43, 71, 0.12);
+    inset 0 2px 3px rgba(255, 255, 255, 0.85),
+    inset 0 -3px 6px rgba(31, 43, 71, 0.1),
+    0 6px 14px -6px rgba(31, 43, 71, 0.2);
 }
 .card > * {
   position: relative;
   z-index: 1;
+}
+/* Darker text on the light cards, so it stays easy to read on a see-through card. */
+.card {
+  color: #0b1119;
+}
+.card-list .table td,
+.card-list .tech-name {
+  color: #0b1119;
 }
 
 /* ---------- Buttons (design system 9.1) ---------- */
@@ -425,19 +435,34 @@ html[lang='bn'] .status {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* Everything inside (label, number, tag) sits in the middle of the card. */
+  align-items: center;
+  text-align: center;
   gap: var(--space-2);
   /* Plain colour with a soft light-to-dark fade (no pattern, no stitch), raised like a pillow. */
-  background-color: var(--number-box);
-  background-image: linear-gradient(180deg, #6a7e94, var(--number-box) 55%, #566a80);
-  border: 1px solid var(--number-box-border);
-  border-radius: 18px;
+  /* 70% solid: a good deal of the grid cloth shows through. */
+  background-color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    rgba(106, 126, 148, 0.7),
+    rgba(95, 115, 135, 0.7) 55%,
+    rgba(86, 106, 128, 0.7)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
   padding: var(--space-5) var(--space-6);
+  /* Bright white text. The soft dark shadow keeps it sharp and easy to read even though the
+     card is see-through. */
   color: #ffffff;
+  text-shadow:
+    0 1px 2px rgba(8, 16, 34, 0.75),
+    0 0 10px rgba(8, 16, 34, 0.35);
+  /* Smooth, button-like edge: a pale rim on top, a faint shade underneath, and a very light
+     shadow behind the card. */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 14px 26px -12px rgba(31, 43, 71, 0.5),
-    0 2px 5px rgba(31, 43, 71, 0.2);
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(15, 26, 48, 0.18),
+    0 6px 14px -6px rgba(31, 43, 71, 0.25);
 }
 .count-number {
   font-size: 44px;
@@ -466,6 +491,7 @@ html[lang='bn'] .count-label {
 .count-tag {
   /* Centred in the middle of the card. */
   align-self: center;
+  text-shadow: none;
   text-align: center;
   justify-content: center;
   display: inline-flex;
@@ -902,9 +928,9 @@ html {
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
 .card-list {
-  background: linear-gradient(180deg, #c3cedb, var(--list-card) 60%);
+  background: linear-gradient(180deg, rgba(195, 206, 219, 0.7), rgba(180, 193, 207, 0.7) 60%);
   border-color: #8c9db0;
-  color: #1e2a38;
+  color: #0b1119;
 }
 .card-list .table td {
   background: transparent;
@@ -932,7 +958,7 @@ html {
 /* A smaller line under a cell's main text (for example the time under a name). */
 .cell-sub {
   font-size: 14px;
-  color: #2c3a4b;
+  color: #162130;
 }
 
 /* ---------- Pop-up box (Assign) ---------- */
