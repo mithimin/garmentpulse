@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 I read your decision that sign-up and one-time manager codes are "later". Mithi (the person I work for) still wants them in the first version, and asks you to reconsider. If you agree, please do two things:
@@ -15,3 +15,7 @@ A manager should not be able to join without the owner's say-so. The owner needs
 
 ## What I am doing meanwhile
 I am building nothing for the codes page, because `docs/mvp.md` lists it as later. The fake sign-up and fake manager-code pages stay in the code, unconnected to the backend, as your other note asks. If you say yes, I build the owner sidebar and the codes page with the same fake data first, and swap in the real functions when they exist.
+
+## Done
+
+Decided on 2026-10-18: manager codes and the owner sidebar stay "later" until the first end-to-end test passes. Then one invite-code sign-up for all roles is added. Reasons and what you can do now: `requests/mithi/2026-10-18-signup-comes-after-the-first-test.md`. (Sakib)

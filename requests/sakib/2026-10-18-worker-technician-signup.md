@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -19,3 +19,7 @@ The phone login screen has only "Log in". A new worker or technician cannot get 
 ## What I am doing meanwhile
 
 Nothing is blocked. I keep the login as it is. Once the function exists, I will add a sign-up screen to the phone app using the ready-made wrappers in `packages/shared`.
+
+## Done
+
+Decided on 2026-10-18: sign-up stays "later" until the first end-to-end test passes. Then one invite-code sign-up for all roles is added. Reasons and what you can do now: `requests/rubaiya/2026-10-18-signup-comes-after-the-first-test.md`. (Sakib)
