@@ -10,6 +10,8 @@
 */
 
 :root {
+  /* The height of the top bar. */
+  --bar-size: 110px;
   /* Blue colours (design system 3.2) */
   --page: #dde3ea;
   --bar: #1f2b47;
@@ -170,7 +172,7 @@ h3 {
 
 .topbar {
   position: relative;
-  min-height: 76px;
+  min-height: var(--bar-size);
   color: var(--bar-text);
   padding: var(--space-3) var(--space-7);
   /* Three zones: sidebar button on the left, nameplate in the middle, actions on the right. */
@@ -178,32 +180,13 @@ h3 {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--space-3);
-  /* Dark denim: the bar colour with a fine diagonal twill weave. */
+  /* Denim with the gold stitch line already drawn at its bottom edge
+     (public/denim-topbar.png). It is stretched to the bar's height and repeated sideways. */
   background-color: var(--bar);
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0,
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.22) 0,
-      rgba(0, 0, 0, 0.22) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-}
-/* The stitch line along the bottom edge. */
-.topbar::after {
-  content: '';
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 6px;
-  border-bottom: 1.5px dashed var(--bar-stitch);
+  background-image: url('/denim-topbar.png');
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  background-size: auto 100%;
 }
 .menu-link {
   display: inline-flex;
@@ -247,13 +230,17 @@ h3 {
   align-items: center;
   gap: var(--space-3);
 }
+.topbar-nameplate {
+  /* The role (Manager / Owner) sits in the middle, right under the app name. */
+  text-align: center;
+}
 .topbar-name {
   font-weight: 600;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--bar-text-chosen);
 }
 .topbar-role {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--bar-text);
 }
 .topbar-right {
@@ -292,23 +279,30 @@ html[lang='bn'] .lang-switch {
 
 .card {
   position: relative;
-  background: var(--card);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: var(--space-5);
-  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
-}
-.card::after {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1.5px dashed var(--card-stitch);
-  border-radius: 6px;
-  pointer-events: none;
+  /* A plain, soft, raised card: no pattern and no stitch, so it never clashes with the
+     grid cloth behind it. The rounded edge is smooth like a button: a pale rim on the top,
+     a faint shade on the bottom, and a very light shadow behind. */
+  /* 70% solid: a good deal of the grid cloth shows through. */
+  background: rgba(247, 249, 251, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 24px;
+  padding: var(--space-6);
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.85),
+    inset 0 -3px 6px rgba(31, 43, 71, 0.1),
+    0 6px 14px -6px rgba(31, 43, 71, 0.2);
 }
 .card > * {
   position: relative;
   z-index: 1;
+}
+/* Darker text on the light cards, so it stays easy to read on a see-through card. */
+.card {
+  color: #0b1119;
+}
+.card-list .table td,
+.card-list .tech-name {
+  color: #0b1119;
 }
 
 /* ---------- Buttons (design system 9.1) ---------- */
@@ -390,19 +384,24 @@ html[lang='bn'] .status {
   letter-spacing: 0;
   text-transform: none;
 }
+/* Soft pastel status colours: butter yellow for waiting, sky blue for in progress / busy,
+   mint green for resolved / free. The dark text and the word keep every status easy to read. */
 .status-waiting {
-  background: var(--waiting-bg);
-  color: var(--waiting-text);
+  background: #fbe7a8;
+  color: #5a4100;
+  box-shadow: 0 0 0 1px #efd37d;
 }
 .status-in_progress,
 .status-busy {
-  background: var(--progress-bg);
-  color: var(--progress-text);
+  background: #d3e3fb;
+  color: #1d3f78;
+  box-shadow: 0 0 0 1px #a9c6f0;
 }
 .status-resolved,
 .status-free {
-  background: var(--resolved-bg);
-  color: var(--resolved-text);
+  background: #cdeedb;
+  color: #1b5a3a;
+  box-shadow: 0 0 0 1px #9fd8b8;
 }
 
 /* ---------- Inputs (design system 9.4) ---------- */
@@ -427,6 +426,23 @@ html[lang='bn'] .status {
   font-size: 16px;
   font-weight: 500;
 }
+/* The wrapper that carries a thin stitch line just inside the box, like the Login button. */
+.input-wrap {
+  position: relative;
+  display: block;
+}
+.input-wrap > .input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.input-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(46, 70, 112, 0.5);
+  border-radius: 5px;
+  pointer-events: none;
+}
 .input::placeholder {
   color: var(--input-hint);
 }
@@ -441,39 +457,35 @@ html[lang='bn'] .status {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* Everything inside (label, number, tag) sits in the middle of the card. */
+  align-items: center;
+  text-align: center;
   gap: var(--space-2);
-  background-color: var(--number-box);
-  /* Quilted: two sets of crossing lines make a diamond grid, like padded cloth. */
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.07) 0,
-      rgba(255, 255, 255, 0.07) 1px,
-      transparent 1px,
-      transparent 14px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.1) 0,
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px,
-      transparent 14px
-    );
-  border: 1px solid var(--number-box-border);
-  border-radius: 10px;
+  /* Plain colour with a soft light-to-dark fade (no pattern, no stitch), raised like a pillow. */
+  /* A lighter steel blue than the tables below it, so the summary boxes stand apart.
+     80% solid (20% see-through). */
+  background-color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    rgba(78, 112, 168, 0.8),
+    rgba(63, 95, 148, 0.8) 55%,
+    rgba(54, 84, 134, 0.8)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
   padding: var(--space-5) var(--space-6);
+  /* Bright white text. The soft dark shadow keeps it sharp and easy to read even though the
+     card is see-through. */
   color: #ffffff;
-  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
-}
-/* The stitch line, 7px inside the edge (design system 8). */
-.count-box::after {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1.5px dashed rgba(255, 255, 255, 0.35);
-  border-radius: 6px;
-  pointer-events: none;
+  text-shadow:
+    0 1px 2px rgba(8, 16, 34, 0.75),
+    0 0 10px rgba(8, 16, 34, 0.35);
+  /* Smooth, button-like edge: a pale rim on top, a faint shade underneath, and a very light
+     shadow behind the card. */
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 6px rgba(15, 26, 48, 0.18),
+    0 6px 14px -6px rgba(31, 43, 71, 0.25);
 }
 .count-number {
   font-size: 44px;
@@ -495,28 +507,29 @@ html[lang='bn'] .count-label {
 /* The small tag under the number (same woven-label look as the status labels). */
 .count-tag,
 .count-tag-space {
-  min-height: 26px;
+  min-height: 22px;
 }
+/* A small, quiet label under the number. It uses the same colours as the status words:
+   yellow for waiting, blue for in progress, olive green for resolved, green for free. */
 .count-tag {
-  position: relative;
+  /* Centred in the middle of the card. */
+  align-self: center;
+  text-shadow: none;
+  text-align: center;
+  justify-content: center;
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  border-radius: 3px;
-  font-size: 13px;
+  border-radius: 8px;
+  line-height: 1.3;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-.count-tag::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border: 1px dashed currentColor;
-  opacity: 0.4;
-  border-radius: 2px;
-}
 html[lang='bn'] .count-tag {
+  /* Tiro Bangla draws small letters, so the Bangla tag is 2px bigger. */
+  font-size: 13px;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -524,13 +537,21 @@ html[lang='bn'] .count-tag {
   background: #eef2f6;
   color: #26324f;
 }
-.count-tag-green {
+.count-tag-waiting {
+  background: var(--waiting-bg);
+  color: var(--waiting-text);
+}
+.count-tag-progress {
+  background: var(--progress-bg);
+  color: var(--progress-text);
+}
+.count-tag-resolved {
+  background: var(--resolved-bg);
+  color: var(--resolved-text);
+}
+.count-tag-free {
   background: #cfeede;
   color: #1c5a3d;
-}
-.count-tag-blue {
-  background: #c7e2f2;
-  color: #1d4b6d;
 }
 
 /* The row of count boxes: four across when there is room, fewer when narrow. */
@@ -616,72 +637,32 @@ html[lang='bn'] .table th {
   align-items: center;
   justify-content: center;
   /* Extra room on top so a tall form (sign-up) never slides under the bar. */
-  padding: 84px var(--space-6) var(--space-6);
+  padding: calc(var(--bar-size) + 36px) var(--space-6) var(--space-6);
   position: relative;
-  /* The SAME blue as the main button, but very faint: it was white before, and
-     now it is a soft blue wash with a barely-there denim weave on top. */
-  background-color: color-mix(in srgb, var(--main-button) 16%, #f7f9fb);
+  background-color: var(--page);
+  /* The pale blue grid cloth picture (public/login-weave.png), the same family as the dashboards.
+     A 55% veil of the page colour on top makes the grid softer, so it is less visible. */
   background-image:
-    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.55), transparent 70%),
-    repeating-linear-gradient(
-      45deg,
-      color-mix(in srgb, var(--main-button) 7%, transparent) 0,
-      color-mix(in srgb, var(--main-button) 7%, transparent) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--main-button) 5%, transparent) 0,
-      color-mix(in srgb, var(--main-button) 5%, transparent) 1px,
-      transparent 1px,
-      transparent 4px
-    );
+    linear-gradient(rgba(221, 227, 234, 0.55), rgba(221, 227, 234, 0.55)), url('/login-weave.png');
+  background-repeat: repeat;
 }
-/* TWO stitch lines sewn just inside the edge, like the double stitching on jeans.
-   They use the same blue as the main button, strong enough to see easily. */
-.login-page::before,
-.login-page::after {
-  content: '';
-  position: absolute;
-  border: 2px dashed color-mix(in srgb, var(--main-button) 60%, transparent);
-  pointer-events: none;
-}
-.login-page::before {
-  inset: 68px 12px 12px;
-  border-radius: 12px;
-}
-.login-page::after {
-  inset: 78px 22px 22px;
-  border-radius: 8px;
-}
+
 .login-bar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  /* As tall as the dashboard top bar, with the same denim picture and thin stitch line. */
+  height: var(--bar-size);
   display: flex;
   align-items: center;
   /* The two choices sit in the middle of the bar. */
   justify-content: center;
-  /* Denim jeans cloth: a mid blue with a fine diagonal twill weave. */
-  background-color: #22395f;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.09) 0,
-      rgba(255, 255, 255, 0.09) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(5, 12, 35, 0.25) 0,
-      rgba(5, 12, 35, 0.25) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+  background-color: var(--bar);
+  background-image: url('/denim-topbar.png');
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  background-size: auto 100%;
   /* A soft shadow under the bar makes a smooth, lifted edge. */
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.35),
@@ -752,6 +733,29 @@ html[lang='bn'] .table th {
   color: #ffffff;
 }
 /* The page title in the middle of the bar on the sign-up page. */
+.login-bar-brand {
+  position: absolute;
+  left: var(--space-6);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.login-bar-brand-name {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+}
+/* On a narrow screen only the logo tile is shown, so it never covers the Manager / Owner tabs. */
+@media (max-width: 760px) {
+  .login-bar-brand-name {
+    display: none;
+  }
+  .login-bar-brand {
+    left: var(--space-3);
+  }
+}
 .login-bar-title {
   color: #ffffff;
   font-size: 16px;
@@ -769,7 +773,7 @@ html[lang='bn'] .table th {
   padding: 0 var(--space-5);
   border-bottom: 3px solid transparent;
   color: #dbe6f5;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-decoration: none;
@@ -844,13 +848,65 @@ html[lang='bn'] .table th {
 
 /* ---------- Manager page greeting ---------- */
 
+/* Style D in Marcellus: a quiet greeting line and the name on a soft gold highlight.
+   Marcellus has one weight, so nothing here asks for bold (the browser would fake it). */
+.greeting {
+  /* Extra room above and below the greeting block, so it is not squeezed against the boxes. */
+  padding: var(--space-6) 0 var(--space-6);
+}
 .greeting h1 {
-  font-size: 42px;
+  font-family: var(--font-marcellus), var(--font-tiro-bangla), Georgia, serif;
+  font-size: 38px;
+  font-weight: 400;
+}
+.greeting-hello {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: #1f3a63;
+  font-size: 25px;
+  letter-spacing: 0.04em;
+}
+/* A thin gold line after the greeting words. */
+.greeting-hello::after {
+  content: '';
+  flex: 0 0 90px;
+  height: 1px;
+  background: #b8893a;
+}
+/* On a narrow phone the greeting words are a little smaller and the gold line shorter, so the
+   long Bangla wish stays on one line. */
+@media (max-width: 480px) {
+  .greeting-hello {
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    gap: 8px;
+  }
+  .greeting-hello::after {
+    flex: 0 1 36px;
+  }
+}
+.greeting-name {
+  display: inline-block;
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+  padding: 0 4px;
+  background: linear-gradient(transparent 58%, #ecd9a8 58%);
 }
 .greeting-line {
-  margin: var(--space-2) 0 0;
+  margin: var(--space-5) 0 0;
   color: var(--soft-text);
-  font-size: 17px;
+  font-size: 18px;
+}
+/* The manager and owner pages (the ones with the denim top bar) sit on a pale blue grid cloth
+   (public/page-weave.png) instead of the plain weave. The login pages keep the plain one. */
+body:has(.topbar) {
+  background-color: var(--page);
+  background-image: url('/page-weave.png');
+  background-repeat: repeat;
+  background-size: auto;
 }
 /* A menu link that scrolls to a card should not hide the card under the top bar. */
 #reports,
@@ -877,20 +933,52 @@ html {
 }
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
+/* Soft navy (the top bar's family), 80% solid (20% see-through). Its own words (title, link,
+   column names) are light; the rows floating on it keep dark text. */
 .card-list {
-  background: var(--list-card);
-  border-color: #8c9db0;
-  color: #1e2a38;
+  background: rgba(42, 59, 99, 0.8);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
-.card-list::after {
-  border-color: #6f8296;
+.card-list .card-head h2 {
+  color: #ffffff;
+}
+.card-list .card-link {
+  color: #e8d6a6;
+}
+.card-list .card-link:hover {
+  color: #ffffff;
+}
+.card-list .table td,
+.card-list .tech-row {
+  color: #0b1119;
+}
+/* Floating rows: every report is its own soft, raised row on the card, with a little air
+   between rows and no header bar. */
+.card-list .table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  margin-top: -6px;
+}
+.card-list .table th {
+  background: transparent;
+  color: #d9c28f;
+  padding: 4px 16px;
+  font-size: 12px;
 }
 .card-list .table td {
-  background: transparent;
-  border-bottom: 1px dashed #6f8296;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: none;
+  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+}
+.card-list .table td:first-child {
+  border-radius: 16px 0 0 16px;
+}
+.card-list .table td:last-child {
+  border-radius: 0 16px 16px 0;
 }
 .card-list .table tr:hover td {
-  background: rgba(255, 255, 255, 0.25);
+  background: #ffffff;
 }
 .card-head {
   display: flex;
@@ -898,6 +986,10 @@ html {
   justify-content: space-between;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
+}
+/* The title of a card (Reports, Technicians) is a little bigger than normal headings. */
+.card-head h2 {
+  font-size: 32px;
 }
 .card-link {
   color: var(--link);
@@ -911,7 +1003,7 @@ html {
 /* A smaller line under a cell's main text (for example the time under a name). */
 .cell-sub {
   font-size: 14px;
-  color: #2c3a4b;
+  color: #162130;
 }
 
 /* ---------- Pop-up box (Assign) ---------- */
@@ -1033,7 +1125,9 @@ html {
 
 /* A report that needs a technician has a gold edge on the left of its row. */
 .card-list .table tr.row-attention td:first-child {
-  box-shadow: inset 4px 0 0 #c99a45;
+  box-shadow:
+    inset 4px 0 0 #c99a45,
+    0 8px 8px -8px rgba(31, 43, 71, 0.4);
 }
 
 /* The read-only details box: names on the left, values on the right. */
@@ -1072,7 +1166,6 @@ html[lang='bn'] .cell-sub,
 html[lang='bn'] .details dt {
   font-size: 16px;
 }
-html[lang='bn'] .count-tag,
 html[lang='bn'] .status,
 html[lang='bn'] .table th,
 html[lang='bn'] .field-label,
@@ -1121,23 +1214,46 @@ html[lang='bn'] .filter-tab {
 /* A small pale rectangle behind the logo, so the dark logo shows on the dark bar. */
 .logo-tile {
   flex: none;
-  width: 48px;
-  height: 48px;
+  /* Sized to fill most of the 110px top bar. The logo inside always takes 76% of the tile. */
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9px;
+  border-radius: 14px;
   background: #e1e8f1;
   border: 1px solid #b9c6d8;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+.logo-tile svg {
+  width: 76%;
+  height: 76%;
+}
+/* A very thin stitch line just inside the edge of the tile, quiet but visible. */
+.logo-tile {
+  position: relative;
+}
+.logo-tile::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed var(--card-stitch);
+  border-radius: 10px;
+  pointer-events: none;
+}
 
-/* The technicians card uses the same darker blue as the reports card. */
+/* The technicians card uses the same darker blue as the reports card, and its rows float
+   the same way as the report rows. */
 .card-list .tech-row {
-  border-bottom-color: #6f8296;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: 10px;
+  border-bottom: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
 }
 .card-list .tech-row:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 /* ---------- Top bar zones, sidebar button, sidebar (manager pages) ---------- */
@@ -1149,21 +1265,26 @@ html[lang='bn'] .filter-tab {
 .topbar-right {
   justify-self: end;
 }
-/* The square button that opens and closes the sidebar. */
+/* The square button that opens and closes the sidebar. It is highlighted with the lighter
+   button blue, a pale border and a soft glow ring, all from the same blue palette. */
 .icon-btn {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  border: 1.5px solid var(--bar-text);
+  background: var(--main-button-hover);
+  box-shadow:
+    0 0 0 3px rgba(152, 166, 186, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.35);
   color: var(--bar-text-chosen);
   cursor: pointer;
 }
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--bar-text-chosen);
+  background: var(--main-button);
 }
 
 /* The sidebar and the page sit side by side. The sidebar PUSHES the page, so the
@@ -1172,7 +1293,7 @@ html[lang='bn'] .filter-tab {
   display: flex;
   align-items: stretch;
   /* The sidebar always reaches the bottom of the window, even on a short page. */
-  min-height: calc(100vh - 76px);
+  min-height: calc(100vh - var(--bar-size));
 }
 .shell > .page {
   flex: 1;
@@ -1186,52 +1307,65 @@ html[lang='bn'] .filter-tab {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-4);
-  background-color: var(--bar);
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 0,
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.22) 0,
-      rgba(0, 0, 0, 0.22) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+  gap: var(--space-4);
+  /* Roomy inside: space between the stitch line and the menu on every side. */
+  padding: var(--space-7) var(--space-6);
+  /* The denim sits on its own layer (::before), behind the menu. */
+  isolation: isolate;
 }
-/* The gold stitch line down the right edge of the sidebar. */
+/* The denim layer: plain, solid denim (public/denim-tile.png).
+   One band of the picture is as tall as one menu item (72px), so each item sits in its own band;
+   the picture starts below the top padding so the bands line up with the items. */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--bar);
+  background-image: url('/denim-tile.png');
+  background-repeat: repeat;
+  background-size: 124px 72px;
+  background-position: 0 var(--space-7);
+}
+/* A beige stitch line on all four sides, set in from the edge (like a stitched patch). */
 .sidebar::after {
   content: '';
   position: absolute;
-  top: 12px;
-  bottom: 12px;
-  right: 6px;
-  border-right: 1.5px dashed var(--bar-stitch);
+  inset: 8px;
+  border: 2px dashed #e8d8b5;
+  border-radius: 12px;
   pointer-events: none;
 }
+/* No gap and no sticky: the menu scrolls with the sidebar so the items stay inside the bands. */
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  /* The menu stays in view while a long page scrolls. */
-  position: sticky;
-  top: var(--space-5);
+  gap: 0;
 }
 .sidebar .menu-link {
   width: 100%;
-  min-height: 48px;
+  min-height: 72px;
+  padding: 0 var(--space-3);
+  border-radius: 0;
   justify-content: flex-start;
   background: transparent;
   font-family: var(--font-body);
 }
+/* The page the person is on: a soft beige glow fading to the right, with a beige bar on the
+   left edge (the same beige as the stitches), and no dashed outline. */
+.sidebar .menu-link {
+  border: 0;
+  position: relative;
+  transition: background 0.15s ease;
+}
 .sidebar .menu-link-active {
-  background: rgba(255, 255, 255, 0.12);
+  border: 0;
+  background: linear-gradient(90deg, rgba(221, 194, 145, 0.28), rgba(221, 194, 145, 0.04) 85%);
+  box-shadow: inset 4px 0 0 #ddc291;
+}
+.sidebar .menu-link-active svg:first-child {
+  color: #ddc291;
 }
 /* Log out at the bottom of the sidebar: a white button with an icon, like the
    second buttons everywhere else. */
@@ -1260,6 +1394,33 @@ html[lang='bn'] .filter-tab {
 html[lang='bn'] .sidebar-logout {
   font-size: 17px;
 }
+/* On a big screen the sidebar is a floating panel: rounded, with space around it, and only as
+   tall as its menu items (it does not stretch down the whole window). It stays in view while a
+   long page scrolls. */
+@media (min-width: 768px) {
+  .shell {
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-left: var(--space-4);
+  }
+  .sidebar {
+    align-self: flex-start;
+    position: sticky;
+    top: var(--space-4);
+    margin-top: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 12px 28px -10px rgba(15, 25, 45, 0.55),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  /* Log out sits right under the last menu item, not pinned to the bottom of the window. */
+  .sidebar-logout {
+    margin-top: var(--space-3);
+    position: static;
+  }
+}
 /* The dark area behind a sliding sidebar exists only on phones. */
 .sidebar-backdrop {
   display: none;
@@ -1270,23 +1431,40 @@ html[lang='bn'] .sidebar-logout {
   .sidebar {
     position: fixed;
     z-index: 20;
-    top: 76px;
-    bottom: 0;
-    left: 0;
-    box-shadow: 8px 0 24px -8px rgba(10, 20, 40, 0.6);
+    /* A floating rounded panel, only as tall as its menu, with space around it. */
+    top: calc(var(--bar-size) + var(--space-3));
+    left: var(--space-3);
+    width: min(264px, calc(100vw - 24px));
+    border-radius: 18px;
+    overflow: hidden;
+    padding-bottom: var(--space-4);
+    box-shadow:
+      0 12px 28px -10px rgba(15, 25, 45, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  /* Log out sits right under the last menu item. */
+  .sidebar-logout {
+    margin-top: var(--space-3);
+    position: static;
   }
   .sidebar-backdrop {
     display: block;
     position: fixed;
     z-index: 15;
-    inset: 76px 0 0 0;
+    inset: var(--bar-size) 0 0 0;
     background: rgba(20, 30, 50, 0.45);
   }
   .topbar {
     padding: var(--space-3) var(--space-4);
   }
   .topbar-name {
-    font-size: 16px;
+    font-size: 17px;
+  }
+  /* A slightly smaller tile on a phone, so the bar still has room for its buttons. */
+  .logo-tile {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
   }
   .topbar-role {
     display: none;
@@ -1317,10 +1495,30 @@ html[lang='bn'] .sidebar-logout {
   .table-stack tr:last-child {
     border-bottom: none;
   }
+  /* Narrow screens: each stacked report is a floating card. */
+  .card-list .table-stack tr {
+    margin-bottom: 10px;
+    border-bottom: none;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+  }
+  .card-list .table-stack tr:last-child {
+    margin-bottom: 0;
+  }
+  /* Hovering a stacked report whitens the whole card, not just one of its fields. */
+  .card-list .table-stack tr:hover td {
+    background: transparent;
+  }
+  .card-list .table-stack tr:hover {
+    background: #ffffff;
+  }
   .table-stack td,
   .card-list .table-stack td {
     padding: var(--space-1) 0;
     border-bottom: none;
+    border-radius: 0;
+    box-shadow: none;
     background: transparent;
   }
   .table-stack td[data-label]::before {
@@ -1369,10 +1567,9 @@ html[lang='bn'] .sidebar-logout {
   .login-tab {
     padding: 0 var(--space-4);
   }
-  /* Keep the page content inside the two stitch lines. */
   .login-page {
-    padding-left: 36px;
-    padding-right: 36px;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
   }
 }
 

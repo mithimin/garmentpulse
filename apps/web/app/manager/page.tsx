@@ -26,7 +26,7 @@ import {
   resolvedToday,
   startedInLastHour,
 } from '../../data/stats';
-import { formatToday, greetingKey } from '../../language/greeting';
+import { formatToday } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
@@ -63,7 +63,8 @@ export default function DashboardPage() {
     <>
       <div className="greeting">
         <h1>
-          {screenText(greetingKey(now), language)}, {firstName}
+          <span className="greeting-hello">{screenText('greetDay', language)}</span>{' '}
+          <span className="greeting-name">{firstName}</span>
         </h1>
         <p className="greeting-line">
           {formatToday(now, language)} · {queueText}
@@ -74,6 +75,7 @@ export default function DashboardPage() {
         <CountBox
           label={screenText('labelNewReports', language)}
           count={summary.waiting}
+          tone="waiting"
           tag={
             queueCount === 0
               ? screenText('tagNobodyWaiting', language)
@@ -83,13 +85,13 @@ export default function DashboardPage() {
         <CountBox
           label={STATUS_LABELS.in_progress[language]}
           count={summary.in_progress}
-          tone="green"
+          tone="progress"
           tag={fill(screenText('tagStartedHour', language), { n: startedInLastHour(list, now) })}
         />
         <CountBox
           label={screenText('labelResolvedToday', language)}
           count={resolvedList.length}
-          tone="blue"
+          tone="resolved"
           tag={
             averageFix === null
               ? screenText('tagNoFixes', language)
@@ -102,7 +104,7 @@ export default function DashboardPage() {
         <CountBox
           label={screenText('labelFreeTechnicians', language)}
           count={freeCount}
-          tone="green"
+          tone="free"
           tag={fill(screenText('tagBusyOf', language), {
             busy: technicianList.length - freeCount,
             total: technicianList.length,

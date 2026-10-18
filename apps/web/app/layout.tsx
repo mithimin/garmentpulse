@@ -7,7 +7,7 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Cormorant_Garamond, IBM_Plex_Mono, Jost, Tiro_Bangla } from 'next/font/google';
+import { Cormorant_Garamond, IBM_Plex_Mono, Jost, Marcellus, Tiro_Bangla } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
@@ -23,6 +23,12 @@ const jost = Jost({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-jost',
+});
+// Marcellus (one weight) is used only for the greeting at the top of the dashboards.
+const marcellus = Marcellus({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-marcellus',
 });
 const tiroBangla = Tiro_Bangla({
   subsets: ['bengali'],
@@ -44,7 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jost.variable} ${tiroBangla.variable} ${plexMono.variable}`}
+      className={`${cormorant.variable} ${jost.variable} ${marcellus.variable} ${tiroBangla.variable} ${plexMono.variable}`}
     >
       <body>
         <LanguageProvider>

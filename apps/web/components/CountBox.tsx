@@ -18,7 +18,7 @@ type CountBoxProps = {
   label: string;
   count: number | string;
   tag?: string;
-  tone?: 'plain' | 'green' | 'blue';
+  tone?: 'plain' | 'waiting' | 'progress' | 'resolved' | 'free';
 };
 
 export function CountBox({ label, count, tag, tone = 'plain' }: CountBoxProps) {

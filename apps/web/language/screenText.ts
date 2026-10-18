@@ -70,9 +70,7 @@ export const SCREEN_TEXT = {
   menuDashboard: { en: 'Dashboard', bn: 'ড্যাশবোর্ড' },
   menuReports: { en: 'Reports', bn: 'রিপোর্ট' },
   menuTechnicians: { en: 'Technicians', bn: 'টেকনিশিয়ান' },
-  greetMorning: { en: 'Good morning', bn: 'শুভ সকাল' },
-  greetAfternoon: { en: 'Good afternoon', bn: 'শুভ অপরাহ্ন' },
-  greetEvening: { en: 'Good evening', bn: 'শুভ সন্ধ্যা' },
+  greetDay: { en: 'Have a good day', bn: 'আপনার দিনটি ভালো কাটুক' },
   queueOne: { en: '1 report needs a technician', bn: '১টি রিপোর্টে একজন টেকনিশিয়ান লাগবে' },
   queueMany: { en: '{n} reports need a technician', bn: '{n}টি রিপোর্টে টেকনিশিয়ান লাগবে' },
   queueNone: {
@@ -88,7 +86,7 @@ export const SCREEN_TEXT = {
   tagAverageFix: { en: 'Avg {t} to fix', bn: 'গড়ে {t} লেগেছে' },
   tagNoFixes: { en: 'No fixes yet today', bn: 'আজ এখনো কিছু ঠিক হয়নি' },
   tagBusyOf: { en: '{busy} busy of {total}', bn: '{total} জনের মধ্যে {busy} জন ব্যস্ত' },
-  needsAttentionTitle: { en: 'Needs attention', bn: 'নজর দেওয়া দরকার' },
+  needsAttentionTitle: { en: 'Reports', bn: 'রিপোর্ট' }, // title of the queue card on the Dashboard
   viewAllReports: { en: 'View all reports', bn: 'সব রিপোর্ট দেখুন' },
   viewAllTechnicians: { en: 'View all technicians', bn: 'সব টেকনিশিয়ান দেখুন' },
   nothingNeedsAttention: { en: 'Nothing needs attention', bn: 'কিছুতেই নজর দেওয়ার দরকার নেই' },
