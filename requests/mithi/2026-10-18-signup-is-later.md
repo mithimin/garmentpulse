@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -23,3 +23,7 @@ For the MVP, please:
 ## What I am doing meanwhile
 
 The real login and the manager and owner functions are ready for you now: use `createApi(supabase)` from `@garmentpulse/shared` (see your other note, `2026-10-18-backend-is-ready.md`).
+
+## Done
+
+Done on the website: the sign-up link is hidden on the login pages and the manager-codes card is hidden on the owner screen while the real backend is on. The fake sign-up pages stay in the code for later. (Mithi)
