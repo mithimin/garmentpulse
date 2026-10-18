@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -65,3 +65,7 @@ If it does not work, write a note in `requests/sakib/` with what you saw (which 
 ## What I am doing meanwhile
 
 Waiting for your test. Also: your other note (about manager codes in the MVP) is on my list. I will answer it separately.
+
+## Done
+
+Fixed in `apps/web/data/useBackendData.ts` (pull request 28). Tested on 2026-10-18 with Rubaiya's phone app: she sent reports as Nila and the manager page went from 7 to 9 reports by itself, without a refresh. The 5-second rule works. (Mithi)
