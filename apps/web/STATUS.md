@@ -23,7 +23,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
-- Nothing right now. Pull request 35 (the website remembers the chosen language after a refresh) is waiting for a teammate's review.
+- Nothing right now. (Pull request 35 is merged: the website remembers the chosen language after a refresh.)
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
@@ -36,7 +36,6 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 - Sakib: Bangla names in the backend and the invite-code sign-up plan (both after the full two-screen test). Note: `requests/mithi/2026-10-19-bangla-names-accepted.md`.
 - Rubaiya and Sakib: the full two-screen test needs everyone at the same time.
 - A Bangla speaker: the Bangla spellings of the test names and a read of the Bangla words.
-- A teammate: review of pull request 35.
 
 ## Decisions made in this lane
 
