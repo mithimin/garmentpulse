@@ -14,7 +14,7 @@
 // sidebar instead, so the bar does not show it twice.
 // Owned by Mithi.
 
-import { LogOut, PanelLeft } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import type { Role } from '@garmentpulse/shared';
 import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
@@ -43,7 +43,7 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
             aria-expanded={sidebarOpen}
             onClick={onToggleSidebar}
           >
-            <PanelLeft size={22} strokeWidth={1.8} aria-hidden="true" />
+            <Menu size={26} strokeWidth={2.2} aria-hidden="true" />
           </button>
         ) : null}
       </div>

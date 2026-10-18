@@ -1165,21 +1165,26 @@ html[lang='bn'] .filter-tab {
 .topbar-right {
   justify-self: end;
 }
-/* The square button that opens and closes the sidebar. */
+/* The square button that opens and closes the sidebar. It is highlighted with the lighter
+   button blue, a pale border and a soft glow ring, all from the same blue palette. */
 .icon-btn {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  border: 1.5px solid var(--bar-text);
+  background: var(--main-button-hover);
+  box-shadow:
+    0 0 0 3px rgba(152, 166, 186, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.35);
   color: var(--bar-text-chosen);
   cursor: pointer;
 }
 .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--bar-text-chosen);
+  background: var(--main-button);
 }
 
 /* The sidebar and the page sit side by side. The sidebar PUSHES the page, so the
