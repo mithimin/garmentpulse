@@ -25,6 +25,7 @@ import { formatToday } from '../../language/greeting';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
+import { personName } from '../../language/localNames';
 
 export default function OwnerPage() {
   const { profile } = useAuth();
@@ -46,7 +47,7 @@ export default function OwnerPage() {
     );
 
   // "Mr. Rahman" is a title and a name, so the owner is greeted by the full name.
-  const name = profile?.display_name ?? '';
+  const name = profile ? personName(profile, language) : '';
 
   return (
     <>

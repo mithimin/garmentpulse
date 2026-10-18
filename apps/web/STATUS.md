@@ -23,19 +23,19 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
-- Nothing right now. (Pull request 35 is merged: the website remembers the chosen language after a refresh.)
+- Nothing right now. The website is ready for the Bangla names (see Next, item 2).
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. The full two-screen test with Sakib and Rubaiya (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Still untested on the real backend: the owner screen with live updates. Tested 2026-10-19: a worker login (nila) on the website is refused with the "this website is for managers and owners, use the phone app" message and stays on the login page. Still to try: typing a manager address as a worker.
-2. Show Bangla names for people and machines when Sakib adds them (accepted 2026-10-19, after the full test). Planned fields: `display_name_bn` and `name_bn`. Until then names show exactly as the backend sends them.
-3. Check the Bangla words with a Bangla speaker.
+1. DONE (2026-10-19, reported by Mithi): the full two-screen test (shared step ★5) was run on the real backend with Rubaiya's phone, all the way to the last step: a worker reports, the manager sees it within 5 seconds, assigns a free technician, the technician accepts and finishes it, the owner's counts move, and the technician shows as free again. The Assign button and the owner screen with live updates were tested too, and a worker login on the website is refused. This unblocks Sakib's next steps.
+2. Bangla names for people and machines: the website is READY (`language/localNames.ts`). In Bangla mode it shows `display_name_bn` (people) and `name_bn` (machines) whenever the backend sends one, and the English name otherwise. Nothing more to build on the website; when Sakib adds the fields they just start showing. Worker-typed report text is never changed.
+3. Sign-up with invite codes is now IN the MVP (plan in `docs/api-contract.md` section 4.7, note `requests/mithi/2026-10-19-signup-with-invite-codes.md`). Website part, to build on fake data first and connect only when Sakib says the backend is ready: the owner sidebar with a Reports page and a Manager codes page, a manager page for worker and technician codes, the sign-up page (a code field, no owner option), and friendly sentences for `INVALID_CODE` and `EMAIL_TAKEN`.
+4. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
 
-- Sakib: Bangla names in the backend and the invite-code sign-up plan (both after the full two-screen test). Note: `requests/mithi/2026-10-19-bangla-names-accepted.md`.
-- Rubaiya and Sakib: the full two-screen test needs everyone at the same time.
-- A Bangla speaker: the Bangla spellings of the test names and a read of the Bangla words.
+- Sakib: the Bangla names in the backend, and the invite-code backend (then the website pages in item 3 connect to it).
+- A Bangla speaker: the Bangla spellings of the test names and machines, and a read of the Bangla words.
 
 ## Decisions made in this lane
 
