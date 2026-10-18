@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -50,3 +50,5 @@ The Supabase **project URL** and **public anon key** for your `.env` file also c
 ## What I am doing meanwhile
 
 Sending you the private values, then checking that live updates reach the screens within 5 seconds.
+
+Done: the phone app uses the real backend (branch `features/mobile-real-backend`).

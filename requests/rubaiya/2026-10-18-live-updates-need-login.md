@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -25,3 +25,5 @@ In my real client check, live updates delivered nothing until I added the line a
 Making sure the backend side is solid. The live-update setup in the database is fine: `reports` is switched on and the rules let workers see their own reports and technicians see their own jobs. A technician who is not on a report does not receive it.
 
 If live updates still do not arrive, write a note in `requests/sakib/` with what you saw (which person, which screen, and any error message).
+
+Done: the phone app uses the real backend and gives live updates the login before subscribing (branch `features/mobile-real-backend`).

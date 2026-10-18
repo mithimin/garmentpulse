@@ -35,11 +35,13 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 - Step 4 (real backend), built on branch `features/mobile-real-backend`:
   - Real login (`src/auth/realAuth.ts`): Supabase email + password, then `get_my_profile()`. A manager or owner is signed out again with `WRONG_PLATFORM`. The fake login was removed.
   - One connection file (`src/backend/supabase.ts`) reads `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` from `apps/mobile/.env`.
-  - `src/data/ReportsContext.tsx` now uses the shared `createApi` calls and live updates (Realtime on `reports`, then a fresh download). Screens kept the same shape.
+  - `src/data/ReportsContext.tsx` now uses the shared `createApi` calls and live updates (Realtime on `reports`, then a fresh download). Screens kept the same shape. Live updates are given the person's login before they subscribe (Sakib's note).
+  - Back arrows on the Report, My reports and History tabs, and the Android phone back button does the same (`src/components/useBackAction.ts`).
+  - Tested on a real phone: login, reports, jobs and the back buttons work.
 
 ## In progress
 
-- Trying the real backend on a phone. Not tested yet: it needs the `.env` values from Sakib. Typecheck and tests pass.
+- Nothing right now.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
@@ -47,7 +49,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Waiting on someone else
 
-- Sakib: the private `.env` values (backend address and public key) and the test account passwords, so the real login can be tried.
+- Sakib: a decision on sign-up for workers and technicians (not in the MVP now). Note: `requests/sakib/2026-10-18-worker-technician-signup.md`.
 
 ## Decisions made in this lane
 
