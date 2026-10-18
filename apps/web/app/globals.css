@@ -462,13 +462,14 @@ html[lang='bn'] .status {
   text-align: center;
   gap: var(--space-2);
   /* Plain colour with a soft light-to-dark fade (no pattern, no stitch), raised like a pillow. */
-  /* Same ocean blue as the Reports card, 80% solid (20% see-through). */
+  /* A lighter steel blue than the tables below it, so the summary boxes stand apart.
+     80% solid (20% see-through). */
   background-color: transparent;
   background-image: linear-gradient(
     180deg,
-    rgba(38, 90, 138, 0.8),
-    rgba(31, 78, 121, 0.8) 55%,
-    rgba(26, 67, 106, 0.8)
+    rgba(78, 112, 168, 0.8),
+    rgba(63, 95, 148, 0.8) 55%,
+    rgba(54, 84, 134, 0.8)
   );
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
@@ -932,10 +933,10 @@ html {
 }
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
-/* Ocean blue, 80% solid (20% see-through). Its own words (title, link, column names) are
-   light; the rows floating on it keep dark text. */
+/* Soft navy (the top bar's family), 80% solid (20% see-through). Its own words (title, link,
+   column names) are light; the rows floating on it keep dark text. */
 .card-list {
-  background: rgba(31, 78, 121, 0.8);
+  background: rgba(42, 59, 99, 0.8);
   border-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
 }
