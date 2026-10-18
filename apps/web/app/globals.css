@@ -828,11 +828,17 @@ html[lang='bn'] .table th {
   color: var(--link-hover);
 }
 
-/* The buttons above the list of invite codes (the manager has two). */
-.code-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+/* The manager's two invite-code cards: side by side on a wide screen, stacked on a small one. */
+.code-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+@media (min-width: 1100px) {
+  .code-cards {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* The list of invite codes on the owner's Manager codes page: the code and when it stops working. */
