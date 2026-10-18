@@ -7,13 +7,13 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Cormorant_Garamond, IBM_Plex_Mono, Jost, Marcellus, Tiro_Bangla } from 'next/font/google';
+import { Baloo_Da_2, Cormorant_Garamond, IBM_Plex_Mono, Jost, Marcellus } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
 
-// The English fonts cannot draw Bangla letters, so Bangla uses Tiro Bangla,
-// a classy Bangla serif font (it has one weight; bold is made by the browser) (see the font lists in globals.css).
+// The English fonts cannot draw Bangla letters, so Bangla uses Baloo Da 2,
+// a rounded, friendly Bangla font that has several weights (see the font lists in globals.css).
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['600'],
@@ -30,10 +30,10 @@ const marcellus = Marcellus({
   weight: '400',
   variable: '--font-marcellus',
 });
-const tiroBangla = Tiro_Bangla({
+const balooBangla = Baloo_Da_2({
   subsets: ['bengali'],
-  weight: '400',
-  variable: '--font-tiro-bangla',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-baloo-bangla',
 });
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -50,7 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${jost.variable} ${marcellus.variable} ${tiroBangla.variable} ${plexMono.variable}`}
+      className={`${cormorant.variable} ${jost.variable} ${marcellus.variable} ${balooBangla.variable} ${plexMono.variable}`}
     >
       <body>
         <LanguageProvider>
