@@ -279,19 +279,16 @@ html[lang='bn'] .lang-switch {
 
 .card {
   position: relative;
+  /* A plain, soft, raised card: no pattern and no stitch, so it never clashes with the
+     grid cloth behind it. A pale top edge and a gentle shadow make it look lifted. */
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: var(--space-5);
-  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
-}
-.card::after {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1.5px dashed var(--card-stitch);
-  border-radius: 6px;
-  pointer-events: none;
+  border-radius: 18px;
+  padding: var(--space-6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 14px 26px -12px rgba(31, 43, 71, 0.38),
+    0 2px 5px rgba(31, 43, 71, 0.12);
 }
 .card > * {
   position: relative;
@@ -430,37 +427,17 @@ html[lang='bn'] .status {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-2);
+  /* Plain colour with a soft light-to-dark fade (no pattern, no stitch), raised like a pillow. */
   background-color: var(--number-box);
-  /* Quilted: two sets of crossing lines make a diamond grid, like padded cloth. */
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.07) 0,
-      rgba(255, 255, 255, 0.07) 1px,
-      transparent 1px,
-      transparent 14px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(0, 0, 0, 0.1) 0,
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px,
-      transparent 14px
-    );
+  background-image: linear-gradient(180deg, #6a7e94, var(--number-box) 55%, #566a80);
   border: 1px solid var(--number-box-border);
-  border-radius: 10px;
+  border-radius: 18px;
   padding: var(--space-5) var(--space-6);
   color: #ffffff;
-  box-shadow: 0 10px 24px -18px rgba(30, 40, 60, 0.45);
-}
-/* The stitch line, 7px inside the edge (design system 8). */
-.count-box::after {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1.5px dashed rgba(255, 255, 255, 0.35);
-  border-radius: 6px;
-  pointer-events: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 14px 26px -12px rgba(31, 43, 71, 0.5),
+    0 2px 5px rgba(31, 43, 71, 0.2);
 }
 .count-number {
   font-size: 44px;
@@ -482,28 +459,28 @@ html[lang='bn'] .count-label {
 /* The small tag under the number (same woven-label look as the status labels). */
 .count-tag,
 .count-tag-space {
-  min-height: 26px;
+  min-height: 22px;
 }
+/* A small, quiet label under the number. It uses the same colours as the status words:
+   yellow for waiting, blue for in progress, olive green for resolved, green for free. */
 .count-tag {
-  position: relative;
+  /* Centred in the middle of the card. */
+  align-self: center;
+  text-align: center;
+  justify-content: center;
   display: inline-flex;
   align-items: center;
   padding: 4px 10px;
-  border-radius: 3px;
-  font-size: 13px;
+  border-radius: 8px;
+  line-height: 1.3;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-.count-tag::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border: 1px dashed currentColor;
-  opacity: 0.4;
-  border-radius: 2px;
-}
 html[lang='bn'] .count-tag {
+  /* Tiro Bangla draws small letters, so the Bangla tag is 2px bigger. */
+  font-size: 13px;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -511,13 +488,21 @@ html[lang='bn'] .count-tag {
   background: #eef2f6;
   color: #26324f;
 }
-.count-tag-green {
+.count-tag-waiting {
+  background: var(--waiting-bg);
+  color: var(--waiting-text);
+}
+.count-tag-progress {
+  background: var(--progress-bg);
+  color: var(--progress-text);
+}
+.count-tag-resolved {
+  background: var(--resolved-bg);
+  color: var(--resolved-text);
+}
+.count-tag-free {
   background: #cfeede;
   color: #1c5a3d;
-}
-.count-tag-blue {
-  background: #c7e2f2;
-  color: #1d4b6d;
 }
 
 /* The row of count boxes: four across when there is room, fewer when narrow. */
@@ -917,12 +902,9 @@ html {
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
 .card-list {
-  background: var(--list-card);
+  background: linear-gradient(180deg, #c3cedb, var(--list-card) 60%);
   border-color: #8c9db0;
   color: #1e2a38;
-}
-.card-list::after {
-  border-color: #6f8296;
 }
 .card-list .table td {
   background: transparent;
@@ -1111,7 +1093,6 @@ html[lang='bn'] .cell-sub,
 html[lang='bn'] .details dt {
   font-size: 16px;
 }
-html[lang='bn'] .count-tag,
 html[lang='bn'] .status,
 html[lang='bn'] .table th,
 html[lang='bn'] .field-label,

@@ -92,6 +92,7 @@ function OwnerContent() {
               <CountBox
                 label={STATUS_LABELS.waiting[language]}
                 count={counts.waiting}
+                tone="waiting"
                 tag={
                   queueCount === 0
                     ? screenText('tagNobodyWaiting', language)
@@ -101,7 +102,7 @@ function OwnerContent() {
               <CountBox
                 label={STATUS_LABELS.in_progress[language]}
                 count={counts.in_progress}
-                tone="green"
+                tone="progress"
                 tag={fill(screenText('tagStartedHour', language), {
                   n: startedInLastHour(list, now),
                 })}
@@ -109,7 +110,7 @@ function OwnerContent() {
               <CountBox
                 label={STATUS_LABELS.resolved[language]}
                 count={counts.resolved}
-                tone="blue"
+                tone="resolved"
                 tag={
                   averageFix === null
                     ? screenText('tagNoneToday', language)

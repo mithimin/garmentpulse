@@ -75,6 +75,7 @@ export default function DashboardPage() {
         <CountBox
           label={screenText('labelNewReports', language)}
           count={summary.waiting}
+          tone="waiting"
           tag={
             queueCount === 0
               ? screenText('tagNobodyWaiting', language)
@@ -84,13 +85,13 @@ export default function DashboardPage() {
         <CountBox
           label={STATUS_LABELS.in_progress[language]}
           count={summary.in_progress}
-          tone="green"
+          tone="progress"
           tag={fill(screenText('tagStartedHour', language), { n: startedInLastHour(list, now) })}
         />
         <CountBox
           label={screenText('labelResolvedToday', language)}
           count={resolvedList.length}
-          tone="blue"
+          tone="resolved"
           tag={
             averageFix === null
               ? screenText('tagNoFixes', language)
@@ -103,7 +104,7 @@ export default function DashboardPage() {
         <CountBox
           label={screenText('labelFreeTechnicians', language)}
           count={freeCount}
-          tone="green"
+          tone="free"
           tag={fill(screenText('tagBusyOf', language), {
             busy: technicianList.length - freeCount,
             total: technicianList.length,
