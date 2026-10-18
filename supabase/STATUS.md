@@ -41,7 +41,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## Decisions made in this lane
 
-- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up with one-time manager codes is **later** (decided 2026-10-18), so the owner stays read-only.
+- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up is **later** for everyone (decided 2026-10-18), so the owner stays read-only. Mithi (manager codes, owner sidebar) and Rubaiya (worker and technician sign-up) both asked for it; the answer is "yes, right after the first end-to-end test passes", as **one invite-code design for all roles**: the owner or manager makes a code, the code decides which role it allows, and the backend refuses any other role. Sakib writes the plan and shares it before building.
 - Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
 - The owner uses the **Web** app (as in the contract).
 - A manager cannot reassign a report in the MVP.
