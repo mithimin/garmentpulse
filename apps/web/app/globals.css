@@ -829,39 +829,55 @@ html[lang='bn'] .table th {
 
 /* Style D in Marcellus: a quiet greeting line and the name on a soft gold highlight.
    Marcellus has one weight, so nothing here asks for bold (the browser would fake it). */
+.greeting {
+  /* Extra room above and below the greeting block, so it is not squeezed against the boxes. */
+  padding: var(--space-6) 0 var(--space-6);
+}
 .greeting h1 {
   font-family: var(--font-marcellus), var(--font-tiro-bangla), Georgia, serif;
-  font-size: 30px;
+  font-size: 38px;
   font-weight: 400;
 }
 .greeting-hello {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 2px;
+  margin-bottom: 14px;
   color: #1f3a63;
-  font-size: 21px;
+  font-size: 25px;
   letter-spacing: 0.04em;
 }
 /* A thin gold line after the greeting words. */
 .greeting-hello::after {
   content: '';
-  flex: 0 0 70px;
+  flex: 0 0 90px;
   height: 1px;
   background: #b8893a;
 }
+/* On a narrow phone the greeting words are a little smaller and the gold line shorter, so the
+   long Bangla wish stays on one line. */
+@media (max-width: 480px) {
+  .greeting-hello {
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    gap: 8px;
+  }
+  .greeting-hello::after {
+    flex: 0 1 36px;
+  }
+}
 .greeting-name {
   display: inline-block;
-  margin-top: 2px;
+  margin-top: 6px;
   letter-spacing: 0.02em;
   font-weight: 700;
   padding: 0 4px;
   background: linear-gradient(transparent 58%, #ecd9a8 58%);
 }
 .greeting-line {
-  margin: var(--space-2) 0 0;
+  margin: var(--space-5) 0 0;
   color: var(--soft-text);
-  font-size: 17px;
+  font-size: 18px;
 }
 /* A menu link that scrolls to a card should not hide the card under the top bar. */
 #reports,
