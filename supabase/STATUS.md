@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-19 by Sakib
+**Last updated:** 2026-10-19 by Sakib (sign-up plan)
 
 ## Done
 
@@ -30,9 +30,9 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 Both apps are now connected to the real backend (phone: #25, website: #18 and #20). Real logins work, and the **5-second rule is confirmed with real devices** (2026-10-18, per `apps/web/STATUS.md`: the manager page went from 7 to 9 reports without a refresh).
 
-1. **The full two-screen test** (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Also the "typing the address" test: a worker must be refused on manager and owner pages. Still untested on the real backend: the website's Assign button and the owner screen with live updates.
-2. **Bangla names** for people and machines (accepted 2026-10-19, after the full test). Optional fields `display_name_bn` and `name_bn`; write them into `docs/api-contract.md` first and tell Rubaiya and Mithi.
-3. **The invite-code sign-up plan** (promised to Rubaiya and Mithi), shared before anything is built.
+1. **Sign-up with invite codes** (in the MVP since 2026-10-19; plan in `docs/api-contract.md` section 4.7). Build order: (a) migration for the `invite_codes` table and the sign-up guard, (b) migration for `check_invite_code`, `create_invite_code`, `list_invite_codes`, (c) new checks in `api_rules_check.sql` and `real_client.check.ts`, (d) the `signUpWithCode` helper and the new error codes in `packages/shared`, (e) switch sign-up back **on** in the Supabase dashboard (email confirmation stays off), (f) tell Rubaiya and Mithi in `requests/` that the backend is ready.
+2. **The full two-screen test** (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Also the "typing the address" test: a worker must be refused on manager and owner pages. Still untested on the real backend: the website's Assign button and the owner screen with live updates.
+3. **Bangla names** for people and machines (accepted 2026-10-19). Optional fields `display_name_bn` and `name_bn`; write them into `docs/api-contract.md` first and tell Rubaiya and Mithi.
 4. Agree the Bangla words in `packages/shared/src/labels.ts` with a Bangla speaker.
 5. Postman collection (optional now that the real client check exists).
 
@@ -45,7 +45,7 @@ Both apps are now connected to the real backend (phone: #25, website: #18 and #2
 
 ## Decisions made in this lane
 
-- Accounts and roles are created by hand by Sakib in the Supabase dashboard (MVP). No sign-up screen. Sign-up is **later** for everyone (decided 2026-10-18), so the owner stays read-only. Mithi (manager codes, owner sidebar) and Rubaiya (worker and technician sign-up) both asked for it; the answer is "yes, right after the first end-to-end test passes", as **one invite-code design for all roles**: the owner or manager makes a code, the code decides which role it allows, and the backend refuses any other role. Sakib writes the plan and shares it before building.
+- **Sign-up is in the MVP, with invite codes** (decided 2026-10-19; it replaces the "later" decision of 2026-10-18). The owner makes **manager** codes; a manager makes **worker** and **technician** codes. The code decides the role, works once, expires after 7 days, and there is no email confirmation. It is enforced by a guard in the database at sign-up, and `check_invite_code` lets the apps ask first. **Owner** accounts are never made by sign-up; Sakib makes them by hand. The owner now has two pages (Reports, Manager codes) and makes manager codes, which is the owner's only action that changes anything.
 - Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
 - The owner uses the **Web** app (as in the contract).
 - A manager cannot reassign a report in the MVP.

@@ -27,11 +27,18 @@ If the MVP works end to end, the team has proof that the idea works. Everything 
 
 Each feature below comes from [prd.md](prd.md). The number (for example FR-01) links back to the PRD.
 
-### 2.1 Login and roles (must have)
+### 2.1 Login, sign-up and roles (must have)
 
 - Each person logs in with email and password.
 - The app knows the role: **worker, technician, manager or owner**.
 - Each role only sees and does what it is allowed to do. The server checks this, not only the app (see NFR-02 in [architecture.md](architecture.md)).
+- A new person can **sign up**, but only with an **invite code**. The code decides their role, so nobody can choose a role for themselves:
+  - The **owner** makes **manager** codes.
+  - A **manager** makes **worker** and **technician** codes.
+  - **Owner** accounts are never created by sign-up. Sakib makes them by hand.
+- A code works **once** and **expires after 7 days**. A wrong, used or expired code is refused.
+- A new person can log in **right away**. The MVP does not ask them to confirm their email.
+- Workers and technicians sign up on the **phone app**. Managers sign up on the **website**.
 
 ### 2.2 Report a machine problem (FR-01)
 
@@ -53,12 +60,14 @@ Each feature below comes from [prd.md](prd.md). The number (for example FR-01) l
 - Each status change is visible to the **worker** and the **manager**.
 - The technician can see their **past jobs**.
 
-### 2.5 Owner view (read-only)
+### 2.5 Owner view (read-only for reports)
 
 - The owner logs in on the **web app**.
 - The owner can **see all reports and their status**. This is for watching only.
-- The owner web app is **one screen**: a read-only list of all reports, with three count boxes on top (Waiting, In progress, Resolved). It has no menu links.
-- The owner cannot approve, change or assign anything in the MVP. Approval comes later (see section 3).
+- The owner web app has **two pages**:
+  - **Reports:** a read-only list of all reports, with three count boxes on top (Waiting, In progress, Resolved).
+  - **Manager codes:** a button to make a one-time **manager invite code**, and the list of unused codes (see 2.1).
+- The owner cannot approve, change or assign any report in the MVP. Approval comes later (see section 3). Making manager codes is the owner's only action that changes anything.
 
 ### 2.6 Simple language support (section 5 of PRD)
 
@@ -83,7 +92,6 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 | Free and paid versions (subscription) | Section 6 | No payment or billing needed to test the main idea. |
 | 12-month history limit and user limits | Section 6, NFR-04 | Not needed for the first test. |
 | Push notifications to phones | FR-05, FR-06 | Can start with in-app status updates only. |
-| Sign-up with one-time manager codes (the owner makes a code, a new manager signs up with it) | - | In the MVP, Sakib creates every account by hand. It would also give the owner a write action, and the owner screen is read-only. The website's fake sign-up pages are kept for a later version. |
 
 **Out of scope everywhere (already in PRD section 7):** stock, production planning, payroll, face recognition.
 
@@ -112,8 +120,11 @@ The MVP is finished when all of these are true:
 - [ ] The manager sees the report within **5 seconds** (see NFR and FR-01 in [prd.md](prd.md)).
 - [ ] The manager can assign a free technician, and the report waits in a queue when all are busy.
 - [ ] A technician can accept a job, change its status, and see past jobs.
-- [ ] The owner can see all reports and their status on the web app, but cannot change anything.
+- [ ] The owner can see all reports and their status on the web app, but cannot change any report.
 - [ ] A worker cannot open owner or manager screens, even by typing the address.
+- [ ] The owner can make a manager invite code, and a new manager can sign up with it and log in right away.
+- [ ] A manager can make worker and technician invite codes, and a new worker or technician can sign up with one on the phone app.
+- [ ] Sign-up is refused with a wrong, already used or expired code, and nobody can choose their own role.
 - [ ] The main screens work in both Bangla and English.
 
 ---
@@ -125,5 +136,6 @@ These are not decided yet. The team should answer them before building the relat
 - **Platform for the first test:** Decided: the worker and technician mobile apps are tested on **both Android and iPhone**. The owner uses the web app, so there is no owner mobile app.
 - **Voice input:** Decided: it waits for a later version.
 - **Chatbot, invoice and receipt, owner approval:** Decided: all three wait for a later version (see section 3).
+- **Sign-up:** Decided on 2026-10-19: sign-up with invite codes is **in the MVP** (see 2.1). The owner makes manager codes, a manager makes worker and technician codes, a code works once and expires after 7 days, and there is no email confirmation. Owner accounts are still made by hand.
 - **Owner expense limit:** Not needed for the MVP. It comes back with owner approval later.
 - **Subscription price:** Still an estimate in [prd.md](prd.md) section 9. Not needed for the MVP.
