@@ -66,12 +66,12 @@
   --space-7: 32px;
   --space-8: 48px;
 
-  /* Fonts (design system 5). Bangla letters use Tiro Bangla, a classy
-     Bangla serif font: it is listed right after each English font, so the browser uses
+  /* Fonts (design system 5). Bangla letters use Baloo Da 2, a rounded,
+     friendly Bangla font: it is listed right after each English font, so the browser uses
      it for any Bangla letter. */
   --font-title:
-    var(--font-cormorant), 'Cormorant Garamond', var(--font-tiro-bangla), Georgia, serif;
-  --font-body: var(--font-jost), Jost, var(--font-tiro-bangla), system-ui, sans-serif;
+    var(--font-cormorant), 'Cormorant Garamond', var(--font-baloo-bangla), Georgia, serif;
+  --font-body: var(--font-jost), Jost, var(--font-baloo-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -528,7 +528,7 @@ html[lang='bn'] .count-label {
   text-transform: uppercase;
 }
 html[lang='bn'] .count-tag {
-  /* Tiro Bangla draws small letters, so the Bangla tag is 2px bigger. */
+  /* Bangla letters are drawn small, so the Bangla tag is 2px bigger. */
   font-size: 13px;
   letter-spacing: 0;
   text-transform: none;
@@ -855,7 +855,7 @@ html[lang='bn'] .table th {
   padding: var(--space-6) 0 var(--space-6);
 }
 .greeting h1 {
-  font-family: var(--font-marcellus), var(--font-tiro-bangla), Georgia, serif;
+  font-family: var(--font-marcellus), var(--font-baloo-bangla), Georgia, serif;
   font-size: 38px;
   font-weight: 400;
 }
@@ -1160,7 +1160,7 @@ html[lang='bn'] .details dt {
   white-space: nowrap;
 }
 
-/* Tiro Bangla draws small letters, so every small text gets 2px bigger in Bangla. */
+/* Bangla letters are drawn small, so every small text gets 2px bigger in Bangla. */
 html[lang='bn'] .count-label,
 html[lang='bn'] .cell-sub,
 html[lang='bn'] .details dt {
