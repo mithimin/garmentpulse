@@ -58,3 +58,25 @@ export type Technician = {
 
 /** The three count boxes on the owner's screen. */
 export type OwnerSummary = Record<ReportStatus, number>;
+
+// -----------------------------------------------------------------------------
+// Sign-up with invite codes (docs/api-contract.md section 4.7)
+// -----------------------------------------------------------------------------
+
+/** The roles an invite code can give. The owner is never created by a code. */
+export type InviteRole = 'worker' | 'technician' | 'manager';
+
+export const INVITE_ROLES: readonly InviteRole[] = ['worker', 'technician', 'manager'];
+
+/** An invite code as the owner or a manager sees it in their list. */
+export type InviteCode = {
+  /** 10 capital letters and digits, without look-alikes (no 0, O, 1 or I). */
+  code: string;
+  role: InviteRole;
+  created_at: string;
+  /** A code stops working 7 days after it was made. */
+  expires_at: string;
+};
+
+/** The answer to "is this code good?" (before sign-up). */
+export type CodeCheck = { role: InviteRole };

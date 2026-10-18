@@ -232,7 +232,7 @@ A new person signs up with an **invite code**. The code decides their role, so n
 
 #### Sign-up itself (Supabase Auth, no custom function)
 
-Apps use the ready-made helper `signUpWithCode(...)` in `packages/shared`. Under the hood it does three things in order:
+Apps use the ready-made helper `signUpWithCode(client, { platform, fullName, email, password, code })` in `packages/shared` (`platform` is `'mobile'` or `'web'`). It returns the new person's `Profile`, and every failure is an `ApiError` whose `code` is one of the codes below. The helper is **written and tested with a pretend client**; it is proven against the real login service by the real client check once sign-up is switched on. Under the hood it does these things in order:
 
 1. Calls `check_invite_code(code)` to get the role, or `INVALID_CODE`.
 2. The app makes sure the role belongs to its own platform (a worker or technician code only on the phone app, a manager code only on the website). If not, it stops with `WRONG_PLATFORM`.

@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-19 by Sakib (sign-up backend done)
+**Last updated:** 2026-10-19 by Sakib (sign-up helper)
 
 ## Done
 
@@ -23,6 +23,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
   - Public sign-up is still switched **off** in the cloud project (a dashboard setting, not in any file). It is switched **on** only after the shared `signUpWithCode` helper exists. If the project is ever rebuilt, set it by hand: sign-up on, email confirmation off.
   - **Creating a login by hand in the dashboard now needs the email on the approved list first** (the guard applies to everybody).
 - **Ready-made wrappers** in `packages/shared/src/api.ts`: `createApi(supabase)` gives typed methods for all 12 functions (for example `api.listMyReports()`). Failures become an `ApiError` with a known `code`. Both apps should use these instead of typing `supabase.rpc('...')` by hand.
+- **Sign-up helper** (written and tested with a pretend client; not yet proven against the real login service): `createApi(...)` now also has `checkInviteCode`, `createInviteCode` and `listInviteCodes`, and `packages/shared` exports `signUpWithCode(client, { platform, fullName, email, password, code })`. It checks the code, refuses the wrong app (`WRONG_PLATFORM`), signs up, and returns the new person's profile. The two sign-up error codes `INVALID_CODE` and `EMAIL_TAKEN` are in their **own** list (`SIGN_UP_ERROR_CODES`, read with `getApiErrorCode`), so neither app's sentence table breaks. They join the main list once both apps have their sentences.
 
 ## In progress
 
@@ -32,7 +33,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 Both apps are now connected to the real backend (phone: #25, website: #18 and #20). Real logins work, and the **5-second rule is confirmed with real devices** (2026-10-18, per `apps/web/STATUS.md`: the manager page went from 7 to 9 reports without a refresh).
 
-1. **Sign-up with invite codes** (in the MVP since 2026-10-19; plan in `docs/api-contract.md` section 4.7). Done: the table, the three functions, the guard, and 52 new checks. Still to do, in order: (d) the `signUpWithCode` helper, the three code wrappers and the new error codes (`INVALID_CODE`, `EMAIL_TAKEN`) in `packages/shared`; (e) switch sign-up **on** in the Supabase dashboard (email confirmation stays off); (c) real sign-up checks in `real_client.check.ts`; (f) tell Rubaiya and Mithi in `requests/` that the backend is ready. The apps then build their sign-up screens and the code pages.
+1. **Sign-up with invite codes** (in the MVP since 2026-10-19; plan in `docs/api-contract.md` section 4.7). Done: the table, the three functions, the guard, 52 new checks, and the shared helper. Still to do, in order: (e) switch sign-up **on** in the Supabase dashboard (email confirmation stays off); (c) real sign-up checks in `real_client.check.ts`, run once, then clean up the test accounts; (f) tell Rubaiya and Mithi in `requests/` that the backend is ready and how to plug in `signUpWithCode` (Mithi's website pages are built on fake data and wait for this). The apps then connect their sign-up screens and code pages.
 2. **The full two-screen test** (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Also the "typing the address" test: a worker must be refused on manager and owner pages. Still untested on the real backend: the website's Assign button and the owner screen with live updates.
 3. **Bangla names** for people and machines (accepted 2026-10-19). Optional fields `display_name_bn` and `name_bn`; write them into `docs/api-contract.md` first and tell Rubaiya and Mithi.
 4. Agree the Bangla words in `packages/shared/src/labels.ts` with a Bangla speaker.
