@@ -4,7 +4,7 @@
 -- What this file does, in plain words:
 --   Acts as each test person (Nila the worker, Tariq and Hasan the
 --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
---   and tries about 46 things against the real functions and tables.
+--   and tries about 49 things against the real functions and tables.
 --   Allowed actions must WORK. Forbidden actions must FAIL with the exact
 --   error code from docs/api-contract.md. For example:
 --     * a worker cannot assign a technician            -> NOT_ALLOWED
@@ -60,6 +60,9 @@ declare
     {"name":"Technician: with past jobs (Tariq still 1)","email":"tariq@example.com","call":"select public.list_my_jobs(true)","check":"jsonb_array_length($1) = 1"},
     {"name":"Technician: Hasan has no open jobs","email":"hasan@example.com","call":"select public.list_my_jobs()","check":"jsonb_array_length($1) = 0"},
     {"name":"Technician: Hasan has 1 past job","email":"hasan@example.com","call":"select public.list_my_jobs(true)","check":"jsonb_array_length($1) = 1"},
+    {"name":"Technician cannot open a QUEUED report (nobody assigned yet)","email":"hasan@example.com","call":"select public.get_report('$R_MOTOR')","error":"NOT_FOUND"},
+    {"name":"Another technician cannot open a QUEUED report either","email":"tariq@example.com","call":"select public.get_report('$R_MOTOR')","error":"NOT_FOUND"},
+    {"name":"The manager can open a queued report","email":"farhan@example.com","call":"select public.get_report('$R_MOTOR')","check":"$1->>'status' = 'waiting' and $1->'technician' = 'null'::jsonb"},
 
     {"name":"Manager: list all reports (4)","email":"farhan@example.com","call":"select public.list_reports()","check":"jsonb_array_length($1) = 4"},
     {"name":"Manager: filter resolved (1)","email":"farhan@example.com","call":"select public.list_reports('resolved')","check":"jsonb_array_length($1) = 1"},

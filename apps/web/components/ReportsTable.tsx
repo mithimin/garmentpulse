@@ -57,7 +57,7 @@ export function ReportsTable({ reports, renderAction }: ReportsTableProps) {
             <td>
               <StatusLabel status={report.status} />
             </td>
-            <td>{formatDateTime(report.created_at, language)}</td>
+            <td className="nowrap">{formatDateTime(report.created_at, language)}</td>
             {renderAction ? <td className="actions">{renderAction(report)}</td> : null}
           </tr>
         ))}

@@ -83,6 +83,7 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 | Free and paid versions (subscription) | Section 6 | No payment or billing needed to test the main idea. |
 | 12-month history limit and user limits | Section 6, NFR-04 | Not needed for the first test. |
 | Push notifications to phones | FR-05, FR-06 | Can start with in-app status updates only. |
+| Sign-up with one-time manager codes (the owner makes a code, a new manager signs up with it) | - | In the MVP, Sakib creates every account by hand. It would also give the owner a write action, and the owner screen is read-only. The website's fake sign-up pages are kept for a later version. |
 
 **Out of scope everywhere (already in PRD section 7):** stock, production planning, payroll, face recognition.
 

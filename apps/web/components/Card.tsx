@@ -6,6 +6,19 @@
 
 import type { ReactNode } from 'react';
 
-export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <section className={`card ${className}`.trim()}>{children}</section>;
+export function Card({
+  children,
+  className = '',
+  id,
+}: {
+  children: ReactNode;
+  className?: string;
+  /** Lets a menu link scroll to this card (for example "#reports"). */
+  id?: string;
+}) {
+  return (
+    <section id={id} className={`card ${className}`.trim()}>
+      {children}
+    </section>
+  );
 }
