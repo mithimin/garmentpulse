@@ -828,7 +828,7 @@ html[lang='bn'] .table th {
   color: var(--link-hover);
 }
 
-/* The list of manager codes on the owner page. */
+/* The list of invite codes on the owner's Manager codes page: the code and when it stops working. */
 .code-list {
   list-style: none;
   padding: 0;
@@ -842,8 +842,18 @@ html[lang='bn'] .table th {
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 4px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.code-list .code {
   font-size: 20px;
   letter-spacing: 0.12em;
+}
+.code-list .code-note {
+  font-size: 14px;
+  color: var(--soft-text);
 }
 
 /* ---------- Manager page greeting ---------- */

@@ -49,6 +49,7 @@ export const SCREEN_TEXT = {
     bn: 'নতুন ম্যানেজারকে একটি কোড দিন। প্রতিটি কোড মাত্র একবার কাজ করে।',
   },
   createCode: { en: 'Create a manager code', bn: 'ম্যানেজার কোড বানান' },
+  codeValidUntil: { en: 'Works until', bn: 'মেয়াদ শেষ' },
   noCodes: { en: 'No unused codes yet.', bn: 'এখনো কোনো অব্যবহৃত কোড নেই।' },
   signupClosedTitle: { en: 'Sign-up is not open yet', bn: 'সাইন আপ এখনো চালু হয়নি' },
   signupClosedText: {
