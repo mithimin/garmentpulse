@@ -25,31 +25,33 @@ const LOGIN_TABS = [
 export function LoginBar({ activeRole }: { activeRole?: 'manager' | 'owner' }) {
   const { language } = useLanguage();
   return (
-    <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
-      {/* The same logo tile and name as the top bar of the manager and owner pages, on the left. */}
-      <div className="login-bar-brand">
-        <span className="logo-tile">
-          <Logo size={34} />
-        </span>
-        <span className="login-bar-brand-name">{screenText('appName', language)}</span>
-      </div>
-      {activeRole ? (
-        <div className="login-tabs">
-          {LOGIN_TABS.map((tab) => (
-            <Link
-              key={tab.role}
-              href={tab.href}
-              className={tab.role === activeRole ? 'login-tab login-tab-active' : 'login-tab'}
-              aria-current={tab.role === activeRole ? 'page' : undefined}
-            >
-              {ROLE_LABELS[tab.role][language]}
-            </Link>
-          ))}
+    <>
+      <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
+        {/* The same logo tile and name as the top bar of the manager and owner pages, on the left. */}
+        <div className="login-bar-brand">
+          <span className="logo-tile">
+            <Logo size={34} />
+          </span>
+          <span className="login-bar-brand-name">{screenText('appName', language)}</span>
         </div>
-      ) : (
-        <div className="login-bar-title">{screenText('signupTitle', language)}</div>
-      )}
-      <SettingsMenu />
-    </nav>
+        {activeRole ? (
+          <div className="login-tabs">
+            {LOGIN_TABS.map((tab) => (
+              <Link
+                key={tab.role}
+                href={tab.href}
+                className={tab.role === activeRole ? 'login-tab login-tab-active' : 'login-tab'}
+                aria-current={tab.role === activeRole ? 'page' : undefined}
+              >
+                {ROLE_LABELS[tab.role][language]}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="login-bar-title">{screenText('signupTitle', language)}</div>
+        )}
+        <SettingsMenu />
+      </nav>
+    </>
   );
 }

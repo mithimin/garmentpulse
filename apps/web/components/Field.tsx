@@ -32,10 +32,20 @@ export function Field({ label, error, children }: FieldProps) {
   );
 }
 
+// Both boxes sit inside a small wrapper, so a thin stitch line can be sewn just inside the edge
+// (see `.input-wrap::after` in globals.css). A box cannot hold a stitch line by itself.
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className="input" {...props} />;
+  return (
+    <span className="input-wrap">
+      <input className="input" {...props} />
+    </span>
+  );
 }
 
 export function SelectInput(props: SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select className="input" {...props} />;
+  return (
+    <span className="input-wrap">
+      <select className="input" {...props} />
+    </span>
+  );
 }

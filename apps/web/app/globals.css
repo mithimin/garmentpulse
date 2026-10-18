@@ -426,6 +426,23 @@ html[lang='bn'] .status {
   font-size: 16px;
   font-weight: 500;
 }
+/* The wrapper that carries a thin stitch line just inside the box, like the Login button. */
+.input-wrap {
+  position: relative;
+  display: block;
+}
+.input-wrap > .input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.input-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(46, 70, 112, 0.5);
+  border-radius: 5px;
+  pointer-events: none;
+}
 .input::placeholder {
   color: var(--input-hint);
 }
@@ -619,72 +636,32 @@ html[lang='bn'] .table th {
   align-items: center;
   justify-content: center;
   /* Extra room on top so a tall form (sign-up) never slides under the bar. */
-  padding: 84px var(--space-6) var(--space-6);
+  padding: calc(var(--bar-size) + 36px) var(--space-6) var(--space-6);
   position: relative;
-  /* The SAME blue as the main button, but very faint: it was white before, and
-     now it is a soft blue wash with a barely-there denim weave on top. */
-  background-color: color-mix(in srgb, var(--main-button) 16%, #f7f9fb);
+  background-color: var(--page);
+  /* The pale blue grid cloth picture (public/login-weave.png), the same family as the dashboards.
+     A 55% veil of the page colour on top makes the grid softer, so it is less visible. */
   background-image:
-    radial-gradient(ellipse at 50% 35%, rgba(255, 255, 255, 0.55), transparent 70%),
-    repeating-linear-gradient(
-      45deg,
-      color-mix(in srgb, var(--main-button) 7%, transparent) 0,
-      color-mix(in srgb, var(--main-button) 7%, transparent) 1px,
-      transparent 1px,
-      transparent 4px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      color-mix(in srgb, var(--main-button) 5%, transparent) 0,
-      color-mix(in srgb, var(--main-button) 5%, transparent) 1px,
-      transparent 1px,
-      transparent 4px
-    );
+    linear-gradient(rgba(221, 227, 234, 0.55), rgba(221, 227, 234, 0.55)), url('/login-weave.png');
+  background-repeat: repeat;
 }
-/* TWO stitch lines sewn just inside the edge, like the double stitching on jeans.
-   They use the same blue as the main button, strong enough to see easily. */
-.login-page::before,
-.login-page::after {
-  content: '';
-  position: absolute;
-  border: 2px dashed color-mix(in srgb, var(--main-button) 60%, transparent);
-  pointer-events: none;
-}
-.login-page::before {
-  inset: 68px 12px 12px;
-  border-radius: 12px;
-}
-.login-page::after {
-  inset: 78px 22px 22px;
-  border-radius: 8px;
-}
+
 .login-bar {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  /* As tall as the dashboard top bar, with the same denim picture and thin stitch line. */
+  height: var(--bar-size);
   display: flex;
   align-items: center;
   /* The two choices sit in the middle of the bar. */
   justify-content: center;
-  /* Denim jeans cloth: a mid blue with a fine diagonal twill weave. */
-  background-color: #22395f;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.09) 0,
-      rgba(255, 255, 255, 0.09) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(5, 12, 35, 0.25) 0,
-      rgba(5, 12, 35, 0.25) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+  background-color: var(--bar);
+  background-image: url('/denim-topbar.png');
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  background-size: auto 100%;
   /* A soft shadow under the bar makes a smooth, lifted edge. */
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.35),
@@ -764,19 +741,9 @@ html[lang='bn'] .table th {
   align-items: center;
   gap: var(--space-3);
 }
-/* A smaller logo tile so it fits the 56px login bar. */
-.login-bar-brand .logo-tile {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-}
-.login-bar-brand .logo-tile::after {
-  inset: 3px;
-  border-radius: 8px;
-}
 .login-bar-brand-name {
   color: #ffffff;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
 }
 /* On a narrow screen only the logo tile is shown, so it never covers the Manager / Owner tabs. */
@@ -805,7 +772,7 @@ html[lang='bn'] .table th {
   padding: 0 var(--space-5);
   border-bottom: 3px solid transparent;
   color: #dbe6f5;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-decoration: none;
@@ -1599,10 +1566,9 @@ html[lang='bn'] .sidebar-logout {
   .login-tab {
     padding: 0 var(--space-4);
   }
-  /* Keep the page content inside the two stitch lines. */
   .login-page {
-    padding-left: 36px;
-    padding-right: 36px;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
   }
 }
 
