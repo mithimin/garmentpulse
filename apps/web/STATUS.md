@@ -27,7 +27,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. The full two-screen test with Sakib and Rubaiya (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Still untested on the real backend: the Assign button, and the owner screen with live updates. Also try a worker login on the website (it must be refused) and typing a manager address as a worker.
+1. The full two-screen test with Sakib and Rubaiya (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Still untested on the real backend: the Assign button, and the owner screen with live updates. Tested 2026-10-19: a worker login (nila) on the website is refused with the "this website is for managers and owners, use the phone app" message and stays on the login page. Still to try: typing a manager address as a worker.
 2. Show Bangla names for people and machines when Sakib adds them (accepted 2026-10-19, after the full test). Planned fields: `display_name_bn` and `name_bn`. Until then names show exactly as the backend sends them.
 3. Check the Bangla words with a Bangla speaker.
 
