@@ -115,15 +115,29 @@ export function ReportsProvider({ profile, children }: Props) {
 
   // Live updates: when any report this person may see changes, download again.
   // (The backend only sends changes the person is allowed to see.)
+  // The live connection must be given the person's login BEFORE it subscribes.
+  // Otherwise it acts like a logged-out visitor and the security rules hide every
+  // report from it, so no update would ever arrive (Sakib's note, 2026-10-18).
   useEffect(() => {
-    const channel = supabase
-      .channel(`reports-${profile.id}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
-        void refresh();
-      })
-      .subscribe();
+    let cancelled = false;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (cancelled || !data.session) return;
+      await supabase.realtime.setAuth(data.session.access_token);
+      if (cancelled) return;
+      channel = supabase
+        .channel(`reports-${profile.id}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
+          void refresh();
+        })
+        .subscribe();
+    })();
+
     return () => {
-      void supabase.removeChannel(channel);
+      cancelled = true;
+      if (channel) void supabase.removeChannel(channel);
     };
   }, [profile.id, refresh]);
 
