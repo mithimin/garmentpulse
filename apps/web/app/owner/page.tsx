@@ -35,6 +35,7 @@ import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { screenText } from '../../language/screenText';
 import { backendIsReal } from '../../lib/backend';
+import { personName } from '../../language/localNames';
 
 export default function OwnerPage() {
   return (
@@ -64,7 +65,7 @@ function OwnerContent() {
     );
 
   // "Mr. Rahman" is a title and a name, so the owner is greeted by the full name.
-  const name = profile?.display_name ?? '';
+  const name = profile ? personName(profile, language) : '';
 
   return (
     <>
