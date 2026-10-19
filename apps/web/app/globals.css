@@ -1702,3 +1702,58 @@ html[lang='bn'] .sidebar-logout {
   border-radius: 18px;
   pointer-events: none;
 }
+
+/* ---------- Dark blue stitch line inside the white row boxes ---------- */
+
+/* Every white box in the reports and technicians cards gets a dashed dark blue stitch line
+   just inside its edge, like a sewn patch. */
+.card-list .tech-row {
+  position: relative;
+}
+.card-list .tech-row::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 2px dashed #1f2b47;
+  border-radius: 12px;
+  pointer-events: none;
+}
+/* Wide table: each cell draws its piece of the line, and the pieces join into one box. */
+.card-list .table td {
+  position: relative;
+}
+.card-list .table td::after {
+  content: '';
+  position: absolute;
+  inset: 4px 0;
+  border-top: 2px dashed #1f2b47;
+  border-bottom: 2px dashed #1f2b47;
+  pointer-events: none;
+}
+.card-list .table td:first-child::after {
+  left: 4px;
+  border-left: 2px dashed #1f2b47;
+  border-radius: 12px 0 0 12px;
+}
+.card-list .table td:last-child::after {
+  right: 4px;
+  border-right: 2px dashed #1f2b47;
+  border-radius: 0 12px 12px 0;
+}
+/* Narrow page: each report is one card, so the line goes around the whole card. */
+@container page (max-width: 720px) {
+  .card-list .table-stack tr {
+    position: relative;
+  }
+  .card-list .table-stack td::after {
+    display: none;
+  }
+  .card-list .table-stack tr::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 2px dashed #1f2b47;
+    border-radius: 12px;
+    pointer-events: none;
+  }
+}
