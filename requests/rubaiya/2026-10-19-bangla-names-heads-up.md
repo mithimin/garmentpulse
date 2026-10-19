@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: The phone app now shows Bangla names when the backend sends them (PR 52); asked Sakib to add the fields.
 
 ## What I need
 
