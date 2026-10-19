@@ -49,7 +49,7 @@ export default function OwnerCodesPage() {
         <h1>{screenText('codesTitle', language)}</h1>
         <p className="greeting-line">{screenText('codesHelp', language)}</p>
       </div>
-      <Card className="card-list">
+      <Card className="card-list code-card">
         <Button kind="main" onClick={handleCreateCode}>
           {screenText('createCode', language)}
         </Button>
