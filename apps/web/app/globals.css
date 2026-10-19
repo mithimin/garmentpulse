@@ -1260,7 +1260,9 @@ html[lang='bn'] .menu-link {
   gap: 4px;
   width: fit-content;
   max-width: 100%;
-  margin-bottom: var(--space-4);
+  /* Centred in the middle of the card. */
+  justify-content: center;
+  margin: 0 auto var(--space-4);
   padding: 5px;
   border-radius: 16px;
   background: rgba(20, 30, 56, 0.55);
