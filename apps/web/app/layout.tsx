@@ -50,6 +50,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${cormorant.variable} ${jost.variable} ${marcellus.variable} ${balooBangla.variable} ${plexMono.variable}`}
     >
       <body>
