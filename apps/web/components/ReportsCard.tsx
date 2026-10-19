@@ -79,7 +79,7 @@ export function ReportsCard({
     f === 'all' ? screenText('filterAll', language) : STATUS_LABELS[f][language];
 
   return (
-    <Card className="card-list">
+    <Card className="card-list stitched">
       {mode === 'queue' ? (
         <div className="card-head">
           <h2>{screenText('needsAttentionTitle', language)}</h2>
@@ -102,10 +102,13 @@ export function ReportsCard({
               key={f}
               type="button"
               className={f === filter ? 'filter-tab filter-tab-active' : 'filter-tab'}
+              data-filter={f}
               aria-pressed={f === filter}
               onClick={() => setFilter(f)}
             >
-              {filterLabel(f)} {localizeDigits(String(countFor(f)), language)}
+              <span className="filter-dot" aria-hidden="true" />
+              <span className="filter-name">{filterLabel(f)}</span>
+              <span className="filter-count">{localizeDigits(String(countFor(f)), language)}</span>
             </button>
           ))}
         </div>

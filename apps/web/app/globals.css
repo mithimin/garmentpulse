@@ -732,7 +732,6 @@ html[lang='bn'] .table th {
   border-color: var(--main-button-border);
   color: #ffffff;
 }
-/* The page title in the middle of the bar on the sign-up page. */
 .login-bar-brand {
   position: absolute;
   left: var(--space-6);
@@ -756,35 +755,72 @@ html[lang='bn'] .table th {
     left: var(--space-3);
   }
 }
-.login-bar-title {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
 .login-tabs {
   display: flex;
   height: 100%;
 }
-/* The two choices: Manager and Owner. The chosen one is white with a gold line. */
+/* Sign-up page: the logo and name sit alone in the middle of the bar, on every screen size. */
+.login-bar-solo .login-bar-brand {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@media (max-width: 760px) {
+  .login-bar-solo .login-bar-brand-name {
+    display: inline;
+  }
+}
+/* The two choices: Manager and Owner. They sit in a dark denim tray in the middle of the bar.
+   The chosen one is a raised cream patch with a thin stitch line, like the report filter tabs. */
+.login-tabs {
+  height: auto;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 16px;
+  background: rgba(10, 18, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 2px 5px rgba(5, 10, 25, 0.5);
+}
 .login-tab {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 44px;
   padding: 0 var(--space-5);
-  border-bottom: 3px solid transparent;
+  border-radius: 12px;
   color: #dbe6f5;
   font-size: 17px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 .login-tab:hover {
   color: var(--bar-text-chosen);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
-.login-tab-active {
-  color: var(--bar-text-chosen);
-  border-bottom-color: var(--bar-stitch);
+.login-tab:focus-visible {
+  outline: 2px solid #e8d8b5;
+  outline-offset: 2px;
+}
+.login-tab-active,
+.login-tab-active:hover {
+  color: #1f2b47;
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  box-shadow:
+    0 4px 10px -2px rgba(5, 10, 25, 0.55),
+    inset 0 1px 0 #ffffff;
+}
+.login-tab-active::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border-radius: 9px;
+  pointer-events: none;
 }
 .login-box {
   width: 100%;
@@ -983,11 +1019,24 @@ html {
   border-spacing: 0 10px;
   margin-top: -6px;
 }
+/* The heading row is one light blue band with dark column names, each on one line. The
+   colours are solid (not see-through), so there are no seams between the cells. */
 .card-list .table th {
-  background: transparent;
-  color: #d9c28f;
-  padding: 4px 16px;
-  font-size: 12px;
+  background: #d3deee;
+  color: #1f2b47;
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  border-bottom: 3px solid #d6ac68;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+.card-list .table th:first-child {
+  border-radius: 14px 0 0 14px;
+}
+.card-list .table th:last-child {
+  border-radius: 0 14px 14px 0;
 }
 .card-list .table td {
   background: rgba(255, 255, 255, 0.92);
@@ -1202,30 +1251,100 @@ html[lang='bn'] .menu-link {
 
 /* ---------- Filter tabs on the Reports page ---------- */
 
+/* The filter tabs: a dark denim tray (like a pocket) with four tabs sitting in it. The chosen
+   tab is a raised cream patch with a thin stitch line just inside its edge. Each tab has a
+   small colour dot AND its word AND a count bubble, so colour is never the only clue. */
 .filter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  /* Centred in the middle of the card. */
+  justify-content: center;
+  margin: 0 auto var(--space-4);
+  padding: 5px;
+  border-radius: 16px;
+  background: rgba(20, 30, 56, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 2px 5px rgba(8, 14, 30, 0.45);
 }
 .filter-tab {
-  min-height: 36px;
-  padding: 0 var(--space-4);
-  border: 1px solid #8c9db0;
-  border-radius: 3px;
-  background: var(--second-button);
-  color: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 14px 0 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #dfe6f5;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .filter-tab:hover {
-  border-color: var(--main-button);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.filter-tab:focus-visible {
+  outline: 2px solid #e8d8b5;
+  outline-offset: 2px;
+}
+.filter-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: #e8d8b5;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+}
+.filter-tab[data-filter='waiting'] .filter-dot {
+  background: #e3ae35;
+}
+.filter-tab[data-filter='in_progress'] .filter-dot {
+  background: #5b93e0;
+}
+.filter-tab[data-filter='resolved'] .filter-dot {
+  background: #46a874;
+}
+.filter-count {
+  min-width: 24px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
 }
 .filter-tab-active {
-  background: var(--main-button);
-  border-color: var(--main-button-border);
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  border-color: #e8d8b5;
+  color: #1f2b47;
+  box-shadow:
+    0 4px 10px -2px rgba(8, 14, 30, 0.5),
+    inset 0 1px 0 #ffffff;
+}
+.filter-tab-active:hover {
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  color: #1f2b47;
+}
+.filter-tab-active::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border-radius: 9px;
+  pointer-events: none;
+}
+.filter-tab-active .filter-count {
+  background: #2e4670;
   color: #ffffff;
 }
 html[lang='bn'] .filter-tab {
@@ -1588,7 +1707,8 @@ html[lang='bn'] .sidebar-logout {
     right: var(--space-4);
   }
   .login-tab {
-    padding: 0 var(--space-4);
+    min-width: 88px;
+    padding: 0 var(--space-3);
   }
   .login-page {
     padding-left: var(--space-4);
@@ -1621,5 +1741,53 @@ html[lang='bn'] .sidebar-logout {
   .topbar .btn-small {
     min-width: 44px;
     padding: 0;
+  }
+}
+
+/* A beige stitch line all the way around the reports card and the technicians card, set in
+   from the edge like the sidebar's stitching, on both the manager and the owner screens. */
+.card-list.stitched::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed #e8d8b5;
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+/* ---------- Wide table: heading and all reports are ONE joined block ---------- */
+
+/* On a wide page the heading band sits on top of every report, with no gaps, in one block
+   that is rounded only at its outer corners. Reports are divided by thin lines. The
+   narrow (stacked card) view is not touched. */
+@container page (min-width: 721px) {
+  .card-list .table {
+    border-spacing: 0;
+    margin-top: 4px;
+  }
+  .card-list .table th:first-child {
+    border-radius: 16px 0 0 0;
+  }
+  .card-list .table th:last-child {
+    border-radius: 0 16px 0 0;
+  }
+  .card-list .table td,
+  .card-list .table td:first-child,
+  .card-list .table td:last-child {
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #d3dbe8;
+  }
+  .card-list .table tr.row-attention td:first-child {
+    box-shadow: inset 4px 0 0 #c99a45;
+  }
+  .card-list .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .card-list .table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 16px;
+  }
+  .card-list .table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 16px;
   }
 }
