@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -60,3 +60,7 @@ Log in as `owner@example.com` and make a manager code. Open the sign-up page in 
 ## What I am doing meanwhile
 
 Waiting for the first full test, then the Bangla names. If something behaves differently from this note, write a note in `requests/sakib/` with what you saw.
+
+## Done
+
+Mithi connected the website to the real sign-up and invite codes and tested it on 2026-10-19 (owner made a manager code, a new manager signed up, the same code was refused). Branch `features/web-real-signup`.

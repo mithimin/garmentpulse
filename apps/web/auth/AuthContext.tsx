@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 import type { Profile, Role } from '@garmentpulse/shared';
 import { backendIsReal } from '../lib/backend';
 import { fakeLogin, fakeSignUp } from './fakeAuth';
-import { realLogin, realLogOut, realRestore } from './realAuth';
+import { realLogin, realLogOut, realRestore, realSignUp } from './realAuth';
 import type { SignUpInput } from './fakeAuth';
 
 const STORAGE_KEY = 'garmentpulse-web-user';
@@ -69,9 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = useCallback(async (input: SignUpInput) => {
-    // Sign-up is fake only for now: the real backend has no sign-up (accounts are
-    // made by Sakib). The sign-up page is closed in real mode, so this is a safety net.
-    if (backendIsReal) throw new Error('NOT_ALLOWED');
+    if (backendIsReal) {
+      const person = await realSignUp(input);
+      setProfile(person);
+      return person;
+    }
     const person = await fakeSignUp(input);
     setProfile(person);
     try {

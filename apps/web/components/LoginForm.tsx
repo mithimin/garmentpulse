@@ -23,7 +23,6 @@ import { LoginBar } from '../components/LoginBar';
 import { Logo } from '../components/Logo';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
-import { backendIsReal } from '../lib/backend';
 import { useLanguage } from '../language/LanguageContext';
 import { errorSentence } from '../language/errorText';
 import { screenText } from '../language/screenText';
@@ -96,7 +95,7 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
             </Button>
           </form>
         </Card>
-        {backendIsReal || role === 'owner' ? null : (
+        {role === 'owner' ? null : (
           <div className="login-help">
             <p>
               {screenText('newHere', language)}{' '}

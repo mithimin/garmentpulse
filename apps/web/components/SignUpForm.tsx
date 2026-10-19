@@ -5,9 +5,9 @@
 // The sign-up form (page /signup). The person types a full name, an email, a
 // password and an INVITE CODE. The code decides the role (a manager code makes a
 // manager), so there is no "who are you?" choice and nobody can pick their own
-// role. Owners never sign up here (docs/mvp.md 2.1). Right now this is FAKE (see
-// auth/fakeAuth.ts and auth/fakeAccounts.ts); the real sign-up comes with
-// Sakib's backend. Owned by Mithi.
+// role. Owners never sign up here (docs/mvp.md 2.1). With the real backend it uses
+// the shared `signUpWithCode` (auth/realAuth.ts); without it, the fake sign-up
+// (auth/fakeAuth.ts) is used. Owned by Mithi.
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';

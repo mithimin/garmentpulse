@@ -18,7 +18,6 @@ import type { MenuItem } from '../../components/Sidebar';
 import { SidebarShell } from '../../components/SidebarShell';
 import { useLanguage } from '../../language/LanguageContext';
 import { screenText } from '../../language/screenText';
-import { backendIsReal } from '../../lib/backend';
 
 export default function OwnerLayout({ children }: { children: ReactNode }) {
   return (
@@ -40,14 +39,12 @@ function OwnerFrame({ children }: { children: ReactNode }) {
       active: pathname === '/owner',
     },
   ];
-  if (!backendIsReal) {
-    menu.push({
-      label: screenText('codesTitle', language),
-      href: '/owner/codes',
-      icon: <KeyRound size={18} strokeWidth={1.8} aria-hidden="true" />,
-      active: pathname.startsWith('/owner/codes'),
-    });
-  }
+  menu.push({
+    label: screenText('codesTitle', language),
+    href: '/owner/codes',
+    icon: <KeyRound size={18} strokeWidth={1.8} aria-hidden="true" />,
+    active: pathname.startsWith('/owner/codes'),
+  });
 
   return (
     <SidebarShell role="owner" menu={menu}>

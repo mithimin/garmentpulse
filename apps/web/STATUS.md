@@ -28,13 +28,13 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 ## Next (in build order from `docs/mvp.md` section 4)
 
 1. DONE (2026-10-19, reported by Mithi): the full two-screen test (shared step ★5) was run on the real backend with Rubaiya's phone, all the way to the last step: a worker reports, the manager sees it within 5 seconds, assigns a free technician, the technician accepts and finishes it, the owner's counts move, and the technician shows as free again. The Assign button and the owner screen with live updates were tested too, and a worker login on the website is refused. This unblocks Sakib's next steps.
-2. Connect sign-up and the invite-code pages to the real backend. Sakib built the backend part (tables, `check_invite_code`, `create_invite_code`, `list_invite_codes` and the sign-up guard, PR 42). It is NOT ready for the website yet: still missing in `packages/shared` are the `signUpWithCode` helper, the three code wrappers and the new error codes. Sakib turns sign-up on in the dashboard after that, then writes in `requests/mithi/`. Until then the website keeps the fake codes, and the code pages stay hidden in real mode.
+2. Sign-up and invite codes are now CONNECTED to the real backend in code (branch `features/web-real-signup`, 2026-10-19). `/signup` uses the shared `signUpWithCode` (`auth/realAuth.ts`), and the owner and manager code pages use `createInviteCode` / `listInviteCodes` through `auth/inviteCodes.ts` (fake codes when no backend keys). The sign-up link, the code pages and their menu links are no longer hidden in real mode. TESTED on the real backend by Mithi (2026-10-19): the owner made a manager code, a new manager signed up with it, and the same code was refused. Still to do: tell Sakib which test account to delete.
 3. Bangla names for people and machines: the website is READY (`language/localNames.ts`). In Bangla mode it shows `display_name_bn` (people) and `name_bn` (machines) whenever the backend sends one, and the English name otherwise. Nothing more to build on the website; it starts showing them when Sakib adds the fields. Worker-typed report text is never changed.
 4. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
 
-- Sakib: the shared `signUpWithCode` helper and code wrappers, then switching sign-up on (the website then connects the sign-up and code pages). Also the Bangla names in the backend. Notes: `requests/mithi/2026-10-19-signup-with-invite-codes.md` and `requests/mithi/2026-10-19-bangla-names-accepted.md`.
+- Sakib: the Bangla names in the backend. Note: `requests/mithi/2026-10-19-bangla-names-accepted.md`.
 - A Bangla speaker: the Bangla spellings of the test names and a read of the Bangla words.
 
 ## Decisions made in this lane
