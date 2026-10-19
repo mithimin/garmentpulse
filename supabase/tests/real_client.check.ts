@@ -184,6 +184,16 @@ describe.skipIf(missing.length > 0)('real client check', () => {
       expect(machines.map((m) => m.name)).toContain('Sewing machine 01');
     });
 
+    it('people and machines carry the optional Bangla name fields (empty means null)', async () => {
+      const machines = await apis.nila.listMachines();
+      expect(machines.length).toBeGreaterThan(0);
+      for (const machine of machines) {
+        expect(machine).toHaveProperty('name_bn');
+      }
+      const profile = await apis.nila.getMyProfile();
+      expect(profile).toHaveProperty('display_name_bn');
+    });
+
     it('the manager sees the technicians with free or busy', async () => {
       const technicians = await apis.farhan.listTechnicians();
       const names = technicians.map((t) => t.display_name);
@@ -472,6 +482,20 @@ describe.skipIf(missing.length > 0)('real client check', () => {
       expect(listed).not.toContain(codes.worker);
       expect(listed).not.toContain(codes.technician);
       expect(listed).toContain(codes.worker2);
+    });
+
+    it('a new person can give an optional Bangla name at sign-up, and it is saved', async () => {
+      const bnClient = newClient();
+      const profile = await signUpWithCode(bnClient, {
+        platform: 'mobile',
+        fullName: 'Real Check Bangla',
+        fullNameBn: 'রিয়েল চেক',
+        email: emailOf('bn'),
+        password,
+        code: codes.worker2,
+      });
+      expect(profile.display_name).toBe('Real Check Bangla');
+      expect(profile.display_name_bn).toBe('রিয়েল চেক');
     });
   });
 });

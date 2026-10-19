@@ -242,3 +242,47 @@ describe('signUpWithCode', () => {
     expect(calls).toEqual([]);
   });
 });
+
+describe('signUpWithCode with an optional Bangla name', () => {
+  it('sends the Bangla name when the person wrote one', async () => {
+    const { client, calls } = fakeClient();
+    await signUpWithCode(client, { ...GOOD, fullNameBn: '  নতুন কর্মী ' });
+    expect(calls[1].args).toEqual({
+      email: 'sam@example.com',
+      password: 'secret1',
+      options: {
+        data: {
+          display_name: 'Sam Rahman',
+          invite_code: 'ABCDEFGHJK',
+          display_name_bn: 'নতুন কর্মী',
+        },
+      },
+    });
+  });
+
+  it.each([
+    ['missing', undefined],
+    ['empty', ''],
+    ['only spaces', '   '],
+  ])('sends no Bangla name when it is %s', async (_label, fullNameBn) => {
+    const { client, calls } = fakeClient();
+    await signUpWithCode(client, { ...GOOD, fullNameBn });
+    expect(JSON.stringify(calls[1].args)).not.toContain('display_name_bn');
+  });
+
+  it('refuses a Bangla name longer than 80 letters and sends nothing', async () => {
+    const { client, calls } = fakeClient();
+    const failure = await failureOf(
+      signUpWithCode(client, { ...GOOD, fullNameBn: 'ক'.repeat(81) }),
+    );
+    expect(failure.code).toBe('INVALID_INPUT');
+    expect(calls).toEqual([]);
+  });
+
+  it('gives back the Bangla name that the backend saved', async () => {
+    const withBn = { ...PROFILE, display_name_bn: 'নতুন কর্মী' };
+    const { client } = fakeClient({ profile: { data: withBn } });
+    const profile = await signUpWithCode(client, { ...GOOD, fullNameBn: 'নতুন কর্মী' });
+    expect(profile.display_name_bn).toBe('নতুন কর্মী');
+  });
+});

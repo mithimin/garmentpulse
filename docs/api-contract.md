@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-10-19
+**Last updated:** 2026-10-20
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -95,23 +95,34 @@ type Platform = 'mobile' | 'web';
 type ReportStatus = 'waiting' | 'in_progress' | 'resolved';
 type TechnicianAvailability = 'free' | 'busy';
 
-type Profile = { id: string; display_name: string; email: string; role: Role };
+type Profile = {
+  id: string;
+  display_name: string;
+  display_name_bn?: string | null; // the name in Bangla letters, if one was written
+  email: string;
+  role: Role;
+};
 
-type Machine = { id: string; name: string };
+type Machine = { id: string; name: string; name_bn?: string | null };
 
 type Report = {
   id: string;
-  machine: { id: string; name: string };
+  machine: { id: string; name: string; name_bn?: string | null };
   description: string;
   status: ReportStatus;
-  reported_by: { id: string; display_name: string };
-  technician: { id: string; display_name: string } | null; // null = not assigned yet
+  reported_by: { id: string; display_name: string; display_name_bn?: string | null };
+  technician: { id: string; display_name: string; display_name_bn?: string | null } | null; // null = not assigned yet
   accepted_at: string | null; // set when the technician accepts the job
   created_at: string; // ISO date and time
   updated_at: string;
 };
 
-type Technician = { id: string; display_name: string; availability: TechnicianAvailability };
+type Technician = {
+  id: string;
+  display_name: string;
+  display_name_bn?: string | null;
+  availability: TechnicianAvailability;
+};
 
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
 
@@ -121,6 +132,8 @@ type InviteCode = { code: string; role: InviteRole; created_at: string; expires_
 ```
 
 A technician is **busy** when they have at least one assigned report that is not `resolved`, and **free** otherwise. The backend calculates this when reading. It is never stored.
+
+**Bangla names (`display_name_bn`, `name_bn`).** These fields are **optional** and always present in the answers once the backend has them. They are `null` when nobody has written a Bangla name, and then the app shows the English name. **Nothing is generated or translated automatically**: a person types each one (a Bangla speaker for the test data, the person themselves at sign-up, and Sakib for machines). They appear on people (`Profile`, `Technician`, and `reported_by` and `technician` inside a `Report`) and on machines (`Machine`, and `machine` inside a `Report`). A Bangla name is 1 to 80 letters or empty. Report descriptions typed by workers are never changed.
 
 ---
 
@@ -232,7 +245,7 @@ A new person signs up with an **invite code**. The code decides their role, so n
 
 #### Sign-up itself (Supabase Auth, no custom function)
 
-Apps use the ready-made helper `signUpWithCode(client, { platform, fullName, email, password, code })` in `packages/shared` (`platform` is `'mobile'` or `'web'`). It returns the new person's `Profile`, and every failure is an `ApiError` whose `code` is one of the codes below. The helper is tested with a pretend client **and proven against the real login service** (the real client check, `supabase/tests/real_client.check.ts`, 12 sign-up checks). Under the hood it does these things in order:
+Apps use the ready-made helper `signUpWithCode(client, { platform, fullName, fullNameBn?, email, password, code })` in `packages/shared` (`platform` is `'mobile'` or `'web'`). It returns the new person's `Profile`, and every failure is an `ApiError` whose `code` is one of the codes below. The helper is tested with a pretend client **and proven against the real login service** (the real client check, `supabase/tests/real_client.check.ts`, 12 sign-up checks). Under the hood it does these things in order:
 
 1. Calls `check_invite_code(code)` to get the role, or `INVALID_CODE`.
 2. The app makes sure the role belongs to its own platform (a worker or technician code only on the phone app, a manager code only on the website). If not, it stops with `WRONG_PLATFORM`.
@@ -325,6 +338,7 @@ These codes live in `packages/shared/src/errors.ts`.
 
 - **How do accounts and roles get created?** *(Changed on 2026-10-19; it was "by hand only" on 2026-10-18.)* People **sign up with an invite code** (section 4.7). The owner makes manager codes, and a manager makes worker and technician codes. The code decides the role. A code works once and expires after 7 days. There is no email confirmation. **Owner accounts** are still made by hand by Sakib. The earlier idea of functions named `sign_up`, `create_manager_code` and `list_manager_codes` became `check_invite_code`, `create_invite_code` and `list_invite_codes`, plus the helper `signUpWithCode`.
 - **How is the code enforced?** By a guard in the database that runs at sign-up and refuses any sign-up without a good code. A small function, `check_invite_code`, lets the apps ask first, so they can show a clear `INVALID_CODE` message.
+- **Bangla names for people and machines** (accepted 2026-10-19, built 2026-10-20). Optional fields `display_name_bn` and `name_bn`, `null` when nobody wrote one (see section 3). A person types them: at sign-up there is an **optional "name in Bangla" box** (`fullNameBn` in `signUpWithCode`, saved as `display_name_bn` by the sign-up guard; longer than 80 letters is refused with `INVALID_INPUT`). A pre-approved account can carry one too. Machines get theirs from Sakib. Nothing is translated automatically.
 - **Where do the machines come from?** Typed in by hand as test data (`supabase/seed.sql`). No function adds machines in the MVP.
 - **Can a manager reassign a report** after it was assigned? **No**, not in the MVP.
 - **Which status moves are allowed for a technician?** Any forward move after the job is accepted: `waiting` to `in_progress` to `resolved`, and also straight from `waiting` to `resolved`. Backwards moves and repeats give `INVALID_STATUS_CHANGE`.

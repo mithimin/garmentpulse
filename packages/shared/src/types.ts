@@ -27,23 +27,40 @@ export const PLATFORM_FOR_ROLE: Record<Role, Platform> = {
   owner: 'web',
 };
 
-export type Profile = { id: string; display_name: string; email: string; role: Role };
+/**
+ * The OPTIONAL Bangla name of a person or a machine (`display_name_bn`, `name_bn`).
+ * Nobody generates it: a person types it (a Bangla speaker for the test data,
+ * the person themselves at sign-up). It is `null` (or missing) when nobody has
+ * written one yet, and the app then shows the English name.
+ */
+export type BanglaName = string | null;
+
+export type Profile = {
+  id: string;
+  display_name: string;
+  /** The person's name in Bangla letters, if they gave one. */
+  display_name_bn?: BanglaName;
+  email: string;
+  role: Role;
+};
 
 export type Machine = {
   id: string;
   /** A short name people recognise, for example "Sewing machine 14". */
   name: string;
+  /** The machine's name in Bangla letters, if one was written. */
+  name_bn?: BanglaName;
 };
 
 export type Report = {
   id: string;
-  machine: { id: string; name: string };
+  machine: { id: string; name: string; name_bn?: BanglaName };
   /** The worker's typed description of the problem. */
   description: string;
   status: ReportStatus;
-  reported_by: { id: string; display_name: string };
+  reported_by: { id: string; display_name: string; display_name_bn?: BanglaName };
   /** null means nobody is assigned yet. */
-  technician: { id: string; display_name: string } | null;
+  technician: { id: string; display_name: string; display_name_bn?: BanglaName } | null;
   /** Set when the technician accepts the job. null until then. */
   accepted_at: string | null;
   created_at: string;
@@ -53,6 +70,7 @@ export type Report = {
 export type Technician = {
   id: string;
   display_name: string;
+  display_name_bn?: BanglaName;
   availability: TechnicianAvailability;
 };
 
