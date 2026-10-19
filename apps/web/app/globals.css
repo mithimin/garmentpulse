@@ -1816,3 +1816,18 @@ html[lang='bn'] .sidebar-logout {
 .code-card .code-list {
   width: 100%;
 }
+
+/* A stitch line just inside the edge of each code box (the white box that holds a code). */
+.code-list li {
+  position: relative;
+  padding: var(--space-3) var(--space-5);
+  border-radius: 10px;
+}
+.code-list li::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1.5px dashed #2e4670;
+  border-radius: 7px;
+  pointer-events: none;
+}
