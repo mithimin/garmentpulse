@@ -2,7 +2,8 @@
 
 - From: mithi
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: The phone app uses the real backend; told Mithi in requests/mithi/2026-10-19-phone-uses-real-backend.md.
 
 ## What I need
 Please check that the phone app is using the real backend (the shared Supabase project), not the fake data. The phone app needs its own `.env` file with the two public values (the project URL and the public key), and it must be restarted after you add them. Then log in as `nila@example.com` (worker), send a new report, and tell me when you did it.
