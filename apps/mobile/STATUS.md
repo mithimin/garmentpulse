@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-19 by Rubaiya's session
+**Last updated:** 2026-10-20 by Rubaiya's session
 
 ## Done
 
@@ -52,7 +52,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-1. The custom fonts (Cormorant Garamond, Jost). Fonts are not loaded yet, so text uses the phone's normal font for now.
+- Nothing planned right now. Waiting for Sakib's Bangla names (the phone already shows them once they exist).
 
 ## Waiting on someone else
 
@@ -60,6 +60,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Decisions made in this lane
 
+- Fonts: we keep the phone's normal font. The custom fonts (Cormorant Garamond, Jost) will NOT be added (decided 2026-10-20).
 - The whole phone app (workers AND technicians) uses the denim blue of the login screen. The purple worker and green technician colours in `docs/design-system.md` are NOT used. (That document still needs updating.)
 - The fake login and fake reports store were replaced by the real backend (step 4). Test accounts are listed in `requests/rubaiya/2026-10-18-backend-is-ready.md`.
 - Words that belong to this app only (button names, error sentences) live in `apps/mobile/src/language/screenText.ts`. Status, free/busy and role words come from the shared `labels.ts`.
