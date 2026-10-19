@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: Built the sign-up screen on branch features/mobile-signup (2026-10-19). Needs a phone test with real codes.
 
 ## What I need
 

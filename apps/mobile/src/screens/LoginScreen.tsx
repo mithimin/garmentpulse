@@ -40,9 +40,11 @@ const CHOOSABLE_ROLES: readonly ChoosableRole[] = ['worker', 'technician'];
 type Props = {
   /** Called with the person's profile once login works. */
   onLoggedIn: (profile: Profile) => void;
+  /** Called when the person taps the link to the sign-up screen. */
+  onGoToSignUp: () => void;
 };
 
-export function LoginScreen({ onLoggedIn }: Props) {
+export function LoginScreen({ onLoggedIn, onGoToSignUp }: Props) {
   const { language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -167,6 +169,13 @@ export function LoginScreen({ onLoggedIn }: Props) {
               {loading ? LOGIN_TEXT.loading[language] : LOGIN_TEXT.loginButton[language]}
             </Text>
           </Pressable>
+
+          <View style={styles.switchRow}>
+            <Text style={styles.switchText}>{LOGIN_TEXT.noAccount[language]}</Text>
+            <Pressable accessibilityRole="link" onPress={onGoToSignUp} disabled={loading}>
+              <Text style={styles.switchLink}>{LOGIN_TEXT.goToSignUp[language]}</Text>
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -279,5 +288,16 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.45)',
     borderRadius: SIZES.buttonRadius - 4,
   },
+  switchRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    minHeight: SIZES.buttonHeight,
+    marginTop: 8,
+  },
+  switchText: { color: C.softText, fontSize: 15 },
+  switchLink: { color: C.mainButton, fontSize: 15, fontWeight: '600' },
   buttonText: { color: C.mainButtonText, fontSize: 16, fontWeight: '600' },
 });

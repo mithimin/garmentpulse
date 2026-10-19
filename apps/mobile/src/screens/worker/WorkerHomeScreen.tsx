@@ -14,6 +14,7 @@ import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { WORKER_TEXT } from '../../language/screenText';
 import { COLORS as C, SIZES } from '../../theme';
+import { personName } from '../../language/localNames';
 
 type Props = {
   profile: Profile;
@@ -31,7 +32,7 @@ export function WorkerHomeScreen({ profile, onReportProblem, onOpenReport, onLog
     <ScrollView contentContainerStyle={styles.content}>
       <Card>
         <Text style={styles.hello}>
-          {WORKER_TEXT.homeHello[language]}, {profile.display_name}
+          {WORKER_TEXT.homeHello[language]}, {personName(profile, language)}
         </Text>
         <Text style={styles.intro}>{WORKER_TEXT.homeIntro[language]}</Text>
         <Button

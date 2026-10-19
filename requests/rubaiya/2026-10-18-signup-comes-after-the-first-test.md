@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: Superseded: sign-up is now built (see signup-is-ready note).
 
 ## What I need
 

@@ -24,6 +24,7 @@ import { useLanguage } from '../../language/LanguageContext';
 import { formatDateTime } from '../../language/format';
 import { ERROR_TEXT, TECH_TEXT } from '../../language/screenText';
 import { COLORS as C, SHARED_COLORS as S, SIZES } from '../../theme';
+import { machineName, personName } from '../../language/localNames';
 
 type Props = {
   profile: Profile;
@@ -78,14 +79,14 @@ export function JobDetailScreen({ profile, job }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Card>
-        <Text style={styles.machine}>{job.machine.name}</Text>
+        <Text style={styles.machine}>{machineName(job.machine, language)}</Text>
         <StatusLabel status={job.status} />
 
         <Text style={styles.label}>{TECH_TEXT.problemLabel[language]}</Text>
         <Text style={styles.value}>{job.description}</Text>
 
         <Text style={styles.label}>{TECH_TEXT.reportedByLabel[language]}</Text>
-        <Text style={styles.value}>{job.reported_by.display_name}</Text>
+        <Text style={styles.value}>{personName(job.reported_by, language)}</Text>
 
         <Text style={styles.label}>{TECH_TEXT.reportedAtLabel[language]}</Text>
         <Text style={styles.value}>{formatDateTime(job.created_at, language)}</Text>

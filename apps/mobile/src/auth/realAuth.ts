@@ -10,9 +10,10 @@
 // Failures throw an Error whose message is a code from the contract, so the login
 // screen can turn it into a friendly sentence. A wrong email or password is
 // NOT_AUTHENTICATED; an empty box is INVALID_INPUT.
+// It also holds the sign-up call for new workers and technicians.
 // Owned by Rubaiya.
 
-import { ApiError, PLATFORM_FOR_ROLE } from '@garmentpulse/shared';
+import { ApiError, PLATFORM_FOR_ROLE, signUpWithCode } from '@garmentpulse/shared';
 import type { Profile } from '@garmentpulse/shared';
 import { api, supabase } from '../backend/supabase';
 
@@ -42,6 +43,20 @@ export async function login(email: string, password: string): Promise<Profile> {
     throw new ApiError('WRONG_PLATFORM');
   }
   return profile;
+}
+
+/**
+ * Sign-up with an invite code (docs/api-contract.md 4.7). The code decides the role;
+ * the shared helper checks it, refuses a website code (WRONG_PLATFORM) and returns
+ * the new profile. The person is already logged in afterwards.
+ */
+export async function signUp(input: {
+  fullName: string;
+  email: string;
+  password: string;
+  code: string;
+}): Promise<Profile> {
+  return signUpWithCode(supabase, { platform: 'mobile', ...input });
 }
 
 /** Logs the person out of the backend. */
