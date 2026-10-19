@@ -32,7 +32,6 @@ A suggested label (a Bangla speaker should check the Bangla): English "Your name
 
 - **Nothing is translated automatically.** Every Bangla name is typed by a person: the test names by a Bangla speaker (they are all empty today), real users in this new box, machines by me.
 - A pre-approved account (an owner I make by hand) can carry a Bangla name too, from my list.
-- In the Bangla review sheet (`docs/bangla-review-sheet.md`), sentence 13 says "Ask the owner for a new code". Workers and technicians get their codes from a manager, so please make it say "the person who gave you the code".
 
 ## What I am doing meanwhile
 
