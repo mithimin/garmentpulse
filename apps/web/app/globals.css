@@ -1017,7 +1017,7 @@ html {
 .card-list .table {
   border-collapse: separate;
   border-spacing: 0 10px;
-  margin-top: -6px;
+  margin-top: -16px;
 }
 /* The heading row is one light blue band with dark column names, each on one line. The
    colours are solid (not see-through), so there are no seams between the cells. */
@@ -1032,11 +1032,23 @@ html {
   border-bottom: 3px solid #d6ac68;
   box-shadow: inset 0 1px 0 #ffffff;
 }
+/* The heading row slides down over the gap so it touches the first report: heading and
+   reports read as one block. Only the top corners of the block are rounded here. */
+.card-list .table th {
+  position: relative;
+  top: 10px;
+}
 .card-list .table th:first-child {
-  border-radius: 14px 0 0 14px;
+  border-radius: 16px 0 0 0;
 }
 .card-list .table th:last-child {
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 16px 0 0;
+}
+.card-list .table tbody tr:first-child td:first-child {
+  border-top-left-radius: 0;
+}
+.card-list .table tbody tr:first-child td:last-child {
+  border-top-right-radius: 0;
 }
 .card-list .table td {
   background: rgba(255, 255, 255, 0.92);
