@@ -94,11 +94,11 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 
 | ID | Who | Steps | What must happen | Result |
 |---|---|---|---|---|
-| **T18** | Mithi | Log in as the **owner**. Open "Manager codes". Press "Make a code". | A new code of 10 letters and numbers appears in the list. | [ ] |
+| **T18** | Mithi | Log in as the **owner**. Open "Manager codes". Press "Create a manager code". | A new code of 10 letters and numbers appears in the list. | [ ] |
 | **T19** | Mithi | Open a **private window**, go to `/signup`. Enter a name, a new email, a password (6 or more letters) and that code. | You land on the **manager** page, already logged in. | [ ] |
 | **T20** | Mithi | Back as the owner: look at the codes list. Then repeat T19 with the **same code**. | The used code is gone from the list. The second attempt is refused with the "wrong, used or too old" sentence. | [ ] |
-| **T21** | Mithi | As the new manager, open "Codes". Make a **worker** code and a **technician** code. | Both appear. A manager cannot make a manager code. | [ ] |
-| **T22** | Rubaiya | *(when the phone sign-up screen exists)* On the phone, sign up with the worker code. | You land on the worker screens, logged in. The role is worker, and you cannot choose another. | [ ] |
+| **T21** | Mithi | As the new manager, open "Invite codes". Press "Create a worker code" and "Create a technician code". | Both appear. A manager cannot make a manager code. | [ ] |
+| **T22** | Rubaiya | On the phone, sign up with the worker code. | You land on the worker screens, logged in. The role is worker, and you cannot choose another. | [ ] |
 | **T23** | Rubaiya | Try the **manager** code on the phone, and a **made-up** code. | Both are refused with friendly sentences, and **no account is created**. | [ ] |
 | **T24** | Rubaiya | Sign up again with an email that already has an account. | The "email already has an account" sentence. | [ ] |
 | **T25** | Sakib | In the Supabase dashboard, open Authentication, Users. | The new people are there. Their profiles have the roles that the codes gave. | [ ] |
@@ -146,7 +146,7 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | 5:00 | Rubaiya | Hasan: Mark as fixed. History shows the job | "Done. Hasan is free again, and the job is in his history." |
 | 5:45 | Mithi | Owner login. Three boxes, all reports, no Assign button | "The owner can watch everything and change nothing. That is a deliberate rule, enforced by the database." |
 | 6:30 | Mithi | Owner makes a **manager code**. Private window: sign up with it as a new manager | "How do new people join? Only with an invite code. The owner makes a manager code. It works once and runs out in a week." |
-| 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it *(when the phone sign-up screen exists)* | "The code decides the role. Nobody can choose to be a manager." |
+| 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it | "The code decides the role. Nobody can choose to be a manager." |
 | 8:15 | Sakib | Try the **same code again**; try a **manager** code on the phone | "A used code, a made-up code, or the wrong app are all refused, and no account is created." |
 | 9:00 | Rubaiya | Press the language button, Bangla | "The whole app works in Bangla and English, because many workers read Bangla." |
 | 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 101 + 28 checks | "Behind the screens, the database is the security guard. We tested the rules with 101 database checks and 28 checks that behave like the real apps." |
@@ -196,6 +196,7 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 
 | Date | Who ran it | T-numbers passed | T-numbers failed | Notes |
 |---|---|---|---|---|
+| 2026-10-20 | Sakib alone (website in the browser pane driven by Claude, phone with Expo Go on Sakib's own phone, real backend) | T1 to T13, T15, T16, T18 to T24 | none | **Nothing failed.** Report story, live updates, queue ("All technicians are busy"), owner view (no Assign), wrong-app and logged-out refusals, invite codes, manager sign-up on the website, worker sign-up on the phone, and every code refusal all worked. **Not run yet:** T14 (real client check), T17 (error sentences in both languages on both apps), T25 (Authentication list check), and a manager typing `/owner`. T2 was seen appearing with no refresh, but the seconds were not timed (the real client check measured 0.5 s). Bangla and English: nothing missing on any page, but the Bangla words are still a draft until a Bangla speaker reads them. The test left pretend accounts (`realcheck-...@example.com`) and changed the data; both were cleaned (reset and seed). |
 | | | | | |
 
 ---
@@ -204,5 +205,4 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 
 - The Bangla words are a draft until a Bangla speaker has read them.
 - People's and machines' names show in English letters in Bangla mode (the Bangla names come later).
-- The phone sign-up screen may not exist yet (T22 to T24).
 - Expenses, invoices, owner approval, chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.
