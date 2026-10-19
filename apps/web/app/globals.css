@@ -732,7 +732,6 @@ html[lang='bn'] .table th {
   border-color: var(--main-button-border);
   color: #ffffff;
 }
-/* The page title in the middle of the bar on the sign-up page. */
 .login-bar-brand {
   position: absolute;
   left: var(--space-6);
@@ -756,15 +755,19 @@ html[lang='bn'] .table th {
     left: var(--space-3);
   }
 }
-.login-bar-title {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-}
 .login-tabs {
   display: flex;
   height: 100%;
+}
+/* Sign-up page: the logo and name sit alone in the middle of the bar, on every screen size. */
+.login-bar-solo .login-bar-brand {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+@media (max-width: 760px) {
+  .login-bar-solo .login-bar-brand-name {
+    display: inline;
+  }
 }
 /* The two choices: Manager and Owner. The chosen one is white with a gold line. */
 .login-tab {
