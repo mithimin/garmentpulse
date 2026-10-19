@@ -769,25 +769,58 @@ html[lang='bn'] .table th {
     display: inline;
   }
 }
-/* The two choices: Manager and Owner. The chosen one is white with a gold line. */
+/* The two choices: Manager and Owner. They sit in a dark denim tray in the middle of the bar.
+   The chosen one is a raised cream patch with a thin stitch line, like the report filter tabs. */
+.login-tabs {
+  height: auto;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 16px;
+  background: rgba(10, 18, 40, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 2px 5px rgba(5, 10, 25, 0.5);
+}
 .login-tab {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 44px;
   padding: 0 var(--space-5);
-  border-bottom: 3px solid transparent;
+  border-radius: 12px;
   color: #dbe6f5;
   font-size: 17px;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-decoration: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 .login-tab:hover {
   color: var(--bar-text-chosen);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
-.login-tab-active {
-  color: var(--bar-text-chosen);
-  border-bottom-color: var(--bar-stitch);
+.login-tab:focus-visible {
+  outline: 2px solid #e8d8b5;
+  outline-offset: 2px;
+}
+.login-tab-active,
+.login-tab-active:hover {
+  color: #1f2b47;
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  box-shadow:
+    0 4px 10px -2px rgba(5, 10, 25, 0.55),
+    inset 0 1px 0 #ffffff;
+}
+.login-tab-active::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border-radius: 9px;
+  pointer-events: none;
 }
 .login-box {
   width: 100%;
@@ -1659,7 +1692,8 @@ html[lang='bn'] .sidebar-logout {
     right: var(--space-4);
   }
   .login-tab {
-    padding: 0 var(--space-4);
+    min-width: 88px;
+    padding: 0 var(--space-3);
   }
   .login-page {
     padding-left: var(--space-4);
