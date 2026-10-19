@@ -9,46 +9,47 @@
 // list of codes nobody has used yet, with the day each one stops working (7 days
 // after it was made). Workers and technicians use the code to sign up on the
 // phone app.
-// FAKE data for now (auth/fakeAccounts.ts); it connects to `create_invite_code`
-// and `list_invite_codes` when Sakib's backend is ready. In real mode the page
-// only says that codes are not open yet. Owned by Mithi.
+// It uses `create_invite_code` and `list_invite_codes` on the real backend, or the
+// fake codes when no backend is connected (auth/inviteCodes.ts). Owned by Mithi.
 
 import { useEffect, useState } from 'react';
-import { createInviteCode, listInviteCodes } from '../../../auth/fakeAccounts';
-import type { InviteCode, InviteRole } from '../../../auth/fakeAccounts';
+import type { InviteCode, InviteRole } from '@garmentpulse/shared';
+import { makeCode, myUnusedCodes } from '../../../auth/inviteCodes';
 import { Button } from '../../../components/Button';
 import { Card } from '../../../components/Card';
+import { errorSentence } from '../../../language/errorText';
 import { useLanguage } from '../../../language/LanguageContext';
 import { formatDateTime } from '../../../language/format';
 import { screenText } from '../../../language/screenText';
-import { backendIsReal } from '../../../lib/backend';
 
 /** The codes a manager may make (and see): never manager codes. */
-function myCodes(): InviteCode[] {
-  return listInviteCodes().filter((c) => c.role === 'worker' || c.role === 'technician');
+function onlyMine(list: InviteCode[]): InviteCode[] {
+  return list.filter((c) => c.role === 'worker' || c.role === 'technician');
 }
 
 export default function ManagerCodesPage() {
   const { language } = useLanguage();
   const [codes, setCodes] = useState<InviteCode[]>([]);
+  const [errorText, setErrorText] = useState('');
+  const [busy, setBusy] = useState(false);
 
-  // Read the saved codes once the page is in the browser.
+  // Read the codes once the page is in the browser.
   useEffect(() => {
-    setCodes(myCodes());
-  }, []);
+    myUnusedCodes()
+      .then((list) => setCodes(onlyMine(list)))
+      .catch((error) => setErrorText(errorSentence(error, language)));
+  }, [language]);
 
-  function handleCreate(role: InviteRole) {
-    createInviteCode(role);
-    setCodes(myCodes());
-  }
-
-  if (backendIsReal) {
-    return (
-      <Card>
-        <h1>{screenText('signupClosedTitle', language)}</h1>
-        <p>{screenText('signupClosedText', language)}</p>
-      </Card>
-    );
+  async function handleCreate(role: InviteRole) {
+    setBusy(true);
+    setErrorText('');
+    try {
+      await makeCode(role);
+      setCodes(onlyMine(await myUnusedCodes()));
+    } catch (error) {
+      setErrorText(errorSentence(error, language));
+    }
+    setBusy(false);
   }
 
   return (
@@ -57,17 +58,24 @@ export default function ManagerCodesPage() {
         <h1>{screenText('menuInviteCodes', language)}</h1>
         <p className="greeting-line">{screenText('inviteCodesHelp', language)}</p>
       </div>
+      {errorText ? (
+        <p className="field-error" role="alert">
+          {errorText}
+        </p>
+      ) : null}
       <div className="code-cards">
         <CodeCard
           title={screenText('workerCodesTitle', language)}
           buttonLabel={screenText('createWorkerCode', language)}
           codes={codes.filter((c) => c.role === 'worker')}
+          busy={busy}
           onCreate={() => handleCreate('worker')}
         />
         <CodeCard
           title={screenText('technicianCodesTitle', language)}
           buttonLabel={screenText('createTechnicianCode', language)}
           codes={codes.filter((c) => c.role === 'technician')}
+          busy={busy}
           onCreate={() => handleCreate('technician')}
         />
       </div>
@@ -80,13 +88,14 @@ function CodeCard(props: {
   title: string;
   buttonLabel: string;
   codes: InviteCode[];
+  busy: boolean;
   onCreate: () => void;
 }) {
   const { language } = useLanguage();
   return (
     <Card className="card-list">
       <h2>{props.title}</h2>
-      <Button kind="main" onClick={props.onCreate}>
+      <Button kind="main" onClick={props.onCreate} disabled={props.busy}>
         {props.buttonLabel}
       </Button>
       {props.codes.length === 0 ? (

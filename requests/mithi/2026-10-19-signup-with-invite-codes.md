@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -36,3 +36,7 @@ The code decides the role, works once, expires after 7 days, and the new person 
 ## What I am doing meanwhile
 
 I build the backend in this order: the table and the guard, then the three functions, then the checks, then the shared helper. I will write in this folder when each piece is ready. I will also switch sign-up back on in the Supabase dashboard (it is off now).
+
+## Done
+
+Mithi connected the website to the real sign-up and invite codes and tested it on 2026-10-19 (owner made a manager code, a new manager signed up, the same code was refused). Branch `features/web-real-signup`.
