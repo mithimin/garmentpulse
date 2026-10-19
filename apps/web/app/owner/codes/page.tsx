@@ -6,41 +6,47 @@
 // one-time invite code for a new MANAGER (the owner may only make manager codes,
 // docs/api-contract.md 4.7). Below it is the list of codes nobody has used yet,
 // with the day each one stops working (7 days after it was made).
-// FAKE data for now (auth/fakeAccounts.ts); it connects to `create_invite_code`
-// and `list_invite_codes` when Sakib's backend is ready. In real mode the page
-// only says that codes are not open yet. Owned by Mithi.
+// It uses `create_invite_code` and `list_invite_codes` on the real backend, or the
+// fake codes when no backend is connected (auth/inviteCodes.ts). Owned by Mithi.
 
 import { useEffect, useState } from 'react';
-import { createInviteCode, listInviteCodes } from '../../../auth/fakeAccounts';
-import type { InviteCode } from '../../../auth/fakeAccounts';
+import type { InviteCode } from '@garmentpulse/shared';
+import { makeCode, myUnusedCodes } from '../../../auth/inviteCodes';
 import { Button } from '../../../components/Button';
 import { Card } from '../../../components/Card';
+import { errorSentence } from '../../../language/errorText';
 import { useLanguage } from '../../../language/LanguageContext';
 import { formatDateTime } from '../../../language/format';
 import { screenText } from '../../../language/screenText';
-import { backendIsReal } from '../../../lib/backend';
+
+/** The owner only makes (and sees) manager codes. */
+function onlyManagerCodes(list: InviteCode[]): InviteCode[] {
+  return list.filter((c) => c.role === 'manager');
+}
 
 export default function OwnerCodesPage() {
   const { language } = useLanguage();
   const [codes, setCodes] = useState<InviteCode[]>([]);
+  const [errorText, setErrorText] = useState('');
+  const [busy, setBusy] = useState(false);
 
-  // Read the saved codes once the page is in the browser.
+  // Read the codes once the page is in the browser.
   useEffect(() => {
-    setCodes(listInviteCodes().filter((c) => c.role === 'manager'));
-  }, []);
+    myUnusedCodes()
+      .then((list) => setCodes(onlyManagerCodes(list)))
+      .catch((error) => setErrorText(errorSentence(error, language)));
+  }, [language]);
 
-  function handleCreateCode() {
-    createInviteCode('manager');
-    setCodes(listInviteCodes().filter((c) => c.role === 'manager'));
-  }
-
-  if (backendIsReal) {
-    return (
-      <Card>
-        <h1>{screenText('signupClosedTitle', language)}</h1>
-        <p>{screenText('signupClosedText', language)}</p>
-      </Card>
-    );
+  async function handleCreateCode() {
+    setBusy(true);
+    setErrorText('');
+    try {
+      await makeCode('manager');
+      setCodes(onlyManagerCodes(await myUnusedCodes()));
+    } catch (error) {
+      setErrorText(errorSentence(error, language));
+    }
+    setBusy(false);
   }
 
   return (
@@ -50,9 +56,14 @@ export default function OwnerCodesPage() {
         <p className="greeting-line">{screenText('codesHelp', language)}</p>
       </div>
       <Card className="card-list code-card">
-        <Button kind="main" onClick={handleCreateCode}>
+        <Button kind="main" onClick={handleCreateCode} disabled={busy}>
           {screenText('createCode', language)}
         </Button>
+        {errorText ? (
+          <p className="field-error" role="alert">
+            {errorText}
+          </p>
+        ) : null}
         {codes.length === 0 ? (
           <p>{screenText('noCodes', language)}</p>
         ) : (

@@ -9,7 +9,7 @@
 // Failures throw an Error whose message is an error code from the contract.
 // Owned by Mithi.
 
-import { PLATFORM_FOR_ROLE } from '@garmentpulse/shared';
+import { PLATFORM_FOR_ROLE, signUpWithCode } from '@garmentpulse/shared';
 import type { Profile, Role } from '@garmentpulse/shared';
 import { api, supabase } from '../lib/backend';
 
@@ -31,6 +31,21 @@ export async function realLogin(email: string, password: string, loginFor: Role)
     await supabase.auth.signOut();
     throw error;
   }
+}
+
+/**
+ * The REAL sign-up with an invite code. The shared helper checks the code, refuses
+ * the wrong app (WRONG_PLATFORM), creates the account and returns the new profile.
+ * The person is logged in right away. Failures throw an Error whose message is a code.
+ */
+export async function realSignUp(input: {
+  fullName: string;
+  email: string;
+  password: string;
+  code: string;
+}): Promise<Profile> {
+  if (!supabase) throw new Error('NOT_AUTHENTICATED');
+  return signUpWithCode(supabase, { platform: 'web', ...input });
 }
 
 /** Asks Supabase if someone is still logged in (for example after a page refresh). */

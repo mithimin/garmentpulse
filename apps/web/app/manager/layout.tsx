@@ -24,7 +24,6 @@ import { SidebarShell } from '../../components/SidebarShell';
 import { ManagerDataProvider, useManagerData } from '../../data/ManagerData';
 import { useLanguage } from '../../language/LanguageContext';
 import { screenText } from '../../language/screenText';
-import { backendIsReal } from '../../lib/backend';
 
 export default function ManagerLayout({ children }: { children: ReactNode }) {
   return (
@@ -62,15 +61,12 @@ function ManagerFrame({ children }: { children: ReactNode }) {
       active: pathname.startsWith('/manager/technicians'),
     },
   ];
-  // Invite codes are fake for now: hidden while the real backend is on (no invite-code backend yet).
-  if (!backendIsReal) {
-    menu.push({
-      label: screenText('menuInviteCodes', language),
-      href: '/manager/codes',
-      icon: <KeyRound size={18} strokeWidth={1.8} aria-hidden="true" />,
-      active: pathname.startsWith('/manager/codes'),
-    });
-  }
+  menu.push({
+    label: screenText('menuInviteCodes', language),
+    href: '/manager/codes',
+    icon: <KeyRound size={18} strokeWidth={1.8} aria-hidden="true" />,
+    active: pathname.startsWith('/manager/codes'),
+  });
 
   return (
     <SidebarShell role="manager" menu={menu}>
