@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: Sign-up screen is built and merged (PR 52); STATUS updated; test emails sent in requests/sakib/2026-10-20-signup-test-emails.md.
 
 ## What I need
 
