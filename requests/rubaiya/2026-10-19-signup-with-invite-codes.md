@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+- Done: Plan read; nothing in it blocks the phone app. Screen built (see signup-is-ready note).
 
 ## What I need
 

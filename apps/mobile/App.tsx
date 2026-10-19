@@ -2,7 +2,7 @@
 //
 // The main component of GarmentPulse Mobile (workers and technicians).
 // It decides which screen to show:
-//   - nobody logged in       -> the login screen
+//   - nobody logged in       -> the login screen (or the sign-up screen, one tap away)
 //   - a worker logged in     -> the worker screens (Home, Report, My reports)
 //   - a technician logged in -> the technician screens (Jobs, History)
 // It also wraps everything in two "holders": one remembers the chosen language
@@ -17,11 +17,14 @@ import { logout as backendLogout } from './src/auth/realAuth';
 import { ReportsProvider } from './src/data/ReportsContext';
 import { LanguageProvider } from './src/language/LanguageContext';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { SignUpScreen } from './src/screens/SignUpScreen';
 import { TechnicianApp } from './src/screens/technician/TechnicianApp';
 import { WorkerApp } from './src/screens/worker/WorkerApp';
 
 export default function App() {
   const [profile, setProfile] = useState<Profile | null>(null);
+  // Which signed-out screen to show: the login or the sign-up.
+  const [showSignUp, setShowSignUp] = useState(false);
   const logout = () => {
     setProfile(null);
     void backendLogout();
@@ -30,7 +33,11 @@ export default function App() {
   return (
     <LanguageProvider>
       {!profile ? (
-        <LoginScreen onLoggedIn={setProfile} />
+        showSignUp ? (
+          <SignUpScreen onSignedUp={setProfile} onGoToLogin={() => setShowSignUp(false)} />
+        ) : (
+          <LoginScreen onLoggedIn={setProfile} onGoToSignUp={() => setShowSignUp(true)} />
+        )
       ) : (
         // `key` makes a fresh holder for each person, so nobody sees the last person's data.
         <ReportsProvider key={profile.id} profile={profile}>

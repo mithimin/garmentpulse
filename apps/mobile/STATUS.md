@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-18 by Rubaiya's session
+**Last updated:** 2026-10-19 by Rubaiya's session
 
 ## Done
 
@@ -39,9 +39,14 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - Back arrows on the Report, My reports and History tabs, and the Android phone back button does the same (`src/components/useBackAction.ts`).
   - Tested on a real phone: login, reports, jobs and the back buttons work.
 
+- Sign-up with an invite code, built on branch `features/mobile-signup` (NOT tested on a phone yet):
+  - New screen `src/screens/SignUpScreen.tsx`: full name, email, password and invite code. No role choice: the code decides the role. Links between login and sign-up, and the Android back button goes back to login.
+  - `signUp` in `src/auth/realAuth.ts` uses the shared `signUpWithCode`. The person is logged in right away.
+  - Friendly sentences in English and Bangla for `INVALID_CODE`, `EMAIL_TAKEN`, `WRONG_PLATFORM` and `INVALID_INPUT` (`SIGNUP_ERROR_TEXT` in `screenText.ts`).
+
 ## In progress
 
-- Nothing right now.
+- Testing sign-up on a real phone with a code from a manager (or from Sakib).
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
@@ -49,7 +54,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Waiting on someone else
 
-- Sakib: a decision on sign-up for workers and technicians (not in the MVP now). Note: `requests/sakib/2026-10-18-worker-technician-signup.md`.
+- Sakib or a manager: one worker code and one technician code, to test sign-up.
 
 ## Decisions made in this lane
 
@@ -59,4 +64,5 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Good to know for the other lanes
 
+- The phone sign-up is ready for the first test: it needs an invite code from a manager.
 - The Bangla error sentences in `screenText.ts` are a first draft and need a Bangla speaker to read them.

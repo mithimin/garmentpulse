@@ -9,7 +9,7 @@
 // a Bangla speaker on the team before release.
 // Owned by Rubaiya.
 
-import type { ErrorCode, Language } from '@garmentpulse/shared';
+import type { ApiErrorCode, ErrorCode, Language } from '@garmentpulse/shared';
 import { UNKNOWN_ERROR } from '@garmentpulse/shared';
 
 type Words = Record<Language, string>;
@@ -29,7 +29,51 @@ export const LOGIN_TEXT = {
   passwordHint: { en: 'Type your password', bn: 'আপনার পাসওয়ার্ড লিখুন' },
   loginButton: { en: 'Log in', bn: 'লগ ইন' },
   loading: { en: 'Loading…', bn: 'লোড হচ্ছে…' },
+  /** The link under the login button that opens the sign-up screen. */
+  noAccount: { en: 'New here?', bn: 'নতুন?' },
+  goToSignUp: { en: 'Sign up with a code', bn: 'কোড দিয়ে সাইন আপ করুন' },
 } satisfies Record<string, Words>;
+
+/** Words on the sign-up screen (name, email, password and invite code). */
+export const SIGNUP_TEXT = {
+  title: { en: 'Create your account', bn: 'আপনার অ্যাকাউন্ট খুলুন' },
+  intro: {
+    en: 'Ask your manager for an invite code. The code decides if you are a worker or a technician.',
+    bn: 'আপনার ম্যানেজারের কাছ থেকে একটি কোড নিন। কোড দেখেই ঠিক হয় আপনি শ্রমিক না টেকনিশিয়ান।',
+  },
+  nameLabel: { en: 'Full name', bn: 'পুরো নাম' },
+  nameHint: { en: 'Type your full name', bn: 'আপনার পুরো নাম লিখুন' },
+  passwordHint: { en: 'At least 6 letters', bn: 'কমপক্ষে ৬টি অক্ষর' },
+  codeLabel: { en: 'Invite code', bn: 'আমন্ত্রণ কোড' },
+  codeHint: { en: 'The code from your manager', bn: 'ম্যানেজারের দেওয়া কোড' },
+  signUpButton: { en: 'Sign up', bn: 'সাইন আপ' },
+  haveAccount: { en: 'Already have an account?', bn: 'আগেই অ্যাকাউন্ট আছে?' },
+  goToLogin: { en: 'Log in', bn: 'লগ ইন' },
+} satisfies Record<string, Words>;
+
+/**
+ * Friendly sentences for the errors a sign-up can give. INVALID_CODE and
+ * EMAIL_TAKEN are not in the shared ERROR_CODES list yet (Sakib's note), so this
+ * is a small separate table. Anything not listed uses ERROR_TEXT.UNKNOWN.
+ */
+export const SIGNUP_ERROR_TEXT: Partial<Record<ApiErrorCode, Words>> = {
+  INVALID_CODE: {
+    en: 'That code is wrong, already used or too old. Ask your manager for a new code.',
+    bn: 'এই কোডটি ভুল, আগেই ব্যবহার হয়েছে বা পুরনো। ম্যানেজারের কাছ থেকে নতুন কোড নিন।',
+  },
+  EMAIL_TAKEN: {
+    en: 'This email already has an account. Please log in.',
+    bn: 'এই ইমেইলে আগেই অ্যাকাউন্ট আছে। অনুগ্রহ করে লগ ইন করুন।',
+  },
+  WRONG_PLATFORM: {
+    en: 'This code is for the website. The phone app is for workers and technicians.',
+    bn: 'এই কোডটি ওয়েবসাইটের জন্য। ফোন অ্যাপ শ্রমিক ও টেকনিশিয়ানদের জন্য।',
+  },
+  INVALID_INPUT: {
+    en: 'Please type your name, a real email and a password of at least 6 letters.',
+    bn: 'অনুগ্রহ করে নাম, সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড লিখুন।',
+  },
+};
 
 /** Words on the worker screens (tabs, report form, report list and detail). */
 export const WORKER_TEXT = {
