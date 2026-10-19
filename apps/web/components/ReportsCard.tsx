@@ -79,7 +79,7 @@ export function ReportsCard({
     f === 'all' ? screenText('filterAll', language) : STATUS_LABELS[f][language];
 
   return (
-    <Card className="card-list">
+    <Card className="card-list stitched">
       {mode === 'queue' ? (
         <div className="card-head">
           <h2>{screenText('needsAttentionTitle', language)}</h2>
