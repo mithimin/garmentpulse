@@ -1791,3 +1791,13 @@ html[lang='bn'] .sidebar-logout {
     border-bottom-right-radius: 16px;
   }
 }
+
+/* The titles of the invite code cards (Worker codes, Technician codes) are bold white, so they
+   read clearly on the dark blue card. */
+.code-cards .card-list h2 {
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
