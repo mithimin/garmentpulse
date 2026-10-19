@@ -13,6 +13,7 @@ import type { Machine } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { WORKER_TEXT } from '../language/screenText';
 import { COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
+import { machineName } from '../language/localNames';
 
 type Props = {
   machines: readonly Machine[];
@@ -39,7 +40,7 @@ export function MachinePicker({ machines, value, onChange, hasError, disabled }:
         style={[styles.box, hasError && styles.boxError]}
       >
         <Text style={chosen ? styles.value : styles.hint} numberOfLines={1}>
-          {chosen ? chosen.name : WORKER_TEXT.machineHint[language]}
+          {chosen ? machineName(chosen, language) : WORKER_TEXT.machineHint[language]}
         </Text>
         <ChevronDown color={C.softText} size={20} strokeWidth={1.8} />
       </Pressable>
@@ -62,7 +63,7 @@ export function MachinePicker({ machines, value, onChange, hasError, disabled }:
                   style={styles.row}
                 >
                   <Text style={[styles.rowText, item.id === value && styles.rowTextChosen]}>
-                    {item.name}
+                    {machineName(item, language)}
                   </Text>
                   {item.id === value && <Check color={C.mainButton} size={20} strokeWidth={2} />}
                 </Pressable>

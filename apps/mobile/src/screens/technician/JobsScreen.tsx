@@ -17,6 +17,7 @@ import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { TECH_TEXT } from '../../language/screenText';
 import { COLORS as C, STATUS_COLORS, SIZES } from '../../theme';
+import { personName } from '../../language/localNames';
 
 type Props = {
   profile: Profile;
@@ -35,7 +36,7 @@ export function JobsScreen({ profile, onOpenJob, onLogout }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Card>
-        <Text style={styles.name}>{profile.display_name}</Text>
+        <Text style={styles.name}>{personName(profile, language)}</Text>
         <View style={styles.row}>
           <Text style={styles.youAre}>{TECH_TEXT.youAre[language]}</Text>
           <View style={[styles.pill, { backgroundColor: colors.background }]}>

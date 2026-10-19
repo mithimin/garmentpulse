@@ -12,6 +12,7 @@ import { StatusLabel } from './StatusLabel';
 import { useLanguage } from '../language/LanguageContext';
 import { formatDateTime } from '../language/format';
 import { COLORS as C } from '../theme';
+import { machineName } from '../language/localNames';
 
 type Props = {
   report: Report;
@@ -29,7 +30,7 @@ export function ReportCard({ report, onPress }: Props) {
       <Card>
         <View style={styles.top}>
           <Text style={styles.machine} numberOfLines={1}>
-            {report.machine.name}
+            {machineName(report.machine, language)}
           </Text>
           <StatusLabel status={report.status} />
         </View>

@@ -14,6 +14,7 @@ import { useLanguage } from '../language/LanguageContext';
 import { formatDateTime } from '../language/format';
 import { TECH_TEXT } from '../language/screenText';
 import { COLORS as C } from '../theme';
+import { machineName, personName } from '../language/localNames';
 
 type Props = {
   job: Report;
@@ -29,7 +30,7 @@ export function JobCard({ job, onPress }: Props) {
       <Card>
         <View style={styles.top}>
           <Text style={styles.machine} numberOfLines={1}>
-            {job.machine.name}
+            {machineName(job.machine, language)}
           </Text>
           <View style={styles.labels}>
             <StatusLabel status={job.status} />
@@ -40,7 +41,7 @@ export function JobCard({ job, onPress }: Props) {
           {job.description}
         </Text>
         <Text style={styles.meta}>
-          {job.reported_by.display_name} · {formatDateTime(job.created_at, language)}
+          {personName(job.reported_by, language)} · {formatDateTime(job.created_at, language)}
         </Text>
       </Card>
     </Pressable>

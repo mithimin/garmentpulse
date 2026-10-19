@@ -44,6 +44,8 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - `signUp` in `src/auth/realAuth.ts` uses the shared `signUpWithCode`. The person is logged in right away.
   - Friendly sentences in English and Bangla for `INVALID_CODE`, `EMAIL_TAKEN`, `WRONG_PLATFORM` and `INVALID_INPUT` (`SIGNUP_ERROR_TEXT` in `screenText.ts`).
 
+- Bangla names (branch `features/mobile-signup`): every screen now shows a person's or machine's name through `src/language/localNames.ts`. In Bangla mode it uses `display_name_bn` / `name_bn` when the backend sends one, otherwise the English name. The backend does not send them yet, so names still look English until Sakib adds them.
+
 ## In progress
 
 - Testing sign-up on a real phone with a code from a manager (or from Sakib).

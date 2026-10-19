@@ -15,6 +15,7 @@ import { useLanguage } from '../../language/LanguageContext';
 import { formatDateTime } from '../../language/format';
 import { WORKER_TEXT } from '../../language/screenText';
 import { COLORS as C, SIZES } from '../../theme';
+import { machineName, personName } from '../../language/localNames';
 
 export function ReportDetailScreen({ report }: { report: Report }) {
   const { language } = useLanguage();
@@ -22,7 +23,7 @@ export function ReportDetailScreen({ report }: { report: Report }) {
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Card>
-        <Text style={styles.machine}>{report.machine.name}</Text>
+        <Text style={styles.machine}>{machineName(report.machine, language)}</Text>
         <StatusLabel status={report.status} />
 
         <Text style={styles.label}>{WORKER_TEXT.problemLabel[language]}</Text>
@@ -34,7 +35,7 @@ export function ReportDetailScreen({ report }: { report: Report }) {
         <Text style={styles.label}>{WORKER_TEXT.technicianLabel[language]}</Text>
         <Text style={styles.value}>
           {report.technician
-            ? report.technician.display_name
+            ? personName(report.technician, language)
             : WORKER_TEXT.noTechnicianYet[language]}
         </Text>
       </Card>
