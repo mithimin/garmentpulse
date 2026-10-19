@@ -1202,30 +1202,98 @@ html[lang='bn'] .menu-link {
 
 /* ---------- Filter tabs on the Reports page ---------- */
 
+/* The filter tabs: a dark denim tray (like a pocket) with four tabs sitting in it. The chosen
+   tab is a raised cream patch with a thin stitch line just inside its edge. Each tab has a
+   small colour dot AND its word AND a count bubble, so colour is never the only clue. */
 .filter-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
   margin-bottom: var(--space-4);
+  padding: 5px;
+  border-radius: 16px;
+  background: rgba(20, 30, 56, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 2px 5px rgba(8, 14, 30, 0.45);
 }
 .filter-tab {
-  min-height: 36px;
-  padding: 0 var(--space-4);
-  border: 1px solid #8c9db0;
-  border-radius: 3px;
-  background: var(--second-button);
-  color: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 14px 0 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #dfe6f5;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .filter-tab:hover {
-  border-color: var(--main-button);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.filter-tab:focus-visible {
+  outline: 2px solid #e8d8b5;
+  outline-offset: 2px;
+}
+.filter-dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: #e8d8b5;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
+}
+.filter-tab[data-filter='waiting'] .filter-dot {
+  background: #e3ae35;
+}
+.filter-tab[data-filter='in_progress'] .filter-dot {
+  background: #5b93e0;
+}
+.filter-tab[data-filter='resolved'] .filter-dot {
+  background: #46a874;
+}
+.filter-count {
+  min-width: 24px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
 }
 .filter-tab-active {
-  background: var(--main-button);
-  border-color: var(--main-button-border);
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  border-color: #e8d8b5;
+  color: #1f2b47;
+  box-shadow:
+    0 4px 10px -2px rgba(8, 14, 30, 0.5),
+    inset 0 1px 0 #ffffff;
+}
+.filter-tab-active:hover {
+  background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
+  color: #1f2b47;
+}
+.filter-tab-active::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border-radius: 9px;
+  pointer-events: none;
+}
+.filter-tab-active .filter-count {
+  background: #2e4670;
   color: #ffffff;
 }
 html[lang='bn'] .filter-tab {

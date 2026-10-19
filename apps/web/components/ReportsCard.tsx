@@ -102,10 +102,13 @@ export function ReportsCard({
               key={f}
               type="button"
               className={f === filter ? 'filter-tab filter-tab-active' : 'filter-tab'}
+              data-filter={f}
               aria-pressed={f === filter}
               onClick={() => setFilter(f)}
             >
-              {filterLabel(f)} {localizeDigits(String(countFor(f)), language)}
+              <span className="filter-dot" aria-hidden="true" />
+              <span className="filter-name">{filterLabel(f)}</span>
+              <span className="filter-count">{localizeDigits(String(countFor(f)), language)}</span>
             </button>
           ))}
         </div>
