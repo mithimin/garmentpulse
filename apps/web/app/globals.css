@@ -1791,3 +1791,43 @@ html[lang='bn'] .sidebar-logout {
     border-bottom-right-radius: 16px;
   }
 }
+
+/* The titles of the invite code cards (Worker codes, Technician codes) are bold white, so they
+   read clearly on the dark blue card. */
+.code-cards .card-list h2 {
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Inside the invite code cards every item (title, button, message or code list) is spaced by
+   the same gap, so nothing is squeezed against its neighbour. */
+.code-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.code-card > * {
+  margin: 0;
+}
+.code-card .code-list {
+  width: 100%;
+}
+
+/* A stitch line just inside the edge of each code box (the white box that holds a code). */
+.code-list li {
+  position: relative;
+  padding: var(--space-3) var(--space-5);
+  border-radius: 10px;
+}
+.code-list li::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1.5px dashed #2e4670;
+  border-radius: 7px;
+  pointer-events: none;
+}

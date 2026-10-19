@@ -93,7 +93,7 @@ function CodeCard(props: {
 }) {
   const { language } = useLanguage();
   return (
-    <Card className="card-list">
+    <Card className="card-list code-card">
       <h2>{props.title}</h2>
       <Button kind="main" onClick={props.onCreate} disabled={props.busy}>
         {props.buttonLabel}

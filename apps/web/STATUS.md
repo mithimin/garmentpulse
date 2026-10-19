@@ -23,7 +23,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
-- Nothing right now. The website pages for sign-up are built on fake data and wait for the real backend connection (see Next, item 2).
+- Nothing right now. The website side of the MVP is DONE (2026-10-19, Mithi): login, dashboard and assign, owner screen, real sign-up with invite codes, and the owner and manager code pages all work on the real backend. Only the Bangla review (a Bangla speaker) and the team's full demo are left.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
