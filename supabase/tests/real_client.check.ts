@@ -260,6 +260,10 @@ describe.skipIf(missing.length > 0)('real client check', () => {
         workerHeard = true;
       });
 
+      // "SUBSCRIBED" can arrive a moment before Supabase really starts sending
+      // changes, so let the three listeners settle before the report is made.
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const sentAt = Date.now();
       const report = await apis.nila.createReport(machineId, description);
       newReportId = report.id;
