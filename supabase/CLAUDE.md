@@ -14,15 +14,16 @@ The **backend** is the hidden part of GarmentPulse that stores information and e
 
 **Big idea: the database is the security guard.** The apps are only screens. Every rule that matters is enforced here, so a changed app cannot cheat. For example: a worker must not be able to do a manager's job, even by trying.
 
-## Planned layout
+## Layout
 
-| Folder | What goes in it |
+| Where | What is in it |
 |---|---|
-| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions) |
-| `functions/` | Edge Functions (small server programs). Not needed in the MVP; the chatbot and camera alerts will use them later |
-| `tests/` | Database tests: role permissions ("a worker cannot open manager screens"), dispatch rules (busy technicians, the queue), status rules |
-
-These folders are empty for now (they only hold a placeholder file).
+| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions, the sign-up guard, Bangla names). The newest file is the last change. |
+| `tests/` | `api_rules_check.sql` (126 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (30 checks through the real login service, run in a terminal) |
+| `seed.sql` | The test story: 5 people, 5 machines, 4 reports |
+| `approve_test_accounts.sql` | Puts the 5 test emails on the approved list, so their logins can be created by hand (see the sign-up guard rule below) |
+| `reset_demo_data.sql` | Deletes all reports and all invite codes, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
+| `functions/` | Edge Functions (small server programs). Empty on purpose: not needed in the MVP; the chatbot and camera alerts will use them later |
 
 ## Read before you build
 
@@ -42,13 +43,18 @@ These folders are empty for now (they only hold a placeholder file).
 - **Every function must match `docs/api-contract.md` exactly:** same name, same inputs, same result shape, same error codes. Errors use the capital-letter code as the message.
 - **Roles are checked on the server** (architecture NFR-02). Never trust a role sent by an app.
 - **Never put the service-role key in an app or in git.** It is secret. The apps only get the public anon key.
-- Provide **test data** (a small seed file) and a **Postman collection** early, so the apps can be checked against the real backend (plan 3.1).
+- **Run both checks before and after every backend change.** First clean the data (`reset_demo_data.sql`, then `seed.sql`), then run `api_rules_check.sql` (it must say ALL ... CHECKS PASSED) and `node supabase/tests/run_real_check.mjs`. Add a check for every new rule. The real client check replaces a Postman collection, which is optional.
+- **The sign-up guard applies to everybody.** A new login is accepted only with a good invite code (the role comes from the code, never from the person) or with an email on `approved_accounts`. Creating a login by hand in the dashboard needs that email on the list first.
+- **Watch out for empty values in SQL.** Comparing an empty value (NULL) with something is neither true nor false, so a permission check can silently let people in. Use `coalesce(...)` or `is distinct from` (this caused the `get_report` bug for reports still in the queue).
+- **Live updates need the login on the connection** (`realtime.setAuth`); the apps must do it before they subscribe.
 - If a function in the contract must change, tell Rubaiya and Mithi **before** you change it.
 
-## Running it locally
+## Running it
 
-`supabase/config.toml` holds the local settings. To run the backend on your computer you need Docker and the Supabase command-line tool. Details will be added here when the first migration exists.
+The backend lives in **one Supabase cloud project** (shared by both apps). Docker and a local copy are **not set up**; `supabase/config.toml` holds the settings for it if that is ever done.
+
+To rebuild the backend from nothing, in the Supabase dashboard: (1) paste each file of `migrations/` into the SQL Editor, one **New query** per file, **in order**; (2) Authentication, Email: sign-up **on**, email confirmation **off**; (3) run `approve_test_accounts.sql`; (4) create the 5 test logins by hand (tick Auto Confirm User, choose private passwords); (5) run `seed.sql`; (6) run both checks.
 
 ## Status
 
-Only the settings file (`config.toml`) and empty folders exist. No tables, no functions, no tests yet.
+The backend is built and tested: 10 migration files, 126 database checks and 30 real client checks. For the live picture (what is done, in progress and waiting), read [`STATUS.md`](./STATUS.md).
