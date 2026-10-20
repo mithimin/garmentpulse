@@ -141,6 +141,11 @@ export type SignUpInput = {
   /** Which app is asking: workers and technicians sign up on mobile, managers on web. */
   platform: Platform;
   fullName: string;
+  /**
+   * OPTIONAL: the person's name in Bangla letters. Empty or missing means "no
+   * Bangla name"; the apps then show the English name. At most 80 letters.
+   */
+  fullNameBn?: string;
   email: string;
   password: string;
   /** The invite code the person was given. Small letters and spaces are fine. */
@@ -169,7 +174,8 @@ function signUpErrorCode(message: string | undefined): ApiErrorCode {
  * returns their profile (so the app knows the role and can open the right
  * screens). The steps, in order:
  *
- *   1. Check the name, email and password. (INVALID_INPUT)
+ *   1. Check the name (and the optional Bangla name), email and password.
+ *      (INVALID_INPUT)
  *   2. Ask the backend if the code is good. (INVALID_CODE)
  *   3. Make sure the code's role belongs to THIS app. (WRONG_PLATFORM)
  *      Nothing has been created yet if it does not.
@@ -185,6 +191,7 @@ function signUpErrorCode(message: string | undefined): ApiErrorCode {
  */
 export async function signUpWithCode(client: SignUpClient, input: SignUpInput): Promise<Profile> {
   const fullName = input.fullName.trim();
+  const fullNameBn = (input.fullNameBn ?? '').trim();
   const email = input.email.trim().toLowerCase();
   const code = input.code.trim().toUpperCase();
 
@@ -192,6 +199,7 @@ export async function signUpWithCode(client: SignUpClient, input: SignUpInput): 
   if (
     fullName.length < 1 ||
     fullName.length > MAX_NAME_LENGTH ||
+    fullNameBn.length > MAX_NAME_LENGTH ||
     !email.includes('@') ||
     input.password.length < MIN_PASSWORD_LENGTH
   ) {
@@ -212,7 +220,14 @@ export async function signUpWithCode(client: SignUpClient, input: SignUpInput): 
   const { data, error } = await client.auth.signUp({
     email,
     password: input.password,
-    options: { data: { display_name: fullName, invite_code: code } },
+    options: {
+      data: {
+        display_name: fullName,
+        invite_code: code,
+        // Only sent when the person wrote one.
+        ...(fullNameBn ? { display_name_bn: fullNameBn } : {}),
+      },
+    },
   });
   if (error) {
     throw new ApiError(signUpErrorCode(error.message));

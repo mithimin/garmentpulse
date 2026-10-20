@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Please delete these two pretend accounts after the tests:
@@ -14,3 +14,7 @@ I tested the phone sign-up screen (PR 52, now on `main`) with invite codes. Each
 
 ## What I am doing meanwhile
 Waiting for the Bangla names (see `2026-10-19-bangla-names-phone-ready.md`) and for the full test.
+
+## Done
+
+Done on 2026-10-20: both pretend accounts (`rubaiyareza00@gmail.com` and `rahimkhan@gmail.com`) are deleted. You can sign up again with a new invite code whenever you want to test again. (Sakib)
