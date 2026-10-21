@@ -78,17 +78,17 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 | **T11** | Mithi | Log in as the **owner**, then type `/manager` in the address bar. | "You cannot open this page" (or similar). The same the other way: log in as the manager, type `/owner`. | [ ] |
 | **T12** | Mithi | Try to log in on the website as **Nila** (a worker). | The login is refused with the "wrong app" sentence (`WRONG_PLATFORM`). | [ ] |
 | **T13** | Rubaiya | Try to log in on the phone as **Farhan** (a manager). | Refused with the "wrong app" sentence. | [ ] |
-| **T14** | Sakib | In the terminal: `node supabase/tests/run_real_check.mjs`. | `Tests 28 passed (28)`. This proves, with the real login service, that a worker cannot list all reports, assign, or make codes. | [ ] |
+| **T14** | Sakib | In the terminal: `node supabase/tests/run_real_check.mjs`. | `Tests 30 passed (30)`. This proves, with the real login service, that a worker cannot list all reports, assign, or make codes. | [ ] |
 
 ### 2.3 Languages (MVP checklist item 7)
 
 | ID | Who | Steps | What must happen | Result |
 |---|---|---|---|---|
-| **T15** | Rubaiya | Phone: press the language button (top right) on the login, Home, Report, My reports, Jobs and History screens. | Everything switches between English and Bangla. No English words stay in Bangla mode, **except** people's and machines' names (they wait for the Bangla names). | [ ] |
+| **T15** | Rubaiya | Phone: press the language button (top right) on the login, Home, Report, My reports, Jobs and History screens. | Everything switches between English and Bangla. No English words stay in Bangla mode, **except** the text a worker typed in a report, which is never translated. People's and machines' names show in Bangla (run `supabase/fill_bangla_test_names.sql` first). | [ ] |
 | **T16** | Mithi | Website: the same on the login pages, Dashboard, Reports, Technicians, Owner. | Same as above. Buttons and dates do not break onto two lines. | [ ] |
 | **T17** | Both | Cause an error on purpose (a wrong password). | The sentence is friendly and in the chosen language. The raw code never shows. | [ ] |
 
-> The Bangla words are still a **draft**. A Bangla speaker should read them before the demo (see [mvp.md](mvp.md) section 5, item 7). Do not tick T15 to T17 for the final run until one has.
+> A Bangla speaker has read Parts A to C of the review sheet (the 9 words, the 10 names, the 13 error sentences) and said they are OK (2026-10-21). Parts D and E (the phone and website texts) are still a **draft**. A Bangla speaker should read them before the demo (see [mvp.md](mvp.md) section 5, item 7). Do not tick T15 to T17 for the final run until one has.
 
 ### 2.4 Sign-up with invite codes (MVP checklist items 8 to 10)
 
@@ -197,6 +197,7 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | Date | Who ran it | T-numbers passed | T-numbers failed | Notes |
 |---|---|---|---|---|
 | 2026-10-20 | Sakib alone (website in the browser pane driven by Claude, phone with Expo Go on Sakib's own phone, real backend) | T1 to T13, T15, T16, T18 to T24 | none | **Nothing failed.** Report story, live updates, queue ("All technicians are busy"), owner view (no Assign), wrong-app and logged-out refusals, invite codes, manager sign-up on the website, worker sign-up on the phone, and every code refusal all worked. **Not run yet:** T14 (real client check), T17 (error sentences in both languages on both apps), T25 (Authentication list check), and a manager typing `/owner`. T2 was seen appearing with no refresh, but the seconds were not timed (the real client check measured 0.5 s). Bangla and English: nothing missing on any page, but the Bangla words are still a draft until a Bangla speaker reads them. The test left pretend accounts (`realcheck-...@example.com`) and changed the data; both were cleaned (reset and seed). |
+| 2026-10-21 | Sakib alone (real backend, phone with Expo Go, website) | T14, T15, T16 (names) | none | **Nothing failed.** The real client check passed all 30 checks (the live-update check needed a 2-second wait after subscribing; it had failed twice before the wait). The Bangla names of the 5 people and 5 machines were filled in and show in Bangla letters on both apps. A Bangla speaker said Parts A, B and C of the review sheet are OK. Report descriptions stay as typed (never translated). **Not run yet:** T17, T25, a manager typing `/owner`, and the Bangla review of Parts D and E. |
 | | | | | |
 
 ---

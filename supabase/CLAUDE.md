@@ -22,7 +22,8 @@ The **backend** is the hidden part of GarmentPulse that stores information and e
 | `tests/` | `api_rules_check.sql` (126 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (30 checks through the real login service, run in a terminal) |
 | `seed.sql` | The test story: 5 people, 5 machines, 4 reports |
 | `approve_test_accounts.sql` | Puts the 5 test emails on the approved list, so their logins can be created by hand (see the sign-up guard rule below) |
-| `reset_demo_data.sql` | Deletes all reports and all invite codes, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
+| `reset_demo_data.sql` | Deletes all reports and all invite codes and empties the Bangla names, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
+| `fill_bangla_test_names.sql` | Writes the reviewed Bangla names of the 5 test people and 5 machines. Run it **after** the rules check (which expects them empty), before the demo. |
 | `functions/` | Edge Functions (small server programs). Empty on purpose: not needed in the MVP; the chatbot and camera alerts will use them later |
 
 ## Read before you build

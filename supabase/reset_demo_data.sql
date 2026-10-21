@@ -12,7 +12,8 @@
 --   2. Run supabase/seed.sql.  (it puts the 4 story reports back)
 --
 -- AFTER BOTH STEPS the database holds exactly:
---   * the 5 test people and 5 machines (this file does not touch them),
+--   * the 5 test people and 5 machines, with EMPTY Bangla names (fill them after
+--     the checks with supabase/fill_bangla_test_names.sql),
 --   * no invite codes at all (the rules check makes its own and counts them),
 --   * 4 reports: one in progress with Tariq (so he is busy), two waiting in
 --     the queue, and one resolved by Hasan (a past job). Hasan is free.
@@ -48,5 +49,10 @@ delete from public.reports;
 -- check, which counts them. (People who already signed up with a code keep
 -- their accounts; they only forget which code they used.)
 delete from public.invite_codes;
+
+-- Empty the Bangla names again. The rules check expects them empty. After the
+-- checks, supabase/fill_bangla_test_names.sql writes them back for the demo.
+update public.profiles set display_name_bn = null where display_name_bn is not null;
+update public.machines set name_bn = null where name_bn is not null;
 
 -- Now run supabase/seed.sql to put the 4 story reports back.
