@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-21 by Sakib (Bangla test names filled)
+**Last updated:** 2026-10-26 by Sakib (first team test done, fix notes sent)
 
 ## Done
 
@@ -42,6 +42,7 @@ Both apps are now connected to the real backend (phone: #25, website: #18 and #2
 
 ## Waiting on someone else
 
+- First team test (2026-10-26) found 5 small problems, none in the backend. Rubaiya: log out lands on the sign-up page, and the sign-up screen has no Worker / Technician choice. Mithi: newest report not on top, colour of the all-busy message, and owner and manager cannot share one browser login. Notes are in `requests/rubaiya/` and `requests/mithi/` (2026-10-26). Then: a short second team test.
 - Rubaiya and Mithi: connect their sign-up screens and code pages to the real backend.
 - The full two-screen test needs Rubaiya (phone) and Mithi (website) at the same time.
 - A Bangla speaker: Bangla spellings of the test people and machines, and a read of the Bangla words.
