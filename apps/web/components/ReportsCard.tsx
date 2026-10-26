@@ -4,7 +4,7 @@
 //
 // The table of reports on the manager screens. It has two modes:
 //   - mode "queue" (Dashboard): only the reports that need a technician (waiting,
-//     nobody assigned), oldest first, because they have waited longest. Title
+//     nobody assigned), newest first, so a new report is always on top. Title
 //     "Needs attention" and a link to the Reports page. There is no Technician
 //     column here, because every row would only say "In the queue".
 //   - mode "all" (Reports page): every report, with filter tabs (All, Waiting,
@@ -45,9 +45,9 @@ type ReportsCardProps = {
 type Filter = 'all' | ReportStatus;
 const FILTERS: Filter[] = ['all', 'waiting', 'in_progress', 'resolved'];
 
-/** Queue first (oldest first), then the rest (newest first). */
+/** Queue first, then the rest. Both groups are newest first, so a new report is on top. */
 function orderForManager(reports: readonly Report[]): Report[] {
-  const queue = reports.filter(isInQueue).sort((a, b) => a.created_at.localeCompare(b.created_at));
+  const queue = reports.filter(isInQueue).sort((a, b) => b.created_at.localeCompare(a.created_at));
   const others = reports
     .filter((r) => !isInQueue(r))
     .sort((a, b) => b.created_at.localeCompare(a.created_at));

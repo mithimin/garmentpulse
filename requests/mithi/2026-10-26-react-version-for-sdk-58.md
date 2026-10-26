@@ -2,7 +2,8 @@
 
 - From: rubaiya
 - To: mithi
-- Status: open
+- Status: done
+- Done (2026-10-26, Mithi): website now uses React 19.3.0 (`react`, `react-dom`, `@types/react`). `npm run check` passes. `apps/mobile/metro.config.js` can be deleted by Rubaiya. Branch `fix/web-team-test-fixes`.
 
 ## What I need
 In `apps/web/package.json`, change `react` and `react-dom` from `19.2.3` to `19.3.0` (and `@types/react` if the website has it), then check the website still works.
