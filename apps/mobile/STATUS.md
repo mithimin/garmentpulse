@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-20 by Rubaiya's session
+**Last updated:** 2026-10-26 by Rubaiya's session
 
 ## Done
 
@@ -45,6 +45,8 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - Friendly sentences in English and Bangla for `INVALID_CODE`, `EMAIL_TAKEN`, `WRONG_PLATFORM` and `INVALID_INPUT` (`SIGNUP_ERROR_TEXT` in `screenText.ts`).
 
 - Bangla names (branch `features/mobile-signup`): every screen now shows a person's or machine's name through `src/language/localNames.ts`. In Bangla mode it uses `display_name_bn` / `name_bn` when the backend sends one, otherwise the English name. The backend does not send them yet, so names still look English until Sakib adds them.
+
+- Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. A new `metro.config.js` makes the app use its own React, because the website still uses React 19.2.3 (note left for Mithi in `requests/mithi/`).
 
 ## In progress
 
