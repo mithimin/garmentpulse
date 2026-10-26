@@ -9,7 +9,6 @@
 // of the manager and owner pages. The Settings button is always at the right end.
 // Owned by Mithi.
 
-import Link from 'next/link';
 import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
@@ -41,14 +40,16 @@ export function LoginBar({ activeRole }: { activeRole?: 'manager' | 'owner' }) {
         {activeRole ? (
           <div className="login-tabs">
             {LOGIN_TABS.map((tab) => (
-              <Link
+              // A plain link (full page load) on purpose: each portal keeps its own
+              // login storage name, which is chosen when the page loads (lib/backend.ts).
+              <a
                 key={tab.role}
                 href={tab.href}
                 className={tab.role === activeRole ? 'login-tab login-tab-active' : 'login-tab'}
                 aria-current={tab.role === activeRole ? 'page' : undefined}
               >
                 {ROLE_LABELS[tab.role][language]}
-              </Link>
+              </a>
             ))}
           </div>
         ) : null}

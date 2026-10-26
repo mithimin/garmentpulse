@@ -23,7 +23,8 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
-- Nothing right now. The website side of the MVP is DONE (2026-10-19, Mithi): login, dashboard and assign, owner screen, real sign-up with invite codes, and the owner and manager code pages all work on the real backend. Only the Bangla review (a Bangla speaker) and the team's full demo are left.
+- Team-test fixes (branch `fix/web-team-test-fixes`, 2026-10-26, checks pass, NOT yet tried on the real backend): reports are newest first on the manager pages; the "all technicians are busy" note has a gold border and bold text; the owner and the manager each keep their own login name in the browser (`lib/backend.ts`), so both can be logged in at once, and the Manager | Owner tabs on the login pages reload the page for that; the website now uses React 19.3.0 like the phone app.
+- Nothing else right now. The website side of the MVP is DONE (2026-10-19, Mithi): login, dashboard and assign, owner screen, real sign-up with invite codes, and the owner and manager code pages all work on the real backend. Only the Bangla review (a Bangla speaker) and the team's full demo are left.
 
 ## Next (in build order from `docs/mvp.md` section 4)
 

@@ -1145,6 +1145,9 @@ html {
   border-radius: 6px;
   background: var(--waiting-bg);
   color: var(--waiting-text);
+  border: 1px solid var(--bar-stitch);
+  border-left-width: 4px;
+  font-weight: 600;
 }
 .dialog-actions {
   display: flex;

@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
+- Done (2026-10-26, Mithi): all three. 1) Newest first in both groups (`orderForManager`). 2) The "all busy" note keeps the theme's waiting colours (amber `#f3e2b8` background, brown `#6e4e0e` text) and now has a gold `#d6ac68` border, a thicker gold left edge and bold text. 3) Each portal has its own login storage name (`garmentpulse-owner-auth` / `garmentpulse-manager-auth`, chosen from the address in `lib/backend.ts`), and the Manager | Owner tabs reload the page. Branch `fix/web-team-test-fixes`.
 
 ## What I need
 
