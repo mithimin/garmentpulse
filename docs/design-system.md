@@ -37,12 +37,12 @@ These were chosen by the team. The rest of this file follows them.
 
 | Topic | Decision |
 |---|---|
-| Colours per user | **4 colour families**: Manager blue, Owner dark red, Worker purple, Technician green |
+| Colours per user | **One blue look for everyone** (the Manager blue in 3.2). The Owner dark red, Worker purple and Technician green from the sample are **not used** (changed in October 2026, see section 14) |
 | Cloth look | **Light**: keep the stitch lines, keep backgrounds plain (no heavy fabric patterns) |
 | Status colours | **Same meaning for everyone** (yellow, blue, green), in soft shades that sit well on every user's colour |
 | Report statuses | **3 only**: Waiting, In progress, Resolved |
 | Expense statuses | **3 only**: Waiting, Approved, Rejected. A rejected expense stays in the list with the owner's short reason |
-| Fonts | The **manager dashboard fonts**: Cormorant Garamond, Jost, IBM Plex Mono |
+| Fonts | The **manager dashboard fonts**: Cormorant Garamond, Jost, IBM Plex Mono. **The phone app keeps the phone's normal font** and does not add these (decided 20 October 2026) |
 | Bangla font | The **device's own** Bangla font. No extra Bangla font is added |
 | Language | **One language at a time**, changed with a small switch in the top-right corner |
 | Numbers in Bangla | **Bangla digits** (২,৪০০). IDs such as `C-2041` always stay in English |
@@ -95,6 +95,8 @@ Every user type (called a **role**) has the same list of colour jobs. Only the c
 
 ### 3.3 Owner - dark red (web)
 
+> **Not used in the app.** The owner uses the Manager blue (3.2). This table is kept only as a record of the sample.
+
 | Colour job | Code | Notes |
 |---|---|---|
 | Page | `#4E1522` | Deep burgundy. Text placed straight on the page is light |
@@ -114,6 +116,8 @@ Every user type (called a **role**) has the same list of colour jobs. Only the c
 
 ### 3.4 Worker - purple (mobile)
 
+> **Not used in the app.** The phone app uses the Manager blue (3.2) for workers and technicians. This table is kept only as a record of the sample.
+
 | Colour job | Code | Notes |
 |---|---|---|
 | Page | `#E9E5EF` | Pale lilac |
@@ -130,6 +134,8 @@ Every user type (called a **role**) has the same list of colour jobs. Only the c
 | Link | `#5E2A5A` | |
 
 ### 3.5 Technician - green (mobile)
+
+> **Not used in the app.** The phone app uses the Manager blue (3.2) for workers and technicians. This table is kept only as a record of the sample.
 
 | Colour job | Code | Notes |
 |---|---|---|
@@ -512,6 +518,8 @@ The sample screens were a first try. The team then made choices that change a fe
 | Language | English and Bangla shown together on worker screens | One language at a time |
 | Bangla font | Hind Siliguri | The device's own Bangla font |
 | Phone buttons | 52 to 58 px tall | 48 px tall |
+| Colours per role | Manager blue, Owner dark red, Worker purple, Technician green | One blue look (the Manager blue) for every role, on the phone and on the web |
+| Phone fonts | Cormorant Garamond and Jost | The phone's normal font |
 | Small text in number boxes | Pale blue `#DCE4EC` | White `#FFFFFF`, because the pale blue was too hard to read |
 
 ---
@@ -520,6 +528,6 @@ The sample screens were a first try. The team then made choices that change a fe
 
 These are not final yet. The team should decide them before building the related screens.
 
-- **Owner web screen:** the colours (dark red) and the content are decided: one read-only list of all reports with three count boxes on top, and no menu links ([mvp.md](mvp.md) section 2.5). The screen itself has not been drawn yet.
+- **Owner web screen:** built. It uses the Manager blue and shows one read-only list of all reports with three count boxes on top ([mvp.md](mvp.md) section 2.5). The owner also has a second page for making manager invite codes.
 - **Camera / floor presence screens:** not in the first version ([mvp.md](mvp.md) section 3), so they are not covered here.
 - **Voice report player:** shown in the sample, but voice input is not in the first version, so it is not covered here.
