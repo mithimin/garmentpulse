@@ -9,8 +9,8 @@
 // a Bangla speaker on the team before release.
 // Owned by Rubaiya.
 
-import type { ApiErrorCode, ErrorCode, Language } from '@garmentpulse/shared';
-import { UNKNOWN_ERROR } from '@garmentpulse/shared';
+import type { ApiErrorCode, ErrorCode, Language, Role } from '@garmentpulse/shared';
+import { ROLE_LABELS, UNKNOWN_ERROR } from '@garmentpulse/shared';
 
 type Words = Record<Language, string>;
 
@@ -38,8 +38,8 @@ export const LOGIN_TEXT = {
 export const SIGNUP_TEXT = {
   title: { en: 'Create your account', bn: 'আপনার অ্যাকাউন্ট খুলুন' },
   intro: {
-    en: 'Ask your manager for an invite code. The code decides if you are a worker or a technician.',
-    bn: 'আপনার ম্যানেজারের কাছ থেকে একটি কোড নিন। কোড দেখেই ঠিক হয় আপনি শ্রমিক না টেকনিশিয়ান।',
+    en: 'Ask your manager for an invite code, then choose Worker or Technician to match the code.',
+    bn: 'আপনার ম্যানেজারের কাছ থেকে একটি কোড নিন, তারপর কোডের সাথে মিলিয়ে শ্রমিক বা টেকনিশিয়ান বেছে নিন।',
   },
   nameLabel: { en: 'Full name', bn: 'পুরো নাম' },
   nameHint: { en: 'Type your full name', bn: 'আপনার পুরো নাম লিখুন' },
@@ -50,6 +50,15 @@ export const SIGNUP_TEXT = {
   haveAccount: { en: 'Already have an account?', bn: 'আগেই অ্যাকাউন্ট আছে?' },
   goToLogin: { en: 'Log in', bn: 'লগ ইন' },
 } satisfies Record<string, Words>;
+
+/** Sentence for when the invite code is for the other role than the chosen button. */
+export const codeIsFor = (role: Role): Words => {
+  const word = ROLE_LABELS[role];
+  return {
+    en: `This code is for a ${word.en}. Please choose ${word.en} above.`,
+    bn: `এই কোডটি ${word.bn}-এর জন্য। অনুগ্রহ করে উপরে ${word.bn} বেছে নিন।`,
+  };
+};
 
 /**
  * Friendly sentences for the errors a sign-up can give. INVALID_CODE and
