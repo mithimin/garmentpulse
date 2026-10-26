@@ -40,7 +40,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
   - Tested on a real phone: login, reports, jobs and the back buttons work.
 
 - Sign-up with an invite code, built on branch `features/mobile-signup` (NOT tested on a phone yet):
-  - New screen `src/screens/SignUpScreen.tsx`: full name, email, password and invite code. No role choice: the code decides the role. Links between login and sign-up, and the Android back button goes back to login.
+  - New screen `src/screens/SignUpScreen.tsx`: full name, email, password and invite code. The code decides the role (see the "I am a" choice below). Links between login and sign-up, and the Android back button goes back to login.
   - `signUp` in `src/auth/realAuth.ts` uses the shared `signUpWithCode`. The person is logged in right away.
   - Friendly sentences in English and Bangla for `INVALID_CODE`, `EMAIL_TAKEN`, `WRONG_PLATFORM` and `INVALID_INPUT` (`SIGNUP_ERROR_TEXT` in `screenText.ts`).
 
@@ -48,7 +48,9 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 - Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. A new `metro.config.js` makes the app use its own React, because the website still uses React 19.2.3 (note left for Mithi in `requests/mithi/`).
 
-- Log out now goes to the login page, not the sign-up page (branch `fix/mobile-logout-to-login`, item 1 of Sakib's team-test note). Item 2 (the "I am a" choice on sign-up) is still open.
+- Log out now goes to the login page, not the sign-up page (branch `fix/mobile-logout-to-login`, item 1 of Sakib's team-test note). 
+
+- Sign-up now has the "I am a" Worker / Technician choice (branch `features/mobile-signup-role-choice`, item 2 of the same note; NOT tried on a phone yet). The invite code still decides the role. Before any account is made, the app asks the code (`check_invite_code`) and, if the code is for the other role, shows "This code is for a technician. Please choose Technician above." (English and Bangla, `codeIsFor` in `screenText.ts`). No new backend function or error code.
 
 ## In progress
 

@@ -4,8 +4,10 @@
 // screen (same blue top bar, language switch and stitched card) and has four
 // boxes: full name, email, password and invite code.
 //
-// There is NO "who are you?" choice. The invite code a manager gives decides
-// whether the new person is a worker or a technician (docs/api-contract.md 4.7).
+// An "I am a" Worker / Technician chooser sits at the top, like on the login
+// screen. The invite code still decides the real role (docs/api-contract.md 4.7);
+// the chooser is only checked against it. If they differ, we stop before any
+// account is made and say which button to press.
 //
 // What happens when the person presses "Sign up":
 //   1. We call `signUp` and show "Loading…" while we wait.
@@ -27,15 +29,25 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { getApiErrorCode } from '@garmentpulse/shared';
-import type { ApiErrorCode, Profile } from '@garmentpulse/shared';
-import { signUp } from '../auth/realAuth';
+import { ROLE_LABELS, getApiErrorCode } from '@garmentpulse/shared';
+import type { ApiErrorCode, Profile, Role } from '@garmentpulse/shared';
+import { RoleMismatchError, signUp } from '../auth/realAuth';
 import { LanguageSwitch } from '../components/LanguageSwitch';
 import { Logo } from '../components/Logo';
 import { useBackAction } from '../components/useBackAction';
 import { useLanguage } from '../language/LanguageContext';
-import { ERROR_TEXT, LOGIN_TEXT, SIGNUP_ERROR_TEXT, SIGNUP_TEXT } from '../language/screenText';
+import {
+  ERROR_TEXT,
+  LOGIN_TEXT,
+  SIGNUP_ERROR_TEXT,
+  SIGNUP_TEXT,
+  codeIsFor,
+} from '../language/screenText';
 import { COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
+
+/** The two roles that may use the phone app. */
+type ChoosableRole = Extract<Role, 'worker' | 'technician'>;
+const CHOOSABLE_ROLES: readonly ChoosableRole[] = ['worker', 'technician'];
 
 type Props = {
   /** Called with the new person's profile once sign-up works (they are logged in). */
@@ -52,17 +64,26 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorCode, setErrorCode] = useState<ApiErrorCode | null>(null);
+  // Which kind of person is signing up. Workers are the most common, so it starts there.
+  const [chosenRole, setChosenRole] = useState<ChoosableRole>('worker');
+  // Set when the code is for the other role; holds the code's role for the sentence.
+  const [codeRole, setCodeRole] = useState<Role | null>(null);
 
   useBackAction(onGoToLogin);
 
   async function handleSignUp() {
     if (loading) return;
     setErrorCode(null);
+    setCodeRole(null);
     setLoading(true);
     try {
-      onSignedUp(await signUp({ fullName, email, password, code }));
+      onSignedUp(await signUp({ fullName, email, password, code, chosenRole }));
     } catch (error) {
-      setErrorCode(getApiErrorCode(error));
+      if (error instanceof RoleMismatchError) {
+        setCodeRole(error.codeRole);
+      } else {
+        setErrorCode(getApiErrorCode(error));
+      }
       setLoading(false);
     }
   }
@@ -73,7 +94,9 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
       (errorCode in ERROR_TEXT
         ? ERROR_TEXT[errorCode as keyof typeof ERROR_TEXT]
         : ERROR_TEXT.UNKNOWN))
-    : null;
+    : codeRole
+      ? codeIsFor(codeRole)
+      : null;
 
   return (
     <KeyboardAvoidingView
@@ -95,6 +118,28 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
           </View>
           <Text style={styles.title}>{SIGNUP_TEXT.title[language]}</Text>
           <Text style={styles.intro}>{SIGNUP_TEXT.intro[language]}</Text>
+
+          {/* Worker / Technician chooser. The chosen one is filled in with the main colour. */}
+          <Text style={styles.label}>{LOGIN_TEXT.roleLabel[language]}</Text>
+          <View style={styles.roleRow} accessibilityRole="radiogroup">
+            {CHOOSABLE_ROLES.map((role) => {
+              const chosen = role === chosenRole;
+              return (
+                <Pressable
+                  key={role}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: chosen }}
+                  disabled={loading}
+                  onPress={() => setChosenRole(role)}
+                  style={[styles.roleButton, chosen && styles.roleButtonChosen]}
+                >
+                  <Text style={[styles.roleText, chosen && styles.roleTextChosen]}>
+                    {ROLE_LABELS[role][language]}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
 
           <Text style={styles.label}>{SIGNUP_TEXT.nameLabel[language]}</Text>
           <TextInput
@@ -235,6 +280,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: { color: C.text, fontSize: 13, fontWeight: '600', marginBottom: 4 },
+  roleRow: { flexDirection: 'row', gap: 8, marginBottom: 16 },
+  roleButton: {
+    flex: 1,
+    height: SIZES.buttonHeight,
+    backgroundColor: '#F7F9FB',
+    borderColor: S.inputBorder,
+    borderWidth: 1,
+    borderRadius: SIZES.buttonRadius,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roleButtonChosen: { backgroundColor: C.mainButton, borderColor: C.mainButtonBorder },
+  roleText: { color: C.text, fontSize: 16, fontWeight: '600' },
+  roleTextChosen: { color: C.mainButtonText },
   input: {
     height: SIZES.inputHeight,
     backgroundColor: S.white,

@@ -14,7 +14,7 @@
 // Owned by Rubaiya.
 
 import { ApiError, PLATFORM_FOR_ROLE, signUpWithCode } from '@garmentpulse/shared';
-import type { Profile } from '@garmentpulse/shared';
+import type { Profile, Role } from '@garmentpulse/shared';
 import { api, supabase } from '../backend/supabase';
 
 export async function login(email: string, password: string): Promise<Profile> {
@@ -55,8 +55,25 @@ export async function signUp(input: {
   email: string;
   password: string;
   code: string;
+  /** The button the person chose (Worker or Technician). */
+  chosenRole: 'worker' | 'technician';
 }): Promise<Profile> {
-  return signUpWithCode(supabase, { platform: 'mobile', ...input });
+  const { chosenRole, ...rest } = input;
+  // Ask the code first (it is not used up by asking). If it is for the other
+  // phone role, stop BEFORE any account is made. Website codes fall through to
+  // signUpWithCode, which refuses them with WRONG_PLATFORM.
+  const { role } = await api.checkInviteCode(rest.code);
+  if ((role === 'worker' || role === 'technician') && role !== chosenRole) {
+    throw new RoleMismatchError(role);
+  }
+  return signUpWithCode(supabase, { platform: 'mobile', ...rest });
+}
+
+/** Thrown when the invite code is for the other phone role than the one chosen. */
+export class RoleMismatchError extends Error {
+  constructor(public readonly codeRole: Role) {
+    super('ROLE_MISMATCH');
+  }
 }
 
 /** Logs the person out of the backend. */
