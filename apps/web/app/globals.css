@@ -1002,6 +1002,18 @@ html {
 .card-list .card-head h2 {
   color: #ffffff;
 }
+/* The empty message ("Nothing needs attention") sits straight on the navy, so its words
+   are white, with a soft dark shadow to keep them sharp, and the heading has a dashed
+   gold line under it, like a row of stitches. */
+.card-list .state h3,
+.card-list .state p {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(12, 18, 36, 0.7);
+}
+.card-list .state h3 {
+  text-decoration: underline dashed var(--bar-stitch) 2px;
+  text-underline-offset: 8px;
+}
 .card-list .card-link {
   color: #e8d6a6;
 }
