@@ -48,6 +48,8 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 - Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. A new `metro.config.js` makes the app use its own React, because the website still uses React 19.2.3 (note left for Mithi in `requests/mithi/`).
 
+- Log out now goes to the login page, not the sign-up page (branch `fix/mobile-logout-to-login`, item 1 of Sakib's team-test note). Item 2 (the "I am a" choice on sign-up) is still open.
+
 ## In progress
 
 - Testing sign-up on a real phone with a code from a manager (or from Sakib).

@@ -27,6 +27,8 @@ export default function App() {
   const [showSignUp, setShowSignUp] = useState(false);
   const logout = () => {
     setProfile(null);
+    // After logging out, always land on the login page (not the sign-up page).
+    setShowSignUp(false);
     void backendLogout();
   };
 
