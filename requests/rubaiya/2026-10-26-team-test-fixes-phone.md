@@ -11,6 +11,8 @@
 
 If the team prefers to keep the code as the only thing that decides the role (no choice), tell me and ignore item 2.
 
+Progress: item 1 (log out to the login page) is done. Item 2 is still open.
+
 ## Why
 
 Both were found by all three of us in the full team test on 2026-10-26.
