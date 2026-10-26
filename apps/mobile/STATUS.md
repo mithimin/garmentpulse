@@ -46,11 +46,11 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 - Bangla names (branch `features/mobile-signup`): every screen now shows a person's or machine's name through `src/language/localNames.ts`. In Bangla mode it uses `display_name_bn` / `name_bn` when the backend sends one, otherwise the English name. The backend does not send them yet, so names still look English until Sakib adds them.
 
-- Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. A new `metro.config.js` makes the app use its own React, because the website still uses React 19.2.3 (note left for Mithi in `requests/mithi/`).
+- Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. The extra `metro.config.js` was removed again once the website moved to React 19.3.0, so the whole repo now has one React.
 
-- Log out now goes to the login page, not the sign-up page (branch `fix/mobile-logout-to-login`, item 1 of Sakib's team-test note). 
+- Log out now goes to the login page, not the sign-up page (item 1 of Sakib's team-test note; tried on a phone, merged). 
 
-- Sign-up now has the "I am a" Worker / Technician choice (branch `features/mobile-signup-role-choice`, item 2 of the same note; NOT tried on a phone yet). The invite code still decides the role. Before any account is made, the app asks the code (`check_invite_code`) and, if the code is for the other role, shows "This code is for a technician. Please choose Technician above." (English and Bangla, `codeIsFor` in `screenText.ts`). No new backend function or error code.
+- Sign-up now has the "I am a" Worker / Technician choice (item 2 of the same note; tried on a phone, merged). The invite code still decides the role. Before any account is made, the app asks the code (`check_invite_code`) and, if the code is for the other role, shows "This code is for a technician. Please choose Technician above." (English and Bangla, `codeIsFor` in `screenText.ts`). No new backend function or error code.
 
 ## In progress
 

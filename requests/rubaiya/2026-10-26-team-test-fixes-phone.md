@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -11,7 +11,7 @@
 
 If the team prefers to keep the code as the only thing that decides the role (no choice), tell me and ignore item 2.
 
-Progress: item 1 (log out to the login page) and item 2 (the Worker / Technician choice on sign-up) are both built. Waiting for the pull requests to be merged.
+Done (2026-10-26): item 1 (log out to the login page, #66) and item 2 (the Worker / Technician choice on sign-up, #68) are both merged.
 
 ## Why
 
