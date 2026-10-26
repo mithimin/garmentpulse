@@ -46,7 +46,7 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 - Bangla names (branch `features/mobile-signup`): every screen now shows a person's or machine's name through `src/language/localNames.ts`. In Bangla mode it uses `display_name_bn` / `name_bn` when the backend sends one, otherwise the English name. The backend does not send them yet, so names still look English until Sakib adds them.
 
-- Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds and `npm run check` passes. NOT tried on a phone yet. The extra `metro.config.js` was removed again once the website moved to React 19.3.0, so the whole repo now has one React.
+- Upgraded to Expo SDK 58 (branch `chore/upgrade-expo-sdk-58`), because Expo Go no longer ran SDK 57: Expo 58, React 19.3.0, React Native 0.88.0. The app builds, `npm run check` passes, and it runs in Expo Go on a phone. The extra `metro.config.js` was removed again once the website moved to React 19.3.0, so the whole repo now has one React.
 
 - Log out now goes to the login page, not the sign-up page (item 1 of Sakib's team-test note; tried on a phone, merged). 
 
