@@ -1,0 +1,59 @@
+# .github/workflows/supabase-keep-alive.yml
+#
+# Keeps the Supabase project awake.
+#
+# Why: the free Supabase plan PAUSES a project that has had no activity for
+# about 7 days. A paused project makes both apps stop working until someone
+# restores it by hand. This robot asks the database one small, harmless
+# question every 3 days, so the project always counts as "in use".
+#
+# What it does: it calls the backend function `check_invite_code` with a made-up
+# code. That function works before login, only READS, and writes nothing. The
+# database answers "INVALID_CODE", which is exactly the answer we want: it proves
+# the database was reached and ran our function.
+#
+# Setup (done once by Sakib, in GitHub: Settings, Secrets and variables, Actions):
+#   SUPABASE_URL       the project web address (https://xxxx.supabase.co)
+#   SUPABASE_ANON_KEY  the PUBLIC anon key (never the service-role key)
+# If a secret is missing the robot says so and stops without a failure.
+#
+# Run it by hand any time: GitHub, Actions, "Supabase keep-alive", Run workflow.
+# Note: GitHub switches scheduled robots off after 60 days with no activity in
+# the repository. Any commit or pull request switches them back on.
+# Owned by Sakib.
+
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: '17 5 */3 * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask the database one harmless question
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "The two secrets SUPABASE_URL and SUPABASE_ANON_KEY are not set yet. Nothing was sent."
+            exit 0
+          fi
+          status=$(curl -s -o response.txt -w '%{http_code}' \
+            -X POST "${SUPABASE_URL%/}/rest/v1/rpc/check_invite_code" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"code":"KEEPALIVE0"}')
+          echo "HTTP status: $status"
+          # A wrong code is refused with INVALID_CODE: that means the database answered.
+          if grep -q "INVALID_CODE" response.txt; then
+            echo "The database answered (INVALID_CODE). The project is awake."
+            exit 0
+          fi
+          echo "Unexpected answer. The project may be paused or the secrets are wrong."
+          cat response.txt
+          exit 1
