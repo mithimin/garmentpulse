@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the website. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-19 by Mithi's session
+**Last updated:** 2026-11-02 by Mithi's session
 
 ## Done
 
@@ -23,6 +23,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
+- Machine map (branch `features/web-machine-map`, 2026-11-02, checks pass, looked at in a browser with fake data, NOT pushed): a new manager page `/manager/machines` with a "Machines" link in the sidebar (after Dashboard). Mithi asked to REMOVE the manager's written reports, so the "Reports" menu link (with its number bubble), the "Reports" card on the Dashboard and the manager's `/manager/reports` page are gone; the machine map replaces them. The owner's read-only report list is unchanged. The same map is also on the Dashboard (between the count boxes and the Technicians card) with 2 rows: because the data has only 5 machines, the rest of the 12 spots are filled with DUMMY machines that look like running machines (`fillWithDummies` in `data/machineSeats.ts`; they are made up, not in the backend, and count in the chips). Every machine is a small sewing machine on a cinema-style seat plan (rows of six, named A1, A2 ...). Red and flashing = down (queue), amber = technician assigned, blue = in progress, green = running. A new red machine beeps (needs one click on the page first). Click red machines to select them, then "Assign technician" opens the normal Assign pop-up. Files: `components/MachineMap.tsx`, `data/machineSeats.ts`, `app/manager/machines/page.tsx`, styles at the end of `app/globals.css`, `useMachines` in `data/useDashboardData.ts`. In fake mode only, a "Demo" button pretends a worker reported (`addFakeReport` in `data/fakeStore.ts`). The machine code is made from the seat name until the backend sends a real one (note to Sakib: `requests/sakib/2026-11-02-machine-code.md`). Bangla words are a draft. If `npm run dev` stops on a Baloo Da 2 font error, run `npm run dev --workspace @garmentpulse/web -- --webpack`.
 - Team-test fixes (branch `fix/web-team-test-fixes`, 2026-10-26, checks pass, NOT yet tried on the real backend): reports are newest first on the manager pages; the "all technicians are busy" note has a gold border and bold text; the owner and the manager each keep their own login name in the browser (`lib/backend.ts`), so both can be logged in at once, and the Manager | Owner tabs on the login pages reload the page for that; the website now uses React 19.3.0 like the phone app.
 - Nothing else right now. The website side of the MVP is DONE (2026-10-19, Mithi): login, dashboard and assign, owner screen, real sign-up with invite codes, and the owner and manager code pages all work on the real backend. Only the Bangla review (a Bangla speaker) and the team's full demo are left.
 
@@ -35,6 +36,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Waiting on someone else
 
+- Sakib: a real machine `code` field (note: `requests/sakib/2026-11-02-machine-code.md`).
 - Sakib: the Bangla names in the backend. Note: `requests/mithi/2026-10-19-bangla-names-accepted.md`.
 - A Bangla speaker: the Bangla spellings of the test names and a read of the Bangla words.
 

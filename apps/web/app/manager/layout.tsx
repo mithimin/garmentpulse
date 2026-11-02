@@ -16,12 +16,11 @@
 
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { KeyRound, LayoutDashboard, Users, Wrench } from 'lucide-react';
-import { isInQueue } from '@garmentpulse/shared';
+import { Cog, KeyRound, LayoutDashboard, Users } from 'lucide-react';
 import { RoleGate } from '../../auth/RoleGate';
 import type { MenuItem } from '../../components/Sidebar';
 import { SidebarShell } from '../../components/SidebarShell';
-import { ManagerDataProvider, useManagerData } from '../../data/ManagerData';
+import { ManagerDataProvider } from '../../data/ManagerData';
 import { useLanguage } from '../../language/LanguageContext';
 import { screenText } from '../../language/screenText';
 
@@ -38,8 +37,6 @@ export default function ManagerLayout({ children }: { children: ReactNode }) {
 function ManagerFrame({ children }: { children: ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
-  const { reports } = useManagerData();
-  const queueCount = (reports.data ?? []).filter(isInQueue).length;
   const menu: MenuItem[] = [
     {
       label: screenText('menuDashboard', language),
@@ -48,11 +45,10 @@ function ManagerFrame({ children }: { children: ReactNode }) {
       active: pathname === '/manager',
     },
     {
-      label: screenText('menuReports', language),
-      href: '/manager/reports',
-      icon: <Wrench size={18} strokeWidth={1.8} aria-hidden="true" />,
-      count: queueCount,
-      active: pathname.startsWith('/manager/reports'),
+      label: screenText('menuMachines', language),
+      href: '/manager/machines',
+      icon: <Cog size={18} strokeWidth={1.8} aria-hidden="true" />,
+      active: pathname.startsWith('/manager/machines'),
     },
     {
       label: screenText('menuTechnicians', language),

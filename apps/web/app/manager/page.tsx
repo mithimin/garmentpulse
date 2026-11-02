@@ -7,8 +7,11 @@
 //     are waiting for a technician (the queue),
 //   - four count boxes: New reports, In progress, Resolved today, Free technicians
 //     (data/stats.ts says how they are worked out),
-//   - "Needs attention": only the queue, with an Assign button, and a compact
-//     technicians panel. The full lists are on the Reports and Technicians pages.
+//   - the MACHINE MAP (components/MachineMap.tsx, two rows filled up with dummy machines): a broken machine flashes red
+//     and beeps, and the manager picks it and assigns a free technician,
+//   - a compact technicians panel. The full list is on the Technicians page.
+//     (The written list of reports was removed: broken machines are shown on the
+//     Machines page, app/manager/machines/page.tsx.)
 // The top bar and the role door come from app/manager/layout.tsx.
 // Owned by Mithi.
 
@@ -16,9 +19,11 @@ import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared
 import { useAuth } from '../../auth/AuthContext';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
-import { ReportsCard } from '../../components/ReportsCard';
+import { MachineMap } from '../../components/MachineMap';
 import { TechniciansPanel } from '../../components/TechniciansPanel';
+import { buildSeats, fillWithDummies } from '../../data/machineSeats';
 import { useManagerData } from '../../data/ManagerData';
+import { useMachines } from '../../data/useDashboardData';
 import {
   averageFixMs,
   countFree,
@@ -36,6 +41,7 @@ export default function DashboardPage() {
   const { profile } = useAuth();
   const { language } = useLanguage();
   const { reports, technicians, reloadAll } = useManagerData();
+  const machines = useMachines();
   const list = reports.data ?? [];
   const summary = summarizeReports(list);
   const queueCount = list.filter(isInQueue).length;
@@ -113,18 +119,30 @@ export default function DashboardPage() {
         />
       </div>
 
+      <DataGate state={machines}>
+        {(machineList) => (
+          <DataGate state={reports}>
+            {(rows) => (
+              <DataGate state={technicians}>
+                {(people) => (
+                  <MachineMap
+                    seats={fillWithDummies(buildSeats(machineList, rows), 2)}
+                    technicians={people}
+                    onChanged={reloadAll}
+                  />
+                )}
+              </DataGate>
+            )}
+          </DataGate>
+        )}
+      </DataGate>
+
       <div className="dashboard-grid">
         <DataGate state={reports}>
           {(rows) => (
             <DataGate state={technicians}>
               {(people) => (
                 <>
-                  <ReportsCard
-                    mode="queue"
-                    reports={rows}
-                    technicians={people}
-                    onAssigned={reloadAll}
-                  />
                   <TechniciansPanel technicians={people} reports={rows} />
                 </>
               )}

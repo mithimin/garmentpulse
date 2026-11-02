@@ -7,9 +7,11 @@
 // menu links, and the page content beside it. The manager pages and the owner
 // pages both use it, so the two roles behave the same way.
 // On a big screen (tablet and up) the sidebar PUSHES the page, so the page is
-// always fully visible beside it. On a phone it SLIDES OVER the page and closes
-// when you pick a page or tap outside. The big-screen choice (open or closed) is
-// remembered in this browser. Owned by Mithi.
+// always fully visible beside it. On a phone it SLIDES OVER the page and also closes
+// when you tap outside. On EVERY screen size the sidebar folds again as soon as its
+// work is done, that is when a menu page is picked. Only the button in the top bar
+// (not this automatic folding) is remembered in this browser, so the sidebar still
+// starts open on a big screen. Owned by Mithi.
 
 import { useState } from 'react';
 import type { ReactNode } from 'react';
@@ -68,13 +70,7 @@ export function SidebarShell({ role, menu, children }: SidebarShellProps) {
       <div className={open ? 'shell shell-open' : 'shell'}>
         {open ? (
           <>
-            <Sidebar
-              menu={menu}
-              onLogOut={logOut}
-              onNavigate={() => {
-                if (isPhone()) setOpen(false);
-              }}
-            />
+            <Sidebar menu={menu} onLogOut={logOut} onNavigate={() => setOpen(false)} />
             {/* On a phone the sidebar covers the page, so a tap outside closes it. */}
             <div className="sidebar-backdrop" onClick={() => setOpen(false)} aria-hidden="true" />
           </>
