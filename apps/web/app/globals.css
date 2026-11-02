@@ -2166,3 +2166,41 @@ html[lang='bn'] .map-desk {
   padding-top: var(--space-3);
   border-top: 1px dashed var(--card-border);
 }
+
+/* The heading strip on top of the Machine map card on the Dashboard. It copies the look of the
+   Technicians card (soft navy, 80% solid, a beige stitch line set in from the edge, white
+   words). The heading is in the middle, with the "machines are down" line under it. It reaches
+   the edges of the card. */
+.map-banner {
+  position: relative;
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  border-radius: 23px 23px 0 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  text-align: center;
+  background: rgba(42, 59, 99, 0.8);
+  color: #ffffff;
+}
+.map-banner::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed #e8d8b5;
+  border-radius: 16px;
+  pointer-events: none;
+}
+.map-banner .map-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+}
+.map-banner .map-down-line {
+  color: #ffffff;
+  font-weight: 500;
+}

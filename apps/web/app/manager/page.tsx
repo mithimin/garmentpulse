@@ -129,6 +129,7 @@ export default function DashboardPage() {
                     seats={fillWithDummies(buildSeats(machineList, rows), 2)}
                     technicians={people}
                     onChanged={reloadAll}
+                    title={screenText('mapTitle', language)}
                   />
                 )}
               </DataGate>

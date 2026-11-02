@@ -82,9 +82,11 @@ type MachineMapProps = {
   technicians: readonly Technician[];
   /** Asks the page to reload its lists (after an assign, or after the demo report). */
   onChanged: () => void;
+  /** A heading for the card (white on a denim strip). The Machines page has its own page title, so it leaves this out. */
+  title?: string;
 };
 
-export function MachineMap({ seats, technicians, onChanged }: MachineMapProps) {
+export function MachineMap({ seats, technicians, onChanged, title }: MachineMapProps) {
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -181,7 +183,8 @@ export function MachineMap({ seats, technicians, onChanged }: MachineMapProps) {
   return (
     <div className="map-layout">
       <Card className="map-card">
-        <div className="card-head">
+        <div className={title ? 'card-head map-banner' : 'card-head'}>
+          {title ? <h2 className="map-title">{title}</h2> : null}
           <p className="map-down-line" aria-live="polite">
             {downSeats.length === 0
               ? screenText('downCountNone', language)
