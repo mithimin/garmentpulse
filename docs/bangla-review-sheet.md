@@ -378,12 +378,12 @@ A Bangla speaker filled in the short version of this sheet (Parts A, B, C and G)
 | 10 | yes | **রিপোর্টের সময়** |
 | 11 | yes | **টেকনিশিয়ান দেওয়া হয়েছে** |
 | 12 | own version | **আমার রিপোর্টে** |
-| 13 | **not answered**: the speaker asked for the original English sentence | The English is: "This account is for the other role. Please choose the other button above." Ask again. |
+| 13 | **not answered, skipped on purpose (2026-11-02)**: the speaker asked for the original English sentence | The English is: "This account is for the other role. Please choose the other button above." The phone keeps its draft wording. Nothing depends on it. |
 | 14 | own version | **কাজটি নিন** for the Accept button; the other two accept texts to follow it, for example *নতুন: কাজটি নিন* and *কাজ নেওয়া হয়েছে* (to confirm) |
 | 15 | own version | **এখন ব্যবহার করার মতো কোনো কোড নেই** |
 | 16 | own version | **মেশিনের চিহ্নটি ঝলকাচ্ছে**, for example *ফ্লোরের প্রতিটি মেশিন। যে মেশিনের চিহ্নটি লাল হয়ে ঝলকাচ্ছে, সেখানে টেকনিশিয়ান লাগবে।* (to confirm) |
 
-**Still to read:** Parts D, E and F, and the open question in Part G row 13.
+**Still to read:** Parts D, E and F. Part G row 13 was skipped on purpose, and the draft stays.
 
 ---
 
