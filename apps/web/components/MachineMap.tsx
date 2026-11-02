@@ -185,7 +185,10 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
       <Card className="map-card">
         <div className={title ? 'card-head map-banner' : 'card-head'}>
           {title ? <h2 className="map-title">{title}</h2> : null}
-          <p className="map-down-line" aria-live="polite">
+          <p
+            className={downSeats.length === 0 ? 'map-down-line map-down-none' : 'map-down-line'}
+            aria-live="polite"
+          >
             {downSeats.length === 0
               ? screenText('downCountNone', language)
               : downSeats.length === 1

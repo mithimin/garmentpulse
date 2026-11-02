@@ -2200,7 +2200,41 @@ html[lang='bn'] .map-desk {
   line-height: 1.1;
   color: #ffffff;
 }
+/* "N machines are down" is a small box on the right side of the strip: glowing cloth blue when
+   something is down, a calm light colour when nothing is. On a narrow screen it drops under the heading. */
 .map-banner .map-down-line {
+  position: absolute;
+  top: 50%;
+  right: var(--space-6);
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: 8px;
+  /* cloth blue (with the fine crosshatch of the cloth) and a glowing blue edge */
+  background-color: #617ca9;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px);
+  border: 1px solid #a9c8ff;
+  box-shadow:
+    0 0 8px 1px rgba(110, 170, 255, 0.75),
+    0 0 20px 4px rgba(90, 150, 255, 0.4);
   color: #ffffff;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-shadow: none;
+}
+.map-banner .map-down-line.map-down-none {
+  background: #eef2f6;
+  border-color: #c9d2de;
+  box-shadow: none;
+  color: #26324f;
+}
+@media (max-width: 640px) {
+  .map-banner .map-down-line {
+    position: static;
+    transform: none;
+    margin-top: var(--space-2);
+  }
 }
