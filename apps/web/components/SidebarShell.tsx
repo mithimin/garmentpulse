@@ -9,11 +9,12 @@
 // On a big screen (tablet and up) the sidebar PUSHES the page, so the page is
 // always fully visible beside it. On a phone it SLIDES OVER the page and also closes
 // when you tap outside. On EVERY screen size the sidebar folds again as soon as its
-// work is done, that is when a menu page is picked. Only the button in the top bar
+// work is done (a menu page is picked) and also when you click or tap anywhere else
+// on the screen, even if you never used the sidebar. Only the button in the top bar
 // (not this automatic folding) is remembered in this browser, so the sidebar still
 // starts open on a big screen. Owned by Mithi.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Role } from '@garmentpulse/shared';
 import { useAuth } from '../auth/AuthContext';
@@ -51,6 +52,20 @@ export function SidebarShell({ role, menu, children }: SidebarShellProps) {
   // This frame only draws in the browser (after the role door), so reading the
   // screen size here is safe.
   const [open, setOpen] = useState(startOpen);
+
+  // While the sidebar is open, a click or tap ANYWHERE outside it folds it. The toggle
+  // button in the top bar is left out, because it opens and closes the sidebar itself.
+  useEffect(() => {
+    if (!open) return;
+    function foldOnOutsideClick(event: PointerEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('.sidebar') || target.closest('[data-sidebar-toggle]')) return;
+      setOpen(false);
+    }
+    document.addEventListener('pointerdown', foldOnOutsideClick);
+    return () => document.removeEventListener('pointerdown', foldOnOutsideClick);
+  }, [open]);
 
   function toggle() {
     const next = !open;

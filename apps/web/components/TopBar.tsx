@@ -39,6 +39,7 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
           <button
             type="button"
             className="icon-btn"
+            data-sidebar-toggle="true"
             aria-label={screenText('sidebarToggle', language)}
             aria-expanded={sidebarOpen}
             onClick={onToggleSidebar}
