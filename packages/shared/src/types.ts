@@ -50,11 +50,13 @@ export type Machine = {
   name: string;
   /** The machine's name in Bangla letters, if one was written. */
   name_bn?: BanglaName;
+  /** A short unique code such as "SM-01", if one was written. `null` when none. */
+  code?: string | null;
 };
 
 export type Report = {
   id: string;
-  machine: { id: string; name: string; name_bn?: BanglaName };
+  machine: { id: string; name: string; name_bn?: BanglaName; code?: string | null };
   /** The worker's typed description of the problem. */
   description: string;
   status: ReportStatus;

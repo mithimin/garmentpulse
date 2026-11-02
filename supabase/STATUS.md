@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-10-26 by Sakib (first team test done, fix notes sent)
+**Last updated:** 2026-11-02 by Sakib (machine codes built, not run yet)
 
 ## Done
 
@@ -16,7 +16,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
   - Security rules: who may see which report; live updates (Realtime) switched on for `reports`.
   - **All 12 functions from `docs/api-contract.md`** with the exact names, inputs and error codes: `get_my_profile`, `list_machines`, `create_report`, `list_my_reports`, `list_reports`, `get_report`, `list_technicians`, `assign_technician`, `list_my_jobs`, `accept_job`, `update_job_status`, `get_owner_summary`.
   - Test data in `supabase/seed.sql`: 5 people, 5 machines, 4 reports.
-  - A rules check in `supabase/tests/api_rules_check.sql` (run by hand in the SQL Editor). It has **126 checks** and all pass: 49 for the reports flow, 26 for the invite code functions, 26 for the sign-up guard, and 25 for the Bangla names. It expects the clean seed data, so run `supabase/reset_demo_data.sql` (it clears reports **and** leftover invite codes) and then `supabase/seed.sql` first; reports or unused codes made by hand change the counts.
+  - A rules check in `supabase/tests/api_rules_check.sql` (run by hand in the SQL Editor). It has **132 checks**: 49 for the reports flow, 26 for the invite code functions, 26 for the sign-up guard, 25 for the Bangla names and 6 for the machine codes (the 6 newest have not been run yet). It expects the clean seed data, so run `supabase/reset_demo_data.sql` (it clears reports **and** leftover invite codes) and then `supabase/seed.sql` first; reports or unused codes made by hand change the counts.
   - A **real client check** (`supabase/tests/real_client.check.ts`, started with `node supabase/tests/run_real_check.mjs`): it logs in like the real apps and calls everything through `createApi`. Last run (2026-10-21): **all 30 checks passed** (16 for logins, roles and live updates, plus 12 for sign-up with invite codes). A new report reached the manager in about **0.5 seconds** (the rule is 5), and an unrelated technician did not receive it. Once, a run showed no live updates at all and the next run was fine again, so a hiccup on Supabase's side is possible. Each run leaves one report and a few pretend sign-ups; the run prints the lines that delete them.
   - A bug found by that check and fixed: any worker or technician could open a report that was still in the queue. See migration `20261018100000_fix_get_report_queue.sql`.
   - **Sign-up with invite codes: the backend part is built and tested** (migrations `20261019100000` to `20261019120000`): the locked `invite_codes` table; `create_invite_code`, `list_invite_codes` and `check_invite_code` (the last one also works before login); and a **sign-up guard** on the login list. A new account is accepted only with a good invite code (the role comes from the code, never from the person) or with an email that Sakib pre-approved in the locked `approved_accounts` table (owner and test accounts; see `supabase/approve_test_accounts.sql`). Anything else is refused and no account is created.
@@ -28,7 +28,7 @@ This is the "where are we?" page for the backend and the shared toolbox. The roo
 
 ## In progress
 
-- Nothing right now.
+- **Machine codes** (branch `features/machine-codes`, asked for by Mithi for the Machine map): migration `20261102100000_machine_codes.sql` adds an optional unique `code` to machines (`SM-01`, `SM-02`, `SM-14`, `CM-03`, `PM-01`), sent in `list_machines()` and in every report as `machine.code`. The seed, the shared types and fake data, the contract (section 3) and the rules check (6 new checks, 132 in all) are updated. NOT yet run on the real project: first run the migration, then reset, seed and the rules check, then the real client check.
 
 ## Next
 

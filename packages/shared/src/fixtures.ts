@@ -16,11 +16,11 @@ import type { Machine, Profile, Report, Technician } from './types';
 import { computeAvailability } from './helpers';
 
 export const FAKE_MACHINES: Machine[] = [
-  { id: 'm-01', name: 'Sewing machine 01' },
-  { id: 'm-02', name: 'Sewing machine 02' },
-  { id: 'm-14', name: 'Sewing machine 14' },
-  { id: 'c-03', name: 'Cutting machine 03' },
-  { id: 'p-01', name: 'Pressing machine 01' },
+  { id: 'm-01', name: 'Sewing machine 01', code: 'SM-01' },
+  { id: 'm-02', name: 'Sewing machine 02', code: 'SM-02' },
+  { id: 'm-14', name: 'Sewing machine 14', code: 'SM-14' },
+  { id: 'c-03', name: 'Cutting machine 03', code: 'CM-03' },
+  { id: 'p-01', name: 'Pressing machine 01', code: 'PM-01' },
 ];
 
 export const FAKE_PEOPLE: Profile[] = [
@@ -42,7 +42,7 @@ const person = (id: string) => {
 const machine = (id: string) => {
   const m = FAKE_MACHINES.find((x) => x.id === id);
   if (!m) throw new Error(`Unknown fake machine: ${id}`);
-  return { id: m.id, name: m.name };
+  return { id: m.id, name: m.name, code: m.code };
 };
 
 export const FAKE_REPORTS: Report[] = [

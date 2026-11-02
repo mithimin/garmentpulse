@@ -18,8 +18,8 @@ The **backend** is the hidden part of GarmentPulse that stores information and e
 
 | Where | What is in it |
 |---|---|
-| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions, the sign-up guard, Bangla names). The newest file is the last change. |
-| `tests/` | `api_rules_check.sql` (126 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (30 checks through the real login service, run in a terminal) |
+| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions, the sign-up guard, Bangla names, machine codes). The newest file is the last change. |
+| `tests/` | `api_rules_check.sql` (132 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (30 checks through the real login service, run in a terminal) |
 | `seed.sql` | The test story: 5 people, 5 machines, 4 reports |
 | `approve_test_accounts.sql` | Puts the 5 test emails on the approved list, so their logins can be created by hand (see the sign-up guard rule below) |
 | `reset_demo_data.sql` | Deletes all reports and all invite codes and empties the Bangla names, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
@@ -58,4 +58,4 @@ To rebuild the backend from nothing, in the Supabase dashboard: (1) paste each f
 
 ## Status
 
-The backend is built and tested: 10 migration files, 126 database checks and 30 real client checks. For the live picture (what is done, in progress and waiting), read [`STATUS.md`](./STATUS.md).
+The backend is built and tested: 11 migration files, 132 database checks and 30 real client checks. For the live picture (what is done, in progress and waiting), read [`STATUS.md`](./STATUS.md).

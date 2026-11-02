@@ -4,7 +4,7 @@
   -- What this file does, in plain words:
   --   Acts as each test person (Nila the worker, Tariq and Hasan the
   --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
-  --   and tries about 126 things against the real functions and tables. The
+  --   and tries about 132 things against the real functions and tables. The
   --   last part tests SIGN-UP WITH INVITE CODES: the code functions and the
   --   sign-up guard (it adds pretend new people to the login list, and the
   --   final "error" removes them again).
@@ -189,7 +189,13 @@
       {"name": "BANGLA GUARD: a blank Bangla name saves nothing (null)", "role": "postgres", "call": "select to_jsonb(p) from public.profiles p where p.email = 'bnblank@example.com'", "check": "$1->'display_name_bn' = 'null'::jsonb"},
       {"name": "BANGLA GUARD: set up a pre-approved account with a Bangla name", "role": "postgres", "call": "with x as (insert into public.approved_accounts (email, role, display_name, display_name_bn) values ('bnowner@example.com', 'owner', 'Bangla Owner', 'বাংলা মালিক') returning email) select to_jsonb(1)"},
       {"name": "BANGLA GUARD: a pre-approved account gets the Bangla name from Sakib's list, not from the form", "role": "postgres", "call": "with x as (insert into auth.users (id, email, raw_user_meta_data) values (gen_random_uuid(), 'bnowner@example.com', jsonb_build_object('display_name_bn', 'typed by the person')) returning id) select to_jsonb(1)"},
-      {"name": "BANGLA GUARD: the pre-approved profile has the Bangla name from the list", "role": "postgres", "call": "select to_jsonb(p) from public.profiles p where p.email = 'bnowner@example.com'", "check": "$1->>'display_name_bn' = 'বাংলা মালিক' and $1->>'role' = 'owner'"}
+      {"name": "BANGLA GUARD: the pre-approved profile has the Bangla name from the list", "role": "postgres", "call": "select to_jsonb(p) from public.profiles p where p.email = 'bnowner@example.com'", "check": "$1->>'display_name_bn' = 'বাংলা মালিক' and $1->>'role' = 'owner'"},
+      {"name": "MACHINE CODE: the machine list has a code for every machine (SM-01 style)", "email": "nila@example.com", "call": "select public.list_machines()", "check": "jsonb_array_length($1) = 5 and not exists (select 1 from jsonb_array_elements($1) e where e->>'code' is null or e->>'code' !~ '^[A-Z]{2}-[0-9]{2}$')"},
+      {"name": "MACHINE CODE: the codes follow the names (Sewing machine 14 is SM-14, Cutting machine 03 is CM-03)", "email": "farhan@example.com", "call": "select public.list_machines()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'name' = 'Sewing machine 14' and e->>'code' = 'SM-14') and exists (select 1 from jsonb_array_elements($1) e where e->>'name' = 'Cutting machine 03' and e->>'code' = 'CM-03')"},
+      {"name": "MACHINE CODE: a report carries the code of its machine", "email": "farhan@example.com", "call": "select public.list_reports()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'description' = 'The needle keeps breaking.' and e->'machine'->>'code' = 'SM-14')"},
+      {"name": "MACHINE CODE: the worker sees the code inside her own reports", "email": "nila@example.com", "call": "select public.list_my_reports()", "check": "not exists (select 1 from jsonb_array_elements($1) e where e->'machine'->>'code' is null)"},
+      {"name": "MACHINE CODE: two machines cannot share a code", "role": "postgres", "call": "with x as (update public.machines set code = 'SM-01' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "duplicate key"},
+      {"name": "MACHINE CODE: a badly written code is refused (small letters)", "role": "postgres", "call": "with x as (update public.machines set code = 'sm-77' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"}
     ]$json$;
   
     t         jsonb;
