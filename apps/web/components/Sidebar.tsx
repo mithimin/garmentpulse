@@ -29,7 +29,7 @@ export type MenuItem = {
 type SidebarProps = {
   menu: MenuItem[];
   onLogOut: () => void;
-  /** Called when a link is chosen (a phone closes the sidebar then). */
+  /** Called when a link is chosen (the sidebar folds again then, on every screen size). */
   onNavigate: () => void;
 };
 

@@ -1846,3 +1846,403 @@ html[lang='bn'] .sidebar-logout {
   border-radius: 7px;
   pointer-events: none;
 }
+
+/* ---------- Machine map (components/MachineMap.tsx) ----------
+   A seat plan like a cinema ticket page: every machine is a small sewing machine on a seat.
+   Green = running, red + flashing = down (waiting for a technician), amber = technician
+   assigned, blue = in progress, dark blue = selected. A word always sits with the colour
+   (the legend and each seat's tooltip), as the design system asks. */
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: var(--space-5);
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.map-side {
+  position: sticky;
+  top: var(--space-4);
+  /* room above it when the page scrolls to it on a narrow screen */
+  scroll-margin-top: var(--space-4);
+}
+@media (max-width: 1000px) {
+  .map-side {
+    position: static;
+  }
+}
+.map-down-line {
+  margin: 0;
+  font-weight: 600;
+  color: var(--soft-text);
+}
+.map-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.map-chips,
+.map-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.map-chip {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  color: var(--heading);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.map-chip b {
+  margin-left: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.map-chip[aria-pressed='true'] {
+  background: var(--bar);
+  border-color: var(--bar);
+  color: #fff;
+}
+.map-desk {
+  max-width: 460px;
+  margin: 0 auto var(--space-2);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--soft-text);
+}
+.map-desk::before {
+  content: '';
+  display: block;
+  height: 14px;
+  margin-bottom: 6px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(180deg, #c3cddc, #e8edf4);
+  border-top: 3px solid var(--card-stitch);
+}
+html[lang='bn'] .map-desk {
+  letter-spacing: 0;
+  font-size: 14px;
+}
+.map-scroll {
+  overflow-x: auto;
+  padding: var(--space-3) 0 var(--space-2);
+}
+.map-rows {
+  display: grid;
+  gap: var(--space-3);
+  width: max-content;
+  margin: 0 auto;
+}
+.map-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.map-row-letter {
+  width: 20px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--soft-text);
+}
+.map-seat-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.map-aisle {
+  width: 24px;
+  flex: none;
+}
+.seat {
+  position: relative;
+  width: 56px;
+  height: 60px;
+  padding: 4px 2px 3px;
+  border-radius: 12px;
+  border: 2px solid #2f9d63;
+  background: #e3f4ea;
+  color: #14583a;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 3px;
+  cursor: pointer;
+  transition:
+    transform 0.1s,
+    opacity 0.2s;
+}
+.seat:hover {
+  transform: translateY(-2px);
+}
+.seat-machine {
+  width: 38px;
+  height: 28px;
+  display: block;
+  fill: currentColor;
+}
+.seat-assigned {
+  border-color: #e0a21b;
+  background: #fdf0cf;
+  color: #6e4e0e;
+}
+.seat-progress {
+  border-color: #3f6cc4;
+  background: #e2eafa;
+  color: #1f3f86;
+}
+.seat-down {
+  border-color: #d6372b;
+  background: #d6372b;
+  color: #fff;
+  /* pops once when it turns red, then keeps flashing and sending out a ring */
+  animation:
+    seat-pop 0.5s ease-out 1,
+    seat-flash 0.7s steps(2, jump-none) infinite,
+    seat-ring 1.2s ease-out infinite;
+}
+.seat-selected {
+  border-color: var(--bar);
+  background: var(--bar);
+  color: #fff;
+  animation: none;
+  box-shadow: 0 0 0 3px rgba(31, 43, 71, 0.25);
+}
+.seat-faded {
+  opacity: 0.22;
+}
+@keyframes seat-flash {
+  0% {
+    filter: brightness(1.1);
+  }
+  100% {
+    filter: brightness(0.75);
+  }
+}
+@keyframes seat-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(214, 55, 43, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 14px rgba(214, 55, 43, 0);
+  }
+}
+@keyframes seat-pop {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* People who asked their computer for less movement get a steady red seat instead. */
+@media (prefers-reduced-motion: reduce) {
+  .seat-down {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(214, 55, 43, 0.5);
+  }
+}
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) 0 0;
+  border-top: 1px dashed var(--card-border);
+  list-style: none;
+  font-size: 14px;
+  color: var(--soft-text);
+}
+.map-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.legend-seat {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 2px solid #2f9d63;
+  background: #e3f4ea;
+  display: inline-block;
+  animation: none;
+}
+.legend-seat.seat-assigned {
+  border-color: #e0a21b;
+  background: #fdf0cf;
+}
+.legend-seat.seat-progress {
+  border-color: #3f6cc4;
+  background: #e2eafa;
+}
+.legend-seat.seat-down {
+  border-color: #d6372b;
+  background: #d6372b;
+  animation: none;
+}
+.legend-seat.seat-selected {
+  border-color: var(--bar);
+  background: var(--bar);
+  box-shadow: none;
+}
+.map-side-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-title);
+  font-size: 26px;
+  color: var(--heading);
+}
+.map-empty,
+.map-note {
+  margin: var(--space-3) 0;
+  color: var(--soft-text);
+}
+.map-empty {
+  padding: var(--space-3);
+  text-align: center;
+  border: 1px dashed var(--card-border);
+  border-radius: 12px;
+}
+.map-note {
+  font-size: 14px;
+}
+.map-selected {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+.map-selected li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: rgba(232, 237, 243, 0.7);
+}
+.map-selected li > div {
+  min-width: 0;
+}
+.map-selected small {
+  display: block;
+  color: var(--soft-text);
+}
+.map-remove {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--input-border);
+  background: var(--second-button);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.map-total {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--space-3) 0;
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--card-border);
+}
+
+/* The heading strip on top of the Machine map card on the Dashboard. It has the look of the
+   count boxes (steel blue), with a beige stitch line set in from the edge and white words.
+   The heading is in the middle and the "machines are down" box sits on its right. The strip
+   reaches the edges of the card. */
+.map-banner {
+  position: relative;
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  border-radius: 23px 23px 0 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  text-align: center;
+  /* The same steel-blue fade as the count boxes ("In progress", "New reports" ...). */
+  background-color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    rgba(78, 112, 168, 0.8),
+    rgba(63, 95, 148, 0.8) 55%,
+    rgba(54, 84, 134, 0.8)
+  );
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(8, 16, 34, 0.75);
+}
+.map-banner::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed #e8d8b5;
+  border-radius: 16px;
+  pointer-events: none;
+}
+.map-banner .map-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+}
+/* "N machines are down" is a small box on the right side of the strip: glowing cloth blue when
+   something is down, a calm light colour when nothing is. On a narrow screen it drops under the heading. */
+.map-banner .map-down-line {
+  position: absolute;
+  top: 50%;
+  right: var(--space-6);
+  transform: translateY(-50%);
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: 8px;
+  /* cloth blue (with the fine crosshatch of the cloth) and a glowing blue edge */
+  background-color: #617ca9;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px);
+  border: 1px solid #a9c8ff;
+  box-shadow:
+    0 0 8px 1px rgba(110, 170, 255, 0.75),
+    0 0 20px 4px rgba(90, 150, 255, 0.4);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-shadow: none;
+}
+.map-banner .map-down-line.map-down-none {
+  background: #eef2f6;
+  border-color: #c9d2de;
+  box-shadow: none;
+  color: #26324f;
+}
+@media (max-width: 640px) {
+  .map-banner .map-down-line {
+    position: static;
+    transform: none;
+    margin-top: var(--space-2);
+  }
+}

@@ -7,11 +7,14 @@
 // menu links, and the page content beside it. The manager pages and the owner
 // pages both use it, so the two roles behave the same way.
 // On a big screen (tablet and up) the sidebar PUSHES the page, so the page is
-// always fully visible beside it. On a phone it SLIDES OVER the page and closes
-// when you pick a page or tap outside. The big-screen choice (open or closed) is
-// remembered in this browser. Owned by Mithi.
+// always fully visible beside it. On a phone it SLIDES OVER the page and also closes
+// when you tap outside. On EVERY screen size the sidebar folds again as soon as its
+// work is done (a menu page is picked) and also when you click or tap anywhere else
+// on the screen, even if you never used the sidebar. Only the button in the top bar
+// (not this automatic folding) is remembered in this browser, so the sidebar still
+// starts open on a big screen. Owned by Mithi.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Role } from '@garmentpulse/shared';
 import { useAuth } from '../auth/AuthContext';
@@ -50,6 +53,20 @@ export function SidebarShell({ role, menu, children }: SidebarShellProps) {
   // screen size here is safe.
   const [open, setOpen] = useState(startOpen);
 
+  // While the sidebar is open, a click or tap ANYWHERE outside it folds it. The toggle
+  // button in the top bar is left out, because it opens and closes the sidebar itself.
+  useEffect(() => {
+    if (!open) return;
+    function foldOnOutsideClick(event: PointerEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('.sidebar') || target.closest('[data-sidebar-toggle]')) return;
+      setOpen(false);
+    }
+    document.addEventListener('pointerdown', foldOnOutsideClick);
+    return () => document.removeEventListener('pointerdown', foldOnOutsideClick);
+  }, [open]);
+
   function toggle() {
     const next = !open;
     setOpen(next);
@@ -68,13 +85,7 @@ export function SidebarShell({ role, menu, children }: SidebarShellProps) {
       <div className={open ? 'shell shell-open' : 'shell'}>
         {open ? (
           <>
-            <Sidebar
-              menu={menu}
-              onLogOut={logOut}
-              onNavigate={() => {
-                if (isPhone()) setOpen(false);
-              }}
-            />
+            <Sidebar menu={menu} onLogOut={logOut} onNavigate={() => setOpen(false)} />
             {/* On a phone the sidebar covers the page, so a tap outside closes it. */}
             <div className="sidebar-backdrop" onClick={() => setOpen(false)} aria-hidden="true" />
           </>

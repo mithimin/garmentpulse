@@ -7,7 +7,12 @@
 // It copies the rules and error codes of `assign_technician` in
 // docs/api-contract.md 4.4. Owned by Mithi.
 
-import { computeAvailability, FAKE_PEOPLE, FAKE_REPORTS } from '@garmentpulse/shared';
+import {
+  computeAvailability,
+  FAKE_MACHINES,
+  FAKE_PEOPLE,
+  FAKE_REPORTS,
+} from '@garmentpulse/shared';
 import type { Report, Technician } from '@garmentpulse/shared';
 
 let reports: Report[] = FAKE_REPORTS.map((report) => ({ ...report }));
@@ -42,4 +47,42 @@ export async function assignFake(reportId: string, technicianId: string): Promis
   };
   reports = reports.map((r) => (r.id === reportId ? updated : r));
   return updated;
+}
+
+/**
+ * FAKE MODE ONLY: pretends a worker just reported a broken machine, so the Machine map
+ * can be shown beeping without a phone. It picks a machine that has no open report.
+ * Returns false when every machine already has one. (The real backend has no such
+ * function: only a worker's phone can make a report.)
+ */
+export function addFakeReport(): boolean {
+  const worker = FAKE_PEOPLE.find((p) => p.role === 'worker');
+  const free = FAKE_MACHINES.filter(
+    (m) => !reports.some((r) => r.machine.id === m.id && r.status !== 'resolved'),
+  );
+  const machine = free[Math.floor(Math.random() * free.length)];
+  if (!worker || !machine) return false;
+
+  const problems = [
+    'The needle keeps breaking.',
+    'Thread snaps every few stitches.',
+    'Machine makes a loud grinding noise.',
+    'Fabric is not feeding forward.',
+  ];
+  const now = new Date().toISOString();
+  reports = [
+    ...reports,
+    {
+      id: `r-demo-${Date.now()}`,
+      machine: { id: machine.id, name: machine.name },
+      description: problems[Math.floor(Math.random() * problems.length)] ?? problems[0] ?? '',
+      status: 'waiting',
+      reported_by: { id: worker.id, display_name: worker.display_name },
+      technician: null,
+      accepted_at: null,
+      created_at: now,
+      updated_at: now,
+    },
+  ];
+  return true;
 }

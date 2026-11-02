@@ -4,6 +4,7 @@
 //
 // The data the manager and owner screens need, in one place:
 //   useReports()       the list of all reports, newest first
+//   useMachines()      the machines (for the Machine map)
 //   useTechnicians()   the technicians with free / busy
 //   useOwnerSummary()  the three count boxes (Waiting, In progress, Resolved)
 // When the real backend is connected (lib/backend.ts) they call the ready-made
@@ -13,8 +14,8 @@
 // "Assign" action (`assign_technician` in the contract; fake in fake mode).
 // Owned by Mithi.
 
-import { summarizeReports } from '@garmentpulse/shared';
-import type { OwnerSummary, Report, Technician } from '@garmentpulse/shared';
+import { FAKE_MACHINES, summarizeReports } from '@garmentpulse/shared';
+import type { Machine, OwnerSummary, Report, Technician } from '@garmentpulse/shared';
 import { api } from '../lib/backend';
 import { assignFake, getFakeReports, getFakeTechnicians } from './fakeStore';
 import { useBackendData } from './useBackendData';
@@ -36,6 +37,11 @@ async function loadOwnerSummary(): Promise<OwnerSummary> {
   return api ? api.getOwnerSummary() : summarizeReports(getFakeReports());
 }
 
+async function loadMachines(): Promise<Machine[]> {
+  return api ? api.listMachines() : FAKE_MACHINES;
+}
+
+export const useMachines = () => useBackendData(loadMachines, true);
 export const useReports = () => useBackendData(loadReports, true);
 export const useTechnicians = () => useBackendData(loadTechnicians, true);
 export const useOwnerSummary = () => useBackendData(loadOwnerSummary, true);

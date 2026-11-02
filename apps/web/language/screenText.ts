@@ -160,6 +160,40 @@ export const SCREEN_TEXT = {
     en: 'Your account is not allowed to see this page.',
     bn: 'আপনার অ্যাকাউন্টের এই পেজ দেখার অনুমতি নেই।',
   },
+  menuMachines: { en: 'Machines', bn: 'মেশিন' },
+  mapTitle: { en: 'Machine map', bn: 'মেশিন ম্যাপ' },
+  mapSub: {
+    en: 'Every machine on the floor. A flashing red machine needs a technician.',
+    bn: 'ফ্লোরের প্রতিটি মেশিন। লাল রঙে জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
+  },
+  seatRunning: { en: 'Running', bn: 'চলছে' },
+  seatDown: { en: 'Down', bn: 'নষ্ট' },
+  seatAssigned: { en: 'Technician assigned', bn: 'টেকনিশিয়ান ঠিক হয়েছে' },
+  seatSelected: { en: 'Selected', bn: 'বাছাই করা' },
+  chipBusy: { en: 'Technician busy', bn: 'টেকনিশিয়ান ব্যস্ত' },
+  deskLabel: { en: 'Supervisor desk', bn: 'সুপারভাইজার ডেস্ক' },
+  downCountNone: { en: 'No machine is down', bn: 'কোনো মেশিন নষ্ট নেই' },
+  downCountOne: { en: '1 machine is down', bn: '১টি মেশিন নষ্ট' },
+  downCountMany: { en: '{n} machines are down', bn: '{n}টি মেশিন নষ্ট' },
+  selectionTitle: { en: 'Your selection', bn: 'আপনার বাছাই' },
+  selectionEmpty: {
+    en: 'Click a red machine to select it. Red machines are broken and waiting for a technician.',
+    bn: 'একটি লাল মেশিনে ক্লিক করে বাছাই করুন। লাল মেশিন নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
+  },
+  selectionCount: { en: 'Reports selected', bn: 'বাছাই করা রিপোর্ট' },
+  selectionQueueNote: {
+    en: 'A technician takes one job at a time. The first machine gets the technician. The others stay in the queue.',
+    bn: 'একজন টেকনিশিয়ান একবারে একটি কাজ করেন। প্রথম মেশিনটি টেকনিশিয়ান পাবে। বাকিগুলো সারিতে থাকবে।',
+  },
+  assignSelected: { en: 'Assign technician', bn: 'টেকনিশিয়ান দিন' },
+  removeSelected: { en: 'Remove {machine}', bn: '{machine} সরান' },
+  runningHint: {
+    en: '{machine} is running. There is nothing to assign.',
+    bn: '{machine} চলছে। দেওয়ার মতো কিছু নেই।',
+  },
+  soundOn: { en: 'Sound: on', bn: 'শব্দ: চালু' },
+  soundOff: { en: 'Sound: off', bn: 'শব্দ: বন্ধ' },
+  demoReport: { en: 'Demo: pretend a worker reports', bn: 'ডেমো: শ্রমিক রিপোর্ট করেছে ধরুন' },
 } as const satisfies Record<string, Record<Language, string>>;
 
 export type ScreenTextKey = keyof typeof SCREEN_TEXT;
