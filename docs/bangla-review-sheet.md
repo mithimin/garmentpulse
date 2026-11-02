@@ -336,7 +336,58 @@ Claude (an AI assistant that can read Bangla but cannot hear how factory workers
 
 ---
 
-## 9. After the review (for the team)
+## 9. Part H: the answers (short version, received 2026-11-02)
+
+A Bangla speaker filled in the short version of this sheet (Parts A, B, C and G). **Their answers are the decisions.** Parts D, E and F were not read yet. Items marked "to confirm" are where Claude had to guess how the answer applies to the app text, so the speaker should look at them once more.
+
+**Part A (the 9 shared words).** Two changed: **Waiting = অপেক্ষায়** (was অপেক্ষমাণ) and **In progress = কাজ চলছে** (was চলমান). The other seven are OK (Resolved সমাধান হয়েছে, Free খালি, Busy ব্যস্ত, Worker শ্রমিক, Technician টেকনিশিয়ান, Manager ম্যানেজার, Owner মালিক).
+
+**Part B (the names).** Nila Akter = নীলা আক্তার, Tariq Hasan = তারিক হাসান, Hasan Ali = হাসান আলী, Farhan Kabir = ফারহান কবির, **Mr. Rahman = রহমান সাহেব** (was জনাব রহমান), Sewing machine 01, 02, 14 = সেলাই মেশিন ০১, ০২, ১৪, Cutting machine 03 = কাটিং মেশিন ০৩, Pressing machine 01 = প্রেসিং মেশিন ০১.
+
+**Part C (the error sentences).** Written by the speaker:
+
+| # | Bangla to use |
+|---|---|
+| 1 | লগ ইন করা যায়নি। ইমেইল আর পাসওয়ার্ড ঠিক আছে কি না দেখে নিন। |
+| 2 | এই ওয়েবসাইটটি শুধু ম্যানেজার ও মালিকের জন্য। এর বদলে ফোনের অ্যাপ ব্যবহার করুন। |
+| 3 | আপনার এই কাজটি করার অনুমতি নেই। |
+| 4 | এটা খুঁজে পাওয়া যায়নি। |
+| 5 | সব ঘর পূরণ করুন। |
+| 6 | OK as drafted: ওই টেকনিশিয়ান অন্য কাজে ব্যস্ত। |
+| 7 | এই রিপোর্টের জন্য আগেই একজন টেকনিশিয়ান আছেন। |
+| 8 | টেকনিশিয়ানকে আগে কাজটি নিতে হবে। |
+| 9 | টেকনিশিয়ান এই কাজটি আগেই নিয়েছেন। |
+| 10 | OK as drafted: স্ট্যাটাস এভাবে বদলানো যাবে না। |
+| 11 | OK as drafted: কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন। |
+| 12 | এই ইমেইল দিয়ে আগেই একটি অ্যাকাউন্ট খোলা হয়েছে। লগ ইন পেজে যান। |
+| 13 | কোডটি ভুল, আগেই ব্যবহার করা হয়েছে, অথবা এর মেয়াদ শেষ। মালিকের কাছ থেকে নতুন কোড নিন। |
+
+**Part G (Claude's suggestions).**
+
+| # | Answer | Decision |
+|---|---|---|
+| 1 | own version | **টেকনিশিয়ান পাঠান** for the Assign pop-up title; for the short Assign button, **পাঠান** (to confirm) |
+| 2 | yes | the Machine map button uses the same word: **টেকনিশিয়ান পাঠান** |
+| 3 | yes | **খালি** everywhere (not ফ্রি) |
+| 4 | own version | **মেরামত শেষ করুন** |
+| 5 | own version | **এখন কোনো বাকি কাজ নেই** (also for the "waiting for the manager" text: *এখন কোনো বাকি কাজ নেই। ম্যানেজারের অপেক্ষায়।*, to confirm) |
+| 6 | yes | **মেয়াদ: ... পর্যন্ত** |
+| 7 | yes | **রিপোর্ট ফিল্টার করুন** |
+| 8 | yes | **লগ ইন** and **লগ আউট** everywhere |
+| 9 | own version | **রিপোর্ট করেছেন** (for "Reported by", on both apps) |
+| 10 | yes | **রিপোর্টের সময়** |
+| 11 | yes | **টেকনিশিয়ান দেওয়া হয়েছে** |
+| 12 | own version | **আমার রিপোর্টে** |
+| 13 | **not answered**: the speaker asked for the original English sentence | The English is: "This account is for the other role. Please choose the other button above." Ask again. |
+| 14 | own version | **কাজটি নিন** for the Accept button; the other two accept texts to follow it, for example *নতুন: কাজটি নিন* and *কাজ নেওয়া হয়েছে* (to confirm) |
+| 15 | own version | **এখন ব্যবহার করার মতো কোনো কোড নেই** |
+| 16 | own version | **মেশিনের চিহ্নটি ঝলকাচ্ছে**, for example *ফ্লোরের প্রতিটি মেশিন। যে মেশিনের চিহ্নটি লাল হয়ে ঝলকাচ্ছে, সেখানে টেকনিশিয়ান লাগবে।* (to confirm) |
+
+**Still to read:** Parts D, E and F, and the open question in Part G row 13.
+
+---
+
+## 10. After the review (for the team)
 
 1. **Sakib** puts the corrected Part A words in `packages/shared/src/labels.ts` (the one place both apps read).
 2. **Rubaiya** puts the corrected Part C and Part D texts in `apps/mobile/src/language/screenText.ts`.
@@ -349,4 +400,5 @@ Claude (an AI assistant that can read Bangla but cannot hear how factory workers
 
 | Date | Reviewer (name or initials) | Parts done | Notes |
 |---|---|---|---|
+| 2026-11-02 | A Bangla speaker (name not written on the sheet) | A, B, C, G (the short version) | Answers are in Part H. Part G row 13 was not answered. Parts D, E and F still to read. |
 | | | | |
