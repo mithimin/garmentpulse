@@ -2167,10 +2167,10 @@ html[lang='bn'] .map-desk {
   border-top: 1px dashed var(--card-border);
 }
 
-/* The heading strip on top of the Machine map card on the Dashboard. It copies the look of the
-   Technicians card (soft navy, 80% solid, a beige stitch line set in from the edge, white
-   words). The heading is in the middle, with the "machines are down" line under it. It reaches
-   the edges of the card. */
+/* The heading strip on top of the Machine map card on the Dashboard. It has the look of the
+   count boxes (steel blue), with a beige stitch line set in from the edge and white words.
+   The heading is in the middle and the "machines are down" box sits on its right. The strip
+   reaches the edges of the card. */
 .map-banner {
   position: relative;
   margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-4);
@@ -2181,8 +2181,16 @@ html[lang='bn'] .map-desk {
   justify-content: center;
   gap: var(--space-1);
   text-align: center;
-  background: rgba(42, 59, 99, 0.8);
+  /* The same steel-blue fade as the count boxes ("In progress", "New reports" ...). */
+  background-color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    rgba(78, 112, 168, 0.8),
+    rgba(63, 95, 148, 0.8) 55%,
+    rgba(54, 84, 134, 0.8)
+  );
   color: #ffffff;
+  text-shadow: 0 1px 2px rgba(8, 16, 34, 0.75);
 }
 .map-banner::after {
   content: '';
