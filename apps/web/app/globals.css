@@ -978,17 +978,12 @@ html {
 
 /* ---------- Two-column dashboard and the darker list card ---------- */
 
-/* "Needs attention" on the left (wide), technicians on the right (narrow). */
+/* The Technicians card now has the dashboard to itself, so it fills the full width. */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-6);
   align-items: start;
-}
-@container page (max-width: 1000px) {
-  .dashboard-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 /* The darker blue card used for lists (design system 3.2, "second card"). */
