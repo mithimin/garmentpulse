@@ -185,17 +185,8 @@ export const SCREEN_TEXT = {
     en: 'A technician takes one job at a time. The first machine gets the technician. The others stay in the queue.',
     bn: 'একজন টেকনিশিয়ান একবারে একটি কাজ করেন। প্রথম মেশিনটি টেকনিশিয়ান পাবে। বাকিগুলো সারিতে থাকবে।',
   },
+  mapViewAll: { en: 'View all {n} machines', bn: 'সব {n}টি মেশিন দেখুন' },
   assignSelected: { en: 'Assign technician', bn: 'টেকনিশিয়ান দিন' },
-  mapTechLabel: { en: 'Technician', bn: 'টেকনিশিয়ান' },
-  mapNoFreeTech: {
-    en: 'Every technician is busy. The report stays in the queue.',
-    bn: 'সব টেকনিশিয়ান ব্যস্ত। রিপোর্টটি সারিতে থাকবে।',
-  },
-  mapOnTheWay: {
-    en: '{tech} is on the way to {machine}.',
-    bn: '{tech} {machine}-এর দিকে যাচ্ছেন।',
-  },
-  mapContinue: { en: 'Continue', bn: 'চালিয়ে যান' },
   removeSelected: { en: 'Remove {machine}', bn: '{machine} সরান' },
   runningHint: {
     en: '{machine} is running. There is nothing to assign.',

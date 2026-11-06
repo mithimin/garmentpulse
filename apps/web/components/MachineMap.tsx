@@ -19,13 +19,17 @@
 //   - Click any other machine to open its report (read-only), or see that it is running.
 // The seat logic is in data/machineSeats.ts. The beep needs one click on the page first,
 // because browsers keep pages silent until the person has used them.
+// On the Dashboard only the first rows are shown (`maxRows`) with a link to the Machines page,
+// which shows every row. The chips, the "machines are down" line and the beep always count ALL
+// machines, so both pages tell the same story.
 // Only in fake mode (no backend keys) there is a "Demo" button that pretends a worker
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
-import { AVAILABILITY_LABELS, STATUS_LABELS } from '@garmentpulse/shared';
+import { STATUS_LABELS } from '@garmentpulse/shared';
 import { addFakeReport } from '../data/fakeStore';
 import { rowLetter, SEATS_PER_ROW } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
@@ -35,8 +39,7 @@ import { formatDateTime, localizeDigits } from '../language/format';
 import { machineName, personName } from '../language/localNames';
 import { screenText } from '../language/screenText';
 import type { ScreenTextKey } from '../language/screenText';
-import { assignTechnician } from '../data/useDashboardData';
-import { errorSentence } from '../language/errorText';
+import { AssignDialog } from './AssignDialog';
 import { Button } from './Button';
 import { Card } from './Card';
 import { ReportDetailsDialog } from './ReportDetailsDialog';
@@ -96,16 +99,15 @@ type MachineMapProps = {
   onChanged: () => void;
   /** A heading for the card (white on a denim strip). The Machines page has its own page title, so it leaves this out. */
   title?: string;
+  /** Show only the first rows (the Dashboard preview). The counts still use ALL machines. Leave out to show every row. */
+  maxRows?: number;
 };
 
-export function MachineMap({ seats, technicians, onChanged, title }: MachineMapProps) {
+export function MachineMap({ seats, technicians, onChanged, title, maxRows }: MachineMapProps) {
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [techId, setTechId] = useState('');
-  const [working, setWorking] = useState(false);
-  const [error, setError] = useState('');
-  const [done, setDone] = useState('');
+  const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
   const [hint, setHint] = useState('');
   const [soundOn, setSoundOn] = useState(true);
@@ -193,30 +195,9 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   const rows: Seat[][] = [];
   for (let i = 0; i < seats.length; i += SEATS_PER_ROW)
     rows.push(seats.slice(i, i + SEATS_PER_ROW));
+  const shownRows = maxRows ? rows.slice(0, maxRows) : rows;
+  const hiddenCount = seats.length - shownRows.reduce((n, row) => n + row.length, 0);
   const first = selectedSeats[0];
-
-  // The technician box in "Your selection": free technicians can be chosen, busy ones are greyed.
-  const freeTechs = technicians.filter((t) => t.availability === 'free');
-  const chosenTech = freeTechs.find((t) => t.id === techId) ?? freeTechs[0];
-  async function assignFirst() {
-    if (!first?.report || !chosenTech) return;
-    setWorking(true);
-    setError('');
-    try {
-      await assignTechnician(first.report.id, chosenTech.id);
-      setSelectedIds((ids) => ids.filter((id) => id !== first.machine.id));
-      setDone(
-        screenText('mapOnTheWay', language)
-          .replace('{tech}', personName(chosenTech, language))
-          .replace('{machine}', first.code),
-      );
-    } catch (e) {
-      setError(errorSentence(e, language));
-    } finally {
-      setWorking(false);
-      onChanged();
-    }
-  }
 
   return (
     <div className="map-layout">
@@ -272,7 +253,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
         <div className="map-desk">{screenText('deskLabel', language)}</div>
         <div className="map-scroll">
           <div className="map-rows">
-            {rows.map((row, r) => (
+            {shownRows.map((row, r) => (
               <div className="map-row" key={rowLetter(r)}>
                 <span className="map-row-letter">{rowLetter(r)}</span>
                 {row.map((seat, k) => {
@@ -298,7 +279,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                       >
                         <span className="scope">
                           <MiniMachine />
-                          <span className="seat-label">{seat.label}</span>
+                          <span className="seat-label">{seat.code}</span>
                         </span>
                         <span className="seat-badge" aria-hidden="true">
                           {selected ? '✓' : SEAT_BADGE[seat.state]}
@@ -312,6 +293,14 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
             ))}
           </div>
         </div>
+
+        {hiddenCount > 0 ? (
+          <p className="map-more">
+            <Link href="/manager/machines">
+              {screenText('mapViewAll', language).replace('{n}', num(seats.length))}
+            </Link>
+          </p>
+        ) : null}
 
         <ul className="map-legend">
           {(['running', 'down', 'assigned', 'progress'] as const).map((state) => (
@@ -368,42 +357,13 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
             <span>{screenText('selectionCount', language)}</span>
             <strong>{num(selectedSeats.length)}</strong>
           </p>
-          {done ? (
-            <>
-              <p className="map-done">{done}</p>
-              <Button kind="main" onClick={() => setDone('')}>
-                {screenText('mapContinue', language)}
-              </Button>
-            </>
-          ) : (
-            <>
-              <label className="map-tech">
-                <span>{screenText('mapTechLabel', language)}</span>
-                <select
-                  value={techId}
-                  onChange={(e) => setTechId(e.target.value)}
-                  disabled={freeTechs.length === 0}
-                >
-                  {technicians.map((t) => (
-                    <option key={t.id} value={t.id} disabled={t.availability !== 'free'}>
-                      {personName(t, language)} · {AVAILABILITY_LABELS[t.availability][language]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {freeTechs.length === 0 ? (
-                <p className="map-note">{screenText('mapNoFreeTech', language)}</p>
-              ) : null}
-              {error ? <p className="map-error">{error}</p> : null}
-              <Button
-                kind="main"
-                disabled={!first?.report || !chosenTech || working}
-                onClick={assignFirst}
-              >
-                {screenText('assignSelected', language)}
-              </Button>
-            </>
-          )}
+          <Button
+            kind="main"
+            disabled={!first?.report}
+            onClick={() => first?.report && setAssigning(first.report)}
+          >
+            {screenText('assignSelected', language)}
+          </Button>
           {selectedSeats.length > 1 ? (
             <p className="map-note">{screenText('selectionQueueNote', language)}</p>
           ) : null}
@@ -411,6 +371,14 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
         </Card>
       </aside>
 
+      {assigning ? (
+        <AssignDialog
+          report={assigning}
+          technicians={technicians}
+          onClose={() => setAssigning(null)}
+          onAssigned={onChanged}
+        />
+      ) : null}
       {viewing ? <ReportDetailsDialog report={viewing} onClose={() => setViewing(null)} /> : null}
     </div>
   );

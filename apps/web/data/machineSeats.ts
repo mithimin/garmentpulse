@@ -83,7 +83,7 @@ export function fillWithDummies(seats: readonly Seat[], rows: number): Seat[] {
     filled.push({
       machine: { id: `dummy-${label}`, name: `Demo machine ${String(index + 1).padStart(2, '0')}` },
       label,
-      code: `SM-${label}`,
+      code: `SM-${String(index + 1).padStart(2, '0')}`,
       state: 'running',
       report: null,
     });

@@ -2062,6 +2062,12 @@ html[lang='bn'] .map-desk {
   }
 }
 
+.map-more {
+  margin: var(--space-2) 0 0;
+  text-align: center;
+  font-weight: 600;
+}
+
 .map-legend {
   display: flex;
   flex-wrap: wrap;
