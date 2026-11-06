@@ -268,16 +268,137 @@ Screens for managers and the owner: login, sign-up, dashboard, reports, technici
 
 ---
 
-## 7. After the review (for the team)
+## 7. Part F: texts added after the sheet was first written
+
+These texts were added later (the Machine map on the website, and sign-up on the phone). They are new, so they have not been read by a Bangla speaker. Same instructions as before: put an **x** in **OK?** if the Bangla is good, otherwise write a better version.
+
+### F1. Phone app (sign-up)
+
+| # | English | Draft Bangla | OK? | Better Bangla (only if it needs a change) |
+|---|---|---|---|---|
+| 1 | Sign up with a code | কোড দিয়ে সাইন আপ করুন | [ ] | |
+| 2 | Ask your manager for an invite code, then choose Worker or Technician to match the code. | আপনার ম্যানেজারের কাছ থেকে একটি কোড নিন, তারপর কোডের সাথে মিলিয়ে শ্রমিক বা টেকনিশিয়ান বেছে নিন। | [ ] | |
+| 3 | At least 6 letters | কমপক্ষে ৬টি অক্ষর | [ ] | |
+| 4 | The code from your manager | ম্যানেজারের দেওয়া কোড | [ ] | |
+| 5 | That code is wrong, already used or too old. Ask your manager for a new code. | এই কোডটি ভুল, আগেই ব্যবহার হয়েছে বা পুরনো। ম্যানেজারের কাছ থেকে নতুন কোড নিন। | [ ] | |
+| 6 | This email already has an account. Please log in. | এই ইমেইলে আগেই অ্যাকাউন্ট আছে। অনুগ্রহ করে লগ ইন করুন। | [ ] | |
+| 7 | This code is for the website. The phone app is for workers and technicians. | এই কোডটি ওয়েবসাইটের জন্য। ফোন অ্যাপ শ্রমিক ও টেকনিশিয়ানদের জন্য। | [ ] | |
+| 8 | Please type your name, a real email and a password of at least 6 letters. | অনুগ্রহ করে নাম, সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড লিখুন। | [ ] | |
+
+### F2. Website (Machine map)
+
+| # | English | Draft Bangla | OK? | Better Bangla (only if it needs a change) |
+|---|---|---|---|---|
+| 1 | Machine map | মেশিন ম্যাপ | [ ] | |
+| 2 | Every machine on the floor. A flashing red machine needs a technician. | ফ্লোরের প্রতিটি মেশিন। লাল রঙে জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে। | [ ] | |
+| 3 | Running | চলছে | [ ] | |
+| 4 | Technician assigned | টেকনিশিয়ান ঠিক হয়েছে | [ ] | |
+| 5 | Selected | বাছাই করা | [ ] | |
+| 6 | Supervisor desk | সুপারভাইজার ডেস্ক | [ ] | |
+| 7 | No machine is down | কোনো মেশিন নষ্ট নেই | [ ] | |
+| 8 | 1 machine is down | ১টি মেশিন নষ্ট | [ ] | |
+| 9 | {n} machines are down | {n}টি মেশিন নষ্ট | [ ] | |
+| 10 | Your selection | আপনার বাছাই | [ ] | |
+| 11 | Click a red machine to select it. Red machines are broken and waiting for a technician. | একটি লাল মেশিনে ক্লিক করে বাছাই করুন। লাল মেশিন নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে। | [ ] | |
+| 12 | Reports selected | বাছাই করা রিপোর্ট | [ ] | |
+| 13 | A technician takes one job at a time. The first machine gets the technician. The others stay in the queue. | একজন টেকনিশিয়ান একবারে একটি কাজ করেন। প্রথম মেশিনটি টেকনিশিয়ান পাবে। বাকিগুলো সারিতে থাকবে। | [ ] | |
+| 14 | Assign technician | টেকনিশিয়ান দিন | [ ] | |
+| 15 | Remove {machine} | {machine} সরান | [ ] | |
+| 16 | {machine} is running. There is nothing to assign. | {machine} চলছে। দেওয়ার মতো কিছু নেই। | [ ] | |
+| 17 | Sound: on | শব্দ: চালু | [ ] | |
+| 18 | Sound: off | শব্দ: বন্ধ | [ ] | |
+| 19 | Demo: pretend a worker reports | ডেমো: শ্রমিক রিপোর্ট করেছে ধরুন | [ ] | |
+
+---
+
+## 8. Part G: a first pass by Claude (to confirm, not yet checked by a Bangla speaker)
+
+Claude (an AI assistant that can read Bangla but cannot hear how factory workers speak) read Parts D, E and F on 2026-11-02 and found the points below. For each row, please say **yes** (use my suggestion), **no** (keep the draft) or write your own version. The app owners change nothing until a Bangla speaker has answered.
+
+| # | Where | Now | Problem | Suggestion | Yes / No / own version |
+|---|---|---|---|---|---|
+| 1 | Website: Assign button and pop-up title (`assignButton`, `assignTitle`) | নিয়োগ দিন, টেকনিশিয়ান নিয়োগ দিন | নিয়োগ usually means hiring someone for a job | দায়িত্ব দিন, টেকনিশিয়ানকে দায়িত্ব দিন (or *পাঠান*) | |
+| 2 | Website: Machine map button (`assignSelected`) | টেকনিশিয়ান দিন | Different from the Assign button above | Same word as row 1 | |
+| 3 | Website: "Free" (`labelFreeTechnicians`, `assignFreeTag`, the technicians help line) | ফ্রি | Part A already says **খালি** for Free | খালি everywhere | |
+| 4 | Phone: "Mark as fixed" (`fixedButton`) | ঠিক হয়েছে | The status label says সমাধান হয়েছে | সমাধান হয়েছে (or *কাজ শেষ করুন*) | |
+| 5 | Phone: "no open job" (`noJobs`, the home card) | খোলা কাজ | A word-for-word translation: খোলা means physically open | বাকি কাজ (a job still to do) | |
+| 6 | Website: "Works until" (`codeValidUntil`) | মেয়াদ শেষ | Reads like "expired" | মেয়াদ: ... পর্যন্ত (for example *মেয়াদ: ৭ নভেম্বর পর্যন্ত*) | |
+| 7 | Website: "Filter the reports" (`filterName`) | রিপোর্ট ছাঁকুন | ছাঁকুন means "strain" (like tea) | রিপোর্ট ফিল্টার করুন | |
+| 8 | Phone and website: Log in | লগ ইন and লগইন both appear | Two spellings of one word | Pick one everywhere (suggestion: লগ ইন, লগ আউট) | |
+| 9 | Website: "Reported by" (`colReportedBy`) | রিপোর্টকারী | The phone says জানিয়েছেন | জানিয়েছেন | |
+| 10 | Phone: "Reported" label (`reportedAtLabel`) | জানানো হয়েছে | The website says রিপোর্টের সময় | রিপোর্টের সময় | |
+| 11 | Machine map: "Technician assigned" (`seatAssigned`) | টেকনিশিয়ান ঠিক হয়েছে | ঠিক হয়েছে can mean "decided/fixed" | টেকনিশিয়ান দেওয়া হয়েছে | |
+| 12 | Phone: a hyphen in a sentence | আমার রিপোর্ট-এ | The hyphen looks odd | আমার রিপোর্টে | |
+| 13 | Phone: wrong role message | অন্য ভূমিকার | ভূমিকা is formal | অন্য ধরনের | |
+| 14 | Phone: Accept (`acceptButton`, `needsAccept`, `acceptedAtLabel`) | গ্রহণ করুন | গ্রহণ is formal for workers | কাজটি নিন | |
+| 15 | Website: "No unused codes" (`noCodes`) | অব্যবহৃত | Formal word | ব্যবহার হয়নি এমন কোড | |
+| 16 | Machine map: flashing machine (`mapSub`) | জ্বলতে থাকা | It means "burning" | জ্বলজ্বল করছে | |
+
+---
+
+## 9. Part H: the answers (short version, received 2026-11-02)
+
+A Bangla speaker filled in the short version of this sheet (Parts A, B, C and G). **Their answers are the decisions.** Parts D, E and F were not read yet. Items marked "to confirm" are where Claude had to guess how the answer applies to the app text, so the speaker should look at them once more.
+
+**Part A (the 9 shared words).** Two changed: **Waiting = অপেক্ষায়** (was অপেক্ষমাণ) and **In progress = কাজ চলছে** (was চলমান). The other seven are OK (Resolved সমাধান হয়েছে, Free খালি, Busy ব্যস্ত, Worker শ্রমিক, Technician টেকনিশিয়ান, Manager ম্যানেজার, Owner মালিক).
+
+**Part B (the names).** Nila Akter = নীলা আক্তার, Tariq Hasan = তারিক হাসান, Hasan Ali = হাসান আলী, Farhan Kabir = ফারহান কবির, **Mr. Rahman = রহমান সাহেব** (was জনাব রহমান), Sewing machine 01, 02, 14 = সেলাই মেশিন ০১, ০২, ১৪, Cutting machine 03 = কাটিং মেশিন ০৩, Pressing machine 01 = প্রেসিং মেশিন ০১.
+
+**Part C (the error sentences).** Written by the speaker:
+
+| # | Bangla to use |
+|---|---|
+| 1 | লগ ইন করা যায়নি। ইমেইল আর পাসওয়ার্ড ঠিক আছে কি না দেখে নিন। |
+| 2 | এই ওয়েবসাইটটি শুধু ম্যানেজার ও মালিকের জন্য। এর বদলে ফোনের অ্যাপ ব্যবহার করুন। |
+| 3 | আপনার এই কাজটি করার অনুমতি নেই। |
+| 4 | এটা খুঁজে পাওয়া যায়নি। |
+| 5 | সব ঘর পূরণ করুন। |
+| 6 | OK as drafted: ওই টেকনিশিয়ান অন্য কাজে ব্যস্ত। |
+| 7 | এই রিপোর্টের জন্য আগেই একজন টেকনিশিয়ান আছেন। |
+| 8 | টেকনিশিয়ানকে আগে কাজটি নিতে হবে। |
+| 9 | টেকনিশিয়ান এই কাজটি আগেই নিয়েছেন। |
+| 10 | OK as drafted: স্ট্যাটাস এভাবে বদলানো যাবে না। |
+| 11 | OK as drafted: কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন। |
+| 12 | এই ইমেইল দিয়ে আগেই একটি অ্যাকাউন্ট খোলা হয়েছে। লগ ইন পেজে যান। |
+| 13 | কোডটি ভুল, আগেই ব্যবহার করা হয়েছে, অথবা এর মেয়াদ শেষ। মালিকের কাছ থেকে নতুন কোড নিন। |
+
+**Part G (Claude's suggestions).**
+
+| # | Answer | Decision |
+|---|---|---|
+| 1 | own version | **টেকনিশিয়ান পাঠান** for the Assign pop-up title; for the short Assign button, **পাঠান** (to confirm) |
+| 2 | yes | the Machine map button uses the same word: **টেকনিশিয়ান পাঠান** |
+| 3 | yes | **খালি** everywhere (not ফ্রি) |
+| 4 | own version | **মেরামত শেষ করুন** |
+| 5 | own version | **এখন কোনো বাকি কাজ নেই** (also for the "waiting for the manager" text: *এখন কোনো বাকি কাজ নেই। ম্যানেজারের অপেক্ষায়।*, to confirm) |
+| 6 | yes | **মেয়াদ: ... পর্যন্ত** |
+| 7 | yes | **রিপোর্ট ফিল্টার করুন** |
+| 8 | yes | **লগ ইন** and **লগ আউট** everywhere |
+| 9 | own version | **রিপোর্ট করেছেন** (for "Reported by", on both apps) |
+| 10 | yes | **রিপোর্টের সময়** |
+| 11 | yes | **টেকনিশিয়ান দেওয়া হয়েছে** |
+| 12 | own version | **আমার রিপোর্টে** |
+| 13 | **not answered, skipped on purpose (2026-11-02)**: the speaker asked for the original English sentence | The English is: "This account is for the other role. Please choose the other button above." The phone keeps its draft wording. Nothing depends on it. |
+| 14 | own version | **কাজটি নিন** for the Accept button; the other two accept texts to follow it, for example *নতুন: কাজটি নিন* and *কাজ নেওয়া হয়েছে* (to confirm) |
+| 15 | own version | **এখন ব্যবহার করার মতো কোনো কোড নেই** |
+| 16 | own version | **মেশিনের চিহ্নটি ঝলকাচ্ছে**, for example *ফ্লোরের প্রতিটি মেশিন। যে মেশিনের চিহ্নটি লাল হয়ে ঝলকাচ্ছে, সেখানে টেকনিশিয়ান লাগবে।* (to confirm) |
+
+**Still to read:** Parts D, E and F. Part G row 13 was skipped on purpose, and the draft stays.
+
+---
+
+## 10. After the review (for the team)
 
 1. **Sakib** puts the corrected Part A words in `packages/shared/src/labels.ts` (the one place both apps read).
 2. **Rubaiya** puts the corrected Part C and Part D texts in `apps/mobile/src/language/screenText.ts`.
 3. **Mithi** puts the corrected Part C and Part E texts in `apps/web/language/errorText.ts` and `apps/web/language/screenText.ts`.
 4. **Sakib** adds the Bangla names of Part B to the backend (`display_name_bn` and `name_bn`, see `docs/api-contract.md` and `requests/`).
 5. Tick tests T15 to T17 in [demo-and-test-plan.md](demo-and-test-plan.md).
+6. Parts F and G were added on 2026-11-02. Part G holds the changes Claude suggested. Apply only the ones the Bangla speaker answered **yes** or gave their own version for.
 
 ### Review log
 
 | Date | Reviewer (name or initials) | Parts done | Notes |
 |---|---|---|---|
+| 2026-11-02 | A Bangla speaker (name not written on the sheet) | A, B, C, G (the short version) | Answers are in Part H. Part G row 13 was not answered. Parts D, E and F still to read. |
 | | | | |

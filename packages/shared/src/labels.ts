@@ -18,8 +18,10 @@ export const LANGUAGES: readonly Language[] = ['en', 'bn'];
 type Words = Record<Language, string>;
 
 export const STATUS_LABELS: Record<ReportStatus, Words> = {
-  waiting: { en: 'Waiting', bn: 'অপেক্ষমাণ' },
-  in_progress: { en: 'In progress', bn: 'চলমান' },
+  // Waiting and In progress were changed on 2026-11-02 after a Bangla speaker read them
+  // (docs/bangla-review-sheet.md, Part H). The other words were said to be OK.
+  waiting: { en: 'Waiting', bn: 'অপেক্ষায়' },
+  in_progress: { en: 'In progress', bn: 'কাজ চলছে' },
   resolved: { en: 'Resolved', bn: 'সমাধান হয়েছে' },
 };
 

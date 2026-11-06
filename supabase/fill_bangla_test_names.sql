@@ -10,8 +10,9 @@
 --
 -- Where the spellings come from:
 --   Nothing is translated automatically. The team first wrote a draft, and a
---   Bangla speaker read it and said all ten are OK (docs/bangla-review-sheet.md,
---   Part B, checked on 2026-10-21).
+--   Bangla speaker read it (docs/bangla-review-sheet.md, Part B). On 2026-10-21 all ten
+--   were said to be OK; on 2026-11-02 a second read changed the owner's name to
+--   "রহমান সাহেব".
 --
 -- WHEN TO RUN IT (important):
 --   Run it AFTER supabase/tests/api_rules_check.sql, never before. That check
@@ -36,7 +37,7 @@ begin
     ('tariq@example.com',  'তারিক হাসান'),
     ('hasan@example.com',  'হাসান আলী'),
     ('farhan@example.com', 'ফারহান কবির'),
-    ('owner@example.com',  'জনাব রহমান')
+    ('owner@example.com',  'রহমান সাহেব')
   ) as v (email, bn)
   where p.email = v.email;
   get diagnostics v_people = row_count;
