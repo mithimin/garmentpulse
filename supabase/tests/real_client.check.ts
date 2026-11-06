@@ -189,6 +189,7 @@ describe.skipIf(missing.length > 0)('real client check', () => {
       expect(machines.length).toBeGreaterThan(0);
       for (const machine of machines) {
         expect(machine).toHaveProperty('name_bn');
+        expect(machine).toHaveProperty('code');
       }
       const profile = await apis.nila.getMyProfile();
       expect(profile).toHaveProperty('display_name_bn');

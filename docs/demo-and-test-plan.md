@@ -45,7 +45,7 @@ Do these in order. They take about 10 minutes. Skip none, because a leftover tes
 | 3 | Delete leftover pretend accounts and codes | Sakib | Run the `delete` lines that the last real check printed (see section 5) |
 | 4 | Sign-up is **on**, email confirmation is **off** | Sakib | Supabase dashboard, Authentication, Email |
 | 5 | The apps point at the real project | Rubaiya, Mithi | Each has a private `.env` file with the web address and the public key (`.env.example` shows the names) |
-| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 126 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (30 checks) |
+| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 132 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (30 checks) |
 | 6b | Fill in the Bangla names of the test people and machines | Sakib | Run `supabase/fill_bangla_test_names.sql` **after** the rules check, never before (the check expects them empty) |
 | 7 | Both apps start | Rubaiya, Mithi | Phone: `npm run start --workspace @garmentpulse/mobile`. Website: `npm run dev --workspace @garmentpulse/web`, then open `http://localhost:3000` |
 
@@ -150,7 +150,7 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it | "The code decides the role. Nobody can choose to be a manager." |
 | 8:15 | Sakib | Try the **same code again**; try a **manager** code on the phone | "A used code, a made-up code, or the wrong app are all refused, and no account is created." |
 | 9:00 | Rubaiya | Press the language button, Bangla | "The whole app works in Bangla and English, because many workers read Bangla." |
-| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 126 + 30 checks | "Behind the screens, the database is the security guard. We tested the rules with 126 database checks and 30 checks that behave like the real apps." |
+| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 132 + 30 checks | "Behind the screens, the database is the security guard. We tested the rules with 132 database checks and 30 checks that behave like the real apps." |
 | 10:00 | All | Final slide / Q&A | "What is next: invoices and receipts, owner approval of big costs, a chatbot, camera presence, several factories." (See [mvp.md](mvp.md) section 3.) |
 
 ### 3.3 Good answers to likely questions
