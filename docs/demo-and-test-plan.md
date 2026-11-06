@@ -62,13 +62,14 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 | ID | Who | Steps | What must happen | Result |
 |---|---|---|---|---|
 | **T1** | Rubaiya | On the phone, log in as Nila (choose "Worker"). Open "Report". Pick a machine, type "Belt is loose", send. | "Report sent". The report shows in "My reports" as **Waiting** (yellow). | [ ] |
-| **T2** | Mithi | On the website, be logged in as Farhan on the Dashboard **before** T1. Do **not** refresh. | The new report appears in the list **within 5 seconds**, marked "In the queue". (Count the seconds.) | [ ] |
-| **T3** | Mithi | Press "Assign" on that report. | The pop-up lists technicians. **Tariq is greyed out (busy)**, Hasan is free. Choose Hasan. | [ ] |
+| **T2** | Mithi | On the website, be logged in as Farhan on the Dashboard (or the Machines page) **before** T1. Do **not** refresh. | The machine on the **Machine map** turns white, glows and **beeps within 5 seconds**, with its code (for example SM-01) written under it. (Click once anywhere on the page first, so the browser allows the beep. Count the seconds.) | [ ] |
+| **T3** | Mithi | Click the glowing machine. It appears in the "Your selection" box. Press "Assign technician". | The pop-up lists technicians. **Tariq is greyed out (busy)**, Hasan is free. Choose Hasan. The machine stops glowing and shows that a technician is assigned. | [ ] |
 | **T4** | Rubaiya | On a second phone, or after logging out, log in as Hasan (choose "Technician"). | The job appears in "Jobs" **within 5 seconds**. | [ ] |
 | **T5** | Rubaiya | As Hasan: Accept job, then Start work. | Status becomes **In progress** (blue). Nila's phone (or Mithi's list) shows the change **within 5 seconds**. | [ ] |
 | **T6** | Rubaiya | As Hasan: Mark as fixed. | Status becomes **Resolved** (green). The job moves to "History" (past jobs). Hasan is **free** again. | [ ] |
 | **T7** | Mithi | Open the **Technicians** page as Farhan. | Hasan shows **Free**. Tariq still shows **Busy**. | [ ] |
-| **T8** | Mithi | Make the **queue**: assign Hasan to one waiting report. Then try to assign a **second** report to Tariq or Hasan while both are busy. | Busy technicians are greyed out in the pop-up. The other report **stays in the queue**. A wrong attempt shows a friendly sentence (never the raw code `TECHNICIAN_BUSY`). | [ ] |
+| **T8** | Mithi | Make the **queue**: assign Hasan to one glowing machine. Then pick a **second** glowing machine and try to assign Tariq or Hasan while both are busy. | Busy technicians are greyed out in the pop-up ("All technicians are busy. The report stays in the queue."). The other machine **keeps glowing**. A wrong attempt shows a friendly sentence (never the raw code `TECHNICIAN_BUSY`). | [ ] |
+| **T26** | Mithi | Open the **Machines** page (sidebar). Click the filter chips: All, Down, Running, Technician busy. Click a running machine. | Each chip shows the right machines and fades the others. The line "{n} machines are down" matches the glowing machines. A running machine opens its report or says there is nothing to assign. The codes are SM-01, SM-02, SM-14, CM-03, PM-01. | [ ] |
 | **T9** | Mithi | Log out. On the owner login (`/owner-login`), log in as the owner. | One read-only dashboard: three count boxes (Waiting, In progress, Resolved) and the list of all reports. **No Assign button.** The counts match what the manager sees. | [ ] |
 
 ### 2.2 "Nobody can do someone else's job" (MVP checklist item 6)
@@ -86,7 +87,7 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 | ID | Who | Steps | What must happen | Result |
 |---|---|---|---|---|
 | **T15** | Rubaiya | Phone: press the language button (top right) on the login, Home, Report, My reports, Jobs and History screens. | Everything switches between English and Bangla. No English words stay in Bangla mode, **except** the text a worker typed in a report, which is never translated. People's and machines' names show in Bangla (run `supabase/fill_bangla_test_names.sql` first). | [ ] |
-| **T16** | Mithi | Website: the same on the login pages, Dashboard, Reports, Technicians, Owner. | Same as above. Buttons and dates do not break onto two lines. | [ ] |
+| **T16** | Mithi | Website: the same on the login pages, Dashboard, Machines, Technicians, Invite codes, Owner. | Same as above. Buttons and dates do not break onto two lines. | [ ] |
 | **T17** | Both | Cause an error on purpose (a wrong password). | The sentence is friendly and in the chosen language. The raw code never shows. | [ ] |
 
 > A Bangla speaker has read Parts A to C of the review sheet (the 9 words, the 10 names, the 13 error sentences) and said they are OK (2026-10-21). Parts D and E (the phone and website texts) are still a **draft**. A Bangla speaker should read them before the demo (see [mvp.md](mvp.md) section 5, item 7). Do not tick T15 to T17 for the final run until one has.
@@ -106,7 +107,7 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 
 ### 2.5 Summary of the MVP checklist
 
-When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked:
+When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked:
 
 | mvp.md section 5 item | Proven by |
 |---|---|
@@ -128,7 +129,7 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 ### 3.1 The set-up on the day
 
 - **Rubaiya** holds the phone, with the screen mirrored or shown to the room. Log in once as **Nila** on the phone beforehand.
-- **Mithi** drives the laptop with the website. Open **two windows** side by side: the manager's Dashboard (logged in as Farhan) and, in a private window, the login page.
+- **Mithi** drives the laptop with the website. Open **two windows** side by side: the manager's Dashboard (logged in as Farhan) and, in a private window, the login page. The owner and the manager keep separate logins, so both can stay logged in in the same browser. **Click once anywhere on the manager's page before the demo**, so the browser allows the beep of the Machine map. Turn the laptop sound on.
 - **Sakib** keeps the Supabase dashboard open (Table Editor, `reports`) for the "look under the hood" moment, and the terminal ready.
 - Run section 1 (the clean start) **the day before** and again **an hour before**.
 - Start a **screen recording** of a perfect run in the rehearsal (see section 4).
@@ -140,12 +141,12 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | 0:00 | Sakib | The login page of the phone and the website | "In a garment factory, when a sewing machine breaks, the line stops. Today the worker has to find a supervisor. GarmentPulse puts the whole chain in one place: worker, manager, technician and owner." |
 | 1:00 | Rubaiya | Phone: Nila logs in, the Home screen | "Nila is a worker. She sees only her own screens." |
 | 1:30 | Rubaiya | Report: pick **Sewing machine 01**, type "Belt is loose", send | "She picks the machine from a list and writes a short problem. No phone calls." |
-| 2:00 | Mithi | **Without refreshing**, the new report appears at the top of the manager's Dashboard | "The manager sees it within 5 seconds, live. It is in the queue because nobody is assigned." |
-| 2:45 | Mithi | Press Assign. Tariq is greyed out (busy). Choose **Hasan** | "The system shows who is free and who is busy, so the manager never double-books a technician. The database itself refuses a second job for a busy technician." |
+| 2:00 | Mithi | **Without refreshing**, on the Dashboard's **Machine map** (click once on the page earlier so the beep can play), Sewing machine 01 turns white, glows and **beeps** | "The manager sees the broken machine itself within 5 seconds, live, with its code SM-01. It is in the queue because nobody is assigned." |
+| 2:45 | Mithi | Click the glowing machine, then press **Assign technician**. Tariq is greyed out (busy). Choose **Hasan** | "The system shows who is free and who is busy, so the manager never double-books a technician. The database itself refuses a second job for a busy technician." |
 | 3:30 | Rubaiya | Phone, as Hasan (technician): the job appears. Accept, Start work | "Hasan's phone shows his new job. He accepts it and starts. Everyone sees the change in a few seconds." |
-| 4:30 | Mithi | The manager's list shows **In progress** | "The manager's screen updated by itself." |
+| 4:30 | Mithi | On the map, the machine changes: a stitched rim when a technician is assigned, then a fast bright beam when he is working. Show the Technicians page too: Hasan **Busy** | "The manager's screen updated by itself." |
 | 5:00 | Rubaiya | Hasan: Mark as fixed. History shows the job | "Done. Hasan is free again, and the job is in his history." |
-| 5:45 | Mithi | Owner login. Three boxes, all reports, no Assign button | "The owner can watch everything and change nothing. That is a deliberate rule, enforced by the database." |
+| 5:45 | Mithi | Owner login (`/owner-login`; it can stay open next to the manager's window). Three boxes, all reports, no Assign button | "The owner can watch everything and change nothing. That is a deliberate rule, enforced by the database." |
 | 6:30 | Mithi | Owner makes a **manager code**. Private window: sign up with it as a new manager | "How do new people join? Only with an invite code. The owner makes a manager code. It works once and runs out in a week." |
 | 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it | "The code decides the role. Nobody can choose to be a manager." |
 | 8:15 | Sakib | Try the **same code again**; try a **manager** code on the phone | "A used code, a made-up code, or the wrong app are all refused, and no account is created." |
@@ -207,4 +208,6 @@ When T1 to T25 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 
 - The Bangla texts of the phone app and the website (Parts D and E of `docs/bangla-review-sheet.md`) are a draft until a Bangla speaker has read them. The shared words, the error sentences and the test names have been read.
 - A report's description is shown exactly as the worker typed it. It is never translated.
+- The Machine map shows the 5 real machines only. A machine has a fixed seat only by sorting: adding a machine can move the others (a fixed seat field is optional and not built).
+- The beep needs one click on the page first. Browsers keep pages silent until the person has used them.
 - Expenses, invoices, owner approval, chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.
