@@ -7,7 +7,7 @@
 //     are waiting for a technician (the queue),
 //   - four count boxes: New reports, In progress, Resolved today, Free technicians
 //     (data/stats.ts says how they are worked out),
-//   - the MACHINE MAP (components/MachineMap.tsx, two rows filled up with dummy machines): a broken machine flashes red
+//   - the MACHINE MAP (components/ManagerMachineMap.tsx, the same map as the Machines page): a broken machine flashes red
 //     and beeps, and the manager picks it and assigns a free technician,
 //   - a compact technicians panel. The full list is on the Technicians page.
 //     (The written list of reports was removed: broken machines are shown on the
@@ -19,11 +19,9 @@ import { isInQueue, STATUS_LABELS, summarizeReports } from '@garmentpulse/shared
 import { useAuth } from '../../auth/AuthContext';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
-import { MachineMap } from '../../components/MachineMap';
+import { ManagerMachineMap } from '../../components/ManagerMachineMap';
 import { TechniciansPanel } from '../../components/TechniciansPanel';
-import { buildSeats, fillWithDummies } from '../../data/machineSeats';
 import { useManagerData } from '../../data/ManagerData';
-import { useMachines } from '../../data/useDashboardData';
 import {
   averageFixMs,
   countFree,
@@ -40,8 +38,7 @@ import { personFirstName } from '../../language/localNames';
 export default function DashboardPage() {
   const { profile } = useAuth();
   const { language } = useLanguage();
-  const { reports, technicians, reloadAll } = useManagerData();
-  const machines = useMachines();
+  const { reports, technicians } = useManagerData();
   const list = reports.data ?? [];
   const summary = summarizeReports(list);
   const queueCount = list.filter(isInQueue).length;
@@ -119,24 +116,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <DataGate state={machines}>
-        {(machineList) => (
-          <DataGate state={reports}>
-            {(rows) => (
-              <DataGate state={technicians}>
-                {(people) => (
-                  <MachineMap
-                    seats={fillWithDummies(buildSeats(machineList, rows), 2)}
-                    technicians={people}
-                    onChanged={reloadAll}
-                    title={screenText('mapTitle', language)}
-                  />
-                )}
-              </DataGate>
-            )}
-          </DataGate>
-        )}
-      </DataGate>
+      <ManagerMachineMap maxRows={2} />
 
       <div className="dashboard-grid">
         <DataGate state={reports}>

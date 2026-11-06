@@ -4,11 +4,14 @@
 //
 // The MACHINE MAP: every machine on the floor is a small sewing machine on a "seat plan",
 // like choosing seats on a cinema or bus ticket website.
-//   - Green seat = running. Red seat = broken, waiting for a technician: it FLASHES and
-//     the page BEEPS when a new one appears (live, thanks to the Realtime updates).
-//     Amber = technician assigned. Blue = the technician is working on it.
+//   - Each machine is a round RADAR SCOPE with a sweeping beam. A machine that is running
+//     is calm. A machine that is DOWN (broken, waiting for a technician) glows WHITE, sends
+//     out ripples, shakes, and the page BEEPS when a new one appears (live, thanks to the
+//     Realtime updates). A dashed stitched rim = technician assigned. A fast, bright beam =
+//     the technician is working on it. The scopes sit on a dark denim panel so the white
+//     glow can be seen.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a red machine to put it in "Your selection" (the box on the side). The
+//   - Click a machine that glows white (down) to put it in "Your selection" (the box on the side). The
 //     "Assign technician" button there opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
@@ -16,10 +19,14 @@
 //   - Click any other machine to open its report (read-only), or see that it is running.
 // The seat logic is in data/machineSeats.ts. The beep needs one click on the page first,
 // because browsers keep pages silent until the person has used them.
+// On the Dashboard only the first rows are shown (`maxRows`) with a link to the Machines page,
+// which shows every row. The chips, the "machines are down" line and the beep always count ALL
+// machines, so both pages tell the same story.
 // Only in fake mode (no backend keys) there is a "Demo" button that pretends a worker
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
@@ -46,7 +53,15 @@ const CHIP_TEXT: Record<Exclude<Filter, 'all'>, ScreenTextKey> = {
   busy: 'chipBusy',
 };
 
-/** A tiny sewing machine (base, arm, needle, hand wheel, thread spool), drawn in the seat colour. */
+/** The small mark on a scope. Always paired with a word (tooltip, legend), never colour alone. */
+const SEAT_BADGE: Record<SeatState, string> = {
+  running: '',
+  assigned: 'T',
+  progress: '···',
+  down: '!',
+};
+
+/** A tiny sewing machine (base, arm, needle, hand wheel, thread spool) in the middle of a scope. */
 function MiniMachine() {
   return (
     <svg viewBox="0 0 40 30" aria-hidden="true" className="seat-machine">
@@ -84,9 +99,11 @@ type MachineMapProps = {
   onChanged: () => void;
   /** A heading for the card (white on a denim strip). The Machines page has its own page title, so it leaves this out. */
   title?: string;
+  /** Show only the first rows (the Dashboard preview). The counts still use ALL machines. Leave out to show every row. */
+  maxRows?: number;
 };
 
-export function MachineMap({ seats, technicians, onChanged, title }: MachineMapProps) {
+export function MachineMap({ seats, technicians, onChanged, title, maxRows }: MachineMapProps) {
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -178,6 +195,8 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   const rows: Seat[][] = [];
   for (let i = 0; i < seats.length; i += SEATS_PER_ROW)
     rows.push(seats.slice(i, i + SEATS_PER_ROW));
+  const shownRows = maxRows ? rows.slice(0, maxRows) : rows;
+  const hiddenCount = seats.length - shownRows.reduce((n, row) => n + row.length, 0);
   const first = selectedSeats[0];
 
   return (
@@ -234,7 +253,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
         <div className="map-desk">{screenText('deskLabel', language)}</div>
         <div className="map-scroll">
           <div className="map-rows">
-            {rows.map((row, r) => (
+            {shownRows.map((row, r) => (
               <div className="map-row" key={rowLetter(r)}>
                 <span className="map-row-letter">{rowLetter(r)}</span>
                 {row.map((seat, k) => {
@@ -258,8 +277,13 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                         title={`${seat.code} · ${stateWord(seat.state)}`}
                         onClick={() => clickSeat(seat)}
                       >
-                        <MiniMachine />
-                        <span className="seat-label">{seat.label}</span>
+                        <span className="scope">
+                          <MiniMachine />
+                          <span className="seat-label">{seat.code}</span>
+                        </span>
+                        <span className="seat-badge" aria-hidden="true">
+                          {selected ? '✓' : SEAT_BADGE[seat.state]}
+                        </span>
                       </button>
                     </span>
                   );
@@ -269,6 +293,14 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
             ))}
           </div>
         </div>
+
+        {hiddenCount > 0 ? (
+          <p className="map-more">
+            <Link href="/manager/machines">
+              {screenText('mapViewAll', language).replace('{n}', num(seats.length))}
+            </Link>
+          </p>
+        ) : null}
 
         <ul className="map-legend">
           {(['running', 'down', 'assigned', 'progress'] as const).map((state) => (

@@ -10,9 +10,9 @@
 //   progress  the technician is working on it        (blue)
 //
 // The seats are put in rows of six, named A, B, C ... and numbered 1 to 6, like "B3".
-// The machine CODE (for example "SM-B3") is the seat name for now: the backend does not
-// give machines a code yet (see requests/sakib/2026-11-02-machine-code.md). When it does,
-// `machineCode` uses the real one and nothing else has to change.
+// The machine CODE (for example "SM-14") is the real `code` the backend sends with every
+// machine (done by Sakib, see requests/mithi/2026-11-02-machine-code-ready.md). A machine
+// without a code falls back to "SM-" plus the seat name.
 // Owned by Mithi.
 
 import type { Machine, Report } from '@garmentpulse/shared';
@@ -34,9 +34,6 @@ export type Seat = {
 /** How many machines sit in one row of the map. */
 export const SEATS_PER_ROW = 6;
 
-/** A machine as the backend will send it once it has a code (the field does not exist yet). */
-type MachineMaybeWithCode = Machine & { code?: string | null };
-
 /** The row letter for a row number: 0 is A, 1 is B ... */
 export function rowLetter(row: number): string {
   return String.fromCharCode(65 + (row % 26));
@@ -44,7 +41,7 @@ export function rowLetter(row: number): string {
 
 /** The real machine code when the backend sends one, otherwise "SM-" plus the seat name. */
 export function machineCode(machine: Machine, label: string): string {
-  const real = (machine as MachineMaybeWithCode).code?.trim();
+  const real = machine.code?.trim();
   return real ? real : `SM-${label}`;
 }
 
@@ -68,25 +65,4 @@ export function buildSeats(machines: readonly Machine[], reports: readonly Repor
     const report = open ?? null;
     return { machine, label, code: machineCode(machine, label), state: stateOf(report), report };
   });
-}
-
-/**
- * Adds DUMMY machines after the real ones so the map has at least `rows` full rows.
- * The dummies look like normal running machines (green, no report), so a factory with
- * only a few machines still shows a full floor plan on the Dashboard. They are made up
- * and are NOT in the backend. When there are enough real machines, nothing is added.
- */
-export function fillWithDummies(seats: readonly Seat[], rows: number): Seat[] {
-  const filled = [...seats];
-  for (let index = filled.length; index < rows * SEATS_PER_ROW; index++) {
-    const label = `${rowLetter(Math.floor(index / SEATS_PER_ROW))}${(index % SEATS_PER_ROW) + 1}`;
-    filled.push({
-      machine: { id: `dummy-${label}`, name: `Demo machine ${String(index + 1).padStart(2, '0')}` },
-      label,
-      code: `SM-${label}`,
-      state: 'running',
-      report: null,
-    });
-  }
-  return filled;
 }

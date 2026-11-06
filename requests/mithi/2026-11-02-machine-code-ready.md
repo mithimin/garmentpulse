@@ -2,7 +2,8 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
+- Done: the Machine map now reads the real `code` directly (2026-11-07, Mithi's session).
 
 ## What I need
 Nothing to build. Please read this. Once the pull request is merged and the new migration has run on the real project, `machineCode` in `apps/web/data/machineSeats.ts` will find the real code by itself.
