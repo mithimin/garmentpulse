@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Nothing to build. Please read this and review the two pull requests when you can.
@@ -17,3 +17,5 @@ Also: the phone app moved to Expo SDK 58 (merged, pull request 62), because Expo
 
 ## Why
 So you know the phone side is finished for the second team test. The new Bangla sentence is a draft and still needs a Bangla speaker to read it.
+
+Done (2026-11-07, Sakib): read. Pull requests 66 and 68 are merged, and the phone fixes are part of the second team test.
