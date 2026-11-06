@@ -163,8 +163,8 @@ export const SCREEN_TEXT = {
   menuMachines: { en: 'Machines', bn: 'মেশিন' },
   mapTitle: { en: 'Machine map', bn: 'মেশিন ম্যাপ' },
   mapSub: {
-    en: 'Every machine on the floor. A flashing red machine needs a technician.',
-    bn: 'ফ্লোরের প্রতিটি মেশিন। লাল রঙে জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
+    en: 'Every machine on the floor. A machine glowing white needs a technician.',
+    bn: 'ফ্লোরের প্রতিটি মেশিন। সাদা আলোয় জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
   },
   seatRunning: { en: 'Running', bn: 'চলছে' },
   seatDown: { en: 'Down', bn: 'নষ্ট' },
@@ -177,8 +177,8 @@ export const SCREEN_TEXT = {
   downCountMany: { en: '{n} machines are down', bn: '{n}টি মেশিন নষ্ট' },
   selectionTitle: { en: 'Your selection', bn: 'আপনার বাছাই' },
   selectionEmpty: {
-    en: 'Click a red machine to select it. Red machines are broken and waiting for a technician.',
-    bn: 'একটি লাল মেশিনে ক্লিক করে বাছাই করুন। লাল মেশিন নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
+    en: 'Click a machine glowing white to select it. These machines are broken and waiting for a technician.',
+    bn: 'সাদা আলোয় জ্বলা একটি মেশিনে ক্লিক করে বাছাই করুন। এই মেশিনগুলো নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
   },
   selectionCount: { en: 'Reports selected', bn: 'বাছাই করা রিপোর্ট' },
   selectionQueueNote: {
@@ -186,6 +186,16 @@ export const SCREEN_TEXT = {
     bn: 'একজন টেকনিশিয়ান একবারে একটি কাজ করেন। প্রথম মেশিনটি টেকনিশিয়ান পাবে। বাকিগুলো সারিতে থাকবে।',
   },
   assignSelected: { en: 'Assign technician', bn: 'টেকনিশিয়ান দিন' },
+  mapTechLabel: { en: 'Technician', bn: 'টেকনিশিয়ান' },
+  mapNoFreeTech: {
+    en: 'Every technician is busy. The report stays in the queue.',
+    bn: 'সব টেকনিশিয়ান ব্যস্ত। রিপোর্টটি সারিতে থাকবে।',
+  },
+  mapOnTheWay: {
+    en: '{tech} is on the way to {machine}.',
+    bn: '{tech} {machine}-এর দিকে যাচ্ছেন।',
+  },
+  mapContinue: { en: 'Continue', bn: 'চালিয়ে যান' },
   removeSelected: { en: 'Remove {machine}', bn: '{machine} সরান' },
   runningHint: {
     en: '{machine} is running. There is nothing to assign.',

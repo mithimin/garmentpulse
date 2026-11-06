@@ -4,11 +4,14 @@
 //
 // The MACHINE MAP: every machine on the floor is a small sewing machine on a "seat plan",
 // like choosing seats on a cinema or bus ticket website.
-//   - Green seat = running. Red seat = broken, waiting for a technician: it FLASHES and
-//     the page BEEPS when a new one appears (live, thanks to the Realtime updates).
-//     Amber = technician assigned. Blue = the technician is working on it.
+//   - Each machine is a round RADAR SCOPE with a sweeping beam. A machine that is running
+//     is calm. A machine that is DOWN (broken, waiting for a technician) glows WHITE, sends
+//     out ripples, shakes, and the page BEEPS when a new one appears (live, thanks to the
+//     Realtime updates). A dashed stitched rim = technician assigned. A fast, bright beam =
+//     the technician is working on it. The scopes sit on a dark denim panel so the white
+//     glow can be seen.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a red machine to put it in "Your selection" (the box on the side). The
+//   - Click a machine that glows white (down) to put it in "Your selection" (the box on the side). The
 //     "Assign technician" button there opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
@@ -22,7 +25,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
-import { STATUS_LABELS } from '@garmentpulse/shared';
+import { AVAILABILITY_LABELS, STATUS_LABELS } from '@garmentpulse/shared';
 import { addFakeReport } from '../data/fakeStore';
 import { rowLetter, SEATS_PER_ROW } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
@@ -32,7 +35,8 @@ import { formatDateTime, localizeDigits } from '../language/format';
 import { machineName, personName } from '../language/localNames';
 import { screenText } from '../language/screenText';
 import type { ScreenTextKey } from '../language/screenText';
-import { AssignDialog } from './AssignDialog';
+import { assignTechnician } from '../data/useDashboardData';
+import { errorSentence } from '../language/errorText';
 import { Button } from './Button';
 import { Card } from './Card';
 import { ReportDetailsDialog } from './ReportDetailsDialog';
@@ -46,7 +50,15 @@ const CHIP_TEXT: Record<Exclude<Filter, 'all'>, ScreenTextKey> = {
   busy: 'chipBusy',
 };
 
-/** A tiny sewing machine (base, arm, needle, hand wheel, thread spool), drawn in the seat colour. */
+/** The small mark on a scope. Always paired with a word (tooltip, legend), never colour alone. */
+const SEAT_BADGE: Record<SeatState, string> = {
+  running: '',
+  assigned: 'T',
+  progress: '···',
+  down: '!',
+};
+
+/** A tiny sewing machine (base, arm, needle, hand wheel, thread spool) in the middle of a scope. */
 function MiniMachine() {
   return (
     <svg viewBox="0 0 40 30" aria-hidden="true" className="seat-machine">
@@ -90,7 +102,10 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [assigning, setAssigning] = useState<Report | null>(null);
+  const [techId, setTechId] = useState('');
+  const [working, setWorking] = useState(false);
+  const [error, setError] = useState('');
+  const [done, setDone] = useState('');
   const [viewing, setViewing] = useState<Report | null>(null);
   const [hint, setHint] = useState('');
   const [soundOn, setSoundOn] = useState(true);
@@ -180,6 +195,29 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
     rows.push(seats.slice(i, i + SEATS_PER_ROW));
   const first = selectedSeats[0];
 
+  // The technician box in "Your selection": free technicians can be chosen, busy ones are greyed.
+  const freeTechs = technicians.filter((t) => t.availability === 'free');
+  const chosenTech = freeTechs.find((t) => t.id === techId) ?? freeTechs[0];
+  async function assignFirst() {
+    if (!first?.report || !chosenTech) return;
+    setWorking(true);
+    setError('');
+    try {
+      await assignTechnician(first.report.id, chosenTech.id);
+      setSelectedIds((ids) => ids.filter((id) => id !== first.machine.id));
+      setDone(
+        screenText('mapOnTheWay', language)
+          .replace('{tech}', personName(chosenTech, language))
+          .replace('{machine}', first.code),
+      );
+    } catch (e) {
+      setError(errorSentence(e, language));
+    } finally {
+      setWorking(false);
+      onChanged();
+    }
+  }
+
   return (
     <div className="map-layout">
       <Card className="map-card">
@@ -258,8 +296,13 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                         title={`${seat.code} · ${stateWord(seat.state)}`}
                         onClick={() => clickSeat(seat)}
                       >
-                        <MiniMachine />
-                        <span className="seat-label">{seat.label}</span>
+                        <span className="scope">
+                          <MiniMachine />
+                          <span className="seat-label">{seat.label}</span>
+                        </span>
+                        <span className="seat-badge" aria-hidden="true">
+                          {selected ? '✓' : SEAT_BADGE[seat.state]}
+                        </span>
                       </button>
                     </span>
                   );
@@ -325,13 +368,42 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
             <span>{screenText('selectionCount', language)}</span>
             <strong>{num(selectedSeats.length)}</strong>
           </p>
-          <Button
-            kind="main"
-            disabled={!first?.report}
-            onClick={() => first?.report && setAssigning(first.report)}
-          >
-            {screenText('assignSelected', language)}
-          </Button>
+          {done ? (
+            <>
+              <p className="map-done">{done}</p>
+              <Button kind="main" onClick={() => setDone('')}>
+                {screenText('mapContinue', language)}
+              </Button>
+            </>
+          ) : (
+            <>
+              <label className="map-tech">
+                <span>{screenText('mapTechLabel', language)}</span>
+                <select
+                  value={techId}
+                  onChange={(e) => setTechId(e.target.value)}
+                  disabled={freeTechs.length === 0}
+                >
+                  {technicians.map((t) => (
+                    <option key={t.id} value={t.id} disabled={t.availability !== 'free'}>
+                      {personName(t, language)} · {AVAILABILITY_LABELS[t.availability][language]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {freeTechs.length === 0 ? (
+                <p className="map-note">{screenText('mapNoFreeTech', language)}</p>
+              ) : null}
+              {error ? <p className="map-error">{error}</p> : null}
+              <Button
+                kind="main"
+                disabled={!first?.report || !chosenTech || working}
+                onClick={assignFirst}
+              >
+                {screenText('assignSelected', language)}
+              </Button>
+            </>
+          )}
           {selectedSeats.length > 1 ? (
             <p className="map-note">{screenText('selectionQueueNote', language)}</p>
           ) : null}
@@ -339,14 +411,6 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
         </Card>
       </aside>
 
-      {assigning ? (
-        <AssignDialog
-          report={assigning}
-          technicians={technicians}
-          onClose={() => setAssigning(null)}
-          onAssigned={onChanged}
-        />
-      ) : null}
       {viewing ? <ReportDetailsDialog report={viewing} onClose={() => setViewing(null)} /> : null}
     </div>
   );
