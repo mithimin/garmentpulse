@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-11-02
+**Last updated:** 2026-11-07
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -103,11 +103,23 @@ type Profile = {
   role: Role;
 };
 
-type Machine = { id: string; name: string; name_bn?: string | null; code?: string | null };
+type Machine = {
+  id: string;
+  name: string;
+  name_bn?: string | null;
+  code?: string | null;
+  seat?: string | null; // the fixed place on the Machine map, such as "A3"
+};
 
 type Report = {
   id: string;
-  machine: { id: string; name: string; name_bn?: string | null; code?: string | null };
+  machine: {
+    id: string;
+    name: string;
+    name_bn?: string | null;
+    code?: string | null;
+    seat?: string | null;
+  };
   description: string;
   status: ReportStatus;
   reported_by: { id: string; display_name: string; display_name_bn?: string | null };
@@ -136,6 +148,8 @@ A technician is **busy** when they have at least one assigned report that is not
 **Bangla names (`display_name_bn`, `name_bn`).** These fields are **optional** and always present in the answers once the backend has them. They are `null` when nobody has written a Bangla name, and then the app shows the English name. **Nothing is generated or translated automatically**: a person types each one (a Bangla speaker for the test data, the person themselves at sign-up, and Sakib for machines). They appear on people (`Profile`, `Technician`, and `reported_by` and `technician` inside a `Report`) and on machines (`Machine`, and `machine` inside a `Report`). A Bangla name is 1 to 80 letters or empty. Report descriptions typed by workers are never changed.
 
 **Machine code (`code`).** An **optional** short label for a machine, such as `SM-01` (Sewing machine 01) or `CM-03` (Cutting machine 03), added on 2026-11-02 for the website's Machine map. It is `null` when a machine has none. Each machine's code is unique, written in capital letters, numbers and dashes (1 to 20 characters), and typed by Sakib: nothing is generated. It appears on machines (`Machine`, and `machine` inside a `Report`). Apps show it next to or under the machine's name.
+
+**Machine seat (`seat`).** An **optional** fixed place of a machine on the website's Machine map, added on 2026-11-07: one capital letter for the row and a place number, for example `A3` (row A, place 3). It is `null` when a machine has none, and the map then sorts by name. Each machine's seat is unique and typed by Sakib. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code`.
 
 ---
 

@@ -52,11 +52,19 @@ export type Machine = {
   name_bn?: BanglaName;
   /** A short unique code such as "SM-01", if one was written. `null` when none. */
   code?: string | null;
+  /** The machine's fixed place on the Machine map, such as "A3" (row A, place 3). `null` when none. */
+  seat?: string | null;
 };
 
 export type Report = {
   id: string;
-  machine: { id: string; name: string; name_bn?: BanglaName; code?: string | null };
+  machine: {
+    id: string;
+    name: string;
+    name_bn?: BanglaName;
+    code?: string | null;
+    seat?: string | null;
+  };
   /** The worker's typed description of the problem. */
   description: string;
   status: ReportStatus;

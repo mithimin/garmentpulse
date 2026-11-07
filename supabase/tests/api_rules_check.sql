@@ -4,7 +4,7 @@
   -- What this file does, in plain words:
   --   Acts as each test person (Nila the worker, Tariq and Hasan the
   --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
-  --   and tries about 132 things against the real functions and tables. The
+  --   and tries about 138 things against the real functions and tables. The
   --   last part tests SIGN-UP WITH INVITE CODES: the code functions and the
   --   sign-up guard (it adds pretend new people to the login list, and the
   --   final "error" removes them again).
@@ -195,7 +195,13 @@
       {"name": "MACHINE CODE: a report carries the code of its machine", "email": "farhan@example.com", "call": "select public.list_reports()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'description' = 'The needle keeps breaking.' and e->'machine'->>'code' = 'SM-14')"},
       {"name": "MACHINE CODE: the worker sees the code inside her own reports", "email": "nila@example.com", "call": "select public.list_my_reports()", "check": "not exists (select 1 from jsonb_array_elements($1) e where e->'machine'->>'code' is null)"},
       {"name": "MACHINE CODE: two machines cannot share a code", "role": "postgres", "call": "with x as (update public.machines set code = 'SM-01' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "duplicate key"},
-      {"name": "MACHINE CODE: a badly written code is refused (small letters)", "role": "postgres", "call": "with x as (update public.machines set code = 'sm-77' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"}
+      {"name": "MACHINE CODE: a badly written code is refused (small letters)", "role": "postgres", "call": "with x as (update public.machines set code = 'sm-77' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "MACHINE SEAT: the machine list has a seat for every machine (a letter and a number)", "email": "nila@example.com", "call": "select public.list_machines()", "check": "jsonb_array_length($1) = 5 and not exists (select 1 from jsonb_array_elements($1) e where e->>'seat' is null or e->>'seat' !~ '^[A-Z][1-9][0-9]?$')"},
+      {"name": "MACHINE SEAT: the seats follow the names (Cutting machine 03 is A1, Sewing machine 14 is A5)", "email": "farhan@example.com", "call": "select public.list_machines()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'name' = 'Cutting machine 03' and e->>'seat' = 'A1') and exists (select 1 from jsonb_array_elements($1) e where e->>'name' = 'Sewing machine 14' and e->>'seat' = 'A5')"},
+      {"name": "MACHINE SEAT: a report carries the seat of its machine", "email": "farhan@example.com", "call": "select public.list_reports()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'description' = 'The needle keeps breaking.' and e->'machine'->>'seat' = 'A5')"},
+      {"name": "MACHINE SEAT: two machines cannot share a seat", "role": "postgres", "call": "with x as (update public.machines set seat = 'A1' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "duplicate key"},
+      {"name": "MACHINE SEAT: a badly written seat is refused (small letter, or a place that starts with 0)", "role": "postgres", "call": "with x as (update public.machines set seat = 'a1' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "MACHINE SEAT: a seat with a place number that starts with 0 is refused", "role": "postgres", "call": "with x as (update public.machines set seat = 'B0' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"}
     ]$json$;
   
     t         jsonb;
