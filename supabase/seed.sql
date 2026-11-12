@@ -77,13 +77,15 @@ on conflict (id) do nothing;
 -- -----------------------------------------------------------------------------
 -- Machines (typed in by hand for the MVP)
 -- -----------------------------------------------------------------------------
-insert into public.machines (name, code) values
-  ('Sewing machine 01', 'SM-01'),
-  ('Sewing machine 02', 'SM-02'),
-  ('Sewing machine 14', 'SM-14'),
-  ('Cutting machine 03', 'CM-03'),
-  ('Pressing machine 01', 'PM-01')
-on conflict (name) do update set code = coalesce(public.machines.code, excluded.code);
+insert into public.machines (name, code, seat) values
+  ('Sewing machine 01', 'SM-01', 'A3'),
+  ('Sewing machine 02', 'SM-02', 'A4'),
+  ('Sewing machine 14', 'SM-14', 'A5'),
+  ('Cutting machine 03', 'CM-03', 'A1'),
+  ('Pressing machine 01', 'PM-01', 'A2')
+on conflict (name) do update set
+  code = coalesce(public.machines.code, excluded.code),
+  seat = coalesce(public.machines.seat, excluded.seat);
 
 
 -- -----------------------------------------------------------------------------
