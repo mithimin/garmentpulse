@@ -5,14 +5,14 @@
 // after) with a heartbeat ("pulse") line running along its arm.
 // It is the same drawing as the phone app's logo (made by Rubaiya), copied here
 // because the phone version only works inside a phone app.
-//   - dark blue machine: arm, pillar, base, thread spool, presser foot and needle
+//   - dark maroon machine: arm, pillar, base, thread spool, presser foot and needle
 //   - gold zig-zag on the arm: the pulse (the machine is alive and healthy)
 //   - gold dashes on the base: the line of stitches the machine sews
 // Use `light` when the logo sits on a dark background (for example the top bar).
 // Owned by Mithi.
 
 const GOLD = '#DCC593';
-const NAVY = '#1F2B47';
+const NAVY = '#4A1519';
 const WHITE = '#F7F9FB';
 
 export function Logo({ size = 72, light = false }: { size?: number; light?: boolean }) {

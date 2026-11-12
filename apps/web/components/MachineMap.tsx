@@ -5,13 +5,13 @@
 // The MACHINE MAP: every machine on the floor is a small sewing machine on a "seat plan",
 // like choosing seats on a cinema or bus ticket website.
 //   - Each machine is a round RADAR SCOPE with a sweeping beam. A machine that is running
-//     is calm. A machine that is DOWN (broken, waiting for a technician) glows WHITE, sends
+//     is calm. A machine that is DOWN (broken, waiting for a technician) glows BURGUNDY, sends
 //     out ripples, shakes, and the page BEEPS when a new one appears (live, thanks to the
 //     Realtime updates). A dashed stitched rim = technician assigned. A fast, bright beam =
 //     the technician is working on it. The scopes sit on a dark denim panel so the white
 //     glow can be seen.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a machine that glows white (down) to put it in "Your selection" (the box on the side). The
+//   - Click a machine that glows burgundy (down) to put it in "Your selection" (the box on the side). The
 //     "Assign technician" button there opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
@@ -26,6 +26,7 @@
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
+import { MapPin, Volume2, VolumeX } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
@@ -203,7 +204,13 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
     <div className="map-layout">
       <Card className="map-card">
         <div className={title ? 'card-head map-banner' : 'card-head'}>
-          {title ? <h2 className="map-title">{title}</h2> : null}
+          {title ? (
+            <>
+              <MapPin className="map-pin" size={34} strokeWidth={2} aria-hidden="true" />
+              <h2 className="map-title">{title}</h2>
+              <span className="map-head-line" aria-hidden="true" />
+            </>
+          ) : null}
           <p
             className={downSeats.length === 0 ? 'map-down-line map-down-none' : 'map-down-line'}
             aria-live="polite"
@@ -236,6 +243,11 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
           <div className="map-buttons">
             <Button small aria-pressed={soundOn} onClick={() => setSoundOn((on) => !on)}>
               {screenText(soundOn ? 'soundOn' : 'soundOff', language)}
+              {soundOn ? (
+                <Volume2 size={18} aria-hidden="true" />
+              ) : (
+                <VolumeX size={18} aria-hidden="true" />
+              )}
             </Button>
             {!backendIsReal ? (
               <Button
@@ -318,7 +330,10 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
 
       <aside ref={sideRef} className="map-side" aria-label={screenText('selectionTitle', language)}>
         <Card>
-          <h2 className="map-side-title">{screenText('selectionTitle', language)}</h2>
+          <div className="map-side-head">
+            <h2 className="map-side-title">{screenText('selectionTitle', language)}</h2>
+            <span className="map-head-line" aria-hidden="true" />
+          </div>
           {selectedSeats.length === 0 ? (
             <p className="map-empty">{screenText('selectionEmpty', language)}</p>
           ) : (

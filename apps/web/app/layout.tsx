@@ -7,28 +7,19 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Baloo_Da_2, Cormorant_Garamond, IBM_Plex_Mono, Jost, Marcellus } from 'next/font/google';
+import { Baloo_Da_2, EB_Garamond, IBM_Plex_Mono } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
 
 // The English fonts cannot draw Bangla letters, so Bangla uses Baloo Da 2,
 // a rounded, friendly Bangla font that has several weights (see the font lists in globals.css).
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['600'],
-  variable: '--font-cormorant',
-});
-const jost = Jost({
+// EB Garamond is the ONE English font of the whole website (titles, normal text,
+// greeting and big numbers). Mithi chose it on 2026-11-13.
+const ebGaramond = EB_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-jost',
-});
-// Marcellus (one weight) is used only for the greeting at the top of the dashboards.
-const marcellus = Marcellus({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-marcellus',
+  variable: '--font-eb-garamond',
 });
 const balooBangla = Baloo_Da_2({
   subsets: ['bengali'],
@@ -51,7 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${cormorant.variable} ${jost.variable} ${marcellus.variable} ${balooBangla.variable} ${plexMono.variable}`}
+      className={`${ebGaramond.variable} ${balooBangla.variable} ${plexMono.variable}`}
     >
       <body>
         <LanguageProvider>
