@@ -11,6 +11,7 @@
 // The number may be a number or a short text. Digits turn into Bangla digits in
 // Bangla mode. Owned by Mithi.
 
+import { CircleCheck, Clock, FileText, UserRound } from 'lucide-react';
 import { useLanguage } from '../language/LanguageContext';
 import { localizeDigits } from '../language/format';
 
@@ -21,10 +22,20 @@ type CountBoxProps = {
   tone?: 'plain' | 'waiting' | 'progress' | 'resolved' | 'free';
 };
 
+const TONE_ICON = {
+  plain: FileText,
+  waiting: FileText,
+  progress: Clock,
+  resolved: CircleCheck,
+  free: UserRound,
+};
+
 export function CountBox({ label, count, tag, tone = 'plain' }: CountBoxProps) {
   const { language } = useLanguage();
+  const Icon = TONE_ICON[tone];
   return (
     <div className="count-box">
+      <Icon className="count-icon" size={36} strokeWidth={1.5} aria-hidden="true" />
       <div className="count-label">{label}</div>
       <div className="count-number">{localizeDigits(String(count), language)}</div>
       {tag ? (

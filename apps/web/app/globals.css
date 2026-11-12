@@ -13,31 +13,31 @@
   /* The height of the top bar. */
   --bar-size: 110px;
   /* Blue colours (design system 3.2) */
-  --page: #dde3ea;
-  --bar: #1f2b47;
-  --bar-text: #d3d9e8;
+  --page: #b3c0c7;
+  --bar: #4a1519;
+  --bar-text: #ecd9d2;
   --bar-text-chosen: #ffffff;
-  --bar-stitch: #d6ac68;
-  --card: #f7f9fb;
-  --card-border: #c9d2de;
-  --card-stitch: #98a6ba;
-  --list-card: #b4c1cf;
-  --number-box: #5f7387;
-  --number-box-border: #4c5e71;
-  --text: #1e2430;
-  --heading: #1a202b;
-  --soft-text: #3f4a59;
-  --main-button: #2e4670;
-  --main-button-border: #1c2d4c;
-  --main-button-hover: #36527f;
-  --link: #2a3a5c;
-  --link-hover: #6e1f2e;
+  --bar-stitch: #d9b98a;
+  --card: #ece4d2;
+  --card-border: #d6cbb4;
+  --card-stitch: #bdae92;
+  --list-card: #bac7ce;
+  --number-box: #778e96;
+  --number-box-border: #62787f;
+  --text: #2e1a1c;
+  --heading: #461b19;
+  --soft-text: #5a4a48;
+  --main-button: #4a1519;
+  --main-button-border: #2e0c0f;
+  --main-button-hover: #62202a;
+  --link: #4a1519;
+  --link-hover: #8a2a1a;
 
   /* Colours shared by every role (design system 3.6) */
-  --second-button: #f7f9fb;
-  --input-border: #aeb9c8;
-  --input-bg: #fcfdfe;
-  --input-hint: #7a8495;
+  --second-button: #f6f1e6;
+  --input-border: #bdae92;
+  --input-bg: #faf6ec;
+  --input-hint: #85766f;
   --error-bg: #f2d6cf;
   --error-text: #8a2a1a;
   --error-border: #d9afa4;
@@ -45,16 +45,16 @@
   /* Report statuses (design system 4.1) */
   --waiting-bg: #f3e2b8;
   --waiting-text: #6e4e0e;
-  --progress-bg: #dce2ee;
-  --progress-text: #263b66;
+  --progress-bg: #d3dde2;
+  --progress-text: #2f4650;
   --resolved-bg: #e1e5cc;
   --resolved-text: #4a5320;
 
   /* Tables (design system 9.7) */
-  --table-head: #26324f;
-  --table-head-text: #efe3c8;
-  --table-row: #e8edf3;
-  --table-row-hover: #dce3ec;
+  --table-head: #4a1519;
+  --table-head-text: #f1e3c0;
+  --table-row: #f1eadb;
+  --table-row-hover: #e6dcc7;
 
   /* Spacing steps (design system 7.1) */
   --space-1: 4px;
@@ -70,8 +70,8 @@
      friendly Bangla font: it is listed right after each English font, so the browser uses
      it for any Bangla letter. */
   --font-title:
-    var(--font-cormorant), 'Cormorant Garamond', var(--font-baloo-bangla), Georgia, serif;
-  --font-body: var(--font-jost), Jost, var(--font-baloo-bangla), system-ui, sans-serif;
+    var(--font-eb-garamond), 'EB Garamond', var(--font-baloo-bangla), Georgia, serif;
+  --font-body: var(--font-eb-garamond), 'EB Garamond', var(--font-baloo-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
 
@@ -86,15 +86,15 @@ body {
   background-image:
     repeating-linear-gradient(
       0deg,
-      rgba(30, 50, 80, 0.035) 0,
-      rgba(30, 50, 80, 0.035) 1px,
+      rgba(74, 21, 25, 0.035) 0,
+      rgba(74, 21, 25, 0.035) 1px,
       transparent 1px,
       transparent 3px
     ),
     repeating-linear-gradient(
       90deg,
-      rgba(30, 50, 80, 0.035) 0,
-      rgba(30, 50, 80, 0.035) 1px,
+      rgba(74, 21, 25, 0.035) 0,
+      rgba(74, 21, 25, 0.035) 1px,
       transparent 1px,
       transparent 3px
     );
@@ -283,14 +283,14 @@ html[lang='bn'] .lang-switch {
      grid cloth behind it. The rounded edge is smooth like a button: a pale rim on the top,
      a faint shade on the bottom, and a very light shadow behind. */
   /* 70% solid: a good deal of the grid cloth shows through. */
-  background: rgba(247, 249, 251, 0.7);
+  background: rgba(236, 228, 210, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 24px;
   padding: var(--space-6);
   box-shadow:
     inset 0 2px 3px rgba(255, 255, 255, 0.85),
-    inset 0 -3px 6px rgba(31, 43, 71, 0.1),
-    0 6px 14px -6px rgba(31, 43, 71, 0.2);
+    inset 0 -3px 6px rgba(74, 21, 25, 0.1),
+    0 6px 14px -6px rgba(74, 21, 25, 0.2);
 }
 .card > * {
   position: relative;
@@ -298,11 +298,11 @@ html[lang='bn'] .lang-switch {
 }
 /* Darker text on the light cards, so it stays easy to read on a see-through card. */
 .card {
-  color: #0b1119;
+  color: #1c0709;
 }
 .card-list .table td,
 .card-list .tech-name {
-  color: #0b1119;
+  color: #1c0709;
 }
 
 /* ---------- Buttons (design system 9.1) ---------- */
@@ -393,7 +393,7 @@ html[lang='bn'] .status {
 }
 .status-in_progress,
 .status-busy {
-  background: #d3e3fb;
+  background: #e9dccf;
   color: #1d3f78;
   box-shadow: 0 0 0 1px #a9c6f0;
 }
@@ -439,7 +439,7 @@ html[lang='bn'] .status {
   content: '';
   position: absolute;
   inset: 4px;
-  border: 1px dashed rgba(46, 70, 112, 0.5);
+  border: 1px dashed rgba(74, 21, 25, 0.5);
   border-radius: 5px;
   pointer-events: none;
 }
@@ -467,9 +467,9 @@ html[lang='bn'] .status {
   background-color: transparent;
   background-image: linear-gradient(
     180deg,
-    rgba(78, 112, 168, 0.8),
-    rgba(63, 95, 148, 0.8) 55%,
-    rgba(54, 84, 134, 0.8)
+    rgba(110, 40, 48, 0.8),
+    rgba(98, 32, 40, 0.8) 55%,
+    rgba(90, 28, 36, 0.8)
   );
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
@@ -478,14 +478,14 @@ html[lang='bn'] .status {
      card is see-through. */
   color: #ffffff;
   text-shadow:
-    0 1px 2px rgba(8, 16, 34, 0.75),
-    0 0 10px rgba(8, 16, 34, 0.35);
+    0 1px 2px rgba(28, 7, 9, 0.75),
+    0 0 10px rgba(28, 7, 9, 0.35);
   /* Smooth, button-like edge: a pale rim on top, a faint shade underneath, and a very light
      shadow behind the card. */
   box-shadow:
     inset 0 2px 3px rgba(255, 255, 255, 0.45),
-    inset 0 -3px 6px rgba(15, 26, 48, 0.18),
-    0 6px 14px -6px rgba(31, 43, 71, 0.25);
+    inset 0 -3px 6px rgba(40, 12, 14, 0.18),
+    0 6px 14px -6px rgba(74, 21, 25, 0.25);
 }
 .count-number {
   font-size: 44px;
@@ -534,8 +534,8 @@ html[lang='bn'] .count-tag {
   text-transform: none;
 }
 .count-tag-plain {
-  background: #eef2f6;
-  color: #26324f;
+  background: #f1eadb;
+  color: #4a1519;
 }
 .count-tag-waiting {
   background: var(--waiting-bg);
@@ -643,7 +643,7 @@ html[lang='bn'] .table th {
   /* The pale blue grid cloth picture (public/login-weave.png), the same family as the dashboards.
      A 55% veil of the page colour on top makes the grid softer, so it is less visible. */
   background-image:
-    linear-gradient(rgba(221, 227, 234, 0.55), rgba(221, 227, 234, 0.55)), url('/login-weave.png');
+    linear-gradient(rgba(179, 192, 199, 0.55), rgba(179, 192, 199, 0.55)), url('/login-weave.png');
   background-repeat: repeat;
 }
 
@@ -666,7 +666,7 @@ html[lang='bn'] .table th {
   /* A soft shadow under the bar makes a smooth, lifted edge. */
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.35),
-    0 6px 14px -2px rgba(20, 35, 63, 0.5);
+    0 6px 14px -2px rgba(60, 18, 22, 0.5);
   /* Above the two stitch lines. */
   z-index: 1;
 }
@@ -684,8 +684,8 @@ html[lang='bn'] .table th {
   min-height: 36px;
   padding: 0 14px;
   border-radius: 3px;
-  border: 1px solid #dbe6f5;
-  background: #1f2b47;
+  border: 1px solid #e9dccf;
+  background: #4a1519;
   color: #ffffff;
   font-family: var(--font-body);
   font-size: 14px;
@@ -704,7 +704,7 @@ html[lang='bn'] .table th {
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 6px;
-  box-shadow: 0 10px 24px -12px rgba(20, 35, 63, 0.55);
+  box-shadow: 0 10px 24px -12px rgba(60, 18, 22, 0.55);
 }
 .settings-title {
   font-size: 14px;
@@ -776,9 +776,9 @@ html[lang='bn'] .table th {
   gap: 4px;
   padding: 5px;
   border-radius: 16px;
-  background: rgba(10, 18, 40, 0.55);
+  background: rgba(30, 8, 10, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 2px 5px rgba(5, 10, 25, 0.5);
+  box-shadow: inset 0 2px 5px rgba(20, 5, 7, 0.5);
 }
 .login-tab {
   position: relative;
@@ -789,7 +789,7 @@ html[lang='bn'] .table th {
   min-height: 44px;
   padding: 0 var(--space-5);
   border-radius: 12px;
-  color: #dbe6f5;
+  color: #e9dccf;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -808,17 +808,17 @@ html[lang='bn'] .table th {
 }
 .login-tab-active,
 .login-tab-active:hover {
-  color: #1f2b47;
+  color: #4a1519;
   background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
   box-shadow:
-    0 4px 10px -2px rgba(5, 10, 25, 0.55),
+    0 4px 10px -2px rgba(20, 5, 7, 0.55),
     inset 0 1px 0 #ffffff;
 }
 .login-tab-active::after {
   content: '';
   position: absolute;
   inset: 3px;
-  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border: 1px dashed rgba(74, 21, 25, 0.45);
   border-radius: 9px;
   pointer-events: none;
 }
@@ -914,7 +914,7 @@ html[lang='bn'] .table th {
   padding: var(--space-6) 0 var(--space-6);
 }
 .greeting h1 {
-  font-family: var(--font-marcellus), var(--font-baloo-bangla), Georgia, serif;
+  font-family: var(--font-eb-garamond), var(--font-baloo-bangla), Georgia, serif;
   font-size: 38px;
   font-weight: 400;
 }
@@ -990,7 +990,7 @@ html {
 /* Soft navy (the top bar's family), 80% solid (20% see-through). Its own words (title, link,
    column names) are light; the rows floating on it keep dark text. */
 .card-list {
-  background: rgba(42, 59, 99, 0.8);
+  background: rgba(74, 21, 25, 0.8);
   border-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
 }
@@ -1003,7 +1003,7 @@ html {
 .card-list .state h3,
 .card-list .state p {
   color: #ffffff;
-  text-shadow: 0 1px 3px rgba(12, 18, 36, 0.7);
+  text-shadow: 0 1px 3px rgba(30, 8, 10, 0.7);
 }
 .card-list .state h3 {
   text-decoration: underline dashed var(--bar-stitch) 2px;
@@ -1017,7 +1017,7 @@ html {
 }
 .card-list .table td,
 .card-list .tech-row {
-  color: #0b1119;
+  color: #1c0709;
 }
 /* Floating rows: every report is its own soft, raised row on the card, with a little air
    between rows and no header bar. */
@@ -1029,8 +1029,8 @@ html {
 /* The heading row is one light blue band with dark column names, each on one line. The
    colours are solid (not see-through), so there are no seams between the cells. */
 .card-list .table th {
-  background: #d3deee;
-  color: #1f2b47;
+  background: #e9dccf;
+  color: #4a1519;
   padding: 13px 16px;
   font-size: 13px;
   font-weight: 700;
@@ -1048,7 +1048,7 @@ html {
 .card-list .table td {
   background: rgba(255, 255, 255, 0.92);
   border-bottom: none;
-  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+  box-shadow: 0 8px 8px -8px rgba(74, 21, 25, 0.4);
 }
 .card-list .table td:first-child {
   border-radius: 16px 0 0 16px;
@@ -1095,7 +1095,7 @@ html {
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
-  background: rgba(20, 30, 50, 0.55);
+  background: rgba(40, 12, 14, 0.55);
 }
 .dialog {
   width: 100%;
@@ -1104,7 +1104,7 @@ html {
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 10px;
-  box-shadow: 0 24px 48px -16px rgba(20, 30, 50, 0.6);
+  box-shadow: 0 24px 48px -16px rgba(40, 12, 14, 0.6);
   color: var(--text);
 }
 .dialog-sub {
@@ -1188,7 +1188,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #dce3ec;
+  background: #e6dcc7;
   color: var(--link);
   border: 2px solid #ffffff;
   box-shadow: 0 0 0 1px var(--card-border);
@@ -1209,7 +1209,7 @@ html {
 .card-list .table tr.row-attention td:first-child {
   box-shadow:
     inset 4px 0 0 #c99a45,
-    0 8px 8px -8px rgba(31, 43, 71, 0.4);
+    0 8px 8px -8px rgba(74, 21, 25, 0.4);
 }
 
 /* The read-only details box: names on the left, values on the right. */
@@ -1275,9 +1275,9 @@ html[lang='bn'] .menu-link {
   margin: 0 auto var(--space-4);
   padding: 5px;
   border-radius: 16px;
-  background: rgba(20, 30, 56, 0.55);
+  background: rgba(40, 12, 14, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 2px 5px rgba(8, 14, 30, 0.45);
+  box-shadow: inset 0 2px 5px rgba(28, 7, 9, 0.45);
 }
 .filter-tab {
   position: relative;
@@ -1289,7 +1289,7 @@ html[lang='bn'] .menu-link {
   border: 1px solid transparent;
   border-radius: 12px;
   background: transparent;
-  color: #dfe6f5;
+  color: #e9dccf;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
@@ -1336,25 +1336,25 @@ html[lang='bn'] .menu-link {
 .filter-tab-active {
   background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
   border-color: #e8d8b5;
-  color: #1f2b47;
+  color: #4a1519;
   box-shadow:
-    0 4px 10px -2px rgba(8, 14, 30, 0.5),
+    0 4px 10px -2px rgba(28, 7, 9, 0.5),
     inset 0 1px 0 #ffffff;
 }
 .filter-tab-active:hover {
   background: linear-gradient(180deg, #fffdf6 0%, #f1ead7 100%);
-  color: #1f2b47;
+  color: #4a1519;
 }
 .filter-tab-active::after {
   content: '';
   position: absolute;
   inset: 3px;
-  border: 1px dashed rgba(46, 70, 112, 0.45);
+  border: 1px dashed rgba(74, 21, 25, 0.45);
   border-radius: 9px;
   pointer-events: none;
 }
 .filter-tab-active .filter-count {
-  background: #2e4670;
+  background: #4a1519;
   color: #ffffff;
 }
 html[lang='bn'] .filter-tab {
@@ -1373,7 +1373,7 @@ html[lang='bn'] .filter-tab {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: #e1e8f1;
+  background: #e6dcc7;
   border: 1px solid #b9c6d8;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
@@ -1402,7 +1402,7 @@ html[lang='bn'] .filter-tab {
   border-bottom: none;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+  box-shadow: 0 8px 8px -8px rgba(74, 21, 25, 0.4);
 }
 .card-list .tech-row:last-child {
   margin-bottom: 0;
@@ -1429,7 +1429,7 @@ html[lang='bn'] .filter-tab {
   border: 1.5px solid var(--bar-text);
   background: var(--main-button-hover);
   box-shadow:
-    0 0 0 3px rgba(152, 166, 186, 0.35),
+    0 0 0 3px rgba(189, 174, 146, 0.35),
     0 4px 10px rgba(0, 0, 0, 0.35);
   color: var(--bar-text-chosen);
   cursor: pointer;
@@ -1564,7 +1564,7 @@ html[lang='bn'] .sidebar-logout {
     border-radius: 18px;
     overflow: hidden;
     box-shadow:
-      0 12px 28px -10px rgba(15, 25, 45, 0.55),
+      0 12px 28px -10px rgba(40, 12, 14, 0.55),
       0 0 0 1px rgba(255, 255, 255, 0.08);
   }
   /* Log out sits right under the last menu item, not pinned to the bottom of the window. */
@@ -1591,7 +1591,7 @@ html[lang='bn'] .sidebar-logout {
     overflow: hidden;
     padding-bottom: var(--space-4);
     box-shadow:
-      0 12px 28px -10px rgba(15, 25, 45, 0.6),
+      0 12px 28px -10px rgba(40, 12, 14, 0.6),
       0 0 0 1px rgba(255, 255, 255, 0.08);
   }
   /* Log out sits right under the last menu item. */
@@ -1604,7 +1604,7 @@ html[lang='bn'] .sidebar-logout {
     position: fixed;
     z-index: 15;
     inset: var(--bar-size) 0 0 0;
-    background: rgba(20, 30, 50, 0.45);
+    background: rgba(40, 12, 14, 0.45);
   }
   .topbar {
     padding: var(--space-3) var(--space-4);
@@ -1653,7 +1653,7 @@ html[lang='bn'] .sidebar-logout {
     border-bottom: none;
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 8px 8px -8px rgba(31, 43, 71, 0.4);
+    box-shadow: 0 8px 8px -8px rgba(74, 21, 25, 0.4);
   }
   .card-list .table-stack tr:last-child {
     margin-bottom: 0;
@@ -1786,7 +1786,7 @@ html[lang='bn'] .sidebar-logout {
   .card-list .table td:last-child {
     border-radius: 0;
     box-shadow: none;
-    border-bottom: 1px solid #d3dbe8;
+    border-bottom: 1px solid #ecd9d2;
   }
   .card-list .table tr.row-attention td:first-child {
     box-shadow: inset 4px 0 0 #c99a45;
@@ -1837,7 +1837,7 @@ html[lang='bn'] .sidebar-logout {
   content: '';
   position: absolute;
   inset: 4px;
-  border: 1.5px dashed #2e4670;
+  border: 1.5px dashed #4a1519;
   border-radius: 7px;
   pointer-events: none;
 }
@@ -1924,7 +1924,7 @@ html[lang='bn'] .sidebar-logout {
   height: 14px;
   margin-bottom: 6px;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  background: linear-gradient(180deg, #c3cddc, #e8edf4);
+  background: linear-gradient(180deg, #d6cbb4, #f1eadb);
   border-top: 3px solid var(--card-stitch);
 }
 html[lang='bn'] .map-desk {
@@ -1980,12 +1980,10 @@ html[lang='bn'] .map-desk {
   place-items: center;
   align-content: center;
   gap: 2px;
-  color: #ffffff;
-  /* Running = the denim plaid cloth, 30% see-through (a light wash over it). */
-  background:
-    linear-gradient(rgba(247, 249, 251, 0.3), rgba(247, 249, 251, 0.3)),
-    url('/denim-plaid.jpg') center / 190px auto;
-  border: 2px solid #5f7387;
+  color: #4a1519;
+  /* Running = a cream tile with a maroon machine, like the reference picture. */
+  background: #f3ede0;
+  border: 2px solid #d6cbb4;
   transition: transform 0.1s;
 }
 .seat:hover .scope {
@@ -1997,7 +1995,6 @@ html[lang='bn'] .map-desk {
   display: block;
   fill: currentColor;
   /* highlighted: a bright icon with a soft glow and a dark edge, so it stands out on the cloth */
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 1px 1px rgba(15, 25, 50, 0.9));
 }
 .seat-label {
   font-family: var(--font-code);
@@ -2005,7 +2002,6 @@ html[lang='bn'] .map-desk {
   font-size: 13px;
   line-height: 1;
   color: inherit;
-  text-shadow: 0 1px 2px rgba(15, 25, 50, 0.95);
 }
 .seat-badge {
   display: none;
@@ -2018,9 +2014,9 @@ html[lang='bn'] .map-desk {
 }
 /* the technician is working on it: soft blue */
 .seat-progress .scope {
-  color: #2e4670;
-  background: #d5deee;
-  border-color: #6b86b8;
+  color: #20343c;
+  background: #8ea3ab;
+  border-color: #778e96;
 }
 /* DOWN: a red seat with a soft red halo that pulses */
 .seat-down .scope {
@@ -2035,8 +2031,8 @@ html[lang='bn'] .map-desk {
 /* selected (written last, so it wins over "down") */
 .seat-selected .scope {
   color: #ffffff;
-  background: #1f2b47;
-  border-color: #aab4c8;
+  background: #4a1519;
+  border-color: #bdae92;
   animation: none;
 }
 .seat-selected .seat-machine {
@@ -2089,10 +2085,8 @@ html[lang='bn'] .map-desk {
   height: 18px;
   box-sizing: border-box;
   border-radius: 5px;
-  border: 2px solid #5f7387;
-  background:
-    linear-gradient(rgba(247, 249, 251, 0.3), rgba(247, 249, 251, 0.3)),
-    url('/denim-plaid.jpg') center / 60px auto;
+  border: 2px solid #d6cbb4;
+  background: #f3ede0;
   display: inline-block;
 }
 .legend-seat.seat-assigned {
@@ -2100,16 +2094,16 @@ html[lang='bn'] .map-desk {
   background: #f1e3c0;
 }
 .legend-seat.seat-progress {
-  border-color: #6b86b8;
-  background: #d5deee;
+  border-color: #778e96;
+  background: #8ea3ab;
 }
 .legend-seat.seat-down {
   border-color: #a32e26;
   background: #a32e26;
 }
 .legend-seat.seat-selected {
-  border-color: #aab4c8;
-  background: #1f2b47;
+  border-color: #bdae92;
+  background: #4a1519;
 }
 .map-tech {
   display: grid;
@@ -2174,7 +2168,7 @@ html[lang='bn'] .map-desk {
   padding: var(--space-3);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  background: rgba(232, 237, 243, 0.7);
+  background: rgba(241, 234, 219, 0.7);
 }
 .map-selected li > div {
   min-width: 0;
@@ -2220,12 +2214,12 @@ html[lang='bn'] .map-desk {
   background-color: transparent;
   background-image: linear-gradient(
     180deg,
-    rgba(78, 112, 168, 0.8),
-    rgba(63, 95, 148, 0.8) 55%,
-    rgba(54, 84, 134, 0.8)
+    rgba(110, 40, 48, 0.8),
+    rgba(98, 32, 40, 0.8) 55%,
+    rgba(90, 28, 36, 0.8)
   );
   color: #ffffff;
-  text-shadow: 0 1px 2px rgba(8, 16, 34, 0.75);
+  text-shadow: 0 1px 2px rgba(28, 7, 9, 0.75);
 }
 .map-banner::after {
   content: '';
@@ -2260,8 +2254,8 @@ html[lang='bn'] .map-desk {
     repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px);
   border: 1px solid #a9c8ff;
   box-shadow:
-    0 0 8px 1px rgba(110, 170, 255, 0.75),
-    0 0 20px 4px rgba(90, 150, 255, 0.4);
+    0 0 8px 1px rgba(210, 130, 120, 0.75),
+    0 0 20px 4px rgba(200, 110, 100, 0.4);
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -2269,10 +2263,10 @@ html[lang='bn'] .map-desk {
   text-shadow: none;
 }
 .map-banner .map-down-line.map-down-none {
-  background: #eef2f6;
-  border-color: #c9d2de;
+  background: #f1eadb;
+  border-color: #d6cbb4;
   box-shadow: none;
-  color: #26324f;
+  color: #4a1519;
 }
 @media (max-width: 640px) {
   .map-banner .map-down-line {
@@ -2280,4 +2274,934 @@ html[lang='bn'] .map-desk {
     transform: none;
     margin-top: var(--space-2);
   }
+}
+
+/* =====================================================================================
+   REFERENCE LOOK (2026-11-12)
+   Everything below makes the manager and owner screens look like the picture Mithi chose:
+   a maroon top bar with a spool and thread, a sky-blue cloth page with a tape measure,
+   four different coloured count boxes with icons, a cream Machine map card and a cream
+   "Your selection" card. It is written last on purpose, so it wins over older rules above.
+   ===================================================================================== */
+
+:root {
+  --bar-size: 88px;
+}
+
+/* ---- Top bar ---- */
+.topbar,
+.login-bar {
+  background-color: #4a1519;
+  background-image: linear-gradient(180deg, #561a20, #431216);
+  box-shadow: 0 4px 14px -4px rgba(40, 8, 12, 0.55);
+}
+.topbar {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 48px;
+  padding-right: 32px;
+}
+.topbar-brand {
+  align-self: stretch;
+  align-items: center;
+  gap: 20px;
+}
+.logo-tile {
+  align-self: flex-start;
+  width: 80px;
+  height: 76px;
+  border: 0;
+  border-radius: 0 0 12px 12px;
+  background: #efe7d6;
+  box-shadow: 0 3px 8px rgba(30, 6, 8, 0.35);
+}
+.logo-tile::after {
+  display: none;
+}
+.topbar-name {
+  font-family: var(--font-title);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.05;
+  color: #f4e9df;
+}
+.topbar-role {
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: #e6d3cb;
+  text-align: center;
+}
+.icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  min-width: 78px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #f4e9df;
+}
+.lang-switch::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin: -3px 0 0 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+.topbar-thread {
+  display: none;
+  height: 88px;
+  margin-right: 70px;
+  pointer-events: none;
+}
+.topbar-thread svg {
+  overflow: visible;
+}
+@media (min-width: 1250px) {
+  .topbar-thread {
+    display: inline-block;
+    width: 380px;
+  }
+}
+
+/* ---- Page: sky-blue cloth with the tape measure in the top-right corner ---- */
+body:has(.topbar) {
+  position: relative;
+  background-color: #b3c0c7;
+}
+body:has(.topbar)::before {
+  content: '';
+  position: absolute;
+  top: var(--bar-size);
+  right: 0;
+  width: min(535px, 40vw);
+  height: 247px;
+  background: url('/cloth-tape.jpg') right top / cover no-repeat;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 40%),
+    linear-gradient(to left, transparent, #000 14%),
+    linear-gradient(to bottom, #000 80%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 40%),
+    linear-gradient(to left, transparent, #000 14%),
+    linear-gradient(to bottom, #000 80%, transparent);
+  mask-composite: intersect;
+  pointer-events: none;
+  z-index: 0;
+}
+@media (max-width: 1100px) {
+  body:has(.topbar)::before {
+    display: none;
+  }
+}
+.shell,
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Greeting ---- */
+.greeting {
+  padding: var(--space-7) 0 var(--space-5);
+}
+.greeting h1 {
+  font-family: var(--font-eb-garamond), var(--font-baloo-bangla), Georgia, serif;
+}
+.greeting-hello {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #3d1d20;
+  margin-bottom: 10px;
+}
+.greeting-hello::after {
+  flex: 0 0 136px;
+  background: #8a6f68;
+}
+.greeting-name {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: #4a1519;
+}
+.greeting-line {
+  margin-top: 12px;
+  font-size: 20px;
+  color: #4f3f3d;
+}
+
+/* ---- Count boxes: four different colours, an icon top-left ---- */
+.count-box {
+  padding: 24px 24px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  gap: 6px;
+  text-shadow: none;
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.35),
+    0 6px 14px -6px rgba(40, 12, 14, 0.35);
+}
+.count-icon {
+  position: absolute;
+  left: 30px;
+  top: 20px;
+}
+.count-label {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+.count-number {
+  font-family: var(--font-eb-garamond), Georgia, serif;
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.count-tag {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.count-grid .count-box:nth-child(1) {
+  background-image: linear-gradient(135deg, #5d1b22, #3f1216);
+  color: #f3e6dc;
+}
+.count-grid .count-box:nth-child(1) .count-tag {
+  background: #c3d1d9;
+  color: #3a1418;
+}
+.count-grid .count-box:nth-child(2) {
+  background-image: linear-gradient(180deg, #c2cdd3, #aebfc8);
+  color: #4a1519;
+}
+.count-grid .count-box:nth-child(2) .count-tag {
+  background: #4a1519;
+  color: #ecd9d2;
+}
+.count-grid .count-box:nth-child(3) {
+  background-image: linear-gradient(180deg, #efe8d8, #e6dcc7);
+  color: #4a1519;
+}
+.count-grid .count-box:nth-child(3) .count-tag {
+  background: #66654f;
+  color: #f1ead7;
+}
+.count-grid .count-box:nth-child(4) {
+  background-image: linear-gradient(180deg, #81979f, #6c848c);
+  color: #f3ede0;
+}
+.count-grid .count-box:nth-child(4) .count-number {
+  color: #3a1818;
+}
+.count-grid .count-box:nth-child(4) .count-tag {
+  background: #4a1519;
+  color: #ecd9d2;
+}
+
+/* ---- Machine map card and "Your selection" card ---- */
+.map-card,
+.map-side .card {
+  background: rgba(236, 228, 210, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 26px;
+  padding: 28px 26px;
+}
+.map-layout {
+  grid-template-columns: minmax(0, 1fr) 396px;
+}
+@media (max-width: 1000px) {
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.map-card .card-head,
+.map-banner {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  margin: 0 0 22px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  text-align: left;
+  color: #4a1519;
+  text-shadow: none;
+}
+.map-banner::after {
+  display: none;
+}
+.map-pin {
+  flex: none;
+  color: #4a1519;
+}
+.map-banner .map-title,
+.map-side-title {
+  margin: 0;
+  font-family: var(--font-eb-garamond), Georgia, serif;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #4a1519;
+}
+.map-head-line {
+  flex: 1;
+  height: 1px;
+  background: #8a6f68;
+  opacity: 0.55;
+}
+.map-side-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.map-card .map-down-line,
+.map-banner .map-down-line {
+  position: static;
+  transform: none;
+  margin: 0 0 0 auto;
+  padding: 13px 24px;
+  border: 0;
+  border-radius: 12px;
+  background: #4a1519;
+  background-image: none;
+  box-shadow: none;
+  color: #f3e6dc;
+  font-size: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.map-banner .map-down-line.map-down-none,
+.map-card .map-down-line.map-down-none {
+  background: #ddd3bf;
+  color: #4a1519;
+}
+.map-banner .map-head-line + .map-down-line {
+  margin-left: 0;
+}
+.map-chip {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid #e0d6c0;
+  background: #f7f2e7;
+  color: #4a1519;
+  font-size: 18px;
+  font-weight: 500;
+}
+.map-chip b {
+  margin-left: 12px;
+  font-weight: 500;
+}
+.map-chip[aria-pressed='true'] {
+  background: #4a1519;
+  border-color: #4a1519;
+  color: #f3e6dc;
+}
+.map-buttons .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid #e0d6c0;
+  border-radius: 999px;
+  background: #f7f2e7;
+  color: #4a1519;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: none;
+}
+.map-tools {
+  margin-bottom: 30px;
+}
+.map-desk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: none;
+  margin: 0 auto var(--space-3);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: #4a2326;
+}
+.map-desk::before,
+.map-desk::after {
+  content: '';
+  display: block;
+  flex: 0 1 186px;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: #a89a86;
+}
+.map-row {
+  justify-content: center;
+  gap: 15px;
+}
+.map-row-letter {
+  width: 40px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #4a2326;
+}
+.map-aisle {
+  display: none;
+}
+.scope {
+  width: 88px;
+  height: 92px;
+  gap: 8px;
+  border-radius: 14px;
+  background: #f3ede0;
+  border: 1px solid #ddd2bb;
+  color: #4a1519;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.9),
+    0 3px 8px -3px rgba(74, 21, 25, 0.3);
+}
+.seat-machine {
+  width: 44px;
+  height: 34px;
+}
+.seat-label {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 500;
+  color: #4a1519;
+}
+.seat-progress .scope {
+  background: #8fa5ad;
+  border-color: #7d939c;
+  color: #1f2f36;
+}
+.seat-progress .seat-label {
+  color: #1f2f36;
+}
+/* DOWN: a cream tile that GLOWS WHITE (the screen text says "click a machine glowing white"). */
+.seat-down .scope {
+  background: #f9f5ec;
+  border-color: #ffffff;
+  color: #4a1519;
+  animation: seat-glow 1.4s ease-in-out infinite;
+}
+.seat-down .seat-machine {
+  color: #4a1519;
+}
+.seat-selected .scope {
+  background: #4a1519;
+  border-color: #bdae92;
+  animation: none;
+}
+.seat-selected .seat-label,
+.seat-selected .seat-machine {
+  color: #f6ece3;
+}
+@keyframes seat-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(255, 255, 255, 0.75),
+      0 0 14px 4px rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(255, 255, 255, 0.45),
+      0 0 26px 8px rgba(255, 255, 255, 0.9);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seat-down .scope {
+    animation: none;
+    box-shadow:
+      0 0 0 4px rgba(255, 255, 255, 0.75),
+      0 0 14px 4px rgba(255, 255, 255, 0.7);
+  }
+}
+.legend-seat {
+  background: #f3ede0;
+  border-color: #ddd2bb;
+}
+.legend-seat.seat-progress {
+  background: #8fa5ad;
+  border-color: #7d939c;
+}
+.legend-seat.seat-down {
+  background: #f9f5ec;
+  border-color: #ffffff;
+  box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.95);
+}
+.map-empty {
+  margin: 0 0 18px;
+  padding: 0 0 20px;
+  border: 0;
+  border-bottom: 1px solid #cdbfa8;
+  border-radius: 0;
+  text-align: left;
+  font-size: 19px;
+  line-height: 1.55;
+  color: #4f3f3d;
+}
+.map-total {
+  margin: 0 0 22px;
+  padding: 0;
+  border: 0;
+  font-size: 19px;
+  color: #3d1d20;
+}
+.map-side .btn-main {
+  min-width: 210px;
+  min-height: 48px;
+  border-radius: 10px;
+  background: #4a1519;
+  border: 0;
+  color: #f3e6dc;
+  font-size: 18px;
+  font-weight: 500;
+}
+.map-side .btn-main::after {
+  display: none;
+}
+.map-side .btn-main:disabled {
+  opacity: 0.95;
+  cursor: not-allowed;
+}
+
+/* The label sits to the right of the icon, as in the picture. */
+.count-label {
+  padding-left: 48px;
+}
+html[lang='bn'] .count-label {
+  padding-left: 44px;
+}
+
+/* ---- The little pictures from the reference: gear, leaf, cloth swatch, pins, scissors, spool.
+   They are cut out of the picture Mithi shared (public/deco-*.png) and laid on top, never
+   in the way of clicks. ---- */
+.count-grid .count-box::after {
+  content: '';
+  position: absolute;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+.count-grid .count-box:nth-child(1)::after {
+  top: 8px;
+  right: 4px;
+  width: 84px;
+  height: 160px;
+  background-image: url('/deco-box1.png');
+}
+.count-grid .count-box:nth-child(2)::after {
+  top: 35px;
+  right: 2px;
+  width: 52px;
+  height: 74px;
+  background-image: url('/deco-box2.png');
+}
+.count-grid .count-box:nth-child(4)::after {
+  top: 71px;
+  right: 3px;
+  width: 64px;
+  height: 98px;
+  background-image: url('/deco-box4.png');
+}
+.count-grid .count-box:nth-child(2) .count-label,
+.count-grid .count-box:nth-child(2) .count-icon {
+  color: #46484c;
+}
+.count-grid .count-box:nth-child(3) .count-label {
+  color: #5a4a48;
+}
+.map-side .card::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: -8px;
+  right: -5px;
+  width: 95px;
+  height: 97px;
+  background: url('/deco-swatch.png') no-repeat;
+  pointer-events: none;
+}
+.map-side-head {
+  padding-right: 60px;
+}
+@media (max-width: 1000px) {
+  .map-side .card::before {
+    display: none;
+  }
+  .map-side-head {
+    padding-right: 0;
+  }
+}
+
+/* The little pictures sit BEHIND the words of a count box. */
+.count-grid .count-box::after {
+  z-index: 0;
+}
+.count-grid .count-box > * {
+  z-index: 1;
+}
+.count-grid .count-box > :not(.count-icon) {
+  position: relative;
+}
+
+/* The cut-out pictures got their real sizes (the cloth piece is now 440 x 258). */
+
+/* The cloth DRAPES over the corners of the screen, always BEHIND the cards and tables:
+   maroon cloth with pins at the bottom-left, maroon cloth and a thread spool at the bottom-right. */
+body:has(.topbar)::after,
+html:has(.topbar)::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  display: none;
+}
+@media (min-width: 1100px) {
+  body:has(.topbar)::after {
+    display: block;
+    left: 0;
+    width: 440px;
+    height: 258px;
+    background-image: url('/deco-pins.png');
+    background-position: left bottom;
+  }
+  html:has(.topbar)::after {
+    display: block;
+    right: 0;
+    width: 90px;
+    height: 228px;
+    background-image: url('/deco-edge-right.png');
+    background-position: right bottom;
+  }
+}
+
+/* ---- Login pages: ONE long burgundy silk ribbon across the whole screen ----
+   The ribbon picture (public/login-drape.png) was cut out of the reference picture
+   Mithi chose, with the cream background removed. It starts hidden behind the top bar at the
+   Settings corner (top-right), runs diagonally down BEHIND the login card, and keeps going to
+   the bottom-left corner of the screen. Its length and angle follow the screen size. */
+.login-page {
+  overflow: clip;
+}
+.login-bar {
+  z-index: 5;
+}
+.login-page::after {
+  content: '';
+  position: absolute;
+  /* The top end is tucked under the bar, right below the Settings button. */
+  top: calc(var(--bar-size) - 40px);
+  left: calc(100% - 90px);
+  /* Long enough to reach the opposite corner: about the length of the page's diagonal. */
+  height: calc(0.66 * (100vw + 100%));
+  aspect-ratio: 0.44;
+  background: url('/login-drape.png') center / 100% 100% no-repeat;
+  transform-origin: 50% 0;
+  transform: translateX(-50%) rotate(58deg);
+  /* The angle that points from the top-right corner to the bottom-left one. */
+  transform: translateX(-50%) rotate(atan2(88vw, 100vh));
+  /* Soft edges on both sides, so the picture's straight edges never show. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16%, #000 84%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+@media (max-width: 900px) {
+  .login-page::after {
+    opacity: 0.5;
+  }
+}
+.login-page > :not(.login-bar) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Login top bar: deep maroon satin, gold hairline, serif name, gilded tabs ---- */
+.login-bar {
+  background-color: #461218;
+  background-image:
+    radial-gradient(ellipse 60% 140% at 50% -40%, rgba(255, 220, 200, 0.2), transparent 70%),
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, #62202a 0%, #4a1519 48%, #34090e 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 235, 220, 0.25),
+    inset 0 -1px 0 rgba(217, 185, 138, 0.85),
+    inset 0 -4px 0 rgba(20, 3, 5, 0.35),
+    0 10px 24px -8px rgba(30, 6, 8, 0.65);
+}
+.login-bar-brand-name {
+  font-family: var(--font-title);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #f4e9df;
+  text-shadow: 0 1px 2px rgba(20, 3, 5, 0.6);
+}
+.login-tabs {
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(20, 3, 5, 0.38);
+  border: 1px solid rgba(217, 185, 138, 0.55);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 235, 220, 0.12);
+}
+.login-tab {
+  letter-spacing: 0.04em;
+  color: #ecd9d2;
+}
+.login-tab-active {
+  background: linear-gradient(180deg, #fbf5e8, #e8dcc2);
+  color: #4a1519;
+  box-shadow:
+    inset 0 1px 0 #ffffff,
+    0 2px 6px rgba(20, 3, 5, 0.45);
+}
+.settings-btn {
+  border: 1px solid rgba(217, 185, 138, 0.75);
+  border-radius: 9px;
+  background: rgba(20, 3, 5, 0.25);
+  color: #f4e9df;
+  letter-spacing: 0.03em;
+}
+.settings-btn:hover {
+  background: rgba(217, 185, 138, 0.2);
+}
+
+/* The title block and the help text sit on a soft frosted panel, so they stay easy to read
+   even where the burgundy ribbon passes behind them. */
+.login-brand,
+.login-help {
+  background: rgba(222, 231, 235, 0.74);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 22px;
+  padding: 14px 28px;
+  box-shadow: 0 6px 18px -10px rgba(40, 8, 12, 0.35);
+}
+.login-brand {
+  margin-bottom: var(--space-4);
+}
+
+/* ---- Login top bar: floating frosted-glass bar (copy of the picture Mithi shared, 2026-11-13) ----
+   A rounded, see-through cream bar that floats a little away from the screen edges, so the
+   ribbon shows through it. The logo has no tile, the active tab is a maroon pill. */
+.login-bar {
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  width: auto;
+  height: 76px;
+  padding: 0 40px;
+  border-radius: 28px;
+  background: rgba(236, 226, 224, 0.55);
+  background-image: none;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 8px 22px -10px rgba(60, 20, 24, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.login-bar .logo-tile {
+  align-self: center;
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+.login-bar-brand-name {
+  color: #5a1a21;
+  text-shadow: none;
+}
+.login-tabs {
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(90, 26, 33, 0.35);
+  box-shadow: none;
+}
+.login-tab {
+  border-radius: 999px;
+  color: #5a1a21;
+}
+.login-tab-active,
+.login-tab-active:hover {
+  background: #5a1a21;
+  color: #f7ece4;
+  box-shadow: none;
+}
+.login-tab-active::after {
+  display: none;
+}
+.login-bar .settings-btn {
+  border: 1px solid rgba(90, 26, 33, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #5a1a21;
+}
+.login-bar .settings-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+.login-bar .logo-tile svg {
+  width: 58px;
+  height: 58px;
+}
+
+/* Manager / Owner on the login bar: two separate buttons (no shared pill around them). */
+.login-tabs {
+  padding: 0;
+  gap: 14px;
+  background: none;
+  border: 0;
+}
+.login-tab {
+  min-width: 130px;
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(90, 26, 33, 0.45);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(240, 228, 222, 0.6));
+  box-shadow:
+    0 3px 8px -3px rgba(60, 20, 24, 0.4),
+    inset 0 1px 0 #fff;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+.login-tab:hover {
+  background: linear-gradient(180deg, #fff, rgba(245, 235, 230, 0.8));
+  transform: translateY(-1px);
+}
+.login-tab:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(60, 20, 24, 0.25);
+}
+.login-tab-active,
+.login-tab-active:hover {
+  background: linear-gradient(180deg, #7a2a33, #5a1a21);
+  border-color: #3f0f15;
+  color: #f7ece4;
+  box-shadow:
+    0 4px 10px -3px rgba(40, 8, 12, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Login bar: no border line, smoother edges. The edge is only a soft, wide shadow, so the bar
+   melts into the page instead of having a hard outline. */
+.login-bar {
+  border: 0;
+  border-radius: 38px;
+  background: rgba(238, 229, 227, 0.58);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  box-shadow:
+    0 2px 6px rgba(60, 20, 24, 0.06),
+    0 14px 36px -12px rgba(60, 20, 24, 0.28);
+}
+
+/* Login bar: back to the earlier corner shape (28px), still with no border line. */
+.login-bar {
+  border-radius: 28px;
+}
+
+/* Login bar, final shape (Mithi, 2026-11-13): the bar itself is invisible. Only the Manager / Owner
+   buttons sit on a small frosted bar in the middle. The logo and name are not in the header
+   (the login card below already shows them). Settings floats alone at the right edge. */
+.login-bar {
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding: 0;
+  pointer-events: none;
+}
+.login-bar > * {
+  pointer-events: auto;
+}
+.login-bar .login-bar-brand {
+  display: none;
+}
+.login-bar .login-tabs {
+  padding: 10px 14px;
+  border-radius: 28px;
+  background: rgba(238, 229, 227, 0.58);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  box-shadow:
+    0 2px 6px rgba(60, 20, 24, 0.06),
+    0 14px 36px -12px rgba(60, 20, 24, 0.28);
+}
+.login-bar .settings-btn {
+  background: rgba(238, 229, 227, 0.7);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 22px -10px rgba(60, 20, 24, 0.3);
+}
+
+/* DOWN seats now glow MERLOT BURGUNDY (the alarming colour), not white (Mithi, 2026-11-13). */
+.seat-down .scope {
+  border-color: #7a1f2e;
+}
+@keyframes seat-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(122, 31, 46, 0.7),
+      0 0 14px 4px rgba(122, 31, 46, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(122, 31, 46, 0.4),
+      0 0 26px 8px rgba(122, 31, 46, 0.85);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seat-down .scope {
+    box-shadow:
+      0 0 0 4px rgba(122, 31, 46, 0.7),
+      0 0 14px 4px rgba(122, 31, 46, 0.6);
+  }
+}
+.legend-seat.seat-down {
+  border-color: #7a1f2e;
+  box-shadow: 0 0 6px 2px rgba(122, 31, 46, 0.85);
 }
