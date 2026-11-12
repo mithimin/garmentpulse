@@ -30,32 +30,6 @@ type TopBarProps = {
   sidebarOpen?: boolean;
 };
 
-/** A loose cream thread with two loops, ending at a spool: pure decoration (hidden on small screens). */
-function TopBarThread() {
-  return (
-    <span className="topbar-thread" aria-hidden="true">
-      <svg viewBox="0 0 420 88" width="420" height="88" fill="none">
-        <path
-          d="M0 66 C60 66 110 60 150 52 C175 47 200 44 216 54 C226 62 218 72 206 68 C194 63 200 48 220 42 C250 33 262 60 288 62 C318 64 340 50 372 44 C384 41 398 42 408 48"
-          stroke="#e6d8cf"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
-        <g transform="translate(398 6)">
-          <rect x="2" y="0" width="34" height="7" rx="2" fill="#b8b0a6" />
-          <rect x="2" y="76" width="34" height="6" rx="2" fill="#b8b0a6" />
-          <rect x="5" y="7" width="28" height="69" rx="3" fill="#7a4a5a" />
-          <path
-            d="M5 14 L33 22 M5 26 L33 34 M5 38 L33 46 M5 50 L33 58 M5 62 L33 70"
-            stroke="#9a6a7a"
-            strokeWidth="3"
-          />
-        </g>
-      </svg>
-    </span>
-  );
-}
-
 export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }: TopBarProps) {
   const { language } = useLanguage();
   return (
@@ -85,7 +59,6 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
         </div>
       </div>
       <div className="topbar-right">
-        <TopBarThread />
         {onLogOut && !onToggleSidebar ? (
           <button
             type="button"

@@ -1474,20 +1474,16 @@ html[lang='bn'] .filter-tab {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background-color: var(--bar);
-  background-image: url('/denim-tile.png');
-  background-repeat: repeat;
-  background-size: 124px 72px;
-  background-position: 0 var(--space-7);
+  /* Transparent on purpose (Mithi, 2026-11-13): the page cloth shows through, and there is
+     no stitch line. The menu text is dark so it can be read on the light page. */
+  background: transparent;
 }
-/* A beige stitch line on all four sides, set in from the edge (like a stitched patch). */
-.sidebar::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 2px dashed #e8d8b5;
-  border-radius: 12px;
-  pointer-events: none;
+.sidebar .menu-link {
+  color: var(--text);
+}
+.sidebar .menu-link:hover {
+  color: var(--text);
+  background: rgba(74, 21, 25, 0.08);
 }
 /* No gap and no sticky: the menu scrolls with the sidebar so the items stay inside the bands. */
 .sidebar-menu {
@@ -1513,11 +1509,12 @@ html[lang='bn'] .filter-tab {
 }
 .sidebar .menu-link-active {
   border: 0;
-  background: linear-gradient(90deg, rgba(221, 194, 145, 0.28), rgba(221, 194, 145, 0.04) 85%);
-  box-shadow: inset 4px 0 0 #ddc291;
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(74, 21, 25, 0.16), rgba(74, 21, 25, 0.02) 85%);
+  box-shadow: inset 4px 0 0 var(--bar);
 }
 .sidebar .menu-link-active svg:first-child {
-  color: #ddc291;
+  color: var(--bar);
 }
 /* Log out at the bottom of the sidebar: a white button with an icon, like the
    second buttons everywhere else. */
@@ -1563,9 +1560,6 @@ html[lang='bn'] .sidebar-logout {
     padding-bottom: var(--space-4);
     border-radius: 18px;
     overflow: hidden;
-    box-shadow:
-      0 12px 28px -10px rgba(40, 12, 14, 0.55),
-      0 0 0 1px rgba(255, 255, 255, 0.08);
   }
   /* Log out sits right under the last menu item, not pinned to the bottom of the window. */
   .sidebar-logout {
@@ -1590,9 +1584,9 @@ html[lang='bn'] .sidebar-logout {
     border-radius: 18px;
     overflow: hidden;
     padding-bottom: var(--space-4);
-    box-shadow:
-      0 12px 28px -10px rgba(40, 12, 14, 0.6),
-      0 0 0 1px rgba(255, 255, 255, 0.08);
+    /* It slides over the page, so it needs a solid page-coloured back to stay readable. */
+    background: var(--page);
+    box-shadow: 0 12px 28px -10px rgba(40, 12, 14, 0.45);
   }
   /* Log out sits right under the last menu item. */
   .sidebar-logout {
@@ -1752,17 +1746,6 @@ html[lang='bn'] .sidebar-logout {
     min-width: 44px;
     padding: 0;
   }
-}
-
-/* A beige stitch line all the way around the reports card and the technicians card, set in
-   from the edge like the sidebar's stitching, on both the manager and the owner screens. */
-.card-list.stitched::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 2px dashed #e8d8b5;
-  border-radius: 18px;
-  pointer-events: none;
 }
 
 /* ---------- Wide table: heading and all reports are ONE joined block ---------- */
@@ -2366,21 +2349,6 @@ html[lang='bn'] .map-desk {
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg);
 }
-.topbar-thread {
-  display: none;
-  height: 88px;
-  margin-right: 70px;
-  pointer-events: none;
-}
-.topbar-thread svg {
-  overflow: visible;
-}
-@media (min-width: 1250px) {
-  .topbar-thread {
-    display: inline-block;
-    width: 380px;
-  }
-}
 
 /* ---- Page: sky-blue cloth with the tape measure in the top-right corner ---- */
 body:has(.topbar) {
@@ -2523,6 +2491,14 @@ body:has(.topbar)::before {
 .count-grid .count-box:nth-child(4) .count-tag {
   background: #4a1519;
   color: #ecd9d2;
+}
+
+/* ---- Technicians card: same maroon as the top bar header (Mithi, 2026-11-13) ---- */
+.card-list:has(.tech-list) {
+  background-color: #4a1519;
+  background-image: linear-gradient(180deg, #561a20, #431216);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
 
 /* ---- Machine map card and "Your selection" card ---- */
