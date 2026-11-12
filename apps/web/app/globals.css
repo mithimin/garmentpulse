@@ -1748,17 +1748,6 @@ html[lang='bn'] .sidebar-logout {
   }
 }
 
-/* A beige stitch line all the way around the reports card and the technicians card, set in
-   from the edge like the sidebar's stitching, on both the manager and the owner screens. */
-.card-list.stitched::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  border: 2px dashed #e8d8b5;
-  border-radius: 18px;
-  pointer-events: none;
-}
-
 /* ---------- Wide table: heading and all reports are ONE joined block ---------- */
 
 /* On a wide page the heading band sits on top of every report, with no gaps, in one block
@@ -2360,21 +2349,6 @@ html[lang='bn'] .map-desk {
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg);
 }
-.topbar-thread {
-  display: none;
-  height: 88px;
-  margin-right: 70px;
-  pointer-events: none;
-}
-.topbar-thread svg {
-  overflow: visible;
-}
-@media (min-width: 1250px) {
-  .topbar-thread {
-    display: inline-block;
-    width: 380px;
-  }
-}
 
 /* ---- Page: sky-blue cloth with the tape measure in the top-right corner ---- */
 body:has(.topbar) {
@@ -2517,6 +2491,14 @@ body:has(.topbar)::before {
 .count-grid .count-box:nth-child(4) .count-tag {
   background: #4a1519;
   color: #ecd9d2;
+}
+
+/* ---- Technicians card: same maroon as the top bar header (Mithi, 2026-11-13) ---- */
+.card-list:has(.tech-list) {
+  background-color: #4a1519;
+  background-image: linear-gradient(180deg, #561a20, #431216);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
 }
 
 /* ---- Machine map card and "Your selection" card ---- */
