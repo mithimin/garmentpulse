@@ -17,7 +17,6 @@ import type { InviteCode, InviteRole } from '@garmentpulse/shared';
 import { makeCode, myUnusedCodes } from '../../../auth/inviteCodes';
 import { Button } from '../../../components/Button';
 import { Card } from '../../../components/Card';
-import { PageArt } from '../../../components/PageArt';
 import { errorSentence } from '../../../language/errorText';
 import { useLanguage } from '../../../language/LanguageContext';
 import { formatDateTime } from '../../../language/format';
@@ -56,7 +55,6 @@ export default function ManagerCodesPage() {
   return (
     <>
       <div className="greeting">
-        <PageArt kind="scissors" />
         <h1>{screenText('menuInviteCodes', language)}</h1>
         <p className="greeting-line">{screenText('inviteCodesHelp', language)}</p>
       </div>
