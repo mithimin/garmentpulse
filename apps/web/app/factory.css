@@ -292,6 +292,14 @@ body:has(.topbar)::before {
 .count-grid {
   gap: 16px;
 }
+/* The owner has only three boxes. Each one is the same size as one of the manager's four boxes,
+   and the three sit together in the middle of the line. */
+@container page (min-width: 761px) {
+  .count-grid.count-grid-three {
+    grid-template-columns: repeat(3, calc((100% - 3 * 16px) / 4));
+    justify-content: center;
+  }
+}
 .count-box {
   min-height: 128px;
   justify-content: center;
