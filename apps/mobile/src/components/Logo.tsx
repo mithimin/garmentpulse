@@ -1,50 +1,41 @@
 // apps/mobile/src/components/Logo.tsx
 //
-// The GarmentPulse logo, drawn as a small picture (SVG) so it stays sharp at any
-// size. It is a sewing machine (the thing GarmentPulse looks after) with a
-// heartbeat ("pulse") line running along its arm.
-//   - no background: the logo sits straight on the white/light page, with no tile
-//   - dark blue machine: arm, pillar, base, thread spool, presser foot and needle
-//   - gold zig-zag on the arm: the pulse (the machine is alive and healthy)
-//   - gold dashes on the base: the line of stitches the machine sews
+// The GarmentPulse logo: a realistic sewing machine (shaded brown body, chrome
+// dials and screws, a steel needle, a blue thread spool on top, a hand wheel and
+// a piece of blue cloth). The drawing itself is built as SVG text in
+// `logoArtSvg.ts` (the same text is used to make the app icon files). It is made
+// of shapes, so it stays sharp at any size.
+// `Logo` takes the WIDTH you want; the height follows the drawing's shape.
+// `LogoTile` puts it on a rounded cream tile, as in the website's top bar.
 // Owned by Rubaiya.
 
-import Svg, { Path, Rect } from 'react-native-svg';
+import { StyleSheet, View } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { LOGO_ART_HEIGHT, LOGO_ART_WIDTH, logoArtSvg } from './logoArtSvg';
 
-const GOLD = '#DCC593';
-const NAVY = '#1F2B47';
+/** The drawing is built once, not every time a screen redraws. */
+const LOGO_ART = logoArtSvg();
 
 export function Logo({ size = 72 }: { size?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="6 5 52 52" accessibilityLabel="GarmentPulse logo">
-      {/* Thread spool on top of the arm */}
-      <Rect x="30" y="10" width="8" height="6" rx="1.5" fill={NAVY} />
-      {/* Arm (reaches left) and pillar (stands on the right) */}
-      <Rect x="12" y="15" width="38" height="11" rx="4" fill={NAVY} />
-      <Rect x="40" y="15" width="10" height="33" rx="3" fill={NAVY} />
-      {/* Base */}
-      <Rect x="9" y="44" width="46" height="8" rx="3" fill={NAVY} />
-      {/* Needle bar, presser foot and needle */}
-      <Rect x="15" y="26" width="3.5" height="10" fill={NAVY} />
-      <Rect x="13.5" y="36" width="6.5" height="3.5" rx="1" fill={NAVY} />
-      <Path d="M16.75 39.5 V44" stroke={NAVY} strokeWidth="1.4" strokeLinecap="round" />
-      {/* Heartbeat along the arm */}
-      <Path
-        d="M20 20.5 H25 L27.5 16.8 L31 24.2 L33.5 20.5 H38"
-        fill="none"
-        stroke={GOLD}
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Stitches on the base */}
-      <Path
-        d="M14 48 H50"
-        stroke={GOLD}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeDasharray="3 3"
-      />
-    </Svg>
+    <SvgXml
+      xml={LOGO_ART}
+      width={size}
+      height={(size * LOGO_ART_HEIGHT) / LOGO_ART_WIDTH}
+      accessibilityLabel="GarmentPulse logo"
+    />
   );
 }
+
+/** The logo on a rounded cream tile, as in the website's top bar. */
+export function LogoTile({ size = 44 }: { size?: number }) {
+  return (
+    <View style={[styles.tile, { width: size, height: size, borderRadius: size * 0.28 }]}>
+      <Logo size={size * 0.84} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  tile: { backgroundColor: '#FFFBEF', alignItems: 'center', justifyContent: 'center' },
+});

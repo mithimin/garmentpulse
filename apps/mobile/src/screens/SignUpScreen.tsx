@@ -1,8 +1,8 @@
 // apps/mobile/src/screens/SignUpScreen.tsx
 //
 // The sign-up screen for new workers and technicians. It looks like the login
-// screen (same blue top bar, language switch and stitched card) and has four
-// boxes: full name, email, password and invite code.
+// screen (same factory picture on top, language switch and cream card) and has
+// four boxes: full name, email, password and invite code.
 //
 // An "I am a" Worker / Technician chooser sits at the top, like on the login
 // screen. The invite code still decides the real role (docs/api-contract.md 4.7);
@@ -20,6 +20,7 @@
 
 import { useState } from 'react';
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -33,7 +34,7 @@ import { ROLE_LABELS, getApiErrorCode } from '@garmentpulse/shared';
 import type { ApiErrorCode, Profile, Role } from '@garmentpulse/shared';
 import { RoleMismatchError, signUp } from '../auth/realAuth';
 import { LanguageSwitch } from '../components/LanguageSwitch';
-import { Logo } from '../components/Logo';
+import { LogoTile } from '../components/Logo';
 import { useBackAction } from '../components/useBackAction';
 import { useLanguage } from '../language/LanguageContext';
 import {
@@ -43,7 +44,7 @@ import {
   SIGNUP_TEXT,
   codeIsFor,
 } from '../language/screenText';
-import { COLORS as C, SHARED_COLORS as S, SIZES } from '../theme';
+import { COLORS as C, PICTURES, SHARED_COLORS as S, SIZES } from '../theme';
 
 /** The two roles that may use the phone app. */
 type ChoosableRole = Extract<Role, 'worker' | 'technician'>;
@@ -103,19 +104,17 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
       style={styles.page}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.bar}>
-        <Text style={styles.barTitle}>{LOGIN_TEXT.appName[language]}</Text>
-        <LanguageSwitch />
-        <View style={styles.barStitch} />
-      </View>
-
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <View style={styles.card}>
-          <View pointerEvents="none" style={styles.cardStitch} />
-
-          <View style={styles.logo}>
-            <Logo size={56} />
+        {/* Top picture: the factory, with the logo on the left and the language switch on the right. */}
+        <View style={styles.hero}>
+          <Image source={PICTURES.factory} style={styles.heroPhoto} resizeMode="cover" />
+          <View style={styles.heroBar}>
+            <LogoTile size={48} />
+            <LanguageSwitch tone="onLight" />
           </View>
+        </View>
+
+        <View style={styles.card}>
           <Text style={styles.title}>{SIGNUP_TEXT.title[language]}</Text>
           <Text style={styles.intro}>{SIGNUP_TEXT.intro[language]}</Text>
 
@@ -206,7 +205,6 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
             disabled={loading}
             style={[styles.button, loading && styles.buttonDisabled]}
           >
-            <View pointerEvents="none" style={styles.buttonStitch} />
             <Text style={styles.buttonText}>
               {loading ? LOGIN_TEXT.loading[language] : SIGNUP_TEXT.signUpButton[language]}
             </Text>
@@ -226,51 +224,36 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: C.page },
-  bar: {
-    backgroundColor: C.bar,
+  content: { flexGrow: 1 },
+  hero: { height: 170, backgroundColor: C.page },
+  heroPhoto: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+  heroBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: SIZES.screenPadding,
-    paddingTop: 48,
-    paddingBottom: 16,
+    paddingTop: 44,
   },
-  barTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '600' },
-  barStitch: {
-    position: 'absolute',
-    left: 12,
-    right: 12,
-    bottom: 4,
-    borderBottomWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: C.barStitch,
-  },
-  content: { flexGrow: 1, justifyContent: 'center', padding: SIZES.screenPadding },
   card: {
+    marginTop: -30,
+    marginHorizontal: SIZES.screenPadding,
+    marginBottom: 24,
     backgroundColor: C.card,
     borderColor: C.cardBorder,
     borderWidth: 1,
-    borderRadius: SIZES.cardRadius,
-    padding: SIZES.cardPadding,
+    borderRadius: SIZES.cardRadius + 4,
+    padding: SIZES.cardPadding + 4,
+    shadowColor: C.bar,
+    shadowOpacity: 0.12,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
   },
-  cardStitch: {
-    position: 'absolute',
-    top: 7,
-    left: 7,
-    right: 7,
-    bottom: 7,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: C.cardStitch,
-    borderRadius: SIZES.cardRadius - 5,
-  },
-  logo: { alignSelf: 'center' },
   title: {
     color: C.text,
     fontSize: 26,
-    fontWeight: '600',
+    fontWeight: '700',
     textAlign: 'center',
-    marginTop: 8,
   },
   intro: {
     color: C.softText,
@@ -284,7 +267,7 @@ const styles = StyleSheet.create({
   roleButton: {
     flex: 1,
     height: SIZES.buttonHeight,
-    backgroundColor: '#F7F9FB',
+    backgroundColor: S.inputBackground,
     borderColor: S.inputBorder,
     borderWidth: 1,
     borderRadius: SIZES.buttonRadius,
@@ -296,11 +279,11 @@ const styles = StyleSheet.create({
   roleTextChosen: { color: C.mainButtonText },
   input: {
     height: SIZES.inputHeight,
-    backgroundColor: S.white,
+    backgroundColor: S.inputBackground,
     borderColor: S.inputBorder,
     borderWidth: 1,
     borderRadius: SIZES.inputRadius,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     fontSize: 15,
     color: C.text,
     marginBottom: 16,
@@ -325,17 +308,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   buttonDisabled: { opacity: 0.5 },
-  buttonStitch: {
-    position: 'absolute',
-    top: 4,
-    left: 4,
-    right: 4,
-    bottom: 4,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: 'rgba(255,255,255,0.45)',
-    borderRadius: SIZES.buttonRadius - 4,
-  },
   buttonText: { color: C.mainButtonText, fontSize: 16, fontWeight: '600' },
   switchRow: {
     flexDirection: 'row',

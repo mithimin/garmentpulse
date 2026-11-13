@@ -1,8 +1,10 @@
 // apps/mobile/src/components/Card.tsx
 //
-// A card: a light box that holds ONE idea (one report, one form, one message).
-// It has a thin border, a soft shadow and a dashed "stitch line" just inside the
-// edge, which gives the app its cloth look (design system sections 7 and 8).
+// A card: a light cream box with big rounded corners that holds ONE idea (one
+// report, one form, one message). It has a thin warm border and a soft brown
+// shadow, like the cards on the website.
+// `tone="dark"` makes it a chocolate-brown feature card (like the "New reports"
+// box on the website); `tone="blue"` makes it a sky-blue card.
 // Owned by Rubaiya.
 
 import { StyleSheet, View } from 'react-native';
@@ -13,12 +15,14 @@ import { COLORS as C, SIZES } from '../theme';
 type Props = {
   children: ReactNode;
   style?: StyleProp<ViewStyle>;
+  tone?: 'cream' | 'dark' | 'blue';
 };
 
-export function Card({ children, style }: Props) {
+export function Card({ children, style, tone = 'cream' }: Props) {
   return (
-    <View style={[styles.card, style]}>
-      <View pointerEvents="none" style={styles.stitch} />
+    <View
+      style={[styles.card, tone === 'dark' && styles.dark, tone === 'blue' && styles.blue, style]}
+    >
       {children}
     </View>
   );
@@ -32,20 +36,11 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.cardRadius,
     padding: SIZES.cardPadding,
     shadowColor: C.bar,
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
   },
-  stitch: {
-    position: 'absolute',
-    top: 7,
-    left: 7,
-    right: 7,
-    bottom: 7,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: C.cardStitch,
-    borderRadius: SIZES.cardRadius - 5,
-  },
+  dark: { backgroundColor: C.darkCard, borderColor: '#432C20' },
+  blue: { backgroundColor: C.blue, borderColor: C.blueTag },
 });

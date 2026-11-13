@@ -23,7 +23,8 @@ import { MAX_DESCRIPTION_LENGTH, useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { localizeDigits } from '../../language/format';
 import { ERROR_TEXT, WORKER_TEXT } from '../../language/screenText';
-import { COLORS as C, SHARED_COLORS as S, SIZES } from '../../theme';
+import { COLORS as C, PICTURES, SHARED_COLORS as S, SIZES } from '../../theme';
+import { PictureCard } from '../../components/PictureCard';
 
 type Props = {
   profile: Profile;
@@ -100,6 +101,7 @@ export function ReportProblemScreen({ profile, onSeeMyReports }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <PictureCard picture={PICTURES.press} height={130} />
       <Card>
         <Text style={styles.label}>{WORKER_TEXT.machineLabel[language]}</Text>
         <MachinePicker

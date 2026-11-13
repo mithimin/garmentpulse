@@ -78,12 +78,7 @@ export function WorkerApp({ profile, onLogout }: Props) {
         {openReport ? (
           <ReportDetailScreen report={openReport} />
         ) : tab === 'home' ? (
-          <WorkerHomeScreen
-            profile={profile}
-            onReportProblem={() => changeTab('report')}
-            onOpenReport={setOpenReportId}
-            onLogout={onLogout}
-          />
+          <WorkerHomeScreen profile={profile} onOpenReport={setOpenReportId} onLogout={onLogout} />
         ) : tab === 'report' ? (
           <ReportProblemScreen profile={profile} onSeeMyReports={() => changeTab('reports')} />
         ) : (
