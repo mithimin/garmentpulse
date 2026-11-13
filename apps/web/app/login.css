@@ -241,6 +241,8 @@ html[lang='bn'] .login-kicker {
   inset: 0.5% 0.5% 0 0;
   border-radius: 8.8cqw;
   background: linear-gradient(200deg, #3f2519 0%, #52331f 100%);
+  /* A very thin golden line around the brown shape. */
+  border: 1px solid #d4af6a;
 }
 .login-card {
   position: relative;
