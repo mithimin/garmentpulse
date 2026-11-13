@@ -116,7 +116,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      <ManagerMachineMap maxRows={2} />
+      <ManagerMachineMap />
 
       <div className="dashboard-grid">
         <DataGate state={reports}>

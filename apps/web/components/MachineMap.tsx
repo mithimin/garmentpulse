@@ -11,33 +11,39 @@
 //     Realtime updates). A dashed stitched rim = technician assigned. A baby-blue seat = the
 //     technician is working on it. A selected seat gets a baby-blue ring.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a machine that glows burgundy (down) to put it in "Your selection" (the box on the side). The
-//     "Assign technician" button there opens the same Assign pop-up as the Dashboard
+//   - Click a machine that glows burgundy (down) to select it. A small floating glass card then
+//     appears right BESIDE that machine (on its other side when there is no room on the right)
+//     with a short count and the "Assign technician" button, so the map itself uses the full
+//     width of the page (there is no side box any more). If the machine is not on the floor
+//     that is showing, or there is no room beside it (a phone), the same card floats at the bottom
+//     of the screen instead. The button opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
 //     one gets the technician and the others stay in the queue.
 //   - Click any other machine to open its report (read-only), or see that it is running.
 // The seat logic is in data/machineSeats.ts. The beep needs one click on the page first,
 // because browsers keep pages silent until the person has used them.
-// On the Dashboard only the first rows are shown (`maxRows`) with a link to the Machines page,
-// which shows every row. The chips, the "machines are down" line and the beep always count ALL
-// machines, so both pages tell the same story.
+// FLOORS: the machines are grouped into floors of 3 rows with 5 machines each (see
+// data/machineSeats.ts). A row of tabs (Floor 1, Floor 2, ...) chooses the floor to show.
+// Every tab carries a live number: how many machines are DOWN on that floor (a tick when
+// none), and a line under the tabs says what is happening on the chosen floor right now
+// (down, technician busy, running). The Dashboard and the Machines page show the same map.
+// The chips, the "machines are down" line and the beep always count ALL machines of ALL floors.
 // Only in fake mode (no backend keys) there is a "Demo" button that pretends a worker
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
-import { HardHat, UserRound, Volume2, VolumeX } from 'lucide-react';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { HardHat, Volume2, VolumeX, X } from 'lucide-react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
 import { addFakeReport } from '../data/fakeStore';
-import { rowLetter, SEATS_PER_ROW } from '../data/machineSeats';
+import { groupFloors, rowLetter } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
 import { backendIsReal } from '../lib/backend';
 import { useLanguage } from '../language/LanguageContext';
-import { formatDateTime, localizeDigits } from '../language/format';
-import { machineName, personName } from '../language/localNames';
+import { localizeDigits } from '../language/format';
+import { machineName } from '../language/localNames';
 import { screenText } from '../language/screenText';
 import type { ScreenTextKey } from '../language/screenText';
 import { AssignDialog } from './AssignDialog';
@@ -93,17 +99,25 @@ type MachineMapProps = {
   onChanged: () => void;
   /** A heading for the card (white on a denim strip). The Machines page has its own page title, so it leaves this out. */
   title?: string;
-  /** Show only the first rows (the Dashboard preview). The counts still use ALL machines. Leave out to show every row. */
-  maxRows?: number;
 };
 
-export function MachineMap({ seats, technicians, onChanged, title, maxRows }: MachineMapProps) {
+export function MachineMap({ seats, technicians, onChanged, title }: MachineMapProps) {
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
+  const [floorNumber, setFloorNumber] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
   const [hint, setHint] = useState('');
+  // The machine the floating card is next to, and where that card goes (set after drawing).
+  const [anchorId, setAnchorId] = useState<string | null>(null);
+  const [pop, setPop] = useState<{
+    top: number;
+    left?: number;
+    right?: number;
+    side: 'right' | 'left';
+  } | null>(null);
+  const layoutRef = useRef<HTMLDivElement | null>(null);
   const [soundOn, setSoundOn] = useState(true);
 
   const num = (n: number) => localizeDigits(String(n), language);
@@ -149,34 +163,20 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
     }
   }, [downKey, soundOn]);
 
-  // On a narrow screen "Your selection" sits BELOW the map, out of sight. After a machine is
-  // chosen, scroll to it. On a wide screen (both side by side) the page stays where it is.
-  const sideRef = useRef<HTMLElement | null>(null);
-  function showSelection() {
-    requestAnimationFrame(() => {
-      const stacked = window.matchMedia('(max-width: 1000px)').matches;
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      sideRef.current?.scrollIntoView({
-        behavior: calm ? 'auto' : 'smooth',
-        block: stacked ? 'start' : 'nearest',
-      });
-    });
-  }
-
   function clickSeat(seat: Seat) {
     setHint('');
     if (seat.state === 'down') {
-      const wasSelected = selectedIds.includes(seat.machine.id);
-      setSelectedIds((ids) =>
-        ids.includes(seat.machine.id)
-          ? ids.filter((id) => id !== seat.machine.id)
-          : [...ids, seat.machine.id],
-      );
-      if (!wasSelected) showSelection();
+      const already = selectedIds.includes(seat.machine.id);
+      const next = already
+        ? selectedIds.filter((id) => id !== seat.machine.id)
+        : [...selectedIds, seat.machine.id];
+      setSelectedIds(next);
+      // The card goes next to the machine just chosen (or the last one still chosen).
+      setAnchorId(already ? (next[next.length - 1] ?? null) : seat.machine.id);
     } else if (seat.report) {
       setViewing(seat.report);
     } else {
-      showSelection();
+      setAnchorId(seat.machine.id);
       setHint(
         screenText('runningHint', language).replace(
           '{machine}',
@@ -186,15 +186,66 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
     }
   }
 
-  const rows: Seat[][] = [];
-  for (let i = 0; i < seats.length; i += SEATS_PER_ROW)
-    rows.push(seats.slice(i, i + SEATS_PER_ROW));
-  const shownRows = maxRows ? rows.slice(0, maxRows) : rows;
-  const hiddenCount = seats.length - shownRows.reduce((n, row) => n + row.length, 0);
+  // Works out where the floating card goes: just beside its machine, on the right when there is
+  // room and on the left when there is not. If the machine is not on the floor that is showing, there
+  // is no spot, and the card floats at the bottom of the screen instead.
+  useLayoutEffect(() => {
+    function place(next: typeof pop) {
+      // Only change the state when the spot really moved, so drawing never loops.
+      setPop((prev) =>
+        prev === next ||
+        (prev &&
+          next &&
+          prev.top === next.top &&
+          prev.left === next.left &&
+          prev.right === next.right &&
+          prev.side === next.side)
+          ? prev
+          : next,
+      );
+    }
+    function measure() {
+      const layout = layoutRef.current;
+      const seat = anchorId
+        ? layout?.querySelector<HTMLElement>(`[data-machine-id="${anchorId}"]`)
+        : null;
+      if (!layout || !seat) {
+        place(null);
+        return;
+      }
+      const l = layout.getBoundingClientRect();
+      const r = seat.getBoundingClientRect();
+      // The small card is about 270px wide; the card with a message is wider.
+      const POP_WIDTH = selectedIds.length > 0 ? 280 : 400;
+      const top = Math.round(r.top - l.top + r.height / 2);
+      if (r.right + 14 + POP_WIDTH <= l.right) {
+        place({ top, left: Math.round(r.right - l.left + 14), side: 'right' });
+      } else if (r.left - 14 - POP_WIDTH >= l.left) {
+        place({ top, right: Math.round(l.right - r.left + 14), side: 'left' });
+      } else {
+        // No room on either side (a phone): the card floats at the bottom of the screen instead.
+        place(null);
+      }
+    }
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  });
+
+  // The floors: floor 1 first, 3 rows of 5 seats each. A floor that no longer exists is never chosen.
+  const floors = groupFloors(seats);
+  const floorIndex = Math.min(floorNumber, floors.length) - 1;
+  const shownRows: Seat[][] = floors[floorIndex] ?? [];
+  const floorSeats = shownRows.flat();
+  const floorDown = floorSeats.filter((s) => s.state === 'down').length;
+  const floorBusy = floorSeats.filter(
+    (s) => s.state === 'assigned' || s.state === 'progress',
+  ).length;
+  const floorRunning = floorSeats.filter((s) => s.state === 'running').length;
   const first = selectedSeats[0];
 
   return (
-    <div className="map-layout">
+    <div className="map-layout" ref={layoutRef}>
       <Card className="map-card">
         <div className={title ? 'card-head map-banner' : 'card-head'}>
           {title ? (
@@ -255,6 +306,53 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
           </div>
         </div>
 
+        {floors.length > 1 ? (
+          <div
+            className="map-floors"
+            role="group"
+            aria-label={screenText('floorName', language).replace('{n}', '')}
+          >
+            {floors.map((floorRows, i) => {
+              const downHere = floorRows.flat().filter((s) => s.state === 'down').length;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  className="map-chip floor-tab"
+                  aria-pressed={i === floorIndex}
+                  onClick={() => setFloorNumber(i + 1)}
+                >
+                  {screenText('floorName', language).replace('{n}', num(i + 1))}
+                  <b className={downHere > 0 ? 'floor-badge floor-badge-down' : 'floor-badge'}>
+                    {downHere > 0 ? `${num(downHere)} ${screenText('seatDown', language)}` : '✓'}
+                  </b>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+        {floors.length > 1 ? (
+          <div className="map-floor-now" aria-live="polite">
+            <p className="floor-now-title">
+              {screenText('floorNow', language).replace('{n}', num(floorIndex + 1))}
+            </p>
+            <div className="floor-now-stats">
+              <div className="floor-stat floor-stat-down">
+                <b>{num(floorDown)}</b>
+                <span>{screenText('seatDown', language)}</span>
+              </div>
+              <div className="floor-stat floor-stat-busy">
+                <b>{num(floorBusy)}</b>
+                <span>{screenText('chipBusy', language)}</span>
+              </div>
+              <div className="floor-stat floor-stat-run">
+                <b>{num(floorRunning)}</b>
+                <span>{screenText('seatRunning', language)}</span>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <div className="map-desk">{screenText('deskLabel', language)}</div>
         <div className="map-scroll">
           <div className="map-rows">
@@ -277,6 +375,7 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
                       <button
                         type="button"
                         className={classes}
+                        data-machine-id={seat.machine.id}
                         aria-pressed={seat.state === 'down' ? selected : undefined}
                         aria-label={`${seat.code}, ${machineName(seat.machine, language)}, ${stateWord(seat.state)}`}
                         title={`${seat.code} · ${stateWord(seat.state)}`}
@@ -299,14 +398,6 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
           </div>
         </div>
 
-        {hiddenCount > 0 ? (
-          <p className="map-more">
-            <Link href="/manager/machines">
-              {screenText('mapViewAll', language).replace('{n}', num(seats.length))}
-            </Link>
-          </p>
-        ) : null}
-
         <ul className="map-legend">
           {(['running', 'down', 'assigned', 'progress'] as const).map((state) => (
             <li key={state}>
@@ -321,65 +412,79 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
         </ul>
       </Card>
 
-      <aside ref={sideRef} className="map-side" aria-label={screenText('selectionTitle', language)}>
-        <Card>
-          <div className="map-side-head">
-            <UserRound className="map-side-icon" size={30} strokeWidth={2.2} aria-hidden="true" />
-            <h2 className="map-side-title">{screenText('selectionTitle', language)}</h2>
-            <span className="map-head-line" aria-hidden="true" />
-          </div>
-          {selectedSeats.length === 0 ? (
-            <p className="map-empty">{screenText('selectionEmpty', language)}</p>
+      {selectedSeats.length > 0 || hint ? (
+        <div
+          className={[
+            'assign-bar',
+            pop ? `assign-pop assign-pop-${pop.side}` : '',
+            selectedSeats.length === 0 ? 'assign-note' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          style={pop ? { top: pop.top, left: pop.left, right: pop.right } : undefined}
+          role="region"
+          aria-live="polite"
+        >
+          {selectedSeats.length > 0 ? (
+            <>
+              <div className="assign-bar-text">
+                <strong>
+                  {screenText('selectionCount', language)}: {num(selectedSeats.length)}
+                </strong>
+                <small>
+                  {first ? `${first.code} · ${machineName(first.machine, language)}` : ''}
+                  {selectedSeats.length > 1
+                    ? ` · ${screenText('selectionQueueNote', language)}`
+                    : ''}
+                </small>
+              </div>
+              <Button
+                kind="main"
+                disabled={!first?.report}
+                onClick={() => first?.report && setAssigning(first.report)}
+              >
+                <HardHat size={22} strokeWidth={2} aria-hidden="true" />
+                {screenText('assignSelected', language)}
+                {selectedSeats.length > 1 ? (
+                  <span className="assign-count">{num(selectedSeats.length)}</span>
+                ) : null}
+              </Button>
+              <button
+                type="button"
+                className="assign-bar-close"
+                aria-label={screenText('removeSelected', language).replace(
+                  '{machine}',
+                  first?.code ?? '',
+                )}
+                onClick={() => {
+                  setSelectedIds([]);
+                  setHint('');
+                  setAnchorId(null);
+                }}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+            </>
           ) : (
-            <ul className="map-selected">
-              {selectedSeats.map((seat) => (
-                <li key={seat.machine.id}>
-                  <div>
-                    <strong>
-                      {seat.code} · {machineName(seat.machine, language)}
-                    </strong>
-                    {seat.report ? (
-                      <small>
-                        {seat.report.description} · {personName(seat.report.reported_by, language)}{' '}
-                        · {formatDateTime(seat.report.created_at, language)}
-                      </small>
-                    ) : null}
-                  </div>
-                  <button
-                    type="button"
-                    className="map-remove"
-                    aria-label={screenText('removeSelected', language).replace(
-                      '{machine}',
-                      seat.code,
-                    )}
-                    onClick={() =>
-                      setSelectedIds((ids) => ids.filter((id) => id !== seat.machine.id))
-                    }
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <>
+              <div className="assign-bar-text">
+                <small>{hint}</small>
+              </div>
+              <button
+                type="button"
+                className="assign-bar-close"
+                aria-label="OK"
+                onClick={() => {
+                  setHint('');
+                  setAnchorId(null);
+                }}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+            </>
           )}
-          <p className="map-total">
-            <span>{screenText('selectionCount', language)}</span>
-            <strong>{num(selectedSeats.length)}</strong>
-          </p>
-          <Button
-            kind="main"
-            disabled={!first?.report}
-            onClick={() => first?.report && setAssigning(first.report)}
-          >
-            <HardHat size={22} strokeWidth={2} aria-hidden="true" />
-            {screenText('assignSelected', language)}
-          </Button>
-          {selectedSeats.length > 1 ? (
-            <p className="map-note">{screenText('selectionQueueNote', language)}</p>
-          ) : null}
-          {hint ? <p className="map-note">{hint}</p> : null}
-        </Card>
-      </aside>
+        </div>
+      ) : null}
 
       {assigning ? (
         <AssignDialog

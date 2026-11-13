@@ -7,7 +7,6 @@
 // have resolved. The top bar comes from app/manager/layout.tsx. Owned by Mithi.
 
 import { DataGate } from '../../../components/DataGate';
-import { PageArt } from '../../../components/PageArt';
 import { TechniciansPanel } from '../../../components/TechniciansPanel';
 import { useManagerData } from '../../../data/ManagerData';
 import { useLanguage } from '../../../language/LanguageContext';
@@ -20,7 +19,6 @@ export default function TechniciansPage() {
   return (
     <>
       <div className="greeting">
-        <PageArt kind="press" />
         <h1>{screenText('techniciansPageTitle', language)}</h1>
         <p className="greeting-line">{screenText('techniciansPageSub', language)}</p>
       </div>
