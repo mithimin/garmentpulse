@@ -13,10 +13,12 @@ import type { Profile } from '@garmentpulse/shared';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { JobCard } from '../../components/JobCard';
+import { PictureCard } from '../../components/PictureCard';
+import { PictureHeader } from '../../components/PictureHeader';
 import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { TECH_TEXT } from '../../language/screenText';
-import { COLORS as C, STATUS_COLORS, SIZES } from '../../theme';
+import { COLORS as C, PICTURES, STATUS_COLORS, SIZES } from '../../theme';
 import { personName } from '../../language/localNames';
 
 type Props = {
@@ -35,8 +37,9 @@ export function JobsScreen({ profile, onOpenJob, onLogout }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
+      <PictureHeader greeting={TECH_TEXT.hello[language]} name={personName(profile, language)} />
+
       <Card>
-        <Text style={styles.name}>{personName(profile, language)}</Text>
         <View style={styles.row}>
           <Text style={styles.youAre}>{TECH_TEXT.youAre[language]}</Text>
           <View style={[styles.pill, { backgroundColor: colors.background }]}>
@@ -49,6 +52,8 @@ export function JobsScreen({ profile, onOpenJob, onLogout }: Props) {
           {availability === 'free' ? TECH_TEXT.freeHint[language] : TECH_TEXT.busyHint[language]}
         </Text>
       </Card>
+
+      <PictureCard picture={PICTURES.tape} height={130} />
 
       {jobs.length === 0 ? (
         <Text style={styles.empty}>{TECH_TEXT.noJobs[language]}</Text>
@@ -65,12 +70,11 @@ export function JobsScreen({ profile, onOpenJob, onLogout }: Props) {
 
 const styles = StyleSheet.create({
   content: { padding: SIZES.screenPadding, gap: 18 },
-  name: { color: C.text, fontSize: 20, fontWeight: '600', marginBottom: 8 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   youAre: { color: C.softText, fontSize: 15 },
   pill: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999 },
   pillText: { fontSize: 13, fontWeight: '700' },
-  hint: { color: C.softText, fontSize: 15, lineHeight: 24, marginTop: 8 },
   empty: { color: C.softText, fontSize: 15 },
+  hint: { color: C.softText, fontSize: 15, lineHeight: 24, marginTop: 8 },
   logout: { marginTop: 8 },
 });

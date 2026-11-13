@@ -16,6 +16,9 @@ type Words = Record<Language, string>;
 
 export const LOGIN_TEXT = {
   appName: { en: 'GarmentPulse', bn: 'গার্মেন্টপালস' },
+  /** The app name in two parts, so "Pulse" can be drawn in blue on the login screen. */
+  appNameFirst: { en: 'Garment', bn: 'গার্মেন্ট' },
+  appNameSecond: { en: 'Pulse', bn: 'পালস' },
   tagline: { en: 'For workers and technicians', bn: 'শ্রমিক ও টেকনিশিয়ানদের জন্য' },
   roleLabel: { en: 'I am a', bn: 'আমি একজন' },
   /** Shown when the chosen role (worker/technician) does not match the account. */
@@ -32,6 +35,12 @@ export const LOGIN_TEXT = {
   /** The link under the login button that opens the sign-up screen. */
   noAccount: { en: 'New here?', bn: 'নতুন?' },
   goToSignUp: { en: 'Sign up with a code', bn: 'কোড দিয়ে সাইন আপ করুন' },
+  /** The small word between the login button and the sign-up link. */
+  or: { en: 'or', bn: 'অথবা' },
+  /** The line at the bottom of the login card (draft Bangla, needs a Bangla speaker). */
+  secure: { en: 'Secure & Confidential', bn: 'নিরাপদ ও গোপনীয়' },
+  showPassword: { en: 'Show password', bn: 'পাসওয়ার্ড দেখান' },
+  hidePassword: { en: 'Hide password', bn: 'পাসওয়ার্ড লুকান' },
 } satisfies Record<string, Words>;
 
 /** Words on the sign-up screen (name, email, password and invite code). */
@@ -155,6 +164,7 @@ export const TECH_TEXT = {
   historyTitle: { en: 'Past jobs', bn: 'আগের কাজ' },
   jobTitle: { en: 'Job details', bn: 'কাজের বিবরণ' },
 
+  hello: { en: 'Hello', bn: 'হ্যালো' },
   youAre: { en: 'You are', bn: 'আপনি এখন' },
   freeHint: {
     en: 'No open job. Waiting for the manager.',
@@ -230,3 +240,83 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
     bn: 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।',
   },
 };
+
+/**
+ * Words on the worker's machine map (floors, rows, the colours, and the report
+ * card). Status words "Waiting" and "In progress" come from `labels.ts` in
+ * @garmentpulse/shared; "OK" and "Down" are only used on the map, so they live here.
+ * DRAFT: the Bangla words need a Bangla speaker to read them.
+ */
+export const MAP_TEXT = {
+  title: { en: 'Machine map', bn: 'মেশিন ম্যাপ' },
+  floor: { en: 'Floor', bn: 'ফ্লোর' },
+  row: { en: 'Row', bn: 'সারি' },
+  machine: { en: 'Machine', bn: 'মেশিন' },
+  hint: {
+    en: 'Tap a machine that stopped working.',
+    bn: 'যে মেশিনটি বন্ধ হয়েছে তাতে ট্যাপ করুন।',
+  },
+  ok: { en: 'OK', bn: 'ঠিক আছে' },
+  down: { en: 'Down', bn: 'বন্ধ' },
+  downCount: { en: 'down', bn: 'টি বন্ধ' },
+  noneDown: { en: 'All machines OK', bn: 'সব মেশিন ঠিক আছে' },
+  downOnFloor: { en: 'A machine on this floor is down', bn: 'এই ফ্লোরের একটি মেশিন বন্ধ' },
+  sheetTitle: { en: 'Report this machine', bn: 'এই মেশিনটির কথা জানান' },
+  whereLabel: { en: 'Where', bn: 'কোথায়' },
+  descriptionLabel: { en: 'What is wrong?', bn: 'কী সমস্যা?' },
+  moreLabel: { en: 'Add more words (optional)', bn: 'আরও কিছু লিখুন (ঐচ্ছিক)' },
+  problemNeedle: { en: 'Needle broke', bn: 'সুই ভেঙেছে' },
+  problemThread: { en: 'Thread keeps breaking', bn: 'সুতা ছিঁড়ে যাচ্ছে' },
+  problemNoise: { en: 'Strange noise or smell', bn: 'অদ্ভুত শব্দ বা গন্ধ' },
+  problemStart: { en: 'Machine will not start', bn: 'মেশিন চালু হচ্ছে না' },
+  descriptionHint: {
+    en: 'Type a few words about the problem',
+    bn: 'সমস্যাটি কয়েকটি শব্দে লিখুন',
+  },
+  send: { en: 'Send report', bn: 'রিপোর্ট পাঠান' },
+  cancel: { en: 'Cancel', bn: 'বাতিল' },
+  close: { en: 'Close', bn: 'বন্ধ করুন' },
+  emptyError: {
+    en: 'Please pick a problem or type what is wrong.',
+    bn: 'অনুগ্রহ করে একটি সমস্যা বেছে নিন বা লিখুন কী হয়েছে।',
+  },
+  sentNote: {
+    en: 'Report sent. The machine now shows as down.',
+    bn: 'রিপোর্ট পাঠানো হয়েছে। মেশিনটি এখন বন্ধ দেখাচ্ছে।',
+  },
+  infoDown: {
+    en: 'This machine is down. A manager will send a technician.',
+    bn: 'এই মেশিনটি বন্ধ। ম্যানেজার একজন টেকনিশিয়ান পাঠাবেন।',
+  },
+  infoWaiting: {
+    en: 'A technician is assigned and will start soon.',
+    bn: 'একজন টেকনিশিয়ান নির্ধারিত হয়েছেন এবং শীঘ্রই কাজ শুরু করবেন।',
+  },
+  infoInProgress: {
+    en: 'A technician is fixing this machine now.',
+    bn: 'একজন টেকনিশিয়ান এখন এই মেশিনটি ঠিক করছেন।',
+  },
+  demoButton: { en: 'Demo: a machine stops', bn: 'ডেমো: একটি মেশিন বন্ধ হলো' },
+  demoNote: {
+    en: 'Demo data. This map is not connected to the backend yet.',
+    bn: 'ডেমো তথ্য। এই ম্যাপ এখনো ব্যাকএন্ডের সাথে যুক্ত নয়।',
+  },
+} satisfies Record<string, Words>;
+
+/**
+ * Words on the worker's live repair tracker (the step-by-step card for the worker's
+ * latest report that is not finished yet).
+ * DRAFT: the Bangla words need a Bangla speaker to read them.
+ */
+export const TRACK_TEXT = {
+  title: { en: 'Your repair', bn: 'আপনার মেরামত' },
+  reported: { en: 'Reported', bn: 'রিপোর্ট করা হয়েছে' },
+  assigned: { en: 'Technician assigned', bn: 'টেকনিশিয়ান নির্ধারিত' },
+  waitingTech: { en: 'Waiting for a technician', bn: 'টেকনিশিয়ানের অপেক্ষায়' },
+  fixing: { en: 'Fixing now', bn: 'এখন ঠিক করা হচ্ছে' },
+  notStarted: { en: 'Not started yet', bn: 'এখনো শুরু হয়নি' },
+  done: { en: 'Done', bn: 'শেষ' },
+  doneDetail: { en: 'The machine is ready', bn: 'মেশিন প্রস্তুত' },
+  isWorking: { en: 'is working on it', bn: 'কাজ করছেন' },
+  openHint: { en: 'Tap to see the report', bn: 'রিপোর্ট দেখতে ট্যাপ করুন' },
+} satisfies Record<string, Words>;

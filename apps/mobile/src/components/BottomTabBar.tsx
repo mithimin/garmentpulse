@@ -2,9 +2,8 @@
 //
 // The bar at the bottom of the phone with 2 to 4 tabs. Each tab is an icon with a
 // word under it, at least 56 px tall. The chosen tab is white on a soft pill.
-// Same blue as the top bar, with a dashed stitch line along its top edge
-// (design system section 9.6). Used by the worker screens now and by the
-// technician screens later.
+// Same chocolate brown as the top bar, with rounded top corners like the
+// website's cards. Used by the worker and the technician screens.
 // Owned by Rubaiya.
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -28,7 +27,6 @@ type Props<Key extends string> = {
 export function BottomTabBar<Key extends string>({ tabs, active, onChange }: Props<Key>) {
   return (
     <View style={styles.bar}>
-      <View pointerEvents="none" style={styles.stitch} />
       {tabs.map(({ key, label, Icon }) => {
         const chosen = key === active;
         return (
@@ -59,15 +57,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingTop: 8,
     paddingBottom: 16,
-  },
-  stitch: {
-    position: 'absolute',
-    left: 12,
-    right: 12,
-    top: 3,
-    borderTopWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: C.barStitch,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
   },
   tab: { flex: 1, minHeight: 56, alignItems: 'center', justifyContent: 'center' },
   pill: {

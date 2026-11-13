@@ -9,10 +9,11 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import type { Profile } from '@garmentpulse/shared';
 import { JobCard } from '../../components/JobCard';
+import { PictureCard } from '../../components/PictureCard';
 import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { TECH_TEXT } from '../../language/screenText';
-import { COLORS as C, SIZES } from '../../theme';
+import { COLORS as C, PICTURES, SIZES } from '../../theme';
 
 type Props = {
   profile: Profile;
@@ -26,6 +27,8 @@ export function HistoryScreen({ profile, onOpenJob }: Props) {
 
   return (
     <ScrollView contentContainerStyle={styles.content}>
+      <PictureCard picture={PICTURES.scissors} height={130} />
+
       {pastJobs.length === 0 ? (
         <Text style={styles.empty}>{TECH_TEXT.noHistory[language]}</Text>
       ) : (
