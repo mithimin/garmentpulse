@@ -92,8 +92,14 @@
 .topbar {
   min-height: var(--bar-size);
   padding: 0 35px;
-  background: radial-gradient(ellipse at 50% 40%, #3a1f11 0%, #46291a 75%);
-  box-shadow: 0 8px 22px -10px rgba(42, 25, 16, 0.7);
+  /* See-through brown glass: the page shows faintly through it and is blurred behind it.
+     The bar stays at the top while the page scrolls, so you can see this happen. */
+  position: sticky;
+  top: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(58, 31, 17, 0.76) 0%, rgba(70, 41, 26, 0.68) 75%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 8px 22px -12px rgba(42, 25, 16, 0.55);
   z-index: 5;
 }
 .topbar-brand {
