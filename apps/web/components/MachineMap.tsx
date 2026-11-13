@@ -11,8 +11,10 @@
 //     Realtime updates). A dashed stitched rim = technician assigned. A baby-blue seat = the
 //     technician is working on it. A selected seat gets a baby-blue ring.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a machine that glows burgundy (down) to put it in "Your selection" (the box on the side). The
-//     "Assign technician" button there opens the same Assign pop-up as the Dashboard
+//   - Click a machine that glows burgundy (down) to select it. A floating glass bar then rises
+//     from the bottom of the screen with a short count and the "Assign technician" button, so
+//     the map itself uses the full width of the page (there is no side box any more). The button
+//     opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
 //     one gets the technician and the others stay in the queue.
@@ -29,7 +31,7 @@
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
-import { HardHat, UserRound, Volume2, VolumeX } from 'lucide-react';
+import { HardHat, Volume2, VolumeX, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
@@ -38,8 +40,8 @@ import { groupFloors, rowLetter } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
 import { backendIsReal } from '../lib/backend';
 import { useLanguage } from '../language/LanguageContext';
-import { formatDateTime, localizeDigits } from '../language/format';
-import { machineName, personName } from '../language/localNames';
+import { localizeDigits } from '../language/format';
+import { machineName } from '../language/localNames';
 import { screenText } from '../language/screenText';
 import type { ScreenTextKey } from '../language/screenText';
 import { AssignDialog } from './AssignDialog';
@@ -150,34 +152,17 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
     }
   }, [downKey, soundOn]);
 
-  // On a narrow screen "Your selection" sits BELOW the map, out of sight. After a machine is
-  // chosen, scroll to it. On a wide screen (both side by side) the page stays where it is.
-  const sideRef = useRef<HTMLElement | null>(null);
-  function showSelection() {
-    requestAnimationFrame(() => {
-      const stacked = window.matchMedia('(max-width: 1000px)').matches;
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      sideRef.current?.scrollIntoView({
-        behavior: calm ? 'auto' : 'smooth',
-        block: stacked ? 'start' : 'nearest',
-      });
-    });
-  }
-
   function clickSeat(seat: Seat) {
     setHint('');
     if (seat.state === 'down') {
-      const wasSelected = selectedIds.includes(seat.machine.id);
       setSelectedIds((ids) =>
         ids.includes(seat.machine.id)
           ? ids.filter((id) => id !== seat.machine.id)
           : [...ids, seat.machine.id],
       );
-      if (!wasSelected) showSelection();
     } else if (seat.report) {
       setViewing(seat.report);
     } else {
-      showSelection();
       setHint(
         screenText('runningHint', language).replace(
           '{machine}',
@@ -359,65 +344,61 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
         </ul>
       </Card>
 
-      <aside ref={sideRef} className="map-side" aria-label={screenText('selectionTitle', language)}>
-        <Card>
-          <div className="map-side-head">
-            <UserRound className="map-side-icon" size={30} strokeWidth={2.2} aria-hidden="true" />
-            <h2 className="map-side-title">{screenText('selectionTitle', language)}</h2>
-            <span className="map-head-line" aria-hidden="true" />
-          </div>
-          {selectedSeats.length === 0 ? (
-            <p className="map-empty">{screenText('selectionEmpty', language)}</p>
+      {selectedSeats.length > 0 || hint ? (
+        <div className="assign-bar" role="region" aria-live="polite">
+          {selectedSeats.length > 0 ? (
+            <>
+              <div className="assign-bar-text">
+                <strong>
+                  {screenText('selectionCount', language)}: {num(selectedSeats.length)}
+                </strong>
+                <small>
+                  {first ? `${first.code} · ${machineName(first.machine, language)}` : ''}
+                  {selectedSeats.length > 1
+                    ? ` · ${screenText('selectionQueueNote', language)}`
+                    : ''}
+                </small>
+              </div>
+              <Button
+                kind="main"
+                disabled={!first?.report}
+                onClick={() => first?.report && setAssigning(first.report)}
+              >
+                <HardHat size={22} strokeWidth={2} aria-hidden="true" />
+                {screenText('assignSelected', language)}
+              </Button>
+              <button
+                type="button"
+                className="assign-bar-close"
+                aria-label={screenText('removeSelected', language).replace(
+                  '{machine}',
+                  first?.code ?? '',
+                )}
+                onClick={() => {
+                  setSelectedIds([]);
+                  setHint('');
+                }}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+            </>
           ) : (
-            <ul className="map-selected">
-              {selectedSeats.map((seat) => (
-                <li key={seat.machine.id}>
-                  <div>
-                    <strong>
-                      {seat.code} · {machineName(seat.machine, language)}
-                    </strong>
-                    {seat.report ? (
-                      <small>
-                        {seat.report.description} · {personName(seat.report.reported_by, language)}{' '}
-                        · {formatDateTime(seat.report.created_at, language)}
-                      </small>
-                    ) : null}
-                  </div>
-                  <button
-                    type="button"
-                    className="map-remove"
-                    aria-label={screenText('removeSelected', language).replace(
-                      '{machine}',
-                      seat.code,
-                    )}
-                    onClick={() =>
-                      setSelectedIds((ids) => ids.filter((id) => id !== seat.machine.id))
-                    }
-                  >
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <>
+              <div className="assign-bar-text">
+                <small>{hint}</small>
+              </div>
+              <button
+                type="button"
+                className="assign-bar-close"
+                aria-label="OK"
+                onClick={() => setHint('')}
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+            </>
           )}
-          <p className="map-total">
-            <span>{screenText('selectionCount', language)}</span>
-            <strong>{num(selectedSeats.length)}</strong>
-          </p>
-          <Button
-            kind="main"
-            disabled={!first?.report}
-            onClick={() => first?.report && setAssigning(first.report)}
-          >
-            <HardHat size={22} strokeWidth={2} aria-hidden="true" />
-            {screenText('assignSelected', language)}
-          </Button>
-          {selectedSeats.length > 1 ? (
-            <p className="map-note">{screenText('selectionQueueNote', language)}</p>
-          ) : null}
-          {hint ? <p className="map-note">{hint}</p> : null}
-        </Card>
-      </aside>
+        </div>
+      ) : null}
 
       {assigning ? (
         <AssignDialog
