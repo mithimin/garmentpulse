@@ -99,10 +99,9 @@
   padding: 0 10px;
   border: 0;
   border-radius: 999px;
-  background: rgba(250, 243, 234, 0.62);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  color: #3b2418;
+  /* Solid brown, like the chosen Manager | Owner tab, so it stands out on the pale photo. */
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: #f9efe5;
   font: inherit;
   font-size: clamp(12px, 0.85vw, 14px);
   font-weight: 700;
@@ -110,7 +109,7 @@
   box-shadow: 0 10px 26px -14px rgba(59, 36, 24, 0.4);
 }
 .settings-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: #2a1910;
 }
 .settings-panel {
   position: absolute;
