@@ -4,12 +4,12 @@
 //
 // The MACHINE MAP: every machine on the floor is a small sewing machine on a "seat plan",
 // like choosing seats on a cinema or bus ticket website.
-//   - Each machine is a round RADAR SCOPE with a sweeping beam. A machine that is running
-//     is calm. A machine that is DOWN (broken, waiting for a technician) glows BURGUNDY, sends
-//     out ripples, shakes, and the page BEEPS when a new one appears (live, thanks to the
-//     Realtime updates). A dashed stitched rim = technician assigned. A fast, bright beam =
-//     the technician is working on it. The scopes sit on a dark denim panel so the white
-//     glow can be seen.
+//   - Each machine is a rounded SEAT with a small sewing machine and its code (the look of
+//     the factory-look draft, see app/factory.css). A machine that is running is a cream
+//     seat. A machine that is DOWN (broken, waiting for a technician) is a brown seat with a
+//     pulsing white-cream halo, and the page BEEPS when a new one appears (live, thanks to the
+//     Realtime updates). A dashed stitched rim = technician assigned. A baby-blue seat = the
+//     technician is working on it. A selected seat gets a baby-blue ring.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
 //   - Click a machine that glows burgundy (down) to put it in "Your selection" (the box on the side). The
 //     "Assign technician" button there opens the same Assign pop-up as the Dashboard
@@ -26,7 +26,7 @@
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
-import { MapPin, Volume2, VolumeX } from 'lucide-react';
+import { HardHat, UserRound, Volume2, VolumeX } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
@@ -62,17 +62,10 @@ const SEAT_BADGE: Record<SeatState, string> = {
   down: '!',
 };
 
-/** A tiny sewing machine (base, arm, needle, hand wheel, thread spool) in the middle of a scope. */
+/** The small sewing machine on a seat: the drawing cut out of the draft picture
+ * (public/factory-icon-machine.png), painted in the seat's text colour by factory.css. */
 function MiniMachine() {
-  return (
-    <svg viewBox="0 0 40 30" aria-hidden="true" className="seat-machine">
-      <rect x="2" y="25" width="36" height="4" rx="1.5" />
-      <path d="M6 25 V13 Q6 7 12 7 H29 Q35 7 35 13 V19 H30 V13 H14 V25 Z" />
-      <rect x="29.5" y="19" width="2" height="6" />
-      <circle cx="36" cy="9" r="3" />
-      <rect x="9" y="2" width="6" height="4" rx="1.5" />
-    </svg>
-  );
+  return <span aria-hidden="true" className="seat-machine" />;
 }
 
 /** Two short beeps, high then low, twice. Silent if the browser has no audio. */
@@ -206,7 +199,7 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
         <div className={title ? 'card-head map-banner' : 'card-head'}>
           {title ? (
             <>
-              <MapPin className="map-pin" size={34} strokeWidth={2} aria-hidden="true" />
+              <span className="map-pin" aria-hidden="true" />
               <h2 className="map-title">{title}</h2>
               <span className="map-head-line" aria-hidden="true" />
             </>
@@ -331,6 +324,7 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
       <aside ref={sideRef} className="map-side" aria-label={screenText('selectionTitle', language)}>
         <Card>
           <div className="map-side-head">
+            <UserRound className="map-side-icon" size={30} strokeWidth={2.2} aria-hidden="true" />
             <h2 className="map-side-title">{screenText('selectionTitle', language)}</h2>
             <span className="map-head-line" aria-hidden="true" />
           </div>
@@ -377,6 +371,7 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
             disabled={!first?.report}
             onClick={() => first?.report && setAssigning(first.report)}
           >
+            <HardHat size={22} strokeWidth={2} aria-hidden="true" />
             {screenText('assignSelected', language)}
           </Button>
           {selectedSeats.length > 1 ? (

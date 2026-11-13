@@ -3,7 +3,8 @@
 // apps/web/components/CountBox.tsx
 //
 // One of the boxes at the top of a screen (design system 3.2, "number box").
-// It is slate blue with a quilted pattern and a dashed stitch line inside the edge:
+// It is a rounded box (brown, cream, baby blue, cream, as in the factory-look picture) with
+// a big faint icon in the top-right corner:
 //   - a small spaced-out CAPITAL label at the top,
 //   - a big number,
 //   - (optional) a small tag under the number with one more fact, for example
@@ -11,7 +12,7 @@
 // The number may be a number or a short text. Digits turn into Bangla digits in
 // Bangla mode. Owned by Mithi.
 
-import { CircleCheck, Clock, FileText, UserRound } from 'lucide-react';
+import { CircleCheck, Clock, TriangleAlert, UserRound } from 'lucide-react';
 import { useLanguage } from '../language/LanguageContext';
 import { localizeDigits } from '../language/format';
 
@@ -23,8 +24,8 @@ type CountBoxProps = {
 };
 
 const TONE_ICON = {
-  plain: FileText,
-  waiting: FileText,
+  plain: TriangleAlert,
+  waiting: TriangleAlert,
   progress: Clock,
   resolved: CircleCheck,
   free: UserRound,
@@ -35,7 +36,7 @@ export function CountBox({ label, count, tag, tone = 'plain' }: CountBoxProps) {
   const Icon = TONE_ICON[tone];
   return (
     <div className="count-box">
-      <Icon className="count-icon" size={36} strokeWidth={1.5} aria-hidden="true" />
+      <Icon className="count-icon" size={58} strokeWidth={1.6} aria-hidden="true" />
       <div className="count-label">{label}</div>
       <div className="count-number">{localizeDigits(String(count), language)}</div>
       {tag ? (

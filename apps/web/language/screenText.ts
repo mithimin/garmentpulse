@@ -163,8 +163,8 @@ export const SCREEN_TEXT = {
   menuMachines: { en: 'Machines', bn: 'মেশিন' },
   mapTitle: { en: 'Machine map', bn: 'মেশিন ম্যাপ' },
   mapSub: {
-    en: 'Every machine on the floor. A machine glowing burgundy needs a technician.',
-    bn: 'ফ্লোরের প্রতিটি মেশিন। গাঢ় লাল আলোয় জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
+    en: 'Every machine on the floor. A machine glowing white needs a technician.',
+    bn: 'ফ্লোরের প্রতিটি মেশিন। সাদা আলোয় জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
   },
   seatRunning: { en: 'Running', bn: 'চলছে' },
   seatDown: { en: 'Down', bn: 'নষ্ট' },
@@ -177,8 +177,8 @@ export const SCREEN_TEXT = {
   downCountMany: { en: '{n} machines are down', bn: '{n}টি মেশিন নষ্ট' },
   selectionTitle: { en: 'Your selection', bn: 'আপনার বাছাই' },
   selectionEmpty: {
-    en: 'Click a machine glowing burgundy to select it. These machines are broken and waiting for a technician.',
-    bn: 'গাঢ় লাল আলোয় জ্বলা একটি মেশিনে ক্লিক করে বাছাই করুন। এই মেশিনগুলো নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
+    en: 'Click a machine glowing white to select it. These machines are broken and waiting for a technician.',
+    bn: 'সাদা আলোয় জ্বলা একটি মেশিনে ক্লিক করে বাছাই করুন। এই মেশিনগুলো নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
   },
   selectionCount: { en: 'Reports selected', bn: 'বাছাই করা রিপোর্ট' },
   selectionQueueNote: {

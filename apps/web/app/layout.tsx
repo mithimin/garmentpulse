@@ -7,19 +7,23 @@
 // Owned by Mithi.
 
 import type { ReactNode } from 'react';
-import { Baloo_Da_2, EB_Garamond, IBM_Plex_Mono } from 'next/font/google';
+import { Baloo_Da_2, IBM_Plex_Mono, Lato } from 'next/font/google';
 import { AuthProvider } from '../auth/AuthContext';
 import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
+// The factory look (brown, cream and baby blue) is written last, so it wins over globals.css.
+import './factory.css';
 
 // The English fonts cannot draw Bangla letters, so Bangla uses Baloo Da 2,
 // a rounded, friendly Bangla font that has several weights (see the font lists in globals.css).
-// EB Garamond is the ONE English font of the whole website (titles, normal text,
-// greeting and big numbers). Mithi chose it on 2026-11-13.
-const ebGaramond = EB_Garamond({
+// Lato is the ONE English font of the whole website (titles, normal text, greeting and big
+// numbers). It is a clean, friendly sans-serif whose letter widths match the factory-look draft
+// picture Mithi shared on 2026-11-13. Lato has regular (400) and bold (700); a CSS weight of
+// 500 or 600 is drawn with the nearest one.
+const lato = Lato({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-eb-garamond',
+  weight: ['400', '700'],
+  variable: '--font-lato',
 });
 const balooBangla = Baloo_Da_2({
   subsets: ['bengali'],
@@ -42,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${ebGaramond.variable} ${balooBangla.variable} ${plexMono.variable}`}
+      className={`${lato.variable} ${balooBangla.variable} ${plexMono.variable}`}
     >
       <body>
         <LanguageProvider>

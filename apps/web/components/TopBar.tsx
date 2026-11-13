@@ -2,7 +2,7 @@
 
 // apps/web/components/TopBar.tsx
 //
-// The denim bar along the top of every page after login (design system 9.5):
+// The brown bar along the top of every page after login (design system 9.5):
 //   - left:   a button that opens and closes the sidebar (only when a page passes
 //             `onToggleSidebar`; the owner's one-screen page has no sidebar),
 //   - middle: the nameplate: the logo, the app name and the role name,
@@ -20,7 +20,6 @@ import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
 import { LanguageSwitch } from './LanguageSwitch';
-import { Logo } from './Logo';
 
 type TopBarProps = {
   role?: Role;
@@ -49,10 +48,8 @@ export function TopBar({ role, onLogOut, onToggleSidebar, sidebarOpen = false }:
         ) : null}
       </div>
       <div className="topbar-brand">
-        {/* The logo keeps its login colour (dark navy) on a pale tile, so it stands out. */}
-        <span className="logo-tile">
-          <Logo size={34} />
-        </span>
+        {/* The logo tile is the picture public/factory-logo-tile.png (set in factory.css). */}
+        <span className="logo-tile" aria-hidden="true" />
         <div className="topbar-nameplate">
           <div className="topbar-name">{screenText('appName', language)}</div>
           {role ? <div className="topbar-role">{ROLE_LABELS[role][language]}</div> : null}
