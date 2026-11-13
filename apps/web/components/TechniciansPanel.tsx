@@ -85,7 +85,7 @@ export function TechniciansPanel({
       )}
       <ul className="tech-list">
         {sorted.map((technician) => (
-          <li key={technician.id} className="tech-row">
+          <li key={technician.id} className={`tech-row tech-row-${technician.availability}`}>
             <span className="avatar" aria-hidden="true">
               {initialsOf(personName(technician, language), language)}
             </span>
