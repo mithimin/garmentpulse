@@ -925,6 +925,15 @@ html[lang='bn'] .map-desk {
 body:has(.page-art)::before {
   display: none;
 }
+/* The Machines page has the map and no greeting, so the factory photo would only float behind
+   the map card. It is taken away there. (The Dashboard has a greeting and keeps the photo.) */
+body:has(.map-layout):not(:has(.greeting))::before {
+  display: none;
+}
+/* With no photo and no greeting, the cards get a little room under the top bar. */
+.shell > .page:has(.map-layout):not(:has(.greeting)) {
+  padding-top: 28px;
+}
 @container page (max-width: 760px) {
   .greeting:has(.page-art) {
     display: flex;
