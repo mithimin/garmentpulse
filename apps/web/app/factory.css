@@ -88,12 +88,11 @@
   box-shadow: 0 0 0 1px #6fb0f2;
 }
 
-/* ---- Header: brown, with the hamburger left, logo and name in the middle, EN right ---- */
+/* ---- Header: a floating glass pill. Its full look is in the block "THE TOP BAR PILL" at the
+   end of this file, copied from the picture Mithi shared on 2026-11-14. ---- */
 .topbar {
   min-height: var(--bar-size);
   padding: 0 35px;
-  background: radial-gradient(ellipse at 50% 40%, #3a1f11 0%, #46291a 75%);
-  box-shadow: 0 8px 22px -10px rgba(42, 25, 16, 0.7);
   z-index: 5;
 }
 .topbar-brand {
@@ -1061,5 +1060,129 @@ body:has(.map-layout):not(:has(.greeting))::before {
   }
   .seat-label {
     font-size: 11.5px;
+  }
+}
+
+/* ======================================================================================
+   THE TOP BAR PILL (an exact copy of the glass bar picture Mithi shared, 2026-11-14)
+   A floating, fully rounded bar of brown glass with a hard diagonal sheen across its left half
+   and a thin light rim. Left: a rounded glass button with three white lines. Middle: the logo
+   tile with a soft glow, a thin vertical line, then the name and the role. Right: a glass pill
+   with the language and a small arrow. It stays at the top while the page scrolls, and the page
+   is blurred behind it. The bar plus its two 8px gaps is as tall as --bar-size (92px).
+   ====================================================================================== */
+.topbar {
+  position: sticky;
+  top: 8px;
+  min-height: calc(var(--bar-size) - 16px);
+  margin: 8px 18px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 245, 235, 0.42);
+  background:
+    /* the hard diagonal sheen over the left half */
+    linear-gradient(112deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.1) 38%, rgba(255, 255, 255, 0) 38.2%),
+    /* a soft light along the top edge */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 45%),
+    /* the brown glass itself: Brown #3B2418 (59, 36, 24), a little see-through */
+    linear-gradient(90deg, rgba(59, 36, 24, 0.92) 0%, rgba(59, 36, 24, 0.94) 100%);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 6px rgba(60, 32, 18, 0.35),
+    0 16px 30px -14px rgba(59, 36, 24, 0.6);
+}
+.topbar .icon-btn {
+  width: 62px;
+  height: 52px;
+  border-radius: 17px;
+  border: 1px solid rgba(255, 245, 235, 0.4);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 6px 12px -6px rgba(50, 26, 14, 0.6);
+  color: #fff;
+}
+.topbar .icon-btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.14));
+}
+.topbar .logo-tile {
+  width: 66px;
+  height: 62px;
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 4px rgba(255, 240, 222, 0.22),
+    0 0 22px rgba(255, 232, 205, 0.55);
+}
+.topbar-brand {
+  gap: 20px;
+}
+.topbar-nameplate {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  min-height: 52px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 245, 235, 0.6);
+}
+.topbar-name {
+  font-size: 24px;
+  color: #fff;
+}
+.topbar-role {
+  font-size: 18px;
+  color: #f1dfcd;
+}
+.topbar .lang-switch {
+  min-width: 100px;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 245, 235, 0.45);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 6px 12px -6px rgba(50, 26, 14, 0.6);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+.topbar .lang-switch:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.14));
+}
+@media (max-width: 767px) {
+  .topbar {
+    margin: 6px 10px 10px;
+    min-height: calc(var(--bar-size) - 16px);
+    padding: 0 12px;
+  }
+  .topbar .icon-btn {
+    width: 46px;
+    height: 44px;
+    border-radius: 14px;
+  }
+  .topbar .logo-tile {
+    width: 50px;
+    height: 47px;
+    border-radius: 14px;
+  }
+  .topbar-nameplate {
+    padding-left: 10px;
+    min-height: 40px;
+  }
+  .topbar-name {
+    font-size: 16px;
+  }
+  .topbar-role {
+    font-size: 13px;
+  }
+  .topbar .lang-switch {
+    min-width: 66px;
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 15px;
   }
 }
