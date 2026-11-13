@@ -1021,3 +1021,36 @@ body:has(.page-art)::before {
     display: none;
   }
 }
+
+/* ---- Machine map on a phone: every seat of a row fits, so nothing scrolls sideways ----
+   Each seat is one fifth of the room that is left beside the two row letters, and the small
+   machine picture and the name shrink with it. (A sixth seat in a row would scroll sideways
+   inside the card, as before.) */
+@media (max-width: 520px) {
+  .map-scroll {
+    padding: 12px 4px;
+  }
+  .map-rows {
+    width: 100%;
+  }
+  .map-row {
+    gap: 4px;
+  }
+  .map-row-letter {
+    width: 14px;
+    font-size: 14px;
+  }
+  .scope {
+    width: max(38px, calc((100vw - 138px) / 5));
+    height: max(40px, calc((100vw - 138px) / 5 + 2px));
+    gap: 3px;
+    border-radius: 12px;
+  }
+  .seat-machine {
+    width: 30px;
+    height: 25px;
+  }
+  .seat-label {
+    font-size: 11.5px;
+  }
+}
