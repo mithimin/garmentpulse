@@ -926,6 +926,8 @@ body:has(.page-art)::before {
 }
 /* The Machines page has the map and no greeting, so the factory photo would only float behind
    the map card. It is taken away there. (The Dashboard has a greeting and keeps the photo.) */
+/* A page with a heading but no count boxes (the Technicians page) has no photo either. */
+body:has(.greeting):not(:has(.count-grid))::before,
 body:has(.map-layout):not(:has(.greeting))::before {
   display: none;
 }
