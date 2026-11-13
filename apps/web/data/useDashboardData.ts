@@ -14,9 +14,10 @@
 // "Assign" action (`assign_technician` in the contract; fake in fake mode).
 // Owned by Mithi.
 
-import { FAKE_MACHINES, summarizeReports } from '@garmentpulse/shared';
+import { summarizeReports } from '@garmentpulse/shared';
 import type { Machine, OwnerSummary, Report, Technician } from '@garmentpulse/shared';
 import { api } from '../lib/backend';
+import { FAKE_FLOOR_MACHINES } from './fakeMachines';
 import { assignFake, getFakeReports, getFakeTechnicians } from './fakeStore';
 import { useBackendData } from './useBackendData';
 
@@ -38,7 +39,7 @@ async function loadOwnerSummary(): Promise<OwnerSummary> {
 }
 
 async function loadMachines(): Promise<Machine[]> {
-  return api ? api.listMachines() : FAKE_MACHINES;
+  return api ? api.listMachines() : FAKE_FLOOR_MACHINES;
 }
 
 export const useMachines = () => useBackendData(loadMachines, true);

@@ -6,9 +6,8 @@
 // page (`/manager/machines`) both show THIS component, so the two can never look different:
 // the same machines, the same rows, the same heading strip, the same seats.
 // It loads the machines, reports and technicians itself (shared copy of the data from
-// data/ManagerData.tsx) and shows the real machines only. The Dashboard passes `maxRows` to
-// show just the first rows with a "View all" link; the Machines page shows every row. The
-// information on the seats is always the same. Owned by Mithi.
+// data/ManagerData.tsx). Machines are shown on floors of 3 rows with 5 machines each, with
+// floor tabs and a live count per floor (see components/MachineMap.tsx). Owned by Mithi.
 
 import { DataGate } from './DataGate';
 import { MachineMap } from './MachineMap';
@@ -18,7 +17,7 @@ import { useMachines } from '../data/useDashboardData';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
 
-export function ManagerMachineMap({ maxRows }: { maxRows?: number }) {
+export function ManagerMachineMap() {
   const { language } = useLanguage();
   const { reports, technicians, reloadAll } = useManagerData();
   const machines = useMachines();
@@ -35,7 +34,6 @@ export function ManagerMachineMap({ maxRows }: { maxRows?: number }) {
                   technicians={people}
                   onChanged={reloadAll}
                   title={screenText('mapTitle', language)}
-                  maxRows={maxRows}
                 />
               )}
             </DataGate>

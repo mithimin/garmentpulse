@@ -9,7 +9,9 @@
 //   assigned  a technician was assigned, not started (amber)
 //   progress  the technician is working on it        (blue)
 //
-// The seats are put in rows of six, named A, B, C ... and numbered 1 to 6, like "B3".
+// The seats are grouped into FLOORS. One floor is 3 rows (A, B, C) of 5 seats (1 to 5), so
+// a seat is named like "B3" on its floor, and a factory with more than 15 machines gets a
+// second floor, a third floor, and so on. A floor is filled before the next one starts.
 // The machine CODE (for example "SM-14") is the real `code` the backend sends with every
 // machine (done by Sakib, see requests/mithi/2026-11-02-machine-code-ready.md). A machine
 // without a code falls back to "SM-" plus the seat name.
@@ -22,7 +24,9 @@ export type SeatState = 'running' | 'down' | 'assigned' | 'progress';
 
 export type Seat = {
   machine: Machine;
-  /** The short name printed on the seat, for example "B3". */
+  /** The floor this seat is on, counting from 1. */
+  floor: number;
+  /** The short name of the seat on its floor, for example "B3". */
   label: string;
   /** The longer code shown with the machine, for example "SM-B3" (or the real code later). */
   code: string;
@@ -32,7 +36,11 @@ export type Seat = {
 };
 
 /** How many machines sit in one row of the map. */
-export const SEATS_PER_ROW = 6;
+export const SEATS_PER_ROW = 5;
+/** How many rows one floor has. */
+export const ROWS_PER_FLOOR = 3;
+/** How many machines one floor holds (3 rows of 5). */
+export const SEATS_PER_FLOOR = SEATS_PER_ROW * ROWS_PER_FLOOR;
 
 /** The row letter for a row number: 0 is A, 1 is B ... */
 export function rowLetter(row: number): string {
@@ -58,11 +66,32 @@ export function buildSeats(machines: readonly Machine[], reports: readonly Repor
     a.name.localeCompare(b.name, 'en', { numeric: true }),
   );
   return sorted.map((machine, index) => {
-    const label = `${rowLetter(Math.floor(index / SEATS_PER_ROW))}${(index % SEATS_PER_ROW) + 1}`;
+    const floor = Math.floor(index / SEATS_PER_FLOOR) + 1;
+    const onFloor = index % SEATS_PER_FLOOR;
+    const label = `${rowLetter(Math.floor(onFloor / SEATS_PER_ROW))}${(onFloor % SEATS_PER_ROW) + 1}`;
     const open = reports
       .filter((r) => r.machine.id === machine.id && r.status !== 'resolved')
       .sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
     const report = open ?? null;
-    return { machine, label, code: machineCode(machine, label), state: stateOf(report), report };
+    return {
+      machine,
+      floor,
+      label,
+      code: machineCode(machine, label),
+      state: stateOf(report),
+      report,
+    };
   });
+}
+
+/** Splits the seats into floors: floor 1 first. Each floor is a list of up to 3 rows of 5 seats. */
+export function groupFloors(seats: readonly Seat[]): Seat[][][] {
+  const floors: Seat[][][] = [];
+  for (const seat of seats) {
+    const floor = (floors[seat.floor - 1] ??= []);
+    const last = floor[floor.length - 1];
+    if (last && last.length < SEATS_PER_ROW) last.push(seat);
+    else floor.push([seat]);
+  }
+  return floors;
 }

@@ -1580,3 +1580,83 @@ html[lang='bn'] .count-label {
   color: #54402f;
   font-weight: 500;
 }
+
+/* ======================================================================================
+   FLOORS of the Machine map (2026-11-14)
+   A row of floor tabs sits under the filter chips. Each tab shows its floor name and a small live
+   badge: how many machines are down on that floor (a brown pill that pulses softly), or a tick when
+   none. A line under the tabs says what is happening on the chosen floor right now.
+   ====================================================================================== */
+.map-floors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+.floor-tab {
+  padding: 0 18px;
+}
+.floor-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 10px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: rgba(142, 197, 255, 0.55);
+  color: #1e3550;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.floor-badge-down {
+  background: linear-gradient(160deg, #55301c 0%, #3b2418 100%);
+  color: #ffffff;
+  animation: floor-pulse 1.8s ease-in-out infinite;
+}
+.map-chip[aria-pressed='true'] .floor-badge-down {
+  background: #ffffff;
+  color: #3b2418;
+}
+.map-chip[aria-pressed='true'] .floor-badge:not(.floor-badge-down) {
+  background: rgba(255, 255, 255, 0.85);
+  color: #3b2418;
+}
+@keyframes floor-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 36, 24, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(59, 36, 24, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floor-badge-down {
+    animation: none;
+  }
+}
+.map-floor-now {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin: 0 0 22px;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    inset 3px 3px 8px rgba(150, 110, 82, 0.18),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.8);
+  color: #2d1a10;
+  font-size: 15px;
+}
+.map-floor-now strong {
+  font-weight: 800;
+}
+.map-floor-now span {
+  font-weight: 600;
+}

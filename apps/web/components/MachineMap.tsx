@@ -19,20 +19,22 @@
 //   - Click any other machine to open its report (read-only), or see that it is running.
 // The seat logic is in data/machineSeats.ts. The beep needs one click on the page first,
 // because browsers keep pages silent until the person has used them.
-// On the Dashboard only the first rows are shown (`maxRows`) with a link to the Machines page,
-// which shows every row. The chips, the "machines are down" line and the beep always count ALL
-// machines, so both pages tell the same story.
+// FLOORS: the machines are grouped into floors of 3 rows with 5 machines each (see
+// data/machineSeats.ts). A row of tabs (Floor 1, Floor 2, ...) chooses the floor to show.
+// Every tab carries a live number: how many machines are DOWN on that floor (a tick when
+// none), and a line under the tabs says what is happening on the chosen floor right now
+// (down, technician busy, running). The Dashboard and the Machines page show the same map.
+// The chips, the "machines are down" line and the beep always count ALL machines of ALL floors.
 // Only in fake mode (no backend keys) there is a "Demo" button that pretends a worker
 // reported a machine, so the alarm can be shown without a phone.
 // Owned by Mithi.
 
 import { HardHat, UserRound, Volume2, VolumeX } from 'lucide-react';
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
 import { addFakeReport } from '../data/fakeStore';
-import { rowLetter, SEATS_PER_ROW } from '../data/machineSeats';
+import { groupFloors, rowLetter } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
 import { backendIsReal } from '../lib/backend';
 import { useLanguage } from '../language/LanguageContext';
@@ -93,13 +95,12 @@ type MachineMapProps = {
   onChanged: () => void;
   /** A heading for the card (white on a denim strip). The Machines page has its own page title, so it leaves this out. */
   title?: string;
-  /** Show only the first rows (the Dashboard preview). The counts still use ALL machines. Leave out to show every row. */
-  maxRows?: number;
 };
 
-export function MachineMap({ seats, technicians, onChanged, title, maxRows }: MachineMapProps) {
+export function MachineMap({ seats, technicians, onChanged, title }: MachineMapProps) {
   const { language } = useLanguage();
   const [filter, setFilter] = useState<Filter>('all');
+  const [floorNumber, setFloorNumber] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
@@ -186,11 +187,16 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
     }
   }
 
-  const rows: Seat[][] = [];
-  for (let i = 0; i < seats.length; i += SEATS_PER_ROW)
-    rows.push(seats.slice(i, i + SEATS_PER_ROW));
-  const shownRows = maxRows ? rows.slice(0, maxRows) : rows;
-  const hiddenCount = seats.length - shownRows.reduce((n, row) => n + row.length, 0);
+  // The floors: floor 1 first, 3 rows of 5 seats each. A floor that no longer exists is never chosen.
+  const floors = groupFloors(seats);
+  const floorIndex = Math.min(floorNumber, floors.length) - 1;
+  const shownRows: Seat[][] = floors[floorIndex] ?? [];
+  const floorSeats = shownRows.flat();
+  const floorDown = floorSeats.filter((s) => s.state === 'down').length;
+  const floorBusy = floorSeats.filter(
+    (s) => s.state === 'assigned' || s.state === 'progress',
+  ).length;
+  const floorRunning = floorSeats.filter((s) => s.state === 'running').length;
   const first = selectedSeats[0];
 
   return (
@@ -255,6 +261,46 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
           </div>
         </div>
 
+        {floors.length > 1 ? (
+          <div
+            className="map-floors"
+            role="group"
+            aria-label={screenText('floorName', language).replace('{n}', '')}
+          >
+            {floors.map((floorRows, i) => {
+              const downHere = floorRows.flat().filter((s) => s.state === 'down').length;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  className="map-chip floor-tab"
+                  aria-pressed={i === floorIndex}
+                  onClick={() => setFloorNumber(i + 1)}
+                >
+                  {screenText('floorName', language).replace('{n}', num(i + 1))}
+                  <b className={downHere > 0 ? 'floor-badge floor-badge-down' : 'floor-badge'}>
+                    {downHere > 0 ? `${num(downHere)} ${screenText('seatDown', language)}` : '✓'}
+                  </b>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+        {floors.length > 1 ? (
+          <p className="map-floor-now" aria-live="polite">
+            <strong>{screenText('floorNow', language).replace('{n}', num(floorIndex + 1))}:</strong>{' '}
+            <span>
+              {screenText('seatDown', language)} {num(floorDown)}
+            </span>
+            <span>
+              {screenText('chipBusy', language)} {num(floorBusy)}
+            </span>
+            <span>
+              {screenText('seatRunning', language)} {num(floorRunning)}
+            </span>
+          </p>
+        ) : null}
+
         <div className="map-desk">{screenText('deskLabel', language)}</div>
         <div className="map-scroll">
           <div className="map-rows">
@@ -298,14 +344,6 @@ export function MachineMap({ seats, technicians, onChanged, title, maxRows }: Ma
             ))}
           </div>
         </div>
-
-        {hiddenCount > 0 ? (
-          <p className="map-more">
-            <Link href="/manager/machines">
-              {screenText('mapViewAll', language).replace('{n}', num(seats.length))}
-            </Link>
-          </p>
-        ) : null}
 
         <ul className="map-legend">
           {(['running', 'down', 'assigned', 'progress'] as const).map((state) => (

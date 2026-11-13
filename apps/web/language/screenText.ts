@@ -200,6 +200,8 @@ export const SCREEN_TEXT = {
     bn: 'একজন টেকনিশিয়ান একবারে একটি কাজ করেন। প্রথম মেশিনটি টেকনিশিয়ান পাবে। বাকিগুলো সারিতে থাকবে।',
   },
   mapViewAll: { en: 'View all {n} machines', bn: 'সব {n}টি মেশিন দেখুন' },
+  floorName: { en: 'Floor {n}', bn: '{n} নম্বর তলা' },
+  floorNow: { en: 'Floor {n} right now', bn: '{n} নম্বর তলার এখনকার অবস্থা' },
   assignSelected: { en: 'Assign technician', bn: 'টেকনিশিয়ান দিন' },
   removeSelected: { en: 'Remove {machine}', bn: '{machine} সরান' },
   runningHint: {

@@ -7,15 +7,48 @@
 // It copies the rules and error codes of `assign_technician` in
 // docs/api-contract.md 4.4. Owned by Mithi.
 
-import {
-  computeAvailability,
-  FAKE_MACHINES,
-  FAKE_PEOPLE,
-  FAKE_REPORTS,
-} from '@garmentpulse/shared';
+import { computeAvailability, FAKE_PEOPLE, FAKE_REPORTS } from '@garmentpulse/shared';
 import type { Report, Technician } from '@garmentpulse/shared';
+import { FAKE_FLOOR_MACHINES } from './fakeMachines';
 
-let reports: Report[] = FAKE_REPORTS.map((report) => ({ ...report }));
+/**
+ * A few more machines that are waiting for a technician, spread over the three floors of the
+ * fake Machine map, so every floor has something to show. (They have no technician, so the
+ * free / busy list of the technicians does not change.)
+ */
+function extraQueuedReports(): Report[] {
+  const worker = FAKE_PEOPLE.find((p) => p.role === 'worker');
+  const problems: [string, string][] = [
+    ['ol-06', 'The overlock thread keeps tangling.'],
+    ['bh-02', 'The buttonhole is cut too wide.'],
+    ['sm-05', 'The needle bar is stuck.'],
+    ['sm-22', 'The motor smells hot.'],
+    ['sm-18', 'The pedal does not respond.'],
+  ];
+  if (!worker) return [];
+  return problems.flatMap(([id, description], index) => {
+    const machine = FAKE_FLOOR_MACHINES.find((m) => m.id === id);
+    if (!machine) return [];
+    const when = new Date(Date.UTC(2026, 9, 17, 8 + index, 10)).toISOString();
+    return [
+      {
+        id: `r-extra-${index + 1}`,
+        machine: { id: machine.id, name: machine.name, code: machine.code },
+        description,
+        status: 'waiting' as const,
+        reported_by: { id: worker.id, display_name: worker.display_name },
+        technician: null,
+        accepted_at: null,
+        created_at: when,
+        updated_at: when,
+      },
+    ];
+  });
+}
+
+let reports: Report[] = [...FAKE_REPORTS, ...extraQueuedReports()].map((report) => ({
+  ...report,
+}));
 
 export function getFakeReports(): Report[] {
   return reports.map((report) => ({ ...report }));
@@ -57,7 +90,7 @@ export async function assignFake(reportId: string, technicianId: string): Promis
  */
 export function addFakeReport(): boolean {
   const worker = FAKE_PEOPLE.find((p) => p.role === 'worker');
-  const free = FAKE_MACHINES.filter(
+  const free = FAKE_FLOOR_MACHINES.filter(
     (m) => !reports.some((r) => r.machine.id === m.id && r.status !== 'resolved'),
   );
   const machine = free[Math.floor(Math.random() * free.length)];
