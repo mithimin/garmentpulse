@@ -1,0 +1,537 @@
+/*
+  apps/web/app/login.css
+
+  THE LOGIN AND SIGN-UP PAGES: an exact copy of the login draft picture Mithi shared
+  (2026-11-14). Pages: /login (manager), /owner-login (owner) and /signup.
+  How it is drawn, in plain words:
+    - The big background is the draft picture itself with the words and the login card taken
+      out (public/login-bg.jpg), so the factory, the sewing machine, the brown and blue cloth,
+      the tape and the scissors are exactly the draft's. The words and the card are real text and
+      real boxes on top, so they work in both languages.
+    - Left: the small line "Smarter . Safer . More efficient", the name "GarmentPulse" in brown and
+      baby blue, and "Manage. Monitor. Grow.". They are sized in "vw" (a hundredth of the screen
+      width), measured from the picture (it is 1672 wide), so on a 16:9 screen they sit exactly
+      where they sit in the picture.
+    - Right: the cream card. Its top-right corner is cut with a big curve and a brown shape shows
+      behind it. Everything inside is sized in "cqw" (a hundredth of the CARD's width, measured
+      from the picture, where the card is 622 wide), so the card scales as one piece.
+    - The whole picture simply gets smaller as the window shrinks (words and card scale together),
+      so a small window shows the same view as a big one. Only on a phone (under 760px wide) the
+      words on the left go away and the card is centred on the photo.
+  The font is Lato, the website's font (its letter widths match the draft's words). Colours are the draft's: brown #3B2418,
+  cream, baby blue. The small Manager | Owner choice and the Settings (language) button at the top
+  are NOT in the draft; they are kept small and soft because the website needs them.
+  Owned by Mithi.
+*/
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  background: #efe1d0 url('/login-bg.jpg') center / cover no-repeat;
+  color: #3b2418;
+}
+
+/* ---- Top: the Manager | Owner choice and Settings (small and soft) ---- */
+.login-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  /* 68px on the 1672px draft; smaller on smaller screens, so the bar never crowds the card */
+  height: clamp(46px, 4.07vw, 68px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.login-bar > * {
+  pointer-events: auto;
+}
+.login-bar-brand {
+  display: none;
+}
+.login-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(250, 243, 234, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px -14px rgba(59, 36, 24, 0.4);
+}
+.login-tab {
+  min-width: clamp(64px, 4.7vw, 80px);
+  height: clamp(26px, 1.8vw, 30px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #3b2418;
+  font-size: clamp(11.5px, 0.8vw, 13px);
+  font-weight: 700;
+  text-decoration: none;
+}
+.login-tab:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+.login-tab-active,
+.login-tab-active:hover {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: #f9efe5;
+}
+.settings-wrap {
+  position: absolute;
+  top: 50%;
+  right: clamp(12px, 1.2vw, 20px);
+  transform: translateY(-50%);
+}
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: clamp(26px, 1.8vw, 30px);
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(250, 243, 234, 0.62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #3b2418;
+  font: inherit;
+  font-size: clamp(11.5px, 0.8vw, 13px);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 26px -14px rgba(59, 36, 24, 0.4);
+}
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  min-width: 190px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #faf3ea;
+  box-shadow: 0 18px 40px -16px rgba(59, 36, 24, 0.5);
+}
+.settings-title {
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b5545;
+}
+html[lang='bn'] .settings-title {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.settings-choices {
+  display: flex;
+  gap: 8px;
+}
+.settings-choice {
+  flex: 1;
+  height: 38px;
+  border: 1px solid #e0d2c0;
+  border-radius: 999px;
+  background: #fffaf2;
+  color: #3b2418;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.settings-choice-active {
+  border-color: #3b2418;
+  background: #3b2418;
+  color: #f9efe5;
+}
+
+/* ---- The stage: words on the left, card on the right ---- */
+.login-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vw;
+  padding: 1.3vh 9.5vw 0 11.8vw;
+}
+
+.login-stage-tall {
+  --card-ratio: 1.5;
+  padding-top: 84px;
+  padding-bottom: 32px;
+}
+
+/* Left words. Sizes in vw come from the draft picture (1672 wide). */
+.login-intro {
+  flex: 1;
+  min-width: 0;
+  /* the words sit higher than the middle of the card, as in the picture */
+  transform: translateY(calc(-17.6vh - 14px));
+}
+.login-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.9vw;
+  margin: 0;
+  font-size: clamp(9px, 0.98vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #4b3427;
+}
+html[lang='bn'] .login-kicker {
+  letter-spacing: 0;
+  text-transform: none;
+}
+.login-kicker::after {
+  content: '';
+  flex: none;
+  width: 8.3vw;
+  height: 1px;
+  background: #cdb9a6;
+}
+.login-intro-brand {
+  display: inline-block;
+  text-align: center;
+}
+.login-wordmark {
+  margin: 0.62vw 0 0;
+  font-size: clamp(28px, 4.58vw, 108px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: #3b2418;
+}
+.login-wordmark .blue,
+.lc-wordmark .blue {
+  color: #78ade6;
+}
+.login-tagline {
+  margin: 0.9vw 0 0;
+  font-size: clamp(12px, 1.717vw, 42px);
+  line-height: 1.2;
+  color: #5b4636;
+}
+
+/* ---- The card ---- */
+.login-card-wrap {
+  position: relative;
+  flex: none;
+  /* About a third of the screen width, and never so big that the card is taller than the window
+     (the card is --card-ratio times as tall as it is wide), so the page never needs scrolling. */
+  width: clamp(260px, min(33vw, calc((100vh - 130px) / var(--card-ratio, 1.2))), 700px);
+  container-type: inline-size;
+}
+/* The brown shape that shows behind the card's cut corner. */
+.login-card-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0.5% 0.5% 0 0;
+  border-radius: 8.8cqw;
+  background: linear-gradient(200deg, #3f2519 0%, #52331f 100%);
+}
+.login-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10.8cqw 9cqw 3.2cqw 10.13cqw;
+  /* big round corner on the top right (like the picture), smaller round corners elsewhere */
+  border-radius: 8.8cqw 33.8cqw 8.8cqw 8.8cqw;
+  background: linear-gradient(180deg, #f8eee4 0%, #f4e8dc 100%);
+  box-shadow:
+    0 3cqw 7cqw -3cqw rgba(59, 36, 24, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+.lc-logo {
+  display: block;
+  width: 25.2cqw;
+  aspect-ratio: 157 / 87;
+  background: #3b2418;
+  -webkit-mask: url('/login-logo-mark.png') center / 100% 100% no-repeat;
+  mask: url('/login-logo-mark.png') center / 100% 100% no-repeat;
+}
+.lc-wordmark {
+  margin: 3.5cqw 0 0;
+  font-family: inherit;
+  font-size: 8.57cqw;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: #3b2418;
+}
+.lc-title {
+  display: flex;
+  align-items: center;
+  gap: 3.7cqw;
+  width: 80.1cqw;
+  margin-top: 3.3cqw;
+  font-size: 4.35cqw;
+  line-height: 1.2;
+  color: #584537;
+}
+.lc-title::before,
+.lc-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0d1c3;
+}
+.lc-form {
+  display: flex;
+  flex-direction: column;
+  width: 80.7cqw;
+  margin-top: 6.65cqw;
+}
+.lc-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.lc-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 10.9cqw;
+  margin-bottom: 3.5cqw;
+  padding: 0 4.3cqw 0 5cqw;
+  border: 1px solid #eadccc;
+  border-radius: 999px;
+  background: #fbf3ea;
+  box-shadow: inset 0 1px 2px rgba(59, 36, 24, 0.05);
+}
+.lc-field:focus-within {
+  border-color: #78ade6;
+  box-shadow: 0 0 0 3px rgba(120, 173, 230, 0.4);
+}
+.lc-field-icon,
+.lc-eye {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 4.4cqw;
+  height: 4.4cqw;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #3b2418;
+}
+.lc-field-icon svg,
+.lc-eye svg {
+  width: 100%;
+  height: 100%;
+}
+.lc-eye {
+  color: #9a8d83;
+  cursor: pointer;
+}
+.lc-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0 3cqw 0 4.3cqw;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #3b2418;
+  font: inherit;
+  font-size: max(12px, 3.7cqw);
+}
+.lc-input::placeholder {
+  color: #9a8f85;
+  opacity: 1;
+}
+.lc-error {
+  margin: 0 0 2.4cqw;
+  padding: 2cqw 3.4cqw;
+  border-radius: 3.4cqw;
+  background: #f2d6cf;
+  color: #8a2a1a;
+  font-size: 3.2cqw;
+  line-height: 1.35;
+}
+.lc-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.2cqw;
+  height: 11.1cqw;
+  margin-top: 0.7cqw;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: #f9efe5;
+  font: inherit;
+  font-size: 4.2cqw;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1.8cqw 3.4cqw -2cqw rgba(59, 36, 24, 0.7);
+}
+.lc-submit svg {
+  width: 4.2cqw;
+  height: 4.2cqw;
+}
+.lc-submit:disabled {
+  opacity: 0.8;
+  cursor: wait;
+}
+.lc-submit:focus-visible,
+.lc-eye:focus-visible,
+.lc-switch a:focus-visible {
+  outline: 3px solid #78ade6;
+  outline-offset: 3px;
+}
+.lc-or {
+  display: flex;
+  align-items: center;
+  gap: 2.8cqw;
+  width: 80.1cqw;
+  height: 3.9cqw;
+  margin-top: 4cqw;
+  font-size: max(11px, 3.4cqw);
+  color: #7a6a5c;
+}
+.lc-or::before,
+.lc-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e3d2c8;
+}
+.lc-switch {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  margin: 3.4cqw 0 0;
+  font-size: max(12px, 3.5cqw);
+  line-height: 1.2;
+  color: #5e4d40;
+}
+.lc-switch a {
+  color: #78ade6;
+  font-weight: 700;
+  text-decoration: none;
+}
+.lc-switch svg {
+  width: 3.4cqw;
+  height: 3.4cqw;
+  color: #78ade6;
+}
+.lc-secure {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+  margin: 4.3cqw 0 0;
+  font-size: max(10.5px, 2.5cqw);
+  color: #7a6a5c;
+}
+.lc-secure svg {
+  width: 3.7cqw;
+  height: 3.7cqw;
+  color: #9a7560;
+  fill: #c9a98f;
+}
+
+/* ---- Phones (under 760px wide): the card is small, so the text is a little bigger ---- */
+@media (max-width: 759px) {
+  @container (max-width: 480px) {
+    .lc-title {
+      font-size: 5.4cqw;
+    }
+    .lc-wordmark {
+      font-size: 10.4cqw;
+    }
+    .lc-field {
+      height: 13.4cqw;
+    }
+    .lc-input {
+      font-size: 4.6cqw;
+    }
+    .lc-field-icon,
+    .lc-eye {
+      width: 5.6cqw;
+      height: 5.6cqw;
+    }
+    .lc-submit {
+      height: 13.6cqw;
+      font-size: 5cqw;
+    }
+    .lc-submit svg {
+      width: 5cqw;
+      height: 5cqw;
+    }
+    .lc-or {
+      font-size: 4.2cqw;
+    }
+    .lc-switch {
+      font-size: 4.4cqw;
+    }
+    .lc-switch svg {
+      width: 4.4cqw;
+      height: 4.4cqw;
+    }
+    .lc-secure {
+      font-size: 3.5cqw;
+    }
+    .lc-secure svg {
+      width: 4.6cqw;
+      height: 4.6cqw;
+    }
+    .lc-error {
+      font-size: 4cqw;
+    }
+  }
+}
+
+/* ---- Phones (under 760px wide): no words on the left, the card is centred on the photo ---- */
+@media (max-width: 759px) {
+  .login-page {
+    background-position: 28% 50%;
+  }
+  .login-stage {
+    justify-content: center;
+    padding: 84px 16px 32px;
+  }
+  .login-intro {
+    display: none;
+  }
+  .login-card-wrap {
+    width: min(100%, 520px, max(280px, calc((100vh - 120px) / var(--card-ratio, 1.2))));
+  }
+}
+
+/* On a phone the Manager | Owner choice gets narrower and Settings shows only its icon,
+   so the two never touch. */
+@media (max-width: 520px) {
+  .login-tab {
+    min-width: 72px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .settings-wrap {
+    right: 12px;
+  }
+  .settings-label {
+    display: none;
+  }
+  .settings-btn {
+    justify-content: center;
+    width: 34px;
+    padding: 0;
+  }
+}

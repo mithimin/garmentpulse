@@ -13,6 +13,8 @@ import { LanguageProvider } from '../language/LanguageContext';
 import './globals.css';
 // The factory look (brown, cream and baby blue) is written last, so it wins over globals.css.
 import './factory.css';
+// The login and sign-up pages are an exact copy of the login draft picture (login.css).
+import './login.css';
 
 // The English fonts cannot draw Bangla letters, so Bangla uses Baloo Da 2,
 // a rounded, friendly Bangla font that has several weights (see the font lists in globals.css).

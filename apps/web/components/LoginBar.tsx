@@ -2,17 +2,15 @@
 
 // apps/web/components/LoginBar.tsx
 //
-// The denim bar across the top of the login pages and the sign-up page.
-// On the login pages it holds the two choices in the middle (Manager | Owner).
-// On the sign-up page there are no choices and no title: the logo and app name sit
-// alone in the middle. On the login pages they sit at the left end, like the top bar
-// of the manager and owner pages. The Settings button is always at the right end.
+// The small controls at the top of the login pages and the sign-up page. They are NOT in the
+// login draft picture, but the website needs them, so they are kept small and soft (app/login.css):
+//   - on the login pages, the two choices in the middle (Manager | Owner),
+//   - on every one of these pages, the Settings button (the language choice) at the right.
 // Owned by Mithi.
 
 import { ROLE_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
-import { Logo } from './Logo';
 import { SettingsMenu } from './SettingsMenu';
 
 /** The two choices in the bar at the top: which kind of person is logging in. */
@@ -25,36 +23,24 @@ const LOGIN_TABS = [
 export function LoginBar({ activeRole }: { activeRole?: 'manager' | 'owner' }) {
   const { language } = useLanguage();
   return (
-    <>
-      <nav
-        className={activeRole ? 'login-bar' : 'login-bar login-bar-solo'}
-        aria-label={screenText('chooseRole', language)}
-      >
-        {/* The same logo tile and name as the top bar of the manager and owner pages. */}
-        <div className="login-bar-brand">
-          <span className="logo-tile">
-            <Logo size={34} />
-          </span>
-          <span className="login-bar-brand-name">{screenText('appName', language)}</span>
+    <nav className="login-bar" aria-label={screenText('chooseRole', language)}>
+      {activeRole ? (
+        <div className="login-tabs">
+          {LOGIN_TABS.map((tab) => (
+            // A plain link (full page load) on purpose: each portal keeps its own
+            // login storage name, which is chosen when the page loads (lib/backend.ts).
+            <a
+              key={tab.role}
+              href={tab.href}
+              className={tab.role === activeRole ? 'login-tab login-tab-active' : 'login-tab'}
+              aria-current={tab.role === activeRole ? 'page' : undefined}
+            >
+              {ROLE_LABELS[tab.role][language]}
+            </a>
+          ))}
         </div>
-        {activeRole ? (
-          <div className="login-tabs">
-            {LOGIN_TABS.map((tab) => (
-              // A plain link (full page load) on purpose: each portal keeps its own
-              // login storage name, which is chosen when the page loads (lib/backend.ts).
-              <a
-                key={tab.role}
-                href={tab.href}
-                className={tab.role === activeRole ? 'login-tab login-tab-active' : 'login-tab'}
-                aria-current={tab.role === activeRole ? 'page' : undefined}
-              >
-                {ROLE_LABELS[tab.role][language]}
-              </a>
-            ))}
-          </div>
-        ) : null}
-        <SettingsMenu />
-      </nav>
-    </>
+      ) : null}
+      <SettingsMenu />
+    </nav>
   );
 }
