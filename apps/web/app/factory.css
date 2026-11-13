@@ -1826,3 +1826,195 @@ html[lang='bn'] .count-label {
 .map-floor-now {
   justify-content: center;
 }
+
+/* ======================================================================================
+   THE ASSIGN CARD NEXT TO THE CLICKED MACHINE (2026-11-14)
+   The floating "Assign technician" card now appears right beside the machine that was clicked:
+   to its right when there is room, otherwise to its left, with a small arrow pointing at the
+   machine. (If that machine is on another floor, the card stays at the bottom of the screen.)
+   ====================================================================================== */
+.map-layout {
+  position: relative;
+}
+.assign-bar.assign-pop {
+  position: absolute;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  z-index: 8;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-radius: 22px;
+  transform: translateY(-50%);
+  animation: assign-pop-in 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+@keyframes assign-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+.assign-pop-right {
+  transform-origin: left center;
+}
+.assign-pop-left {
+  transform-origin: right center;
+}
+/* the little arrow that points at the machine */
+.assign-pop::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #4a2a1a;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  transform: translateY(-50%) rotate(45deg);
+}
+.assign-pop-right::before {
+  left: -8px;
+}
+.assign-pop-left::before {
+  right: -8px;
+  transform: translateY(-50%) rotate(225deg);
+}
+.assign-pop .assign-bar-text {
+  max-width: 200px;
+}
+.assign-pop .assign-bar-text small {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 560px) {
+  .assign-bar.assign-pop {
+    padding: 8px 8px 8px 12px;
+    gap: 8px;
+  }
+  .assign-pop .assign-bar-text {
+    max-width: 110px;
+  }
+  .assign-pop .assign-bar-text strong {
+    font-size: 14px;
+  }
+}
+
+/* ======================================================================================
+   THE FLOOR "RIGHT NOW" LINE, with room to breathe (2026-11-14)
+   It used to be one cramped line in a pressed box. Now it is a small title and three roomy
+   frosted tiles side by side: a big number with its word under it (Down, Technician busy, Running).
+   ====================================================================================== */
+.map-floor-now {
+  display: block;
+  padding: 0;
+  margin: 0 auto 26px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.floor-now-title {
+  margin: 0 0 10px;
+  text-align: center;
+  color: #54402f;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+html[lang='bn'] .floor-now-title {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 16px;
+}
+.floor-now-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.floor-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(252, 246, 238, 0.92), rgba(244, 232, 218, 0.84));
+  box-shadow:
+    6px 6px 14px var(--neo-dark),
+    -5px -5px 12px var(--neo-light),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.9);
+  color: #2d1a10;
+  text-align: center;
+}
+.floor-stat b {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+}
+.floor-stat span {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #54402f;
+}
+.floor-stat-down {
+  background: linear-gradient(160deg, rgba(85, 48, 28, 0.94) 0%, rgba(59, 36, 24, 0.94) 100%);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+}
+.floor-stat-down span {
+  color: #f1dfcd;
+}
+.floor-stat-run {
+  background: linear-gradient(180deg, rgba(168, 211, 255, 0.9), rgba(142, 197, 255, 0.9));
+}
+.floor-stat-run span {
+  color: #1e3550;
+}
+@media (max-width: 520px) {
+  .floor-now-stats {
+    gap: 8px;
+  }
+  .floor-stat {
+    padding: 10px 4px 9px;
+  }
+  .floor-stat b {
+    font-size: 22px;
+  }
+  .floor-stat span {
+    font-size: 12px;
+  }
+}
+
+/* Beside a machine the card is SMALL: just the Assign technician button and the × (a count shows
+   on the button when more than one machine is chosen). The longer words stay in the bottom bar. */
+.assign-pop:not(.assign-note) .assign-bar-text {
+  display: none;
+}
+.assign-pop:not(.assign-note) {
+  padding: 8px 8px 8px 8px;
+  gap: 8px;
+  border-radius: 20px;
+}
+.assign-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  margin-left: 4px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #3b2418;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}

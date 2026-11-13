@@ -11,10 +11,12 @@
 //     Realtime updates). A dashed stitched rim = technician assigned. A baby-blue seat = the
 //     technician is working on it. A selected seat gets a baby-blue ring.
 //   - Filter chips on top (All, Down, Running, Technician busy) fade the other seats.
-//   - Click a machine that glows burgundy (down) to select it. A floating glass bar then rises
-//     from the bottom of the screen with a short count and the "Assign technician" button, so
-//     the map itself uses the full width of the page (there is no side box any more). The button
-//     opens the same Assign pop-up as the Dashboard
+//   - Click a machine that glows burgundy (down) to select it. A small floating glass card then
+//     appears right BESIDE that machine (on its other side when there is no room on the right)
+//     with a short count and the "Assign technician" button, so the map itself uses the full
+//     width of the page (there is no side box any more). If the machine is not on the floor
+//     that is showing, or there is no room beside it (a phone), the same card floats at the bottom
+//     of the screen instead. The button opens the same Assign pop-up as the Dashboard
 //     (components/AssignDialog.tsx), so the free / busy rules and errors are the same.
 //     A technician takes one job at a time, so with several machines selected the first
 //     one gets the technician and the others stay in the queue.
@@ -32,7 +34,7 @@
 // Owned by Mithi.
 
 import { HardHat, Volume2, VolumeX, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
 import { addFakeReport } from '../data/fakeStore';
@@ -107,6 +109,15 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   const [assigning, setAssigning] = useState<Report | null>(null);
   const [viewing, setViewing] = useState<Report | null>(null);
   const [hint, setHint] = useState('');
+  // The machine the floating card is next to, and where that card goes (set after drawing).
+  const [anchorId, setAnchorId] = useState<string | null>(null);
+  const [pop, setPop] = useState<{
+    top: number;
+    left?: number;
+    right?: number;
+    side: 'right' | 'left';
+  } | null>(null);
+  const layoutRef = useRef<HTMLDivElement | null>(null);
   const [soundOn, setSoundOn] = useState(true);
 
   const num = (n: number) => localizeDigits(String(n), language);
@@ -155,14 +166,17 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   function clickSeat(seat: Seat) {
     setHint('');
     if (seat.state === 'down') {
-      setSelectedIds((ids) =>
-        ids.includes(seat.machine.id)
-          ? ids.filter((id) => id !== seat.machine.id)
-          : [...ids, seat.machine.id],
-      );
+      const already = selectedIds.includes(seat.machine.id);
+      const next = already
+        ? selectedIds.filter((id) => id !== seat.machine.id)
+        : [...selectedIds, seat.machine.id];
+      setSelectedIds(next);
+      // The card goes next to the machine just chosen (or the last one still chosen).
+      setAnchorId(already ? (next[next.length - 1] ?? null) : seat.machine.id);
     } else if (seat.report) {
       setViewing(seat.report);
     } else {
+      setAnchorId(seat.machine.id);
       setHint(
         screenText('runningHint', language).replace(
           '{machine}',
@@ -171,6 +185,52 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
       );
     }
   }
+
+  // Works out where the floating card goes: just beside its machine, on the right when there is
+  // room and on the left when there is not. If the machine is not on the floor that is showing, there
+  // is no spot, and the card floats at the bottom of the screen instead.
+  useLayoutEffect(() => {
+    function place(next: typeof pop) {
+      // Only change the state when the spot really moved, so drawing never loops.
+      setPop((prev) =>
+        prev === next ||
+        (prev &&
+          next &&
+          prev.top === next.top &&
+          prev.left === next.left &&
+          prev.right === next.right &&
+          prev.side === next.side)
+          ? prev
+          : next,
+      );
+    }
+    function measure() {
+      const layout = layoutRef.current;
+      const seat = anchorId
+        ? layout?.querySelector<HTMLElement>(`[data-machine-id="${anchorId}"]`)
+        : null;
+      if (!layout || !seat) {
+        place(null);
+        return;
+      }
+      const l = layout.getBoundingClientRect();
+      const r = seat.getBoundingClientRect();
+      // The small card is about 270px wide; the card with a message is wider.
+      const POP_WIDTH = selectedIds.length > 0 ? 280 : 400;
+      const top = Math.round(r.top - l.top + r.height / 2);
+      if (r.right + 14 + POP_WIDTH <= l.right) {
+        place({ top, left: Math.round(r.right - l.left + 14), side: 'right' });
+      } else if (r.left - 14 - POP_WIDTH >= l.left) {
+        place({ top, right: Math.round(l.right - r.left + 14), side: 'left' });
+      } else {
+        // No room on either side (a phone): the card floats at the bottom of the screen instead.
+        place(null);
+      }
+    }
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  });
 
   // The floors: floor 1 first, 3 rows of 5 seats each. A floor that no longer exists is never chosen.
   const floors = groupFloors(seats);
@@ -185,7 +245,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
   const first = selectedSeats[0];
 
   return (
-    <div className="map-layout">
+    <div className="map-layout" ref={layoutRef}>
       <Card className="map-card">
         <div className={title ? 'card-head map-banner' : 'card-head'}>
           {title ? (
@@ -272,18 +332,25 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
           </div>
         ) : null}
         {floors.length > 1 ? (
-          <p className="map-floor-now" aria-live="polite">
-            <strong>{screenText('floorNow', language).replace('{n}', num(floorIndex + 1))}:</strong>{' '}
-            <span>
-              {screenText('seatDown', language)} {num(floorDown)}
-            </span>
-            <span>
-              {screenText('chipBusy', language)} {num(floorBusy)}
-            </span>
-            <span>
-              {screenText('seatRunning', language)} {num(floorRunning)}
-            </span>
-          </p>
+          <div className="map-floor-now" aria-live="polite">
+            <p className="floor-now-title">
+              {screenText('floorNow', language).replace('{n}', num(floorIndex + 1))}
+            </p>
+            <div className="floor-now-stats">
+              <div className="floor-stat floor-stat-down">
+                <b>{num(floorDown)}</b>
+                <span>{screenText('seatDown', language)}</span>
+              </div>
+              <div className="floor-stat floor-stat-busy">
+                <b>{num(floorBusy)}</b>
+                <span>{screenText('chipBusy', language)}</span>
+              </div>
+              <div className="floor-stat floor-stat-run">
+                <b>{num(floorRunning)}</b>
+                <span>{screenText('seatRunning', language)}</span>
+              </div>
+            </div>
+          </div>
         ) : null}
 
         <div className="map-desk">{screenText('deskLabel', language)}</div>
@@ -308,6 +375,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                       <button
                         type="button"
                         className={classes}
+                        data-machine-id={seat.machine.id}
                         aria-pressed={seat.state === 'down' ? selected : undefined}
                         aria-label={`${seat.code}, ${machineName(seat.machine, language)}, ${stateWord(seat.state)}`}
                         title={`${seat.code} · ${stateWord(seat.state)}`}
@@ -345,7 +413,18 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
       </Card>
 
       {selectedSeats.length > 0 || hint ? (
-        <div className="assign-bar" role="region" aria-live="polite">
+        <div
+          className={[
+            'assign-bar',
+            pop ? `assign-pop assign-pop-${pop.side}` : '',
+            selectedSeats.length === 0 ? 'assign-note' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          style={pop ? { top: pop.top, left: pop.left, right: pop.right } : undefined}
+          role="region"
+          aria-live="polite"
+        >
           {selectedSeats.length > 0 ? (
             <>
               <div className="assign-bar-text">
@@ -366,6 +445,9 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
               >
                 <HardHat size={22} strokeWidth={2} aria-hidden="true" />
                 {screenText('assignSelected', language)}
+                {selectedSeats.length > 1 ? (
+                  <span className="assign-count">{num(selectedSeats.length)}</span>
+                ) : null}
               </Button>
               <button
                 type="button"
@@ -377,6 +459,7 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                 onClick={() => {
                   setSelectedIds([]);
                   setHint('');
+                  setAnchorId(null);
                 }}
               >
                 <X size={20} aria-hidden="true" />
@@ -391,7 +474,10 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                 type="button"
                 className="assign-bar-close"
                 aria-label="OK"
-                onClick={() => setHint('')}
+                onClick={() => {
+                  setHint('');
+                  setAnchorId(null);
+                }}
               >
                 <X size={20} aria-hidden="true" />
               </button>
