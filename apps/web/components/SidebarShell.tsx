@@ -12,7 +12,7 @@
 // work is done (a menu page is picked) and also when you click or tap anywhere else
 // on the screen, even if you never used the sidebar. Only the button in the top bar
 // (not this automatic folding) is remembered in this browser, so the sidebar still
-// starts open on a big screen. Owned by Mithi.
+// starts folded on every screen. Owned by Mithi.
 
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -30,13 +30,13 @@ function isPhone(): boolean {
   return window.matchMedia(PHONE_QUERY).matches;
 }
 
-/** Open on a big screen unless the person closed it before; closed on a phone. */
+/** Folded when the page opens (like the factory-look picture), unless the person left it open before. Always folded on a phone. */
 function startOpen(): boolean {
   if (isPhone()) return false;
   try {
-    return window.localStorage.getItem(STORAGE_KEY) !== 'closed';
+    return window.localStorage.getItem(STORAGE_KEY) === 'open';
   } catch {
-    return true;
+    return false;
   }
 }
 

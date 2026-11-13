@@ -7,20 +7,18 @@
 // role can get in through it (MVP 2.1). The person types an email
 // and a password. On success they go to their own start page. If the account
 // belongs to a worker or technician, we show the WRONG_PLATFORM sentence and do
-// not log them in (they use the phone app). Under the form there is a short
-// "Sign up" instruction that links to /signup. Right now the login is FAKE (see
-// auth/fakeAuth.ts); the real one comes with Sakib's backend.
+// not log them in (they use the phone app). Managers also get a "Sign up" link to
+// /signup (the owner never signs up). The look is an exact copy of the login draft picture
+// (components/LoginParts.tsx and app/login.css). With the real backend it uses the real
+// login; without it, the fake login (auth/fakeAuth.ts).
 // Owned by Mithi.
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Button } from '../components/Button';
-import { Card } from '../components/Card';
-import { Field, TextInput } from '../components/Field';
-import { LoginBar } from '../components/LoginBar';
-import { Logo } from '../components/Logo';
+import { ChevronRight, LogIn, Mail, ShieldCheck } from 'lucide-react';
+import { CardBrand, LoginShell, PasswordField, PillField } from '../components/LoginParts';
 import { useAuth } from '../auth/AuthContext';
 import { homePathFor } from '../auth/homePath';
 import { useLanguage } from '../language/LanguageContext';
@@ -51,62 +49,53 @@ export function LoginForm({ role }: { role: 'manager' | 'owner' }) {
   }
 
   return (
-    <main className="login-page">
-      <LoginBar activeRole={role} />
-      <div className="login-box">
-        <div className="login-brand">
-          <Logo size={72} />
-          <h1>{screenText('appName', language)}</h1>
-          <p>{screenText(role === 'owner' ? 'ownerTagline' : 'managerTagline', language)}</p>
-        </div>
-        <Card>
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
-            <Field label={screenText('emailLabel', language)}>
-              {(id) => (
-                <TextInput
-                  id={id}
-                  type="email"
-                  autoComplete="username"
-                  placeholder={screenText('emailHint', language)}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              )}
-            </Field>
-            <Field label={screenText('passwordLabel', language)}>
-              {(id) => (
-                <TextInput
-                  id={id}
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder={screenText('passwordHint', language)}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              )}
-            </Field>
-            {errorText ? (
-              <p className="field-error" role="alert">
-                {errorText}
-              </p>
-            ) : null}
-            <Button kind="main" type="submit" disabled={busy}>
-              {busy ? screenText('loading', language) : screenText('loginButton', language)}
-            </Button>
-          </form>
-        </Card>
-        {role === 'owner' ? null : (
-          <div className="login-help">
-            <p>
-              {screenText('newHere', language)}{' '}
-              <Link href="/signup" className="login-link">
-                {screenText('signupLink', language)}
-              </Link>
-            </p>
-            <p>{screenText('managerSignupHelp', language)}</p>
+    <LoginShell activeRole={role}>
+      <CardBrand
+        title={screenText(role === 'owner' ? 'ownerLoginTitle' : 'managerLoginTitle', language)}
+      />
+      <form className="lc-form" onSubmit={handleSubmit} noValidate>
+        <PillField
+          icon={<Mail strokeWidth={1.8} />}
+          label={screenText('emailLabel', language)}
+          type="email"
+          autoComplete="username"
+          placeholder={screenText('emailAddressHint', language)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <PasswordField
+          label={screenText('passwordLabel', language)}
+          autoComplete="current-password"
+          placeholder={screenText('passwordPlainHint', language)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {errorText ? (
+          <p className="lc-error" role="alert">
+            {errorText}
+          </p>
+        ) : null}
+        <button className="lc-submit" type="submit" disabled={busy}>
+          <LogIn aria-hidden="true" strokeWidth={2} />
+          {busy ? screenText('loading', language) : screenText('loginButton', language)}
+        </button>
+      </form>
+      {role === 'owner' ? null : (
+        <>
+          <div className="lc-or">
+            <span>{screenText('orWord', language)}</span>
           </div>
-        )}
-      </div>
-    </main>
+          <p className="lc-switch">
+            {screenText('newHere', language)}{' '}
+            <Link href="/signup">{screenText('signupLink', language)}</Link>
+            <ChevronRight aria-hidden="true" strokeWidth={2.2} />
+          </p>
+        </>
+      )}
+      <p className="lc-secure">
+        <ShieldCheck aria-hidden="true" strokeWidth={1.8} />
+        {screenText('secureNote', language)}
+      </p>
+    </LoginShell>
   );
 }

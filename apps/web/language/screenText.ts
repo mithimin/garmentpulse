@@ -130,6 +130,20 @@ export const SCREEN_TEXT = {
   },
   tagResolvedToday: { en: '{n} today · avg {t}', bn: 'আজ {n}টি · গড়ে {t}' },
   tagNoneToday: { en: 'None resolved today', bn: 'আজ কিছু সমাধান হয়নি' },
+  // The login pages (an exact copy of the login draft picture). The Bangla is a draft.
+  loginKicker: {
+    en: 'Smarter • Safer • More efficient',
+    bn: 'আরও স্মার্ট • আরও নিরাপদ • আরও কার্যকর',
+  },
+  loginTagline: { en: 'Manage. Monitor. Grow.', bn: 'পরিচালনা করুন। নজর রাখুন। এগিয়ে যান।' },
+  managerLoginTitle: { en: 'Manager Login', bn: 'ম্যানেজার লগ ইন' },
+  ownerLoginTitle: { en: 'Owner Login', bn: 'মালিকের লগ ইন' },
+  emailAddressHint: { en: 'Email address', bn: 'ইমেইল ঠিকানা' },
+  passwordPlainHint: { en: 'Password', bn: 'পাসওয়ার্ড' },
+  orWord: { en: 'or', bn: 'অথবা' },
+  secureNote: { en: 'Secure & Confidential', bn: 'নিরাপদ ও গোপনীয়' },
+  showPassword: { en: 'Show password', bn: 'পাসওয়ার্ড দেখান' },
+  hidePassword: { en: 'Hide password', bn: 'পাসওয়ার্ড লুকান' },
   managerTagline: { en: 'Manager login', bn: 'ম্যানেজার লগ ইন' },
   ownerTagline: { en: 'Owner login', bn: 'মালিকের লগ ইন' },
   emailLabel: { en: 'Email', bn: 'ইমেইল' },
@@ -163,8 +177,8 @@ export const SCREEN_TEXT = {
   menuMachines: { en: 'Machines', bn: 'মেশিন' },
   mapTitle: { en: 'Machine map', bn: 'মেশিন ম্যাপ' },
   mapSub: {
-    en: 'Every machine on the floor. A machine glowing burgundy needs a technician.',
-    bn: 'ফ্লোরের প্রতিটি মেশিন। গাঢ় লাল আলোয় জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
+    en: 'Every machine on the floor. A machine glowing white needs a technician.',
+    bn: 'ফ্লোরের প্রতিটি মেশিন। সাদা আলোয় জ্বলতে থাকা মেশিনে টেকনিশিয়ান লাগবে।',
   },
   seatRunning: { en: 'Running', bn: 'চলছে' },
   seatDown: { en: 'Down', bn: 'নষ্ট' },
@@ -177,8 +191,8 @@ export const SCREEN_TEXT = {
   downCountMany: { en: '{n} machines are down', bn: '{n}টি মেশিন নষ্ট' },
   selectionTitle: { en: 'Your selection', bn: 'আপনার বাছাই' },
   selectionEmpty: {
-    en: 'Click a machine glowing burgundy to select it. These machines are broken and waiting for a technician.',
-    bn: 'গাঢ় লাল আলোয় জ্বলা একটি মেশিনে ক্লিক করে বাছাই করুন। এই মেশিনগুলো নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
+    en: 'Click a machine glowing white to select it. These machines are broken and waiting for a technician.',
+    bn: 'সাদা আলোয় জ্বলা একটি মেশিনে ক্লিক করে বাছাই করুন। এই মেশিনগুলো নষ্ট এবং টেকনিশিয়ানের অপেক্ষায় আছে।',
   },
   selectionCount: { en: 'Reports selected', bn: 'বাছাই করা রিপোর্ট' },
   selectionQueueNote: {

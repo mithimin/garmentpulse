@@ -1,0 +1,1004 @@
+/*
+  apps/web/app/factory.css
+
+  THE FACTORY LOOK (written 2026-11-13 from the draft picture Mithi shared).
+  It is loaded AFTER globals.css on purpose, so everything here wins over the older rules.
+  What it draws, in plain words:
+    - a brown header (hamburger button on the left, the logo tile and the name in the middle,
+      the language button on the right),
+    - a bright, modern garment factory photo behind the greeting (public/factory-hero.jpg),
+      brown cloth with two thread spools in the bottom-left corner (factory-cloth.png) and a
+      (the baby-blue wave of the draft was removed on request),
+    - four count boxes (brown, cream, baby blue, cream) with a big faint icon each,
+    - a cream, see-through "Machine map" card with seats, and a "Your selection" card.
+  Colours (the three of the draft, plus a slightly darker shade of each):
+    Brown  #3B2418 (darker #2A1910, lighter #4E2B19)  header, main buttons, broken machines
+    Cream  #F2E8DA                                    page, panels, cards
+    Baby blue #8EC5FF                                 resolved, active selection, highlights
+  All the pictures were cut out of the draft itself with a small script, nothing was redrawn.
+  The login and sign-up pages have their own look in login.css.
+  Owned by Mithi.
+*/
+
+:root {
+  --bar-size: 92px;
+
+  --brown: #3b2418;
+  --brown-deep: #2a1910;
+  --brown-soft: #4e2b19;
+  --cream: #f2e8da;
+  --cream-card: rgba(250, 243, 234, 0.82);
+  --blue: #8ec5ff;
+  --blue-soft: #a6d2ff;
+
+  /* The older named colours now point at the three draft colours. */
+  --page: #f2e8da;
+  --bar: #3b2418;
+  --bar-text: #f2e8da;
+  --bar-text-chosen: #ffffff;
+  --bar-stitch: #8ec5ff;
+  --card: #faf3ea;
+  --card-border: #e3d5c1;
+  --card-stitch: #cdb99f;
+  --list-card: #faf3ea;
+  --text: #3b2418;
+  --heading: #3b2418;
+  --soft-text: #6b5545;
+  --main-button: #3b2418;
+  --main-button-border: #2a1910;
+  --main-button-hover: #4e2b19;
+  --link: #3b2418;
+  --link-hover: #6b3a22;
+  --second-button: #faf3ea;
+  --input-border: #cdb99f;
+  --input-bg: #fffaf2;
+  --input-hint: #8a7667;
+  --table-head: #3b2418;
+  --table-head-text: #f2e8da;
+  --table-row: #faf3ea;
+  --table-row-hover: #f0e4d4;
+}
+
+/* ---- Words and buttons ---- */
+.btn {
+  border-radius: 12px;
+}
+.btn-main {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  border-color: #2a1910;
+}
+.btn-main::after {
+  display: none;
+}
+.status-waiting {
+  background: #eadbc4;
+  color: #3b2418;
+  box-shadow: 0 0 0 1px #d6c1a3;
+}
+.status-in_progress,
+.status-busy {
+  background: #c9ab8c;
+  color: #2a1910;
+  box-shadow: 0 0 0 1px #b08d6b;
+}
+.status-resolved,
+.status-free {
+  background: #8ec5ff;
+  color: #17304f;
+  box-shadow: 0 0 0 1px #6fb0f2;
+}
+
+/* ---- Header: brown, with the hamburger left, logo and name in the middle, EN right ---- */
+.topbar {
+  min-height: var(--bar-size);
+  padding: 0 35px;
+  background: radial-gradient(ellipse at 50% 40%, #3a1f11 0%, #46291a 75%);
+  box-shadow: 0 8px 22px -10px rgba(42, 25, 16, 0.7);
+  z-index: 5;
+}
+.topbar-brand {
+  gap: 22px;
+}
+.logo-tile {
+  display: block;
+  width: 85px;
+  height: 78px;
+  border: 0;
+  border-radius: 0;
+  background: url('/factory-logo-tile.png') center / 100% 100% no-repeat;
+  box-shadow: 0 6px 14px -6px rgba(20, 10, 5, 0.6);
+  align-self: center;
+  margin: 0;
+}
+.logo-tile::before,
+.logo-tile::after {
+  display: none;
+}
+.topbar-name {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cream);
+}
+.topbar-role {
+  font-size: 17px;
+  font-weight: 400;
+  color: #e6d6c3;
+}
+.icon-btn {
+  width: 68px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid rgba(242, 232, 218, 0.08);
+  background: #54301f;
+  box-shadow: none;
+  color: var(--cream);
+}
+.icon-btn:hover {
+  background: #66402b;
+  border-color: rgba(242, 232, 218, 0.2);
+}
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 86px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(242, 232, 218, 0.45);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--cream);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.lang-switch::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin: -3px 0 0 12px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+.lang-switch:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---- The page: cream, with the factory photo at the top and corner pictures ---- */
+body:has(.topbar) {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f2e6d6 0%, #eedfcc 100%);
+  background-attachment: scroll;
+}
+/* The bright factory photo (with the sewing machine) sits behind the greeting and fades out on
+   its left and bottom edges, so it melts into the cream page. */
+body:has(.topbar)::before {
+  content: '';
+  position: absolute;
+  top: var(--bar-size);
+  right: 0;
+  width: 68.4vw;
+  max-width: 1500px;
+  aspect-ratio: 1171 / 242;
+  background: url('/factory-hero.jpg') right top / 100% 100% no-repeat;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 30%),
+    linear-gradient(to bottom, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 30%),
+    linear-gradient(to bottom, #000 86%, transparent 100%);
+  mask-composite: intersect;
+  pointer-events: none;
+  z-index: 0;
+}
+.shell {
+  position: relative;
+  z-index: 1;
+}
+/* Brown cloth with two thread spools in the bottom-left corner of the SCREEN. It stays put
+   while the page scrolls. On the pages with the Machine map, on a wide screen (1600px and more,
+   where nothing sits in that corner) and where the browser can do it, it sits IN FRONT of the cards like the draft and fades away as
+   soon as the page is scrolled, so it never hides anything. Everywhere else it stays behind. */
+.shell::before {
+  content: '';
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  height: 229px;
+  background: url('/factory-cloth.png') left bottom / contain no-repeat;
+  /* The cloth fades out on its right side, so it never ends in a hard straight edge. */
+  -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+@media (min-width: 1600px) {
+  @supports (animation-timeline: scroll()) {
+    .shell:has(.map-layout)::before {
+      z-index: 3;
+      animation: cloth-away linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 240px;
+    }
+  }
+}
+@keyframes cloth-away {
+  to {
+    opacity: 0;
+  }
+}
+.shell-open::before {
+  display: none;
+}
+.shell:not(.shell-open) {
+  padding-left: 0;
+}
+.shell > .page {
+  max-width: 1760px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+  gap: 36px;
+}
+
+/* ---- Greeting ---- */
+.greeting {
+  padding: 62px 0 0;
+  margin-bottom: -4px;
+}
+.greeting h1 {
+  font-family: var(--font-title);
+  font-size: 34px;
+  font-weight: 400;
+}
+.greeting-hello {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 4px;
+  font-size: 35px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--brown);
+}
+.greeting-hello::after {
+  flex: 0 0 134px;
+  height: 1px;
+  background: var(--brown);
+  opacity: 0.75;
+}
+.greeting-name {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: none;
+  font-size: 62px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--brown);
+}
+.greeting-line {
+  margin: 14px 0 0;
+  font-size: 20px;
+  color: #4b3427;
+}
+
+/* ---- Count boxes ---- */
+.count-grid {
+  gap: 22px;
+}
+.count-box {
+  min-height: 160px;
+  justify-content: center;
+  gap: 2px;
+  padding: 20px 24px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(247, 236, 224, 0.84);
+  backdrop-filter: blur(8px);
+  color: var(--brown);
+  text-shadow: none;
+  overflow: hidden;
+  box-shadow:
+    0 12px 28px -14px rgba(59, 36, 24, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+.count-label {
+  padding: 0;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+}
+html[lang='bn'] .count-label {
+  padding: 0;
+  font-size: 21px;
+  letter-spacing: 0;
+}
+.count-number {
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 0.98;
+}
+.count-tag,
+.count-tag-space {
+  min-height: 0;
+}
+.count-tag {
+  margin-top: 5px;
+  padding: 7px 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+html[lang='bn'] .count-tag {
+  font-size: 15px;
+}
+.count-icon {
+  position: absolute;
+  top: 26px;
+  right: 14px;
+  left: auto;
+  width: 58px;
+  height: 58px;
+  pointer-events: none;
+}
+/* 1: brown, "New reports" */
+.count-grid .count-box:nth-child(1) {
+  background: linear-gradient(160deg, #55301c 0%, #3b2418 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--cream);
+}
+.count-grid .count-box:nth-child(1) .count-icon {
+  color: #2d1a10;
+  fill: #7b5745;
+}
+.count-grid .count-box:nth-child(1) .count-tag {
+  background: #f0e0cf;
+  color: var(--brown);
+}
+/* 2: cream, "In progress" */
+.count-grid .count-box:nth-child(2) .count-icon {
+  color: #d2c1ac;
+}
+.count-grid .count-box:nth-child(2) .count-tag {
+  background: #a6d2ff;
+  color: #1e3550;
+}
+/* 3: baby blue, "Resolved today" */
+.count-grid .count-box:nth-child(3) {
+  background: linear-gradient(180deg, #a8d3ff 0%, #8ec5ff 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.count-grid .count-box:nth-child(3) .count-icon {
+  color: #eaf4ff;
+  fill: #6fa8e6;
+}
+.count-grid .count-box:nth-child(3) .count-tag {
+  background: #f5eadd;
+  color: var(--brown);
+}
+/* 4: cream, "Free technicians" */
+.count-grid .count-box:nth-child(4) .count-icon {
+  color: #dccdb9;
+  fill: #e6d8c5;
+}
+.count-grid .count-box:nth-child(4) .count-tag {
+  background: #a6d2ff;
+  color: #1e3550;
+}
+
+/* ---- Cards (the Machine map, "Your selection", the Technicians list ...) ---- */
+.card {
+  background: var(--cream-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 26px;
+  color: var(--brown);
+  box-shadow:
+    0 16px 36px -18px rgba(59, 36, 24, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+.card-list {
+  background: var(--cream-card);
+  border-color: rgba(255, 255, 255, 0.75);
+  color: var(--brown);
+}
+.card-list .card-head h2 {
+  color: var(--brown);
+}
+.map-card,
+.map-side .card {
+  padding: 14px 28px 16px;
+}
+
+/* ---- The list cards (Technicians) in the cream look ---- */
+.card-list .state h3,
+.card-list .state p {
+  color: var(--brown);
+  text-shadow: none;
+}
+.card-list .state h3 {
+  text-decoration-color: var(--blue);
+}
+.card-list .card-link {
+  color: var(--brown);
+}
+.card-list .card-link:hover {
+  color: #6b3a22;
+}
+.card-list .table th {
+  background: #efe2d0;
+  color: var(--brown);
+  border-bottom: 3px solid var(--blue);
+}
+.card-list .table tr.row-attention td:first-child {
+  box-shadow:
+    inset 4px 0 0 var(--brown),
+    0 8px 8px -8px rgba(59, 36, 24, 0.4);
+}
+.card-list .tech-row {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+}
+.avatar {
+  background: #efe2d0;
+  color: var(--brown);
+}
+
+/* ---- Machine map: the header of the card ---- */
+.map-layout {
+  grid-template-columns: minmax(0, 1fr) 391px;
+  gap: 24px;
+  /* "Your selection" is as tall as the map card (like the draft). */
+  align-items: stretch;
+}
+.map-side {
+  position: static;
+  margin-top: 4px;
+}
+.map-side .card {
+  height: 100%;
+}
+@media (max-width: 1000px) {
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.map-card .card-head,
+.map-banner {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 17px;
+  padding: 0 0 10px;
+  border: 0;
+  border-bottom: 1px solid rgba(59, 36, 24, 0.14);
+  border-radius: 0;
+  background: none;
+  color: var(--brown);
+  text-align: left;
+  text-shadow: none;
+}
+.map-banner::after {
+  display: none;
+}
+.map-pin {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: #f4e8d8;
+  box-shadow:
+    inset 0 0 0 1px rgba(59, 36, 24, 0.1),
+    0 4px 10px -6px rgba(59, 36, 24, 0.4);
+}
+.map-pin::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  background: var(--brown);
+  -webkit-mask: url('/factory-icon-logo.png') center / contain no-repeat;
+  mask: url('/factory-icon-logo.png') center / contain no-repeat;
+}
+.map-banner .map-title,
+.map-side-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--brown);
+}
+.map-head-line {
+  display: none;
+}
+/* "3 machines are down": a dark brown pill with a glowing dot on each side. */
+.map-card .map-down-line,
+.map-banner .map-down-line {
+  position: static;
+  transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 0 auto;
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  box-shadow: 0 8px 16px -8px rgba(59, 36, 24, 0.7);
+  color: var(--cream);
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: none;
+}
+.map-down-line::before,
+.map-down-line::after {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #f2e8da;
+  box-shadow: 0 0 8px 2px rgba(242, 232, 218, 0.7);
+}
+.map-card .map-down-line.map-down-none,
+.map-banner .map-down-line.map-down-none {
+  background: #e8dac6;
+  box-shadow: none;
+  color: var(--brown);
+}
+.map-down-none::before,
+.map-down-none::after {
+  display: none;
+}
+
+/* ---- Machine map: the chips and the sound button ---- */
+.map-tools {
+  gap: 12px;
+  margin: 0 0 29px;
+}
+.map-chips,
+.map-buttons {
+  gap: 12px;
+}
+.map-chip,
+.map-buttons .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 45px;
+  padding: 0 26px;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  background: rgba(252, 246, 238, 0.92);
+  color: var(--brown);
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 8px 16px -10px rgba(59, 36, 24, 0.4);
+}
+.map-chip b {
+  margin-left: 4px;
+  font-weight: 600;
+}
+.map-chip[aria-pressed='true'] {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  border-color: #3b2418;
+  color: var(--cream);
+}
+
+/* ---- Machine map: the supervisor desk and the rows of seats ---- */
+.map-desk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  max-width: none;
+  margin: 0 auto 6px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  color: var(--brown);
+}
+.map-desk::before,
+.map-desk::after {
+  content: '';
+  display: block;
+  flex: 0 1 170px;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: rgba(59, 36, 24, 0.35);
+}
+html[lang='bn'] .map-desk {
+  letter-spacing: 0;
+  font-size: 19px;
+}
+.map-scroll {
+  padding: 14px 12px;
+}
+.map-row {
+  justify-content: center;
+  gap: 16px;
+}
+.map-row-letter {
+  width: 36px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--brown);
+}
+.map-aisle {
+  display: none;
+}
+.map-seat-wrap {
+  gap: 0;
+}
+.scope {
+  width: 86px;
+  height: 84px;
+  gap: 6px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fcf1e6, #f4e6d6);
+  color: var(--brown);
+  box-shadow:
+    0 10px 18px -10px rgba(59, 36, 24, 0.55),
+    inset 0 1px 0 #ffffff;
+}
+.seat-machine {
+  display: block;
+  width: 40px;
+  height: 33px;
+  background: currentColor;
+  -webkit-mask: url('/factory-icon-machine.png') center / contain no-repeat;
+  mask: url('/factory-icon-machine.png') center / contain no-repeat;
+}
+.seat-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: inherit;
+}
+/* technician assigned: a darker cream with a dashed stitch inside */
+.seat-assigned .scope {
+  background: linear-gradient(180deg, #ecdcc6, #e4d0b6);
+  color: var(--brown);
+  outline: 2px dashed rgba(59, 36, 24, 0.4);
+  outline-offset: -7px;
+}
+/* the technician is working on it: baby blue */
+.seat-progress .scope {
+  background: linear-gradient(180deg, #a6d2ff, #8ec5ff);
+  color: var(--brown);
+}
+/* DOWN: brown, with a soft cream halo that pulses ("glowing white") */
+.seat-down .scope {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: var(--cream);
+  animation: seat-halo 1.6s ease-in-out infinite;
+}
+.seat-down .seat-machine {
+  color: var(--cream);
+}
+/* selected: brown with a baby-blue ring */
+.seat-selected .scope {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: var(--cream);
+  animation: none;
+  box-shadow:
+    0 0 0 4px #8ec5ff,
+    0 0 0 9px rgba(142, 197, 255, 0.35);
+}
+.seat-selected .seat-machine {
+  color: var(--cream);
+}
+.seat-faded {
+  opacity: 0.28;
+}
+@keyframes seat-halo {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 7px rgba(226, 206, 187, 0.85),
+      0 0 14px 6px rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 0 11px rgba(226, 206, 187, 0.5),
+      0 0 24px 10px rgba(255, 255, 255, 0.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seat-down .scope {
+    animation: none;
+    box-shadow:
+      0 0 0 8px rgba(226, 206, 187, 0.8),
+      0 0 14px 6px rgba(255, 255, 255, 0.4);
+  }
+}
+/* The draft has no legend under the seats: the chips on top already say every state in words. */
+.map-legend {
+  display: none;
+}
+.map-more {
+  margin-top: 6px;
+}
+
+/* ---- "Your selection" ---- */
+.map-side-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 50px;
+  margin: 0 0 20px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid rgba(59, 36, 24, 0.14);
+}
+.map-side-icon {
+  flex: none;
+  color: var(--brown);
+}
+.map-side-title {
+  font-size: 24px;
+}
+.map-empty {
+  margin: 0 0 18px;
+  padding: 0 6px 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(59, 36, 24, 0.14);
+  border-radius: 0;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--brown);
+}
+.map-selected li {
+  border-color: rgba(59, 36, 24, 0.14);
+  background: rgba(255, 250, 242, 0.7);
+}
+.map-selected small {
+  color: var(--soft-text);
+}
+.map-total {
+  align-items: center;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  font-size: 19px;
+  color: var(--brown);
+}
+.map-total strong {
+  font-size: 24px;
+  font-weight: 600;
+}
+.map-side .btn-main {
+  min-width: 0;
+  min-height: 53px;
+  padding: 0 24px;
+  gap: 12px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  color: var(--cream);
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 10px 18px -10px rgba(59, 36, 24, 0.7);
+}
+.map-side .btn-main:disabled {
+  opacity: 0.8;
+}
+
+/* ---- The sidebar: a cream glass panel (it starts folded, the hamburger opens it) ---- */
+.sidebar {
+  background: rgba(250, 243, 234, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 18px 40px -18px rgba(59, 36, 24, 0.5);
+}
+.sidebar .menu-link-active {
+  background: linear-gradient(90deg, rgba(142, 197, 255, 0.6), rgba(142, 197, 255, 0.08) 90%);
+  box-shadow: inset 4px 0 0 var(--brown);
+}
+.count-bubble {
+  background: var(--brown);
+  color: var(--cream);
+}
+
+/* ---- Invite code cards and the filter tabs (owner page) in the cream look ---- */
+.code-cards .card-list h2 {
+  color: var(--brown);
+}
+.filter-tabs {
+  background: rgba(59, 36, 24, 0.08);
+  border-color: rgba(59, 36, 24, 0.12);
+  box-shadow: none;
+}
+.filter-tab {
+  color: var(--brown);
+}
+.filter-tab:hover {
+  background: rgba(59, 36, 24, 0.08);
+  color: var(--brown);
+}
+.filter-count {
+  background: rgba(59, 36, 24, 0.12);
+}
+.filter-tab-active,
+.filter-tab-active:hover {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  border-color: #3b2418;
+  color: var(--cream);
+  box-shadow: 0 6px 12px -6px rgba(59, 36, 24, 0.7);
+}
+.filter-tab-active::after {
+  border-color: rgba(242, 232, 218, 0.4);
+}
+.filter-tab-active .filter-count {
+  background: var(--blue);
+  color: #17304f;
+}
+.filter-tab[data-filter='in_progress'] .filter-dot {
+  background: #8a5a35;
+}
+.filter-tab[data-filter='resolved'] .filter-dot {
+  background: var(--blue);
+}
+
+/* ---- A picture in the heading of some pages (components/PageArt.tsx) ----
+   Technicians = pressing machine, Invite codes = scissors, Manager codes (owner) = measuring
+   tape. The picture is part of the page grid, not a sticker:
+     - its RIGHT edge is exactly the right edge of the cards below it,
+     - its corners have the same round radius as the cards (26px),
+     - it sits in the heading block, so the gap below it is the same 36px as between any two
+       rows of the page, and it never lies over a card or a table,
+     - its LEFT side melts into the cream page (a soft fade), like the factory photo does.
+   On these pages it takes the place of the factory photo, so a page never has two big pictures.
+   When the page is narrow it moves UNDER the title, as a full-width strip. */
+.greeting {
+  position: relative;
+}
+.greeting:has(.page-art) {
+  --art-width: clamp(300px, 38%, 540px);
+  min-height: 224px;
+  margin-bottom: 0;
+}
+.greeting:has(.page-art) h1,
+.greeting:has(.page-art) .greeting-line {
+  max-width: calc(100% - var(--art-width) - 24px);
+}
+.page-art {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  bottom: 0;
+  width: var(--art-width);
+  border-radius: 26px;
+  background: no-repeat;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+  pointer-events: none;
+}
+.page-art-press {
+  background-image: url('/factory-art-press.webp');
+  background-position: 70% 45%;
+}
+.page-art-scissors {
+  background-image: url('/factory-art-scissors.webp');
+  background-position: 60% 50%;
+}
+.page-art-tape {
+  background-image: url('/factory-art-tape.webp');
+  background-position: 60% 60%;
+}
+body:has(.page-art)::before {
+  display: none;
+}
+@container page (max-width: 760px) {
+  .greeting:has(.page-art) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .greeting:has(.page-art) h1,
+  .greeting:has(.page-art) .greeting-line {
+    max-width: none;
+  }
+  .page-art {
+    position: static;
+    order: 3;
+    width: 100%;
+    height: 150px;
+    margin-top: 20px;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* ---- Tablets and phones ---- */
+@media (max-width: 1100px) {
+  body:has(.topbar)::before {
+    width: 100vw;
+    opacity: 0.55;
+  }
+  .shell::before {
+    width: 200px;
+    height: 153px;
+  }
+}
+@media (max-width: 767px) {
+  .topbar {
+    padding: 0 14px;
+    gap: 8px;
+  }
+  .topbar-brand {
+    gap: 10px;
+  }
+  .topbar-name {
+    font-size: 17px;
+  }
+  .topbar-right {
+    gap: 8px;
+  }
+  .lang-switch {
+    min-width: 62px;
+    padding: 0 10px;
+  }
+  .lang-switch::after {
+    margin-left: 6px;
+  }
+  .logo-tile {
+    width: 62px;
+    height: 57px;
+    margin-top: 0;
+    align-self: center;
+  }
+  .icon-btn {
+    width: 52px;
+  }
+  .shell > .page {
+    padding: 0 16px 48px;
+  }
+  .greeting {
+    padding-top: 32px;
+  }
+  .greeting-hello {
+    font-size: 24px;
+  }
+  .greeting-name {
+    font-size: 44px;
+  }
+  .map-card,
+  .map-side .card {
+    padding: 20px 16px;
+  }
+  .scope {
+    width: 72px;
+    height: 72px;
+  }
+  .seat-machine {
+    width: 34px;
+    height: 28px;
+  }
+  .map-row {
+    gap: 10px;
+  }
+  .map-row-letter {
+    width: 20px;
+  }
+  .shell::before {
+    display: none;
+  }
+}
