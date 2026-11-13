@@ -115,13 +115,13 @@
   display: none;
 }
 .topbar-name {
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 700;
   line-height: 1.15;
   color: var(--cream);
 }
 .topbar-role {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 400;
   color: #e6d6c3;
 }
@@ -149,7 +149,7 @@
   border: 1px solid rgba(242, 232, 218, 0.45);
   background: rgba(255, 255, 255, 0.03);
   color: var(--cream);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.03em;
 }
@@ -241,18 +241,18 @@ body:has(.topbar)::before {
 .shell > .page {
   max-width: 1760px;
   margin: 0 auto;
-  padding: 0 40px 60px;
-  gap: 36px;
+  padding: 0 32px 48px;
+  gap: 26px;
 }
 
 /* ---- Greeting ---- */
 .greeting {
-  padding: 62px 0 0;
+  padding: 40px 0 0;
   margin-bottom: -4px;
 }
 .greeting h1 {
   font-family: var(--font-title);
-  font-size: 34px;
+  font-size: 29px;
   font-weight: 400;
 }
 .greeting-hello {
@@ -260,7 +260,7 @@ body:has(.topbar)::before {
   align-items: center;
   gap: 18px;
   margin: 0 0 4px;
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 400;
   letter-spacing: 0;
   color: var(--brown);
@@ -276,7 +276,7 @@ body:has(.topbar)::before {
   margin: 0;
   padding: 0;
   background: none;
-  font-size: 62px;
+  font-size: 53px;
   font-weight: 700;
   line-height: 1.12;
   letter-spacing: 0;
@@ -284,20 +284,33 @@ body:has(.topbar)::before {
 }
 .greeting-line {
   margin: 14px 0 0;
-  font-size: 20px;
+  font-size: 17px;
   color: #4b3427;
 }
 
 /* ---- Count boxes ---- */
 .count-grid {
-  gap: 22px;
+  gap: 16px;
+}
+/* On the owner screen the three boxes start BELOW the factory photo, not on top of it. The photo
+   is about 14.14vw tall (at most 310px), so the greeting is kept at least that tall. */
+.page:has(.count-grid-three) .greeting {
+  min-height: calc(min(14.14vw, 310px) + 6px);
+}
+/* The owner has only three boxes. Each one is the same size as one of the manager's four boxes,
+   and the three sit together in the middle of the line. */
+@container page (min-width: 761px) {
+  .count-grid.count-grid-three {
+    grid-template-columns: repeat(3, calc((100% - 3 * 16px) / 4));
+    justify-content: center;
+  }
 }
 .count-box {
-  min-height: 160px;
+  min-height: 128px;
   justify-content: center;
   gap: 2px;
-  padding: 20px 24px 18px;
-  border-radius: 24px;
+  padding: 14px 20px 14px;
+  border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.75);
   background: rgba(247, 236, 224, 0.84);
   backdrop-filter: blur(8px);
@@ -310,17 +323,17 @@ body:has(.topbar)::before {
 }
 .count-label {
   padding: 0;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 400;
   letter-spacing: 0.035em;
 }
 html[lang='bn'] .count-label {
   padding: 0;
-  font-size: 21px;
+  font-size: 18px;
   letter-spacing: 0;
 }
 .count-number {
-  font-size: 54px;
+  font-size: 46px;
   font-weight: 700;
   line-height: 0.98;
 }
@@ -337,15 +350,15 @@ html[lang='bn'] .count-label {
   letter-spacing: 0.02em;
 }
 html[lang='bn'] .count-tag {
-  font-size: 15px;
+  font-size: 13px;
 }
 .count-icon {
   position: absolute;
-  top: 26px;
-  right: 14px;
+  top: 18px;
+  right: 12px;
   left: auto;
-  width: 58px;
-  height: 58px;
+  width: 44px;
+  height: 44px;
   pointer-events: none;
 }
 /* 1: brown, "New reports" */
@@ -356,7 +369,7 @@ html[lang='bn'] .count-tag {
 }
 .count-grid .count-box:nth-child(1) .count-icon {
   color: #2d1a10;
-  fill: #7b5745;
+  fill: #f5c518; /* yellow warning sign */
 }
 .count-grid .count-box:nth-child(1) .count-tag {
   background: #f0e0cf;
@@ -442,6 +455,12 @@ html[lang='bn'] .count-tag {
     inset 4px 0 0 var(--brown),
     0 8px 8px -8px rgba(59, 36, 24, 0.4);
 }
+/* In the stacked (narrow) table the whole row is the card, so its first cell must not draw its
+   own curved bar over the text. */
+.card-list .table-stack tr.row-attention td:first-child {
+  box-shadow: none;
+  border-radius: 0;
+}
 .card-list .tech-row {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.85);
@@ -515,7 +534,7 @@ html[lang='bn'] .count-tag {
 .map-side-title {
   margin: 0;
   font-family: var(--font-title);
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 500;
   line-height: 1.1;
   color: var(--brown);
@@ -538,7 +557,7 @@ html[lang='bn'] .count-tag {
   background: linear-gradient(180deg, #4e2b19, #3b2418);
   box-shadow: 0 8px 16px -8px rgba(59, 36, 24, 0.7);
   color: var(--cream);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
   text-shadow: none;
@@ -583,7 +602,7 @@ html[lang='bn'] .count-tag {
   border-radius: 999px;
   background: rgba(252, 246, 238, 0.92);
   color: var(--brown);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   box-shadow: 0 8px 16px -10px rgba(59, 36, 24, 0.4);
 }
@@ -605,7 +624,7 @@ html[lang='bn'] .count-tag {
   gap: 22px;
   max-width: none;
   margin: 0 auto 6px;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.26em;
   color: var(--brown);
@@ -623,7 +642,7 @@ html[lang='bn'] .count-tag {
 }
 html[lang='bn'] .map-desk {
   letter-spacing: 0;
-  font-size: 19px;
+  font-size: 16px;
 }
 .map-scroll {
   padding: 14px 12px;
@@ -634,7 +653,7 @@ html[lang='bn'] .map-desk {
 }
 .map-row-letter {
   width: 36px;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
   color: var(--brown);
 }
@@ -666,7 +685,7 @@ html[lang='bn'] .map-desk {
 }
 .seat-label {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
   color: inherit;
@@ -751,7 +770,7 @@ html[lang='bn'] .map-desk {
   color: var(--brown);
 }
 .map-side-title {
-  font-size: 24px;
+  font-size: 21px;
 }
 .map-empty {
   margin: 0 0 18px;
@@ -760,7 +779,7 @@ html[lang='bn'] .map-desk {
   border-bottom: 1px solid rgba(59, 36, 24, 0.14);
   border-radius: 0;
   text-align: center;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.5;
   color: var(--brown);
 }
@@ -776,11 +795,11 @@ html[lang='bn'] .map-desk {
   margin: 0 0 18px;
   padding: 0;
   border: 0;
-  font-size: 19px;
+  font-size: 16px;
   color: var(--brown);
 }
 .map-total strong {
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 600;
 }
 .map-side .btn-main {
@@ -792,7 +811,7 @@ html[lang='bn'] .map-desk {
   border-radius: 14px;
   background: linear-gradient(180deg, #4e2b19, #3b2418);
   color: var(--cream);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   box-shadow: 0 10px 18px -10px rgba(59, 36, 24, 0.7);
 }
@@ -906,6 +925,15 @@ html[lang='bn'] .map-desk {
 body:has(.page-art)::before {
   display: none;
 }
+/* The Machines page has the map and no greeting, so the factory photo would only float behind
+   the map card. It is taken away there. (The Dashboard has a greeting and keeps the photo.) */
+body:has(.map-layout):not(:has(.greeting))::before {
+  display: none;
+}
+/* With no photo and no greeting, the cards get a little room under the top bar. */
+.shell > .page:has(.map-layout):not(:has(.greeting)) {
+  padding-top: 28px;
+}
 @container page (max-width: 760px) {
   .greeting:has(.page-art) {
     display: flex;
@@ -947,7 +975,7 @@ body:has(.page-art)::before {
     gap: 10px;
   }
   .topbar-name {
-    font-size: 17px;
+    font-size: 15px;
   }
   .topbar-right {
     gap: 8px;
@@ -975,10 +1003,10 @@ body:has(.page-art)::before {
     padding-top: 32px;
   }
   .greeting-hello {
-    font-size: 24px;
+    font-size: 21px;
   }
   .greeting-name {
-    font-size: 44px;
+    font-size: 38px;
   }
   .map-card,
   .map-side .card {
@@ -1000,5 +1028,38 @@ body:has(.page-art)::before {
   }
   .shell::before {
     display: none;
+  }
+}
+
+/* ---- Machine map on a phone: every seat of a row fits, so nothing scrolls sideways ----
+   Each seat is one fifth of the room that is left beside the two row letters, and the small
+   machine picture and the name shrink with it. (A sixth seat in a row would scroll sideways
+   inside the card, as before.) */
+@media (max-width: 520px) {
+  .map-scroll {
+    padding: 12px 4px;
+  }
+  .map-rows {
+    width: 100%;
+  }
+  .map-row {
+    gap: 4px;
+  }
+  .map-row-letter {
+    width: 14px;
+    font-size: 14px;
+  }
+  .scope {
+    width: max(38px, calc((100vw - 138px) / 5));
+    height: max(40px, calc((100vw - 138px) / 5 + 2px));
+    gap: 3px;
+    border-radius: 12px;
+  }
+  .seat-machine {
+    width: 30px;
+    height: 25px;
+  }
+  .seat-label {
+    font-size: 11.5px;
   }
 }

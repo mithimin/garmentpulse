@@ -11,8 +11,9 @@
 // when you tap outside. On EVERY screen size the sidebar folds again as soon as its
 // work is done (a menu page is picked) and also when you click or tap anywhere else
 // on the screen, even if you never used the sidebar. Only the button in the top bar
-// (not this automatic folding) is remembered in this browser, so the sidebar still
-// starts folded on every screen. Owned by Mithi.
+// The sidebar ALWAYS starts folded, every time the page opens and after every login.
+// It opens only when the person presses the button in the top bar. Nothing about it is
+// remembered in the browser. Owned by Mithi.
 
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -21,24 +22,6 @@ import { useAuth } from '../auth/AuthContext';
 import { Sidebar } from './Sidebar';
 import type { MenuItem } from './Sidebar';
 import { TopBar } from './TopBar';
-
-const STORAGE_KEY = 'garmentpulse-web-sidebar-open';
-/** Below this width the sidebar slides over the page instead of pushing it. */
-const PHONE_QUERY = '(max-width: 767px)';
-
-function isPhone(): boolean {
-  return window.matchMedia(PHONE_QUERY).matches;
-}
-
-/** Folded when the page opens (like the factory-look picture), unless the person left it open before. Always folded on a phone. */
-function startOpen(): boolean {
-  if (isPhone()) return false;
-  try {
-    return window.localStorage.getItem(STORAGE_KEY) === 'open';
-  } catch {
-    return false;
-  }
-}
 
 type SidebarShellProps = {
   /** The role shown on the nameplate in the top bar. */
@@ -49,9 +32,8 @@ type SidebarShellProps = {
 
 export function SidebarShell({ role, menu, children }: SidebarShellProps) {
   const { logOut } = useAuth();
-  // This frame only draws in the browser (after the role door), so reading the
-  // screen size here is safe.
-  const [open, setOpen] = useState(startOpen);
+  // Always folded to begin with. Only the button in the top bar opens it.
+  const [open, setOpen] = useState(false);
 
   // While the sidebar is open, a click or tap ANYWHERE outside it folds it. The toggle
   // button in the top bar is left out, because it opens and closes the sidebar itself.
@@ -68,15 +50,7 @@ export function SidebarShell({ role, menu, children }: SidebarShellProps) {
   }, [open]);
 
   function toggle() {
-    const next = !open;
-    setOpen(next);
-    if (!isPhone()) {
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next ? 'open' : 'closed');
-      } catch {
-        // Not remembering is fine.
-      }
-    }
+    setOpen(!open);
   }
 
   return (
