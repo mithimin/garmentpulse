@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Make the real project's machines **exactly the same** as the 45 fake machines on the website: the same names, codes, floors and seats, listed in the table below. Please update `supabase/seed.sql` and the real project.
@@ -65,3 +65,5 @@ The real project has only 5 machines, all on floor 1, so the website's Machine m
 | 3 | C3 | Sewing machine 23 | SM-23 |
 | 3 | C4 | Sewing machine 24 | SM-24 |
 | 3 | C5 | Sewing machine 25 | SM-25 |
+
+Done (2026-11-15, Sakib): the real project has exactly your 45 machines (3 floors of 3 rows of 5 seats), with the same names, codes, floors and seats as your table. The 5 old machines moved, they were not copied. A seat is now unique per floor (migration `20261115100000_seat_unique_per_floor.sql`). 170 database checks and 32 real client checks pass. Pull request 91.
