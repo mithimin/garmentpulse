@@ -208,6 +208,6 @@ When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 
 - The Bangla texts of the phone app and the website (Parts D and E of `docs/bangla-review-sheet.md`) are a draft until a Bangla speaker has read them. The shared words, the error sentences and the test names have been read.
 - A report's description is shown exactly as the worker typed it. It is never translated.
-- The Machine map shows 45 machines on 3 floors (3 rows of 5 seats each). Every machine has a fixed floor and seat set in the database. The 40 machines that were added later have no Bangla names, so in Bangla mode they show in English letters.
+- The Machine map shows 45 machines on 3 floors (3 rows of 5 seats each). Every machine has a fixed floor and seat set in the database. The 40 machines that were added later have Bangla names that follow the reviewed pattern (the words হোল and ওভারলক were confirmed by a Bangla speaker on 2026-11-15).
 - The beep needs one click on the page first. Browsers keep pages silent until the person has used them.
 - Expenses, invoices, owner approval, chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.
