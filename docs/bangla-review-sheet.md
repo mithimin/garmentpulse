@@ -383,6 +383,8 @@ A Bangla speaker filled in the short version of this sheet (Parts A, B, C and G)
 | 15 | own version | **এখন ব্যবহার করার মতো কোনো কোড নেই** |
 | 16 | own version | **মেশিনের চিহ্নটি ঝলকাচ্ছে**, for example *ফ্লোরের প্রতিটি মেশিন। যে মেশিনের চিহ্নটি লাল হয়ে ঝলকাচ্ছে, সেখানে টেকনিশিয়ান লাগবে।* (to confirm) |
 
+**Machine types (2026-11-15):** the Bangla speaker confirmed the two new machine type words, **হোল** (Buttonhole) and **ওভারলক** (Overlock). Together with সেলাই, কাটিং and প্রেসিং, the Bangla names of the 40 machines that were added later follow the reviewed pattern `<type> মেশিন <number in Bangla digits>` (for example `সেলাই মেশিন ২৫`).
+
 **Still to read:** Parts D, E and F. Part G row 13 was skipped on purpose, and the draft stays.
 
 ---
