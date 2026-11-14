@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Two small things in the backend, so the phone app can show a **machine map** on the worker's Home screen:
@@ -27,3 +27,5 @@ Note: this map is **new** and is not written in `docs/mvp.md` (the MVP says "a s
 
 ## What I am doing meanwhile
 The map is built with **fake floors, rows, machines and states** inside the phone app (`apps/mobile/src/data/fakeMachineMap.ts`), with a clear "Demo data" note on the card. Sending a report from the map does not make a real report yet. When your two things exist, I replace the fake data with the real calls, and send the real `create_report` with the tapped machine's id.
+
+Done (2026-11-15, Sakib): the backend part is built and merged. Every machine has a `floor` (and a `seat`), `list_machine_states()` gives the live state of every machine to every logged-in role, and the states are kept in the locked table `machine_states` with live updates (Realtime). Nothing private is sent. Migration `20261114100000_machine_floors_and_states.sql`, 170 database checks and 32 real client checks pass. Pull request 88. The phone map can now switch from fake data to the real calls (see `requests/rubaiya/2026-11-14-worker-machine-map-built.md`).
