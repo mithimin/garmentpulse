@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Please check that the Supabase project (the real backend) is switched on and that the website and Rubaiya's phone app are both connected to the **same** project. Then send me the current website values for `apps/web/.env.local` (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`) in private, not in git. If Rubaiya's phone app points to a different project or has old keys, please tell her too.
@@ -12,3 +12,5 @@ I want to try the website and the phone app together on the real backend (a work
 
 ## What I am doing meanwhile
 I keep using the fake data on the website (`web-fake-3000` preview). Nothing is blocked.
+
+Done (2026-11-14, Sakib): the Supabase project is switched on (the keep-alive robot runs green). The website and the phone app use the same project and the same anon key (checked on Sakib's computer: the two keys are identical). The website values were sent to Mithi in private. If the phone or the website ever shows old data, check the `.env` files again and restart the app.
