@@ -45,7 +45,7 @@ Do these in order. They take about 10 minutes. Skip none, because a leftover tes
 | 3 | Delete leftover pretend accounts and codes | Sakib | Run the `delete` lines that the last real check printed (see section 5) |
 | 4 | Sign-up is **on**, email confirmation is **off** | Sakib | Supabase dashboard, Authentication, Email |
 | 5 | The apps point at the real project | Rubaiya, Mithi | Each has a private `.env` file with the web address and the public key (`.env.example` shows the names) |
-| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 167 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (30 checks) |
+| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 170 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (30 checks) |
 | 6b | Fill in the Bangla names of the test people and machines | Sakib | Run `supabase/fill_bangla_test_names.sql` **after** the rules check, never before (the check expects them empty) |
 | 7 | Both apps start | Rubaiya, Mithi | Phone: `npm run start --workspace @garmentpulse/mobile`. Website: `npm run dev --workspace @garmentpulse/web`, then open `http://localhost:3000` |
 
@@ -62,14 +62,14 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 | ID | Who | Steps | What must happen | Result |
 |---|---|---|---|---|
 | **T1** | Rubaiya | On the phone, log in as Nila (choose "Worker"). Open "Report". Pick a machine, type "Belt is loose", send. | "Report sent". The report shows in "My reports" as **Waiting** (yellow). | [ ] |
-| **T2** | Mithi | On the website, be logged in as Farhan on the Dashboard (or the Machines page) **before** T1. Do **not** refresh. | The machine on the **Machine map** turns white, glows and **beeps within 5 seconds**, with its code (for example SM-01) written under it. (Click once anywhere on the page first, so the browser allows the beep. Count the seconds.) | [ ] |
+| **T2** | Mithi | On the website, be logged in as Farhan on the Dashboard (or the Machines page) **before** T1. Do **not** refresh. | The machine on the **Machine map** turns white, glows and **beeps within 5 seconds**, with its code (for example BH-01) written under it, on the right floor tab. (Click once anywhere on the page first, so the browser allows the beep. Count the seconds.) | [ ] |
 | **T3** | Mithi | Click the glowing machine. It appears in the "Your selection" box. Press "Assign technician". | The pop-up lists technicians. **Tariq is greyed out (busy)**, Hasan is free. Choose Hasan. The machine stops glowing and shows that a technician is assigned. | [ ] |
 | **T4** | Rubaiya | On a second phone, or after logging out, log in as Hasan (choose "Technician"). | The job appears in "Jobs" **within 5 seconds**. | [ ] |
 | **T5** | Rubaiya | As Hasan: Accept job, then Start work. | Status becomes **In progress** (blue). Nila's phone (or Mithi's list) shows the change **within 5 seconds**. | [ ] |
 | **T6** | Rubaiya | As Hasan: Mark as fixed. | Status becomes **Resolved** (green). The job moves to "History" (past jobs). Hasan is **free** again. | [ ] |
 | **T7** | Mithi | Open the **Technicians** page as Farhan. | Hasan shows **Free**. Tariq still shows **Busy**. | [ ] |
 | **T8** | Mithi | Make the **queue**: assign Hasan to one glowing machine. Then pick a **second** glowing machine and try to assign Tariq or Hasan while both are busy. | Busy technicians are greyed out in the pop-up ("All technicians are busy. The report stays in the queue."). The other machine **keeps glowing**. A wrong attempt shows a friendly sentence (never the raw code `TECHNICIAN_BUSY`). | [ ] |
-| **T26** | Mithi | Open the **Machines** page (sidebar). Click the filter chips: All, Down, Running, Technician busy. Click a running machine. | Each chip shows the right machines and fades the others. The line "{n} machines are down" matches the glowing machines. A running machine opens its report or says there is nothing to assign. The codes are SM-01, SM-02, SM-14, CM-03, PM-01. | [ ] |
+| **T26** | Mithi | Open the **Machines** page (sidebar). Click the filter chips: All, Down, Running, Technician busy. Click a running machine. | Each chip shows the right machines and fades the others. The line "{n} machines are down" matches the glowing machines. A running machine opens its report or says there is nothing to assign. There are **45 machines on 3 floors** (floor tabs), 3 rows of 5 seats on each, and every machine shows its code, for example BH-01, CM-03, SM-14. | [ ] |
 | **T9** | Mithi | Log out. On the owner login (`/owner-login`), log in as the owner. | One read-only dashboard: three count boxes (Waiting, In progress, Resolved) and the list of all reports. **No Assign button.** The counts match what the manager sees. | [ ] |
 
 ### 2.2 "Nobody can do someone else's job" (MVP checklist item 6)
@@ -140,8 +140,8 @@ When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 |---|---|---|---|
 | 0:00 | Sakib | The login page of the phone and the website | "In a garment factory, when a sewing machine breaks, the line stops. Today the worker has to find a supervisor. GarmentPulse puts the whole chain in one place: worker, manager, technician and owner." |
 | 1:00 | Rubaiya | Phone: Nila logs in, the Home screen | "Nila is a worker. She sees only her own screens." |
-| 1:30 | Rubaiya | Report: pick **Sewing machine 01**, type "Belt is loose", send | "She picks the machine from a list and writes a short problem. No phone calls." |
-| 2:00 | Mithi | **Without refreshing**, on the Dashboard's **Machine map** (click once on the page earlier so the beep can play), Sewing machine 01 turns white, glows and **beeps** | "The manager sees the broken machine itself within 5 seconds, live, with its code SM-01. It is in the queue because nobody is assigned." |
+| 1:30 | Rubaiya | Report: pick **Buttonhole machine 01** (it is on floor 1, so it shows on the manager's first screen), type "Belt is loose", send | "She picks the machine from a list and writes a short problem. No phone calls." |
+| 2:00 | Mithi | **Without refreshing**, on the Dashboard's **Machine map** (click once on the page earlier so the beep can play), Buttonhole machine 01 (BH-01) turns white, glows and **beeps** | "The manager sees the broken machine itself within 5 seconds, live, with its code SM-01. It is in the queue because nobody is assigned." |
 | 2:45 | Mithi | Click the glowing machine, then press **Assign technician**. Tariq is greyed out (busy). Choose **Hasan** | "The system shows who is free and who is busy, so the manager never double-books a technician. The database itself refuses a second job for a busy technician." |
 | 3:30 | Rubaiya | Phone, as Hasan (technician): the job appears. Accept, Start work | "Hasan's phone shows his new job. He accepts it and starts. Everyone sees the change in a few seconds." |
 | 4:30 | Mithi | On the map, the machine changes: a stitched rim when a technician is assigned, then a fast bright beam when he is working. Show the Technicians page too: Hasan **Busy** | "The manager's screen updated by itself." |
@@ -151,7 +151,7 @@ When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it | "The code decides the role. Nobody can choose to be a manager." |
 | 8:15 | Sakib | Try the **same code again**; try a **manager** code on the phone | "A used code, a made-up code, or the wrong app are all refused, and no account is created." |
 | 9:00 | Rubaiya | Press the language button, Bangla | "The whole app works in Bangla and English, because many workers read Bangla." |
-| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 167 + 30 checks | "Behind the screens, the database is the security guard. We tested the rules with 167 database checks and 30 checks that behave like the real apps." |
+| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 170 + 32 checks | "Behind the screens, the database is the security guard. We tested the rules with 170 database checks and 30 checks that behave like the real apps." |
 | 10:00 | All | Final slide / Q&A | "What is next: invoices and receipts, owner approval of big costs, a chatbot, camera presence, several factories." (See [mvp.md](mvp.md) section 3.) |
 
 ### 3.3 Good answers to likely questions
@@ -208,6 +208,6 @@ When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 
 - The Bangla texts of the phone app and the website (Parts D and E of `docs/bangla-review-sheet.md`) are a draft until a Bangla speaker has read them. The shared words, the error sentences and the test names have been read.
 - A report's description is shown exactly as the worker typed it. It is never translated.
-- The Machine map shows the 5 real machines only. Each machine has a fixed seat (A1 to A5) set in the database, so adding a machine does not move the others.
+- The Machine map shows 45 machines on 3 floors (3 rows of 5 seats each). Every machine has a fixed floor and seat set in the database. The 40 machines that were added later have no Bangla names, so in Bangla mode they show in English letters.
 - The beep needs one click on the page first. Browsers keep pages silent until the person has used them.
 - Expenses, invoices, owner approval, chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.

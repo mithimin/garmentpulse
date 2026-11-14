@@ -3,7 +3,7 @@
 -- =============================================================================
 -- What this file does, in plain words:
 --   Fills the database with a small, realistic "story" so everyone can try
---   the real functions: 5 people, 5 machines and 4 reports. The names follow
+--   the real functions: 5 people, 45 machines and 4 reports. The names follow
 --   packages/shared/src/fixtures.ts (the fake data the apps used first).
 --
 -- THE STORY AFTER THIS FILE RUNS
@@ -77,16 +77,65 @@ on conflict (id) do nothing;
 -- -----------------------------------------------------------------------------
 -- Machines (typed in by hand for the MVP)
 -- -----------------------------------------------------------------------------
+-- 45 machines on 3 floors, each floor 3 rows (A, B, C) of 5 seats, exactly the
+-- machines of the website's Machine map (requests/sakib/2026-11-14-more-machines-for-the-map.md).
+-- The 5 machines of the first version (Sewing machine 01, 02, 14, Cutting machine 03,
+-- Pressing machine 01) are the SAME machines: if they already exist they MOVE to their
+-- new floor and seat (so old reports keep pointing at them), they are not copied.
+-- First every seat is cleared, so the machines can move without two of them ever
+-- being in one place for a moment.
+update public.machines set seat = null where seat is not null;
+
 insert into public.machines (name, code, seat, floor) values
-  ('Sewing machine 01', 'SM-01', 'A3', 1),
-  ('Sewing machine 02', 'SM-02', 'A4', 1),
-  ('Sewing machine 14', 'SM-14', 'A5', 1),
-  ('Cutting machine 03', 'CM-03', 'A1', 1),
-  ('Pressing machine 01', 'PM-01', 'A2', 1)
+  ('Buttonhole machine 01', 'BH-01', 'A1', 1),
+  ('Buttonhole machine 02', 'BH-02', 'A2', 1),
+  ('Buttonhole machine 03', 'BH-03', 'A3', 1),
+  ('Cutting machine 01', 'CM-01', 'A4', 1),
+  ('Cutting machine 02', 'CM-02', 'A5', 1),
+  ('Cutting machine 03', 'CM-03', 'B1', 1),
+  ('Cutting machine 04', 'CM-04', 'B2', 1),
+  ('Cutting machine 05', 'CM-05', 'B3', 1),
+  ('Overlock machine 01', 'OL-01', 'B4', 1),
+  ('Overlock machine 02', 'OL-02', 'B5', 1),
+  ('Overlock machine 03', 'OL-03', 'C1', 1),
+  ('Overlock machine 04', 'OL-04', 'C2', 1),
+  ('Overlock machine 05', 'OL-05', 'C3', 1),
+  ('Overlock machine 06', 'OL-06', 'C4', 1),
+  ('Overlock machine 07', 'OL-07', 'C5', 1),
+  ('Overlock machine 08', 'OL-08', 'A1', 2),
+  ('Pressing machine 01', 'PM-01', 'A2', 2),
+  ('Pressing machine 02', 'PM-02', 'A3', 2),
+  ('Pressing machine 03', 'PM-03', 'A4', 2),
+  ('Pressing machine 04', 'PM-04', 'A5', 2),
+  ('Sewing machine 01', 'SM-01', 'B1', 2),
+  ('Sewing machine 02', 'SM-02', 'B2', 2),
+  ('Sewing machine 03', 'SM-03', 'B3', 2),
+  ('Sewing machine 04', 'SM-04', 'B4', 2),
+  ('Sewing machine 05', 'SM-05', 'B5', 2),
+  ('Sewing machine 06', 'SM-06', 'C1', 2),
+  ('Sewing machine 07', 'SM-07', 'C2', 2),
+  ('Sewing machine 08', 'SM-08', 'C3', 2),
+  ('Sewing machine 09', 'SM-09', 'C4', 2),
+  ('Sewing machine 10', 'SM-10', 'C5', 2),
+  ('Sewing machine 11', 'SM-11', 'A1', 3),
+  ('Sewing machine 12', 'SM-12', 'A2', 3),
+  ('Sewing machine 13', 'SM-13', 'A3', 3),
+  ('Sewing machine 14', 'SM-14', 'A4', 3),
+  ('Sewing machine 15', 'SM-15', 'A5', 3),
+  ('Sewing machine 16', 'SM-16', 'B1', 3),
+  ('Sewing machine 17', 'SM-17', 'B2', 3),
+  ('Sewing machine 18', 'SM-18', 'B3', 3),
+  ('Sewing machine 19', 'SM-19', 'B4', 3),
+  ('Sewing machine 20', 'SM-20', 'B5', 3),
+  ('Sewing machine 21', 'SM-21', 'C1', 3),
+  ('Sewing machine 22', 'SM-22', 'C2', 3),
+  ('Sewing machine 23', 'SM-23', 'C3', 3),
+  ('Sewing machine 24', 'SM-24', 'C4', 3),
+  ('Sewing machine 25', 'SM-25', 'C5', 3)
 on conflict (name) do update set
-  code = coalesce(public.machines.code, excluded.code),
-  seat = coalesce(public.machines.seat, excluded.seat),
-  floor = coalesce(public.machines.floor, excluded.floor);
+  code = excluded.code,
+  seat = excluded.seat,
+  floor = excluded.floor;
 
 
 -- -----------------------------------------------------------------------------
