@@ -27,6 +27,7 @@ describe('createApi: names and inputs match the contract', () => {
 
     await api.getMyProfile();
     await api.listMachines();
+    await api.listMachineStates();
     await api.createReport('m1', 'The needle keeps breaking');
     await api.listMyReports();
     await api.listReports();
@@ -43,6 +44,7 @@ describe('createApi: names and inputs match the contract', () => {
     expect(calls).toEqual([
       { name: 'get_my_profile', args: undefined },
       { name: 'list_machines', args: undefined },
+      { name: 'list_machine_states', args: undefined },
       {
         name: 'create_report',
         args: { machine_id: 'm1', description: 'The needle keeps breaking' },

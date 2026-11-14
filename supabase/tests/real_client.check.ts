@@ -191,6 +191,7 @@ describe.skipIf(missing.length > 0)('real client check', () => {
         expect(machine).toHaveProperty('name_bn');
         expect(machine).toHaveProperty('code');
         expect(machine).toHaveProperty('seat');
+        expect(machine).toHaveProperty('floor');
       }
       const profile = await apis.nila.getMyProfile();
       expect(profile).toHaveProperty('display_name_bn');
@@ -297,6 +298,74 @@ describe.skipIf(missing.length > 0)('real client check', () => {
 
     it('an unrelated technician cannot open that report', async () => {
       expect(await codeOf(apis.tariq.getReport(newReportId))).toBe('NOT_FOUND');
+    });
+
+    // The worker machine map: every logged-in person can read the live state of every
+    // machine (and nothing else), through list_machine_states() and through live updates.
+    it('every logged-in person can read the machine states, with two keys only', async () => {
+      for (const name of ['nila', 'tariq', 'farhan', 'owner'] as const) {
+        const states = await apis[name].listMachineStates();
+        expect(states.length).toBeGreaterThan(0);
+        for (const row of states) {
+          expect(Object.keys(row).sort()).toEqual(['machine_id', 'state']);
+          expect(['ok', 'down', 'waiting', 'in_progress']).toContain(row.state);
+        }
+      }
+    });
+
+    it('a new report changes the live machine state for an unrelated technician within 5 seconds', async () => {
+      const states = await apis.tariq.listMachineStates();
+      const machines = await apis.nila.listMachines();
+      // Use a machine that is calm (ok) now, so a new report really changes its state.
+      const calm = states.find((row) => row.state === 'ok');
+      if (!calm) {
+        console.log(
+          '  No machine is ok right now (leftovers from an earlier run): skipped. Reset and seed first.',
+        );
+        return;
+      }
+      const machine = machines.find((m) => m.id === calm.machine_id)!;
+      let heardAt = 0;
+
+      const { data } = await clients.tariq.auth.getSession();
+      await clients.tariq.realtime.setAuth(data.session!.access_token);
+      await new Promise<void>((resolve, reject) => {
+        clients.tariq
+          .channel(`check-machine-states-${Math.random().toString(36).slice(2)}`)
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'machine_states' },
+            (payload) => {
+              const row = payload.new as { machine_id?: string; state?: string };
+              console.log(`  [machine map] ${row.machine_id} is now ${row.state}`);
+              if (row.machine_id === machine.id && row.state === 'down') heardAt = Date.now();
+            },
+          )
+          .subscribe((status, error) => {
+            console.log(`  [machine map] live-update channel status: ${status}`);
+            if (status === 'SUBSCRIBED') resolve();
+            if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+              reject(new Error(`Live updates failed: ${status} ${error?.message ?? ''}`));
+            }
+          });
+      });
+      // "SUBSCRIBED" can arrive a moment before changes are really sent.
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const sentAt = Date.now();
+      await apis.nila.createReport(
+        machine.id,
+        `Real client check (machine map) ${new Date().toISOString()}`,
+      );
+      while (heardAt === 0 && Date.now() - sentAt < 5000) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      const seconds = heardAt === 0 ? Infinity : (heardAt - sentAt) / 1000;
+      console.log(`The machine map heard the new state after ${seconds} seconds.`);
+      expect(seconds).toBeLessThan(5);
+
+      const after = await apis.nila.listMachineStates();
+      expect(after.find((row) => row.machine_id === machine.id)?.state).toBe('down');
     });
   });
 

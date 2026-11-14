@@ -27,6 +27,7 @@ import type {
   InviteCode,
   InviteRole,
   Machine,
+  MachineStateRow,
   OwnerSummary,
   Platform,
   Profile,
@@ -73,6 +74,7 @@ export function createApi(client: RpcClient) {
 
     // 4.2 Machines
     listMachines: () => call<Machine[]>('list_machines'),
+    listMachineStates: () => call<MachineStateRow[]>('list_machine_states'),
 
     // 4.3 Reports
     createReport: (machineId: string, description: string) =>

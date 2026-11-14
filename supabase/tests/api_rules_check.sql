@@ -4,7 +4,7 @@
   -- What this file does, in plain words:
   --   Acts as each test person (Nila the worker, Tariq and Hasan the
   --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
-  --   and tries about 138 things against the real functions and tables. The
+  --   and tries about 167 things against the real functions and tables. The
   --   last part tests SIGN-UP WITH INVITE CODES: the code functions and the
   --   sign-up guard (it adds pretend new people to the login list, and the
   --   final "error" removes them again).
@@ -201,7 +201,36 @@
       {"name": "MACHINE SEAT: a report carries the seat of its machine", "email": "farhan@example.com", "call": "select public.list_reports()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'description' = 'The needle keeps breaking.' and e->'machine'->>'seat' = 'A5')"},
       {"name": "MACHINE SEAT: two machines cannot share a seat", "role": "postgres", "call": "with x as (update public.machines set seat = 'A1' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "duplicate key"},
       {"name": "MACHINE SEAT: a badly written seat is refused (small letter, or a place that starts with 0)", "role": "postgres", "call": "with x as (update public.machines set seat = 'a1' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
-      {"name": "MACHINE SEAT: a seat with a place number that starts with 0 is refused", "role": "postgres", "call": "with x as (update public.machines set seat = 'B0' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"}
+      {"name": "MACHINE SEAT: a seat with a place number that starts with 0 is refused", "role": "postgres", "call": "with x as (update public.machines set seat = 'B0' where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "FLOOR: the machine list has a floor for every machine (floor 1)", "email": "farhan@example.com", "call": "select public.list_machines()", "check": "jsonb_array_length($1) = 5 and not exists (select 1 from jsonb_array_elements($1) e where (e->>'floor') is distinct from '1')"},
+      {"name": "FLOOR: a report carries the floor of its machine", "email": "farhan@example.com", "call": "select public.list_reports()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'description' = 'The needle keeps breaking.' and e->'machine'->>'floor' = '1')"},
+      {"name": "FLOOR: floor 0 is refused", "role": "postgres", "call": "with x as (update public.machines set floor = 0 where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "FLOOR: floor 100 is refused", "role": "postgres", "call": "with x as (update public.machines set floor = 100 where name = 'Sewing machine 02' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "MSTATE: set up, no reports at all", "role": "postgres", "call": "with x as (delete from public.reports returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: with no reports every machine is ok (the worker sees 5)", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "jsonb_array_length($1) = 5 and not exists (select 1 from jsonb_array_elements($1) e where e->>'state' <> 'ok')"},
+      {"name": "MSTATE: only two keys are sent (machine_id and state), nothing private", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "not exists (select 1 from jsonb_array_elements($1) e where (select count(*) from jsonb_object_keys(e)) <> 2 or not (e ? 'machine_id') or not (e ? 'state'))"},
+      {"name": "MSTATE: the technician can see the states", "email": "tariq@example.com", "call": "select public.list_machine_states()", "check": "jsonb_array_length($1) = 5"},
+      {"name": "MSTATE: the manager can see the states", "email": "farhan@example.com", "call": "select public.list_machine_states()", "check": "jsonb_array_length($1) = 5"},
+      {"name": "MSTATE: the owner can see the states", "email": "owner@example.com", "call": "select public.list_machine_states()", "check": "jsonb_array_length($1) = 5"},
+      {"name": "MSTATE: a logged-out visitor cannot ask for the states", "role": "anon", "call": "select public.list_machine_states()", "error": "permission denied for function list_machine_states"},
+      {"name": "MSTATE: set up, Nila reports Sewing machine 01 (nobody assigned)", "role": "postgres", "call": "with x as (insert into public.reports (machine_id, reported_by, description) values ('$M1', '$NILA', 'MSTATE test one') returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: a queued report makes that machine down, the other four stay ok", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'machine_id' = '$M1' and e->>'state' = 'down') and (select count(*) from jsonb_array_elements($1) e where e->>'state' = 'ok') = 4"},
+      {"name": "MSTATE: set up, a technician is assigned", "role": "postgres", "call": "with x as (update public.reports set technician_id = (select id from public.profiles where email = 'hasan@example.com') where description = 'MSTATE test one' returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: an assigned report makes the machine waiting", "email": "tariq@example.com", "call": "select public.list_machine_states()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'machine_id' = '$M1' and e->>'state' = 'waiting')"},
+      {"name": "MSTATE: set up, the technician starts work", "role": "postgres", "call": "with x as (update public.reports set status = 'in_progress', accepted_at = now() where description = 'MSTATE test one' returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: a started job makes the machine in_progress", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'machine_id' = '$M1' and e->>'state' = 'in_progress')"},
+      {"name": "MSTATE: set up, a second report on the same machine", "role": "postgres", "call": "with x as (insert into public.reports (machine_id, reported_by, description) values ('$M1', '$NILA', 'MSTATE test two') returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: two open reports, the one furthest along wins (in_progress)", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'machine_id' = '$M1' and e->>'state' = 'in_progress')"},
+      {"name": "MSTATE: set up, the first report is resolved", "role": "postgres", "call": "with x as (update public.reports set status = 'resolved' where description = 'MSTATE test one' returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: only the queued report is left, so the machine is down again", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "exists (select 1 from jsonb_array_elements($1) e where e->>'machine_id' = '$M1' and e->>'state' = 'down')"},
+      {"name": "MSTATE: set up, every report is deleted", "role": "postgres", "call": "with x as (delete from public.reports returning 1) select to_jsonb(1)"},
+      {"name": "MSTATE: with no reports left every machine is ok again", "email": "nila@example.com", "call": "select public.list_machine_states()", "check": "not exists (select 1 from jsonb_array_elements($1) e where e->>'state' <> 'ok')"},
+      {"name": "MSTATE: a worker can read the table directly (live updates need it): 5 rows, two keys", "email": "nila@example.com", "call": "select jsonb_agg(to_jsonb(s)) from public.machine_states s", "check": "jsonb_array_length($1) = 5 and not exists (select 1 from jsonb_array_elements($1) e where (select count(*) from jsonb_object_keys(e)) <> 2)"},
+      {"name": "MSTATE: a worker cannot insert into the table", "email": "nila@example.com", "call": "with x as (insert into public.machine_states (machine_id, state) values ('$M1', 'down') returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
+      {"name": "MSTATE: a worker cannot change the table", "email": "nila@example.com", "call": "with x as (update public.machine_states set state = 'down' returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
+      {"name": "MSTATE: a worker cannot delete from the table", "email": "nila@example.com", "call": "with x as (delete from public.machine_states returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
+      {"name": "MSTATE: the manager cannot change the table either", "email": "farhan@example.com", "call": "with x as (update public.machine_states set state = 'ok' returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
+      {"name": "MSTATE: a state outside the four words is refused", "role": "postgres", "call": "with x as (update public.machine_states set state = 'broken' returning 1) select to_jsonb(1)", "error": "new row for relation"}
     ]$json$;
   
     t         jsonb;
@@ -267,6 +296,8 @@
       -- id of the report just made, or $CODE_WRK, an invite code). Longest names
       -- first, so $CODE_WRK2 is never mistaken for $CODE_WRK.
       v_check := t ->> 'check';
+      -- The id of Sewing machine 01 can be used inside a check too (the machine map checks).
+      v_check := replace(v_check, '$M1', v_m1::text);
       for v_key in
         select k from jsonb_object_keys(v_vars) as k order by length(k) desc
       loop
