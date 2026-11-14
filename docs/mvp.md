@@ -43,6 +43,7 @@ Each feature below comes from [prd.md](prd.md). The number (for example FR-01) l
 ### 2.2 Report a machine problem (FR-01)
 
 - The worker picks the **machine** from a simple dropdown.
+- **Added on 2026-11-14:** the worker can also pick the machine on a **machine map** on the phone's Home screen: floors, rows and coloured seats that show which machines are down, assigned or being fixed (the same idea as the manager's Machine map). The dropdown stays as the simple way to report. The backend gives it an optional `floor` on machines and `list_machine_states()` (see `docs/api-contract.md` section 4.2). It shows only the colour of each machine, never report text or names.
 - The worker types a short **description** of the problem.
 - The worker can see the **status** of their own reports (for example: waiting, in progress, resolved).
 

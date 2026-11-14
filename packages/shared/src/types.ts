@@ -54,6 +54,8 @@ export type Machine = {
   code?: string | null;
   /** The machine's fixed place on the Machine map, such as "A3" (row A, place 3). `null` when none. */
   seat?: string | null;
+  /** The floor of the factory the machine stands on (1, 2, 3 ...). `null` when none. */
+  floor?: number | null;
 };
 
 export type Report = {
@@ -64,6 +66,7 @@ export type Report = {
     name_bn?: BanglaName;
     code?: string | null;
     seat?: string | null;
+    floor?: number | null;
   };
   /** The worker's typed description of the problem. */
   description: string;
@@ -85,6 +88,19 @@ export type Technician = {
 };
 
 /** The three count boxes on the owner's screen. */
+/**
+ * The live state of one machine, for the worker's machine map (docs/api-contract.md 4.2).
+ *   ok           no open report
+ *   down         a report is waiting and nobody is assigned yet (the queue)
+ *   waiting      a technician is assigned but has not started
+ *   in_progress  the technician is working on it
+ */
+export const MACHINE_STATES = ['ok', 'down', 'waiting', 'in_progress'] as const;
+export type MachineState = (typeof MACHINE_STATES)[number];
+
+/** One row of `list_machine_states()`: the machine and its state, nothing else. */
+export type MachineStateRow = { machine_id: string; state: MachineState };
+
 export type OwnerSummary = Record<ReportStatus, number>;
 
 // -----------------------------------------------------------------------------

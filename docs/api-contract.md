@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-11-07
+**Last updated:** 2026-11-14
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -109,6 +109,7 @@ type Machine = {
   name_bn?: string | null;
   code?: string | null;
   seat?: string | null; // the fixed place on the Machine map, such as "A3"
+  floor?: number | null; // the floor of the factory, 1 to 99
 };
 
 type Report = {
@@ -119,6 +120,7 @@ type Report = {
     name_bn?: string | null;
     code?: string | null;
     seat?: string | null;
+    floor?: number | null;
   };
   description: string;
   status: ReportStatus;
@@ -136,6 +138,10 @@ type Technician = {
   availability: TechnicianAvailability;
 };
 
+// The live state of one machine, for the worker's machine map (section 4.2)
+type MachineState = 'ok' | 'down' | 'waiting' | 'in_progress';
+type MachineStateRow = { machine_id: string; state: MachineState }; // nothing else is ever sent
+
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
 
 // Sign-up with invite codes (section 4.7)
@@ -150,6 +156,8 @@ A technician is **busy** when they have at least one assigned report that is not
 **Machine code (`code`).** An **optional** short label for a machine, such as `SM-01` (Sewing machine 01) or `CM-03` (Cutting machine 03), added on 2026-11-02 for the website's Machine map. It is `null` when a machine has none. Each machine's code is unique, written in capital letters, numbers and dashes (1 to 20 characters), and typed by Sakib: nothing is generated. It appears on machines (`Machine`, and `machine` inside a `Report`). Apps show it next to or under the machine's name.
 
 **Machine seat (`seat`).** An **optional** fixed place of a machine on the website's Machine map, added on 2026-11-07: one capital letter for the row and a place number, for example `A3` (row A, place 3). It is `null` when a machine has none, and the map then sorts by name. Each machine's seat is unique and typed by Sakib. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code`.
+
+**Machine floor (`floor`).** An **optional** whole number from 1 to 99 for the floor of the factory a machine stands on, added on 2026-11-14 for the worker's machine map. It is `null` when a machine has none. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code` and `seat`. The row letter and the place number are in `seat` (`A3` = row A, place 3).
 
 ---
 
@@ -174,6 +182,21 @@ Email and password. After login the app calls `get_my_profile()`. If the person'
 - **Inputs:** none
 - **Returns:** `Machine[]` (sorted by name). Feeds the worker's dropdown.
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED` (technician and owner do not need it)
+
+#### `list_machine_states()` — Mobile, Web (every logged-in role)
+
+Added on 2026-11-14 for the worker's machine map. A worker may not read other people's reports, so this function gives **only the colour of every machine**, with no report text and no names.
+
+- **Inputs:** none
+- **Returns:** `MachineStateRow[]`, one row per machine (sorted by machine name). Each row has exactly two keys, `machine_id` and `state`.
+- **The four states:**
+  - `ok`: the machine has no open report (a resolved report means `ok` again);
+  - `down`: a report is `waiting` and **has no technician yet** (the queue);
+  - `waiting`: a technician is **assigned** but has not started (the report is still `waiting`);
+  - `in_progress`: the report is `in_progress`.
+  If a machine has several open reports, the one furthest along wins: `in_progress`, then `waiting`, then `down`.
+- **Live updates:** the same states are kept in a small locked table, `machine_states`, that every logged-in person may **read** (and nobody may write: a trigger in the database keeps it up to date by itself). The apps subscribe to Realtime on `machine_states`, so a change reaches every open map within 5 seconds, like `reports`.
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED` (a login with no person behind it)
 
 ### 4.3 Reports
 
@@ -296,6 +319,7 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 |---|---|---|---|---|
 | `get_my_profile` | yes | yes | yes | yes |
 | `list_machines` | yes | no | yes | no |
+| `list_machine_states` | yes | yes | yes | yes |
 | `create_report` | yes | no | no | no |
 | `list_my_reports` | yes | no | no | no |
 | `list_reports` | no | no | yes | yes (read-only) |
@@ -336,6 +360,7 @@ These codes live in `packages/shared/src/errors.ts`.
 ## 7. Live Updates and Alerts
 
 - **Realtime (live updates):** the apps subscribe to changes on `reports`. A new report, a new assignment, and every status change reach the worker, technician, manager, and owner who are allowed to see that report, within 5 seconds.
+- **Machine states:** the apps may also subscribe to changes on `machine_states` (every logged-in person may read it). A new report, an assignment, a start and a resolve change a machine's state, and the change reaches every open map within 5 seconds. The table holds only a machine id and one of four words.
 - **Technician availability** changes whenever a job is assigned or resolved. The manager's screen must refresh the free/busy list when a report changes.
 - **Push notifications** are not in the MVP. In-app live updates are enough.
 
