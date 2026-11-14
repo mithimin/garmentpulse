@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-07 by Sakib (machine seats built and checked on the real project)
+**Last updated:** 2026-11-14 by Sakib (worker machine map request accepted for after the demo)
 
 ## Done
 
@@ -39,7 +39,8 @@ Both apps are now connected to the real backend (phone: #25, website: #18 and #2
 2. **The full two-screen test** (shared step ★5): a worker reports, the manager sees it, assigns a free technician, the technician accepts and finishes, the owner sees the counts. Also the "typing the address" test: a worker must be refused on manager and owner pages. Still untested on the real backend: the website's Assign button and the owner screen with live updates.
 3. DONE (2026-10-21): the Bangla names of the 10 test values were read by a Bangla speaker (Parts A to C of `docs/bangla-review-sheet.md` are OK) and filled in with `supabase/fill_bangla_test_names.sql`. Run it **after** `api_rules_check.sql`; `reset_demo_data.sql` empties the names again so the checks start clean.
 4. **A Bangla speaker answered the short sheet on 2026-11-02** (Parts A, B, C, G; answers in Part H of `docs/bangla-review-sheet.md`). Done by me: the owner's Bangla name is now রহমান সাহেব in `fill_bangla_test_names.sql` (run it again). Notes with the confirmed words are in `requests/rubaiya/` and `requests/mithi/`. To do: change the two shared words in `labels.ts` (Waiting becomes অপেক্ষায়, In progress becomes কাজ চলছে; needs a clash warning first), and ask the speaker again about Part G row 13 and the "to confirm" items. Parts D, E and F are still unread.
-5. Postman collection (optional now that the real client check exists).
+5. **After the demo:** Rubaiya's request for the worker machine map (`requests/sakib/2026-11-14-worker-machine-map.md`): an optional `floor` on machines and a new function `list_machine_states()` with a live `machine_states` table (only `machine_id` and `state`). Decided on 2026-11-14: not before the demo, because it is new security-sensitive work and not in the MVP.
+6. Postman collection (optional now that the real client check exists).
 
 ## Waiting on someone else
 

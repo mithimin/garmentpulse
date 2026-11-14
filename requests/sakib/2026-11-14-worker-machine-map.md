@@ -27,3 +27,5 @@ Note: this map is **new** and is not written in `docs/mvp.md` (the MVP says "a s
 
 ## What I am doing meanwhile
 The map is built with **fake floors, rows, machines and states** inside the phone app (`apps/mobile/src/data/fakeMachineMap.ts`), with a clear "Demo data" note on the card. Sending a report from the map does not make a real report yet. When your two things exist, I replace the fake data with the real calls, and send the real `create_report` with the tapped machine's id.
+
+Answer (2026-11-14, Sakib): accepted, but **after the demo**. The backend stays as it is for the second team test and the demo. See `requests/rubaiya/2026-11-14-worker-machine-map-after-demo.md`. This note stays open until it is built.
