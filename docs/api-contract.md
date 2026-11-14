@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-11-14
+**Last updated:** 2026-11-15
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -155,7 +155,7 @@ A technician is **busy** when they have at least one assigned report that is not
 
 **Machine code (`code`).** An **optional** short label for a machine, such as `SM-01` (Sewing machine 01) or `CM-03` (Cutting machine 03), added on 2026-11-02 for the website's Machine map. It is `null` when a machine has none. Each machine's code is unique, written in capital letters, numbers and dashes (1 to 20 characters), and typed by Sakib: nothing is generated. It appears on machines (`Machine`, and `machine` inside a `Report`). Apps show it next to or under the machine's name.
 
-**Machine seat (`seat`).** An **optional** fixed place of a machine on the website's Machine map, added on 2026-11-07: one capital letter for the row and a place number, for example `A3` (row A, place 3). It is `null` when a machine has none, and the map then sorts by name. Each machine's seat is unique and typed by Sakib. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code`.
+**Machine seat (`seat`).** An **optional** fixed place of a machine on the website's Machine map, added on 2026-11-07: one capital letter for the row and a place number, for example `A3` (row A, place 3). It is `null` when a machine has none, and the map then sorts by name. A seat is unique **on its floor** (the same seat name is used once on every floor, for example `A1` on floors 1, 2 and 3), and a machine that has a seat must also have a `floor`. It is typed by Sakib. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code`.
 
 **Machine floor (`floor`).** An **optional** whole number from 1 to 99 for the floor of the factory a machine stands on, added on 2026-11-14 for the worker's machine map. It is `null` when a machine has none. It appears on machines (`Machine`, and `machine` inside a `Report`), next to `code` and `seat`. The row letter and the place number are in `seat` (`A3` = row A, place 3).
 

@@ -16,11 +16,11 @@ import type { Machine, Profile, Report, Technician } from './types';
 import { computeAvailability } from './helpers';
 
 export const FAKE_MACHINES: Machine[] = [
-  { id: 'm-01', name: 'Sewing machine 01', code: 'SM-01', seat: 'A3', floor: 1 },
-  { id: 'm-02', name: 'Sewing machine 02', code: 'SM-02', seat: 'A4', floor: 1 },
-  { id: 'm-14', name: 'Sewing machine 14', code: 'SM-14', seat: 'A5', floor: 1 },
-  { id: 'c-03', name: 'Cutting machine 03', code: 'CM-03', seat: 'A1', floor: 1 },
-  { id: 'p-01', name: 'Pressing machine 01', code: 'PM-01', seat: 'A2', floor: 1 },
+  { id: 'm-01', name: 'Sewing machine 01', code: 'SM-01', seat: 'B1', floor: 2 },
+  { id: 'm-02', name: 'Sewing machine 02', code: 'SM-02', seat: 'B2', floor: 2 },
+  { id: 'm-14', name: 'Sewing machine 14', code: 'SM-14', seat: 'A4', floor: 3 },
+  { id: 'c-03', name: 'Cutting machine 03', code: 'CM-03', seat: 'B1', floor: 1 },
+  { id: 'p-01', name: 'Pressing machine 01', code: 'PM-01', seat: 'A2', floor: 2 },
 ];
 
 export const FAKE_PEOPLE: Profile[] = [
