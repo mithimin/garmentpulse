@@ -106,6 +106,15 @@ Every feature below is marked **MUST** (needed for the first version) or **SHOUL
   - **Manager and Owner:** answers questions about reports, costs and presence alerts.
 - The chatbot is available in the **free** version as well.
 
+### 4.8 AI factory layout (set up a new factory)
+
+- **FR-08 (SHOULD, after the first version):** Every factory is built differently: a different number of floors, rows and seats, and different machine types. So **the owner does not draw the layout by hand**. When a new factory joins GarmentPulse, an **AI agent** (a helper program that works through a task step by step) designs the factory's layout automatically.
+- The AI agent builds the floors, the rows, the seats, the machines on each seat, and which workers sit at which machine. The result is the same **machine map** that managers and workers already use.
+- The AI agent needs some **information about the factory** to do this, for example the number of floors, rows and machines per type, or a simple description or file the factory gives us. What exactly the factory must give is not decided yet (see section 9).
+- The **owner can look at the result** and ask for a change, but the owner is not the one who builds it.
+- It is a **set-up helper**, not a daily feature. It runs once when a factory joins, and again if the factory changes.
+- In the first version, the layout is typed in by the team as test data (`supabase/seed.sql`).
+
 ---
 
 ## 5. Language and ease of use
@@ -159,6 +168,7 @@ To keep the first version small, these are **not** included:
 4. **Receipt-backed expenses:** every repair cost needs an invoice and receipt.
 5. **Camera presence alerts:** alert after 10 minutes with no one at a seat.
 6. **One AI chatbot for all roles:** report helper, troubleshooting and cost answers.
+7. **AI sets up the factory layout:** each factory has its own floors, rows and seats, and an AI agent designs them automatically when the factory joins, so the owner does not draw anything by hand.
 
 ---
 
@@ -168,3 +178,4 @@ These product decisions are not final yet:
 
 - **Owner expense limit:** The actual BDT amount is not decided yet. The owner sets it in the app settings.
 - **Subscription price:** The BDT 3,000 to 10,000 range is an estimate and must be confirmed.
+- **AI factory layout (FR-08):** What must a new factory give the AI agent so it can design the layout (a short form, a description, a floor-plan photo, or a file)? How does the owner check and correct the result? These are not decided yet.

@@ -94,6 +94,7 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 | 12-month history limit and user limits | Section 6, NFR-04 | Not needed for the first test. |
 | Push notifications to phones | FR-05, FR-06 | Can start with in-app status updates only. |
 | Several factories in one system (an invite code would also decide the factory, and each factory would see only its own machines, reports and people) | Section 6 | The MVP proves the flow for **one** factory. Many factories would add a factory column to every table and rework every security rule and function. The invite code is the natural place to add it later, next to the role. |
+| AI factory layout (an AI agent designs each new factory's floors, rows, seats and machines, so the owner does not build them by hand) | FR-08 | Every factory has a different layout, so this only matters once several factories join. The MVP has one factory, whose layout the team types in as test data. |
 
 **Out of scope everywhere (already in PRD section 7):** stock, production planning, payroll, face recognition.
 
