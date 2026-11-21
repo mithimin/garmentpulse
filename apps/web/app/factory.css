@@ -722,6 +722,18 @@ html[lang='bn'] .map-desk {
 .seat-selected .seat-machine {
   color: var(--cream);
 }
+/* A chosen DOWN machine stays red and a chosen ASSIGNED machine stays butter yellow: only the
+   baby-blue ring shows it is chosen. Other chosen machines (running) turn brown with the ring. */
+.seat-down.seat-selected .scope {
+  background: linear-gradient(180deg, #a8493e, #8a3a31);
+}
+.seat-assigned.seat-selected .scope {
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
+  color: var(--brown);
+}
+.seat-assigned.seat-selected .seat-machine {
+  color: var(--brown);
+}
 .seat-faded {
   opacity: 0.28;
 }
@@ -782,11 +794,6 @@ html[lang='bn'] .map-desk {
 /* In progress: baby blue */
 .map-legend .legend-seat.seat-progress {
   background: linear-gradient(180deg, #a6d2ff, #8ec5ff);
-}
-/* Selected: brown with a baby-blue ring */
-.map-legend .legend-seat.seat-selected {
-  background: linear-gradient(180deg, #4e2b19, #3b2418);
-  box-shadow: 0 0 0 3px #8ec5ff;
 }
 .map-more {
   margin-top: 6px;
