@@ -1,9 +1,11 @@
 // apps/mobile/src/screens/worker/WorkerApp.tsx
 //
-// Everything a logged-in WORKER sees. It holds the blue top bar, the bottom bar
-// with 3 tabs (Home, Report, My reports) and shows the screen of the chosen tab.
+// Everything a logged-in WORKER sees. It holds the top bar, the bottom bar with
+// 2 tabs (Home, My reports) and shows the screen of the chosen tab.
+// Reporting a problem happens on Home (the worker's own machine and the
+// "Report a problem" button), so there is no separate Report tab any more.
 // Opening a report shows its details on top, with a back arrow in the top bar.
-// The Report and My reports tabs also have a back arrow that returns to Home.
+// The My reports tab also has a back arrow that returns to Home.
 // The Android phone's back button does the same (see useBackAction).
 //
 // There is no navigation library on purpose: with only a few screens, a simple
@@ -12,9 +14,11 @@
 
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { House, List, Wrench } from 'lucide-react-native';
+import { House, List } from 'lucide-react-native';
 import type { Profile } from '@garmentpulse/shared';
 import { BottomTabBar } from '../../components/BottomTabBar';
+import { FabricBackground } from '../../components/FabricBackground';
+import { FirstTimeGuide } from '../../components/FirstTimeGuide';
 import type { TabItem } from '../../components/BottomTabBar';
 import { TopBar } from '../../components/TopBar';
 import { useBackAction } from '../../components/useBackAction';
@@ -24,10 +28,9 @@ import { WORKER_TEXT } from '../../language/screenText';
 import { COLORS as C } from '../../theme';
 import { MyReportsScreen } from './MyReportsScreen';
 import { ReportDetailScreen } from './ReportDetailScreen';
-import { ReportProblemScreen } from './ReportProblemScreen';
 import { WorkerHomeScreen } from './WorkerHomeScreen';
 
-type Tab = 'home' | 'report' | 'reports';
+type Tab = 'home' | 'reports';
 
 type Props = {
   profile: Profile;
@@ -42,14 +45,12 @@ export function WorkerApp({ profile, onLogout }: Props) {
 
   const tabs: readonly TabItem<Tab>[] = [
     { key: 'home', label: WORKER_TEXT.tabHome[language], Icon: House },
-    { key: 'report', label: WORKER_TEXT.tabReport[language], Icon: Wrench },
     { key: 'reports', label: WORKER_TEXT.tabMyReports[language], Icon: List },
   ];
 
   const openReport = listMyReports(profile).find((report) => report.id === openReportId);
   const titles: Record<Tab, string> = {
     home: WORKER_TEXT.tabHome[language],
-    report: WORKER_TEXT.reportTitle[language],
     reports: WORKER_TEXT.myReportsTitle[language],
   };
 
@@ -69,6 +70,8 @@ export function WorkerApp({ profile, onLogout }: Props) {
 
   return (
     <View style={styles.page}>
+      <FabricBackground />
+      <FirstTimeGuide role="worker" />
       <TopBar
         title={openReport ? WORKER_TEXT.detailTitle[language] : titles[tab]}
         onBack={goBack}
@@ -79,8 +82,6 @@ export function WorkerApp({ profile, onLogout }: Props) {
           <ReportDetailScreen report={openReport} />
         ) : tab === 'home' ? (
           <WorkerHomeScreen profile={profile} onOpenReport={setOpenReportId} onLogout={onLogout} />
-        ) : tab === 'report' ? (
-          <ReportProblemScreen profile={profile} onSeeMyReports={() => changeTab('reports')} />
         ) : (
           <MyReportsScreen profile={profile} onOpenReport={setOpenReportId} />
         )}

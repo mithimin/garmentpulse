@@ -85,11 +85,32 @@ function dial(cx: number, cy: number, r: number) {
 const SILHOUETTE =
   'M5 89 Q5 93 10 93 L120 93 Q124 93 124 89 L124 83 Q124 78 119 78 L116 78 Q110 78 110 72 C110 62 108 54 109 40 Q110 22 98 20 C80 15 52 15 30 19 Q15 22 14 36 L14 47 Q14 56 24 58 Q33 59 37 52 Q40 47 48 47 L74 47 Q83 47 83 57 L83 68 Q83 77 72 77 L11 77 Q5 77 5 83 Z';
 
-const DEFS = `
+/**
+ * The colours of the painted body: top, middle and bottom of the body, the three
+ * stops of the side, the dark panel behind the dials, and the hand wheel.
+ * Chrome, thread and cloth never change. `BROWN` is the logo; the others are the
+ * looks of the worker's own machine on the Home screen (see `MyMachine.tsx`).
+ */
+export type BodyPalette = {
+  body: readonly [string, string, string];
+  side: readonly [string, string, string];
+  dark: readonly [string, string];
+  wheel: readonly [string, string, string];
+};
+
+export const BROWN: BodyPalette = {
+  body: ['#A77B63', '#6B4636', '#34201A'],
+  side: ['#8A5E49', '#6B4636', '#3A2419'],
+  dark: ['#4A2F24', '#2A1812'],
+  wheel: ['#8A5E49', '#4A2F24', '#241410'],
+};
+
+function makeDefs(p: BodyPalette): string {
+  return `
 <clipPath id="lgClip"><path d="${SILHOUETTE}"/></clipPath>
-<linearGradient id="lgBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A77B63"/><stop offset=".32" stop-color="#6B4636"/><stop offset="1" stop-color="#34201A"/></linearGradient>
-<linearGradient id="lgSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8A5E49"/><stop offset=".45" stop-color="#6B4636"/><stop offset="1" stop-color="#3A2419"/></linearGradient>
-<linearGradient id="lgDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A2F24"/><stop offset="1" stop-color="#2A1812"/></linearGradient>
+<linearGradient id="lgBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.body[0]}"/><stop offset=".32" stop-color="${p.body[1]}"/><stop offset="1" stop-color="${p.body[2]}"/></linearGradient>
+<linearGradient id="lgSide" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${p.side[0]}"/><stop offset=".45" stop-color="${p.side[1]}"/><stop offset="1" stop-color="${p.side[2]}"/></linearGradient>
+<linearGradient id="lgDark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.dark[0]}"/><stop offset="1" stop-color="${p.dark[1]}"/></linearGradient>
 <linearGradient id="lgSteel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E7883"/><stop offset=".18" stop-color="#C9D1D9"/><stop offset=".38" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#AEB7C0"/><stop offset=".78" stop-color="#E8EDF2"/><stop offset="1" stop-color="#7D8791"/></linearGradient>
 <linearGradient id="lgSteelV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".3" stop-color="#D5DBE1"/><stop offset=".5" stop-color="#8F99A4"/><stop offset=".62" stop-color="#C9D1D9"/><stop offset="1" stop-color="#7D8791"/></linearGradient>
 <linearGradient id="lgGloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".6" stop-color="#FFFFFF" stop-opacity=".08"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient>
@@ -99,7 +120,8 @@ const DEFS = `
 <linearGradient id="lgWood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B58E5C"/><stop offset=".35" stop-color="#EFD9B0"/><stop offset=".65" stop-color="#DDBF8D"/><stop offset="1" stop-color="#9C7547"/></linearGradient>
 <linearGradient id="lgCloth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9CC2E8"/><stop offset="1" stop-color="#5E8FC4"/></linearGradient>
 <linearGradient id="lgShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity=".4"/></linearGradient>
-<radialGradient id="lgWheel" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#8A5E49"/><stop offset=".6" stop-color="#4A2F24"/><stop offset="1" stop-color="#241410"/></radialGradient>`;
+<radialGradient id="lgWheel" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="${p.wheel[0]}"/><stop offset=".6" stop-color="${p.wheel[1]}"/><stop offset="1" stop-color="${p.wheel[2]}"/></radialGradient>`;
+}
 
 const BODY = `
 <ellipse cx="63" cy="95.6" rx="62" ry="5.4" fill="url(#lgGround)"/>
@@ -175,7 +197,12 @@ ${ticks(114, 28, 9.2, 10.4, 40, '#A3745C', 0.45)}
 <path d="M52 10.6 C42 6 34 18 32 29 C31 38 30 46 27.8 56" fill="none" stroke="#2F527A" stroke-opacity=".22" stroke-width=".45" stroke-dasharray="1 1.6" stroke-linecap="round"/>
 <circle cx="32" cy="29" r="1.6" fill="url(#lgChrome)" stroke="#5F6872" stroke-width=".3"/>`;
 
+/** The same machine painted in any colours (used for the worker's own machine). */
+export function machineArtSvg(palette: BodyPalette): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${LOGO_ART_WIDTH}" height="${LOGO_ART_HEIGHT}" viewBox="0 0 ${LOGO_ART_WIDTH} ${LOGO_ART_HEIGHT}"><defs>${makeDefs(palette)}</defs>${BODY}</svg>`;
+}
+
 /** The whole logo as SVG text. */
 export function logoArtSvg(): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${LOGO_ART_WIDTH}" height="${LOGO_ART_HEIGHT}" viewBox="0 0 ${LOGO_ART_WIDTH} ${LOGO_ART_HEIGHT}"><defs>${DEFS}</defs>${BODY}</svg>`;
+  return machineArtSvg(BROWN);
 }

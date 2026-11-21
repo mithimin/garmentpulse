@@ -6,30 +6,30 @@
 //   2. Technician assigned (done when a technician is set, shows the name)
 //   3. Fixing now          (done when the status is "in progress")
 //   4. Done                (done when the report is resolved)
-// A step that is finished is a brown circle with a tick; the step that is
-// happening now is a sky-blue ring; the next steps are empty circles. It uses the
-// worker's REAL reports, so it moves by itself when the technician accepts the job
-// and starts work (the screen already gets live updates).
+// The steps are drawn by `VerticalSteps.tsx` (the technician's job page uses the
+// same drawing). It uses the worker's REAL reports, so it moves by itself when the
+// technician accepts the job and starts work (the screen already gets live updates).
+// The label at the top-right has the same word and colour as the machine picture.
 // Tapping the card opens the full report.
 // Owned by Rubaiya.
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Check } from 'lucide-react-native';
 import type { Report } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { formatDateTime } from '../language/format';
 import { machineName, personName } from '../language/localNames';
 import { TRACK_TEXT } from '../language/screenText';
-import { COLORS as C, MAP_COLORS } from '../theme';
+import { COLORS as C } from '../theme';
 import { Card } from './Card';
-import { StatusLabel } from './StatusLabel';
+import { MY_MACHINE_LOOKS } from './myMachineLooks';
+import type { MyMachineLook } from './myMachineLooks';
+import { VerticalSteps } from './VerticalSteps';
+import type { StepState, VerticalStep } from './VerticalSteps';
 
 type Props = {
   report: Report;
   onPress: () => void;
 };
-
-type StepState = 'done' | 'current' | 'todo';
 
 export function RepairTracker({ report, onPress }: Props) {
   const { language } = useLanguage();
@@ -45,11 +45,33 @@ export function RepairTracker({ report, onPress }: Props) {
           : 1;
   const technicianName = report.technician ? personName(report.technician, language) : null;
 
-  const steps: { title: string; detail: string }[] = [
-    { title: TRACK_TEXT.reported[language], detail: formatDateTime(report.created_at, language) },
+  // the look of the machine picture that goes with this report
+  const look: MyMachineLook =
+    report.status === 'resolved'
+      ? 'ok'
+      : report.status === 'in_progress'
+        ? 'fixing'
+        : report.technician
+          ? 'assigned'
+          : 'down';
+  const looks = MY_MACHINE_LOOKS[look];
+
+  function stateOf(index: number): StepState {
+    if (index < finished) return 'done';
+    return index === finished ? 'current' : 'todo';
+  }
+
+  const steps: VerticalStep[] = [
     {
-      title: TRACK_TEXT.assigned[language],
-      detail: technicianName ?? TRACK_TEXT.waitingTech[language],
+      title: TRACK_TEXT.reported[language],
+      detail: formatDateTime(report.created_at, language),
+      state: stateOf(0),
+    },
+    // the title tells the truth: "Waiting for a technician" until one is assigned
+    {
+      title: technicianName ? TRACK_TEXT.assigned[language] : TRACK_TEXT.waitingTech[language],
+      detail: technicianName ?? '',
+      state: stateOf(1),
     },
     {
       title: TRACK_TEXT.fixing[language],
@@ -57,17 +79,14 @@ export function RepairTracker({ report, onPress }: Props) {
         finished >= 3 && technicianName
           ? `${technicianName} ${TRACK_TEXT.isWorking[language]}`
           : TRACK_TEXT.notStarted[language],
+      state: stateOf(2),
     },
     {
       title: TRACK_TEXT.done[language],
       detail: finished >= 4 ? TRACK_TEXT.doneDetail[language] : '',
+      state: stateOf(3),
     },
   ];
-
-  function stateOf(index: number): StepState {
-    if (index < finished) return 'done';
-    return index === finished ? 'current' : 'todo';
-  }
 
   return (
     <Pressable
@@ -83,72 +102,28 @@ export function RepairTracker({ report, onPress }: Props) {
               {machineName(report.machine, language)}
             </Text>
           </View>
-          <StatusLabel status={report.status} />
+          {/* the same word and colour as the machine picture above */}
+          <View
+            style={[
+              styles.chip,
+              { backgroundColor: looks.chipBackground, borderColor: looks.chipBorder },
+            ]}
+          >
+            <Text style={[styles.chipText, { color: looks.chipText }]}>{looks.word(language)}</Text>
+          </View>
         </View>
 
-        <View style={styles.steps}>
-          {steps.map((step, index) => {
-            const state = stateOf(index);
-            const isLast = index === steps.length - 1;
-            return (
-              <View key={step.title} style={styles.step}>
-                <View style={styles.rail}>
-                  <View
-                    style={[
-                      styles.dot,
-                      state === 'done' && styles.dotDone,
-                      state === 'current' && styles.dotCurrent,
-                    ]}
-                  >
-                    {state === 'done' && <Check color="#FFFFFF" size={14} strokeWidth={3} />}
-                  </View>
-                  {!isLast && <View style={[styles.line, state === 'done' && styles.lineDone]} />}
-                </View>
-                <View style={styles.stepText}>
-                  <Text style={[styles.stepTitle, state === 'todo' && styles.stepTitleTodo]}>
-                    {step.title}
-                  </Text>
-                  {step.detail ? <Text style={styles.stepDetail}>{step.detail}</Text> : null}
-                </View>
-              </View>
-            );
-          })}
-        </View>
+        <VerticalSteps steps={steps} />
       </Card>
     </Pressable>
   );
 }
-
-const DOT = 24;
 
 const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 },
   headerText: { flex: 1 },
   kicker: { color: C.softText, fontSize: 13, fontWeight: '700' },
   machine: { color: C.text, fontSize: 19, fontWeight: '700', marginTop: 2 },
-  steps: { marginLeft: 2 },
-  step: { flexDirection: 'row', gap: 14, minHeight: 52 },
-  rail: { alignItems: 'center', width: DOT },
-  dot: {
-    width: DOT,
-    height: DOT,
-    borderRadius: DOT / 2,
-    borderWidth: 2,
-    borderColor: C.cardBorder,
-    backgroundColor: C.card,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dotDone: { backgroundColor: C.mainButton, borderColor: C.mainButton },
-  dotCurrent: {
-    borderColor: MAP_COLORS.in_progress.border,
-    backgroundColor: MAP_COLORS.in_progress.background,
-    borderWidth: 4,
-  },
-  line: { flex: 1, width: 2, backgroundColor: C.cardBorder, marginVertical: 2 },
-  lineDone: { backgroundColor: C.mainButton },
-  stepText: { flex: 1, paddingBottom: 12 },
-  stepTitle: { color: C.text, fontSize: 16, fontWeight: '700' },
-  stepTitleTodo: { color: C.softText, fontWeight: '500' },
-  stepDetail: { color: C.softText, fontSize: 14, marginTop: 1 },
+  chip: { borderWidth: 1, borderRadius: 999, paddingVertical: 5, paddingHorizontal: 12 },
+  chipText: { fontSize: 13, fontWeight: '700' },
 });
