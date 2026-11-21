@@ -746,9 +746,47 @@ html[lang='bn'] .map-desk {
       0 0 14px 6px rgba(255, 255, 255, 0.4);
   }
 }
-/* The draft has no legend under the seats: the chips on top already say every state in words. */
+/* The colour guide under the seats (the legend): a tiny copy of each seat colour with its word,
+   so colour is never the only clue. The small squares use the same colours as the real seats above. */
 .map-legend {
-  display: none;
+  justify-content: center;
+  gap: 10px 26px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(59, 36, 24, 0.22);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brown);
+}
+.map-legend .legend-seat {
+  width: 24px;
+  height: 22px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #fcf1e6, #f4e6d6);
+  box-shadow:
+    0 0 0 1px rgba(59, 36, 24, 0.18),
+    0 2px 4px -2px rgba(59, 36, 24, 0.5);
+}
+/* Down: brown (the real seats also pulse) */
+.map-legend .legend-seat.seat-down {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  box-shadow: 0 0 0 3px rgba(226, 206, 187, 0.85);
+}
+/* Technician assigned: darker cream with a dashed stitch */
+.map-legend .legend-seat.seat-assigned {
+  background: linear-gradient(180deg, #ecdcc6, #e4d0b6);
+  outline: 1.5px dashed rgba(59, 36, 24, 0.45);
+  outline-offset: -4px;
+}
+/* In progress: baby blue */
+.map-legend .legend-seat.seat-progress {
+  background: linear-gradient(180deg, #a6d2ff, #8ec5ff);
+}
+/* Selected: brown with a baby-blue ring */
+.map-legend .legend-seat.seat-selected {
+  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  box-shadow: 0 0 0 3px #8ec5ff;
 }
 .map-more {
   margin-top: 6px;
