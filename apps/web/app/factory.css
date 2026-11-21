@@ -689,9 +689,9 @@ html[lang='bn'] .map-desk {
   letter-spacing: 0;
   color: inherit;
 }
-/* technician assigned: a darker cream with a dashed stitch inside */
+/* technician assigned: light butter yellow with a dashed stitch inside */
 .seat-assigned .scope {
-  background: linear-gradient(180deg, #ecdcc6, #e4d0b6);
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
   color: var(--brown);
   outline: 2px dashed rgba(59, 36, 24, 0.4);
   outline-offset: -7px;
@@ -773,9 +773,9 @@ html[lang='bn'] .map-desk {
   background: linear-gradient(180deg, #a8493e, #8a3a31);
   box-shadow: 0 0 0 3px rgba(168, 73, 62, 0.28);
 }
-/* Technician assigned: darker cream with a dashed stitch */
+/* Technician assigned: light butter yellow with a dashed stitch */
 .map-legend .legend-seat.seat-assigned {
-  background: linear-gradient(180deg, #ecdcc6, #e4d0b6);
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
   outline: 1.5px dashed rgba(59, 36, 24, 0.45);
   outline-offset: -4px;
 }
