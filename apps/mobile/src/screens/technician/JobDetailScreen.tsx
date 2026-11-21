@@ -5,8 +5,10 @@
 //   2. "Start work"     -> Waiting becomes In progress
 //   3. "Mark as fixed"  -> In progress becomes Resolved (final)
 // Only the button for the NEXT step is shown, because a status only moves
-// forward (docs/api-contract.md 2.6). The page also shows the machine, what the
-// worker wrote, who reported it, the times, and the 3-step tracker.
+// forward (docs/api-contract.md 2.6). The page also shows the machine and WHERE it
+// stands (floor, row, seat) in big letters, what the worker wrote, who reported it,
+// when, and a 4-step list (Assigned, Accepted, Fixing, Done) that also shows how
+// long the repair took once the job is finished.
 // If the (fake) backend refuses, a friendly sentence is shown under the buttons.
 // Owned by Rubaiya.
 
@@ -17,12 +19,17 @@ import { getErrorCode } from '@garmentpulse/shared';
 import type { Profile, Report } from '@garmentpulse/shared';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
+import { DownTimer } from '../../components/DownTimer';
+import { FloorMiniMap } from '../../components/FloorMiniMap';
 import { StatusLabel } from '../../components/StatusLabel';
-import { StepTracker } from '../../components/StepTracker';
+import { VerticalSteps } from '../../components/VerticalSteps';
+import type { VerticalStep } from '../../components/VerticalSteps';
 import { useReports } from '../../data/ReportsContext';
 import { useLanguage } from '../../language/LanguageContext';
 import { formatDateTime } from '../../language/format';
-import { ERROR_TEXT, TECH_TEXT } from '../../language/screenText';
+import { machinePlace } from '../../language/machinePlace';
+import { repairTime } from '../../language/repairTime';
+import { ERROR_TEXT, TECH_TEXT, TRACK_TEXT } from '../../language/screenText';
 import { COLORS as C, SHARED_COLORS as S, SIZES } from '../../theme';
 import { machineName, personName } from '../../language/localNames';
 
@@ -76,33 +83,71 @@ export function JobDetailScreen({ profile, job }: Props) {
     };
   }
 
+  // The four steps of the job, from the technician's side.
+  const accepted = job.accepted_at !== null;
+  const resolved = job.status === 'resolved';
+  const took = repairTime(job, language);
+  const steps: VerticalStep[] = [
+    { title: TECH_TEXT.stepAssigned[language], state: 'done' },
+    {
+      title: TECH_TEXT.acceptedAtLabel[language],
+      detail: job.accepted_at
+        ? formatDateTime(job.accepted_at, language)
+        : TECH_TEXT.notAcceptedYet[language],
+      state: accepted ? 'done' : 'current',
+    },
+    {
+      title: TRACK_TEXT.fixing[language],
+      detail: resolved
+        ? took
+          ? `${TECH_TEXT.repairTook[language]} ${took}`
+          : ''
+        : job.status === 'in_progress'
+          ? TECH_TEXT.youWorking[language]
+          : TRACK_TEXT.notStarted[language],
+      state: resolved ? 'done' : accepted ? 'current' : 'todo',
+    },
+    {
+      title: TRACK_TEXT.done[language],
+      detail: resolved ? formatDateTime(job.updated_at, language) : '',
+      state: resolved ? 'done' : 'todo',
+    },
+  ];
+  const place = machinePlace(job.machine, language);
+
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Card>
-        <Text style={styles.machine}>{machineName(job.machine, language)}</Text>
-        <StatusLabel status={job.status} />
+        <Text style={styles.machine}>
+          {machineName(job.machine, language)}
+          {job.machine.code ? `  ·  ${job.machine.code}` : ''}
+        </Text>
+        {place ? (
+          <>
+            <Text style={styles.whereLabel}>{TECH_TEXT.whereLabel[language]}</Text>
+            <Text style={styles.place}>{place}</Text>
+          </>
+        ) : null}
+        <FloorMiniMap floor={job.machine.floor} seat={job.machine.seat} />
+        <View style={styles.statusRow}>
+          <StatusLabel status={job.status} />
+          {!resolved && <DownTimer since={job.created_at} />}
+        </View>
 
         <Text style={styles.label}>{TECH_TEXT.problemLabel[language]}</Text>
-        <Text style={styles.value}>{job.description}</Text>
+        <Text style={styles.problem}>{job.description}</Text>
 
         <Text style={styles.label}>{TECH_TEXT.reportedByLabel[language]}</Text>
         <Text style={styles.value}>{personName(job.reported_by, language)}</Text>
 
         <Text style={styles.label}>{TECH_TEXT.reportedAtLabel[language]}</Text>
         <Text style={styles.value}>{formatDateTime(job.created_at, language)}</Text>
-
-        <Text style={styles.label}>{TECH_TEXT.acceptedAtLabel[language]}</Text>
-        <Text style={styles.value}>
-          {job.accepted_at
-            ? formatDateTime(job.accepted_at, language)
-            : TECH_TEXT.notAcceptedYet[language]}
-        </Text>
       </Card>
 
       <Card>
         <Text style={styles.cardTitle}>{TECH_TEXT.progressLabel[language]}</Text>
         <View style={styles.tracker}>
-          <StepTracker status={job.status} />
+          <VerticalSteps steps={steps} />
         </View>
       </Card>
 
@@ -129,6 +174,16 @@ export function JobDetailScreen({ profile, job }: Props) {
 const styles = StyleSheet.create({
   content: { padding: SIZES.screenPadding, gap: 18 },
   machine: { color: C.text, fontSize: 20, fontWeight: '600', marginBottom: 8 },
+  whereLabel: { color: C.softText, fontSize: 13, fontWeight: '600' },
+  place: { color: C.mainButton, fontSize: 22, fontWeight: '700', marginTop: 2 },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexWrap: 'wrap',
+    marginTop: 12,
+  },
+  problem: { color: C.text, fontSize: 18, lineHeight: 26, fontWeight: '600', marginTop: 2 },
   label: { color: C.softText, fontSize: 13, fontWeight: '600', marginTop: 16 },
   value: { color: C.text, fontSize: 15, lineHeight: 24, marginTop: 2 },
   cardTitle: { color: C.text, fontSize: 18, fontWeight: '600' },

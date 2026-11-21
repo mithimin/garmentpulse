@@ -18,6 +18,22 @@ export function localizeDigits(text: string, language: Language): string {
 
 const two = (n: number) => String(n).padStart(2, '0');
 
+/** Writes a time taken like "25 min" or "1 h 05 min" (at least 1 minute). */
+export function formatDuration(milliseconds: number, language: Language): string {
+  const total = Math.max(1, Math.round(milliseconds / 60000));
+  const hours = Math.floor(total / 60);
+  const minutes = total % 60;
+  const hourWord = language === 'en' ? 'h' : 'ঘণ্টা';
+  const minuteWord = language === 'en' ? 'min' : 'মিনিট';
+  const text =
+    hours === 0
+      ? `${minutes} ${minuteWord}`
+      : minutes === 0
+        ? `${hours} ${hourWord}`
+        : `${hours} ${hourWord} ${two(minutes)} ${minuteWord}`;
+  return localizeDigits(text, language);
+}
+
 /** Writes a date and time like "17/10 · 08:05" (day/month, then hours:minutes). */
 export function formatDateTime(isoDate: string, language: Language): string {
   const date = new Date(isoDate);

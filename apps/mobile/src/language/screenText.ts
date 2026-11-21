@@ -182,6 +182,13 @@ export const TECH_TEXT = {
   acceptedAtLabel: { en: 'Accepted', bn: 'গ্রহণ করা হয়েছে' },
   notAcceptedYet: { en: 'Not accepted yet', bn: 'এখনো গ্রহণ করা হয়নি' },
   progressLabel: { en: 'Progress', bn: 'অগ্রগতি' },
+  whereLabel: { en: 'Where', bn: 'কোথায়' },
+  nextJob: { en: 'Next', bn: 'পরের কাজ' },
+  downFor: { en: 'Down for', bn: 'বন্ধ আছে' },
+  currentJob: { en: 'You are working on', bn: 'আপনি এখন করছেন' },
+  stepAssigned: { en: 'Assigned to you', bn: 'আপনাকে দেওয়া হয়েছে' },
+  youWorking: { en: 'You are working on it', bn: 'আপনি কাজ করছেন' },
+  repairTook: { en: 'Repair took', bn: 'মেরামতে সময় লেগেছে' },
 
   acceptButton: { en: 'Accept job', bn: 'কাজটি গ্রহণ করুন' },
   startButton: { en: 'Start work', bn: 'কাজ শুরু করুন' },
@@ -300,6 +307,86 @@ export const MAP_TEXT = {
   demoNote: {
     en: 'Demo data. This map is not connected to the backend yet.',
     bn: 'ডেমো তথ্য। এই ম্যাপ এখনো ব্যাকএন্ডের সাথে যুক্ত নয়।',
+  },
+} satisfies Record<string, Words>;
+
+/**
+ * Words under the picture of the worker's own machine on the Home screen.
+ * "OK" and "Down" come from MAP_TEXT, and "Technician assigned" from TRACK_TEXT.
+ * DRAFT: the Bangla words need a Bangla speaker to read them.
+ */
+export const MY_MACHINE_TEXT = {
+  title: { en: 'My machine', bn: 'আমার মেশিন' },
+  fixing: { en: 'Being fixed', bn: 'ঠিক করা হচ্ছে' },
+  noMachine: {
+    en: 'No machine is assigned to you yet. Please ask your manager.',
+    bn: 'এখনো আপনার জন্য কোনো মেশিন ঠিক করা হয়নি। ম্যানেজারকে বলুন।',
+  },
+  reportButton: { en: 'Report a problem', bn: 'সমস্যা জানান' },
+  // one friendly sentence for each look (DRAFT Bangla)
+  sentenceOk: { en: 'Your machine is running well.', bn: 'আপনার মেশিন ভালো চলছে।' },
+  sentenceDown: {
+    en: 'Your report is sent. A manager will send a technician.',
+    bn: 'আপনার রিপোর্ট পাঠানো হয়েছে। ম্যানেজার একজন টেকনিশিয়ান পাঠাবেন।',
+  },
+  sentenceAssigned: { en: 'is coming to fix your machine.', bn: 'আপনার মেশিন ঠিক করতে আসছেন।' },
+  sentenceAssignedNoName: {
+    en: 'A technician is coming to fix your machine.',
+    bn: 'একজন টেকনিশিয়ান আপনার মেশিন ঠিক করতে আসছেন।',
+  },
+  sentenceFixing: { en: 'is fixing your machine now.', bn: 'এখন আপনার মেশিন ঠিক করছেন।' },
+  sentenceFixingNoName: {
+    en: 'A technician is fixing your machine now.',
+    bn: 'একজন টেকনিশিয়ান এখন আপনার মেশিন ঠিক করছেন।',
+  },
+  // the small badge: "5 days running well"
+  runningToday: { en: 'Running well today', bn: 'আজ ভালো চলছে' },
+  runningDays: { en: 'days running well', bn: 'দিন ভালো চলছে' },
+  runningDay: { en: 'day running well', bn: 'দিন ভালো চলছে' },
+} satisfies Record<string, Words>;
+
+/**
+ * Words used on both the worker and technician screens: the "no internet" message
+ * under a pull-down refresh, and the three-card guide shown the first time.
+ * DRAFT: the Bangla words need a Bangla speaker to read them.
+ */
+export const COMMON_TEXT = {
+  noInternet: {
+    en: 'Could not update. Check your internet, then pull down to try again.',
+    bn: 'হালনাগাদ করা যায়নি। ইন্টারনেট দেখে নিন, তারপর নিচে টেনে আবার চেষ্টা করুন।',
+  },
+  guideNext: { en: 'Next', bn: 'পরেরটি' },
+  guideDone: { en: 'Got it', bn: 'বুঝেছি' },
+  guideSkip: { en: 'Skip', bn: 'বাদ দিন' },
+  workerTitle1: { en: 'See your machine', bn: 'আপনার মেশিন দেখুন' },
+  workerBody1: {
+    en: 'Your own machine is on the Home screen. Its colour shows what is happening.',
+    bn: 'হোম স্ক্রিনে আপনার নিজের মেশিন দেখা যায়। রঙ দেখে বোঝা যায় কী হচ্ছে।',
+  },
+  workerTitle2: { en: 'Report a problem', bn: 'সমস্যা জানান' },
+  workerBody2: {
+    en: 'If it breaks, press the big button and pick the problem.',
+    bn: 'মেশিন নষ্ট হলে বড় বোতাম চেপে সমস্যাটি বেছে নিন।',
+  },
+  workerTitle3: { en: 'Watch the repair', bn: 'মেরামত দেখুন' },
+  workerBody3: {
+    en: 'See who is coming and when it is fixed. Pull the screen down to update it.',
+    bn: 'কে আসছেন আর কখন ঠিক হলো দেখুন। হালনাগাদ করতে স্ক্রিন নিচে টানুন।',
+  },
+  techTitle1: { en: 'New jobs', bn: 'নতুন কাজ' },
+  techBody1: {
+    en: 'A beep plays when a new job comes. The job that waited longest is on top.',
+    bn: 'নতুন কাজ এলে বিপ বাজে। সবচেয়ে বেশি অপেক্ষার কাজ সবার উপরে থাকে।',
+  },
+  techTitle2: { en: 'Find the machine', bn: 'মেশিন খুঁজুন' },
+  techBody2: {
+    en: 'Each job shows the floor, row and seat, with a small map.',
+    bn: 'প্রতিটি কাজে ফ্লোর, সারি ও সিট আর একটি ছোট ম্যাপ দেখা যায়।',
+  },
+  techTitle3: { en: 'Update the job', bn: 'কাজ আপডেট করুন' },
+  techBody3: {
+    en: 'Accept the job, start work, then mark it fixed.',
+    bn: 'কাজটি নিন, শুরু করুন, তারপর ঠিক হলে জানান।',
   },
 } satisfies Record<string, Words>;
 

@@ -5,6 +5,7 @@
 // Opening a job shows its page on top, with a back arrow in the top bar.
 // The History tab also has a back arrow that returns to Jobs. The Android phone's
 // back button does the same (see useBackAction).
+// A short beep plays when a new job is assigned (see useNewJobSound).
 // Works the same way as WorkerApp (no navigation library on purpose).
 // Owned by Rubaiya.
 
@@ -13,10 +14,13 @@ import { StyleSheet, View } from 'react-native';
 import { History, Wrench } from 'lucide-react-native';
 import type { Profile } from '@garmentpulse/shared';
 import { BottomTabBar } from '../../components/BottomTabBar';
+import { FabricBackground } from '../../components/FabricBackground';
+import { FirstTimeGuide } from '../../components/FirstTimeGuide';
 import type { TabItem } from '../../components/BottomTabBar';
 import { TopBar } from '../../components/TopBar';
 import { useBackAction } from '../../components/useBackAction';
 import { useReports } from '../../data/ReportsContext';
+import { useNewJobSound } from '../../data/useNewJobSound';
 import { useLanguage } from '../../language/LanguageContext';
 import { TECH_TEXT } from '../../language/screenText';
 import { COLORS as C } from '../../theme';
@@ -34,6 +38,7 @@ type Props = {
 export function TechnicianApp({ profile, onLogout }: Props) {
   const { language } = useLanguage();
   const { listMyJobs } = useReports();
+  useNewJobSound(profile);
   const [tab, setTab] = useState<Tab>('jobs');
   const [openJobId, setOpenJobId] = useState<string | null>(null);
 
@@ -64,6 +69,8 @@ export function TechnicianApp({ profile, onLogout }: Props) {
 
   return (
     <View style={styles.page}>
+      <FabricBackground />
+      <FirstTimeGuide role="technician" />
       <TopBar title={openJob ? TECH_TEXT.jobTitle[language] : titles[tab]} onBack={goBack} />
 
       <View style={styles.body}>
