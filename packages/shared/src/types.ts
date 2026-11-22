@@ -42,6 +42,8 @@ export type Profile = {
   display_name_bn?: BanglaName;
   email: string;
   role: Role;
+  /** A worker's own machine. `null` when none is assigned (and always for other roles). */
+  machine?: Machine | null;
 };
 
 export type Machine = {

@@ -3,8 +3,9 @@
 // apps/web/app/owner/layout.tsx
 //
 // The frame shared by the owner's pages (docs/mvp.md 2.5): the role door (only an
-// owner gets in), the denim top bar and a sidebar with TWO pages:
-//   - Reports       (/owner)        a read-only list of all reports and counts,
+// owner gets in), the denim top bar and a sidebar with THREE pages:
+//   - Dashboard     (/owner)         the Waiting / In progress / Resolved count boxes,
+//   - Reports       (/owner/reports) a read-only list of all reports,
 //   - Manager codes (/owner/codes)  make one-time invite codes for new managers.
 // The "Manager codes" link is hidden while the real backend is on, because the
 // real invite-code backend is not built yet (see supabase/STATUS.md).
@@ -12,7 +13,7 @@
 
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { KeyRound, Wrench } from 'lucide-react';
+import { KeyRound, LayoutDashboard, Wrench } from 'lucide-react';
 import { RoleGate } from '../../auth/RoleGate';
 import type { MenuItem } from '../../components/Sidebar';
 import { SidebarShell } from '../../components/SidebarShell';
@@ -33,10 +34,16 @@ function OwnerFrame({ children }: { children: ReactNode }) {
 
   const menu: MenuItem[] = [
     {
-      label: screenText('menuReports', language),
+      label: screenText('menuDashboard', language),
       href: '/owner',
-      icon: <Wrench size={18} strokeWidth={1.8} aria-hidden="true" />,
+      icon: <LayoutDashboard size={18} strokeWidth={1.8} aria-hidden="true" />,
       active: pathname === '/owner',
+    },
+    {
+      label: screenText('menuReports', language),
+      href: '/owner/reports',
+      icon: <Wrench size={18} strokeWidth={1.8} aria-hidden="true" />,
+      active: pathname.startsWith('/owner/reports'),
     },
   ];
   menu.push({

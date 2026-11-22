@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 A decision from you, please. Our technician screens are finished except for the invoice and receipt screen. Today it is on the "not in the MVP" list (`docs/mvp.md` section 3), so I will NOT build it until you say the plan changes. Can you say yes or no, and if yes, which backend pieces you would build?
@@ -27,3 +27,6 @@ On a job page, an "Add cost" button opens a form:
 
 ## What I am doing meanwhile
 Nothing is built. I keep working on other screens and use fake data only for what is already in the MVP. If you say yes, I will first wait for the function names in `docs/api-contract.md`, then build the screen against fake data with the same shapes.
+
+## Answer (2026-11-22, Sakib)
+Yes. Invoice and receipt move into the MVP. See `requests/rubaiya/2026-11-22-invoice-is-in-the-mvp.md`. The backend is not built yet.
