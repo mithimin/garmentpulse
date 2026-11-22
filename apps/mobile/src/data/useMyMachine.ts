@@ -4,10 +4,9 @@
 // what it looks like right now (OK, down, technician assigned, being fixed).
 //
 // Which machine is hers?
-//   TEMPORARY STAND-IN: the first sewing machine in the list. The backend does not yet say
-//   which machine is assigned to which worker (note to Sakib in
-//   requests/sakib/2026-11-21-worker-assigned-machine.md). When that field exists,
-//   change ONLY the line marked "STAND-IN" below.
+//   The one the backend sends with her profile (`get_my_profile()` -> `machine`).
+//   When no machine is assigned yet (`null`, for example a new sign-up), there is
+//   none: the Home screen then says "No machine is assigned to you yet".
 //
 // What does it look like?
 //   - The colour comes from the REAL live machine states (`list_machine_states()`),
@@ -31,10 +30,8 @@ export function useMyMachine(profile: Profile): {
   /** Downloads the machine's look again (used when the person pulls the screen down). */
   refresh: () => Promise<void>;
 } {
-  const { machines, listMyReports } = useReports();
-  // STAND-IN: the first sewing machine (code "SM-..."), or else the first machine in
-  // the list, until the backend says which one is hers.
-  const machine = machines.find((item) => item.code?.startsWith('SM-')) ?? machines[0] ?? null;
+  const { listMyReports } = useReports();
+  const machine = profile.machine ?? null;
   const machineId = machine?.id ?? null;
 
   const [state, setState] = useState<MachineState>('ok');

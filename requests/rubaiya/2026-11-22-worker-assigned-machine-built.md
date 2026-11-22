@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done (2026-11-22, Rubaiya: the phone now uses profile.machine and the stand-in is removed)
 
 ## What I need
 Please swap the one stand-in line in `apps/mobile/src/data/useMyMachine.ts`. `get_my_profile()` now sends `machine` for a worker: `id`, `name`, `name_bn`, `code`, `seat`, `floor`, or `null` when no machine is assigned. It is `null` for technicians, managers and owners. The `Profile` type in `packages/shared` has the new optional `machine` field (after my pull request is merged).
