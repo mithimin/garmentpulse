@@ -405,10 +405,6 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
               {stateWord(state)}
             </li>
           ))}
-          <li>
-            <i className="legend-seat seat-selected" aria-hidden="true" />
-            {screenText('seatSelected', language)}
-          </li>
         </ul>
       </Card>
 
