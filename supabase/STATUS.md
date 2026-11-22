@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the backend and the shared toolbox. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-15 by Sakib (machine floors, states and the 45 machines are merged and checked; the Bangla names of the 45 machines are merged and checked on the real project)
+**Last updated:** 2026-11-22 by Sakib (machine floors, states and the 45 machines are merged and checked; the Bangla names of the 45 machines are merged and checked on the real project)
 
 ## Done
 
@@ -56,6 +56,7 @@ Both apps are now connected to the real backend (phone: #25, website: #18 and #2
 
 ## Decisions made in this lane
 
+- **Invoice and receipt (FR-04) stay OUT of the MVP** (decided 2026-11-22, Rubaiya asked). It needs an invoices table, storage for receipt photos, new functions and the owner's expense limit: too much new security work before the demo. It is planned after the demo. A note that said "yes" was written in Sakib's name by mistake and was corrected (`requests/rubaiya/2026-11-22-invoice-stays-out-of-the-mvp.md`).
 - **Sign-up is in the MVP, with invite codes** (decided 2026-10-19; it replaces the "later" decision of 2026-10-18). The owner makes **manager** codes; a manager makes **worker** and **technician** codes. The code decides the role, works once, expires after 7 days, and there is no email confirmation. It is enforced by a guard in the database at sign-up, and `check_invite_code` lets the apps ask first. **Owner** accounts are never made by sign-up; Sakib makes them by hand. The owner now has two pages (Reports, Manager codes) and makes manager codes, which is the owner's only action that changes anything.
 - Machines are typed in as test data (`seed.sql`). No function to add machines in the MVP.
 - **Bangla names are never generated; a person types them** (decided 2026-10-19). For the 5 test people and 5 machines, a Bangla speaker writes the spellings (Part B of `docs/bangla-review-sheet.md`) and Sakib adds them by hand to the new optional columns `display_name_bn` (people) and `name_bn` (machines). For real users later: an **optional second box at sign-up**, "Your name in Bangla"; the sign-up guard saves it as `display_name_bn`. If it is empty, Bangla mode shows the English-letter name. Machines get their Bangla name from Sakib when he adds them. **Built on 2026-10-20** (migrations `20261020100000` and `20261020110000`, field names in `docs/api-contract.md` section 3, 126 database checks pass). Rubaiya and Mithi each add the optional box to their sign-up form (`fullNameBn` in `signUpWithCode`).

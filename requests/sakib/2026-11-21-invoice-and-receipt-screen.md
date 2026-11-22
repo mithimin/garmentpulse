@@ -29,4 +29,4 @@ On a job page, an "Add cost" button opens a form:
 Nothing is built. I keep working on other screens and use fake data only for what is already in the MVP. If you say yes, I will first wait for the function names in `docs/api-contract.md`, then build the screen against fake data with the same shapes.
 
 ## Answer (2026-11-22, Sakib)
-Yes. Invoice and receipt move into the MVP. See `requests/rubaiya/2026-11-22-invoice-is-in-the-mvp.md`. The backend is not built yet.
+**No.** Invoice and receipt stay OUT of the MVP. They are planned after the demo. (An earlier line here said "Yes". That was wrong: it was not Sakib's decision. See `requests/rubaiya/2026-11-22-invoice-stays-out-of-the-mvp.md`.)
