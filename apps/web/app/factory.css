@@ -541,7 +541,7 @@ html[lang='bn'] .count-tag {
 .map-head-line {
   display: none;
 }
-/* "3 machines are down": a dark brown pill with a glowing dot on each side. */
+/* "3 machines are down": a red pill with a glowing dot on each side. */
 .map-card .map-down-line,
 .map-banner .map-down-line {
   position: static;
@@ -553,9 +553,9 @@ html[lang='bn'] .count-tag {
   padding: 12px 24px;
   border: 0;
   border-radius: 14px;
-  background: linear-gradient(180deg, #4e2b19, #3b2418);
-  box-shadow: 0 8px 16px -8px rgba(59, 36, 24, 0.7);
-  color: var(--cream);
+  background: linear-gradient(180deg, #a8493e, #8a3a31);
+  box-shadow: 0 8px 16px -8px rgba(138, 58, 49, 0.7);
+  color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   white-space: nowrap;
@@ -689,9 +689,9 @@ html[lang='bn'] .map-desk {
   letter-spacing: 0;
   color: inherit;
 }
-/* technician assigned: a darker cream with a dashed stitch inside */
+/* technician assigned: light butter yellow with a dashed stitch inside */
 .seat-assigned .scope {
-  background: linear-gradient(180deg, #ecdcc6, #e4d0b6);
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
   color: var(--brown);
   outline: 2px dashed rgba(59, 36, 24, 0.4);
   outline-offset: -7px;
@@ -701,9 +701,9 @@ html[lang='bn'] .map-desk {
   background: linear-gradient(180deg, #a6d2ff, #8ec5ff);
   color: var(--brown);
 }
-/* DOWN: brown, with a soft cream halo that pulses ("glowing white") */
+/* DOWN: warm red (the alert colour), with a soft red halo that pulses */
 .seat-down .scope {
-  background: linear-gradient(180deg, #4e2b19, #3b2418);
+  background: linear-gradient(180deg, #a8493e, #8a3a31);
   color: var(--cream);
   animation: seat-halo 1.6s ease-in-out infinite;
 }
@@ -722,6 +722,18 @@ html[lang='bn'] .map-desk {
 .seat-selected .seat-machine {
   color: var(--cream);
 }
+/* A chosen DOWN machine stays red and a chosen ASSIGNED machine stays butter yellow: only the
+   baby-blue ring shows it is chosen. Other chosen machines (running) turn brown with the ring. */
+.seat-down.seat-selected .scope {
+  background: linear-gradient(180deg, #a8493e, #8a3a31);
+}
+.seat-assigned.seat-selected .scope {
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
+  color: var(--brown);
+}
+.seat-assigned.seat-selected .seat-machine {
+  color: var(--brown);
+}
 .seat-faded {
   opacity: 0.28;
 }
@@ -729,26 +741,59 @@ html[lang='bn'] .map-desk {
   0%,
   100% {
     box-shadow:
-      0 0 0 7px rgba(226, 206, 187, 0.85),
-      0 0 14px 6px rgba(255, 255, 255, 0.35);
+      0 0 0 7px rgba(168, 73, 62, 0.28),
+      0 0 14px 6px rgba(168, 73, 62, 0.3);
   }
   50% {
     box-shadow:
-      0 0 0 11px rgba(226, 206, 187, 0.5),
-      0 0 24px 10px rgba(255, 255, 255, 0.6);
+      0 0 0 11px rgba(168, 73, 62, 0.14),
+      0 0 24px 10px rgba(168, 73, 62, 0.4);
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .seat-down .scope {
     animation: none;
     box-shadow:
-      0 0 0 8px rgba(226, 206, 187, 0.8),
-      0 0 14px 6px rgba(255, 255, 255, 0.4);
+      0 0 0 8px rgba(168, 73, 62, 0.25),
+      0 0 14px 6px rgba(168, 73, 62, 0.3);
   }
 }
-/* The draft has no legend under the seats: the chips on top already say every state in words. */
+/* The colour guide under the seats (the legend): a tiny copy of each seat colour with its word,
+   so colour is never the only clue. The small squares use the same colours as the real seats above. */
 .map-legend {
-  display: none;
+  justify-content: center;
+  gap: 10px 26px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(59, 36, 24, 0.22);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brown);
+}
+.map-legend .legend-seat {
+  width: 24px;
+  height: 22px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #fcf1e6, #f4e6d6);
+  box-shadow:
+    0 0 0 1px rgba(59, 36, 24, 0.18),
+    0 2px 4px -2px rgba(59, 36, 24, 0.5);
+}
+/* Down: red (the real seats also pulse) */
+.map-legend .legend-seat.seat-down {
+  background: linear-gradient(180deg, #a8493e, #8a3a31);
+  box-shadow: 0 0 0 3px rgba(168, 73, 62, 0.28);
+}
+/* Technician assigned: light butter yellow with a dashed stitch */
+.map-legend .legend-seat.seat-assigned {
+  background: linear-gradient(180deg, #fbefb8, #f5e498);
+  outline: 1.5px dashed rgba(59, 36, 24, 0.45);
+  outline-offset: -4px;
+}
+/* In progress: baby blue */
+.map-legend .legend-seat.seat-progress {
+  background: linear-gradient(180deg, #a6d2ff, #8ec5ff);
 }
 .map-more {
   margin-top: 6px;
@@ -1612,13 +1657,13 @@ html[lang='bn'] .count-label {
   letter-spacing: 0.02em;
 }
 .floor-badge-down {
-  background: linear-gradient(160deg, #55301c 0%, #3b2418 100%);
+  background: linear-gradient(160deg, #a8493e 0%, #8a3a31 100%);
   color: #ffffff;
   animation: floor-pulse 1.8s ease-in-out infinite;
 }
 .map-chip[aria-pressed='true'] .floor-badge-down {
   background: #ffffff;
-  color: #3b2418;
+  color: #8a3a31;
 }
 .map-chip[aria-pressed='true'] .floor-badge:not(.floor-badge-down) {
   background: rgba(255, 255, 255, 0.85);
@@ -1627,10 +1672,10 @@ html[lang='bn'] .count-label {
 @keyframes floor-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(59, 36, 24, 0.35);
+    box-shadow: 0 0 0 0 rgba(168, 73, 62, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(59, 36, 24, 0);
+    box-shadow: 0 0 0 6px rgba(168, 73, 62, 0);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1966,12 +2011,12 @@ html[lang='bn'] .floor-now-title {
   color: #54402f;
 }
 .floor-stat-down {
-  background: linear-gradient(160deg, rgba(85, 48, 28, 0.94) 0%, rgba(59, 36, 24, 0.94) 100%);
+  background: linear-gradient(160deg, rgba(168, 73, 62, 0.95) 0%, rgba(138, 58, 49, 0.95) 100%);
   border-color: rgba(255, 255, 255, 0.4);
   color: #ffffff;
 }
 .floor-stat-down span {
-  color: #f1dfcd;
+  color: #fbe3dc;
 }
 .floor-stat-run {
   background: linear-gradient(180deg, rgba(168, 211, 255, 0.9), rgba(142, 197, 255, 0.9));
