@@ -2,14 +2,13 @@
 
 // apps/web/app/owner/page.tsx
 //
-// The owner's Reports page (docs/mvp.md 2.5). It is READ-ONLY. From the top it has:
+// The owner's Dashboard page (docs/mvp.md 2.5). It is READ-ONLY. It has:
 //   - a greeting ("Have a good day, Mr. Rahman") with today's date and a short line,
 //   - three count boxes: Waiting, In progress, Resolved, each with a small tag
-//     (data/stats.ts says how the tags are worked out),
-//   - a "Reports" card with every report and filter tabs. There is no Assign
-//     button, and "Open" only shows details.
+//     (data/stats.ts says how the tags are worked out).
+// The list of reports moved to its own page, app/owner/reports/page.tsx.
 // The role door, the top bar and the sidebar come from app/owner/layout.tsx; the
-// second owner page, "Manager codes", is app/owner/codes/page.tsx.
+// "Manager codes" page is app/owner/codes/page.tsx.
 // Data comes from the real backend when it is connected (lib/backend.ts),
 // otherwise from the fake data, and updates live.
 // Owned by Mithi.
@@ -18,7 +17,6 @@ import { isInQueue, STATUS_LABELS } from '@garmentpulse/shared';
 import { useAuth } from '../../auth/AuthContext';
 import { CountBox } from '../../components/CountBox';
 import { DataGate } from '../../components/DataGate';
-import { ReportsCard } from '../../components/ReportsCard';
 import { averageFixMs, formatDuration, resolvedToday, startedInLastHour } from '../../data/stats';
 import { useOwnerSummary, useReports } from '../../data/useDashboardData';
 import { formatToday } from '../../language/greeting';
@@ -102,17 +100,6 @@ export default function OwnerPage() {
               }
             />
           </div>
-        )}
-      </DataGate>
-
-      <DataGate state={reports}>
-        {(rows) => (
-          <ReportsCard
-            mode="all"
-            readOnly
-            reports={rows}
-            title={screenText('reportsPageTitle', language)}
-          />
         )}
       </DataGate>
     </>

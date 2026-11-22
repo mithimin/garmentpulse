@@ -157,11 +157,33 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
     if (![...now].some((id) => !before.has(id))) return;
     try {
       audioRef.current ??= new AudioContext();
-      playAlarm(audioRef.current);
+      const context = audioRef.current;
+      // A browser keeps a new sound "asleep" until the person has used the page. Wake it first.
+      if (context.state === 'suspended') void context.resume();
+      playAlarm(context);
     } catch {
       // Sound is a bonus: a browser that blocks it just stays silent.
     }
   }, [downKey, soundOn]);
+
+  // Unlock the sound on the first click or key press anywhere on the page, so the first live
+  // report after that can beep (browsers refuse sound before the person has touched the page).
+  useEffect(() => {
+    function unlock() {
+      try {
+        audioRef.current ??= new AudioContext();
+        if (audioRef.current.state === 'suspended') void audioRef.current.resume();
+      } catch {
+        // No audio in this browser: stay silent.
+      }
+    }
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+  }, []);
 
   function clickSeat(seat: Seat) {
     setHint('');
@@ -405,10 +427,6 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
               {stateWord(state)}
             </li>
           ))}
-          <li>
-            <i className="legend-seat seat-selected" aria-hidden="true" />
-            {screenText('seatSelected', language)}
-          </li>
         </ul>
       </Card>
 
