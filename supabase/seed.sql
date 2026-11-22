@@ -139,6 +139,19 @@ on conflict (name) do update set
 
 
 -- -----------------------------------------------------------------------------
+-- Each worker's own machine (migration 20261122100000)
+-- -----------------------------------------------------------------------------
+-- A worker always works at the same machine. Nila works at Sewing machine 14, the
+-- machine of her first report. (Only workers may have a machine, and no two workers
+-- may share one; both rules are enforced by the database.) Safe to run twice.
+update public.profiles p
+set machine_id = m.id
+from public.machines m
+where p.email = 'nila@example.com'
+  and m.name = 'Sewing machine 14';
+
+
+-- -----------------------------------------------------------------------------
 -- Sample reports (one in each interesting state)
 -- -----------------------------------------------------------------------------
 -- These are inserted directly because the seed runs with full rights; the

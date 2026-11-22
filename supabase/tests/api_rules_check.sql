@@ -233,7 +233,22 @@
       {"name": "MSTATE: a worker cannot change the table", "email": "nila@example.com", "call": "with x as (update public.machine_states set state = 'down' returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
       {"name": "MSTATE: a worker cannot delete from the table", "email": "nila@example.com", "call": "with x as (delete from public.machine_states returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
       {"name": "MSTATE: the manager cannot change the table either", "email": "farhan@example.com", "call": "with x as (update public.machine_states set state = 'ok' returning 1) select to_jsonb(1)", "error": "permission denied for table machine_states"},
-      {"name": "MSTATE: a state outside the four words is refused", "role": "postgres", "call": "with x as (update public.machine_states set state = 'broken' returning 1) select to_jsonb(1)", "error": "new row for relation"}
+      {"name": "MSTATE: a state outside the four words is refused", "role": "postgres", "call": "with x as (update public.machine_states set state = 'broken' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+
+      {"name": "MYMACHINE: the worker's profile carries her own machine (SM-14)", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'code' = 'SM-14' and $1->'machine'->>'name' = 'Sewing machine 14'"},
+      {"name": "MYMACHINE: the machine has all six keys (id, name, name_bn, code, seat, floor)", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "(select array_agg(k order by k) from jsonb_object_keys($1->'machine') k) = array['code','floor','id','name','name_bn','seat']"},
+      {"name": "MYMACHINE: her machine is on floor 3, seat A4", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'floor' = '3' and $1->'machine'->>'seat' = 'A4'"},
+      {"name": "MYMACHINE: the rest of the profile is unchanged (role worker, name)", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "$1->>'role' = 'worker' and $1->>'display_name' = 'Nila Akter'"},
+      {"name": "MYMACHINE: a worker with no machine gets machine null (the new sign-up)", "email": "newworker@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine' = 'null'::jsonb"},
+      {"name": "MYMACHINE: a technician has no machine (null)", "email": "tariq@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine' = 'null'::jsonb"},
+      {"name": "MYMACHINE: the manager has no machine (null)", "email": "farhan@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine' = 'null'::jsonb"},
+      {"name": "MYMACHINE: a technician cannot be given a machine", "role": "postgres", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'tariq@example.com' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "MYMACHINE: the manager cannot be given a machine", "role": "postgres", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'farhan@example.com' returning 1) select to_jsonb(1)", "error": "new row for relation"},
+      {"name": "MYMACHINE: two workers cannot share one machine", "role": "postgres", "call": "with x as (update public.profiles set machine_id = (select machine_id from public.profiles where email = 'nila@example.com') where email = 'newworker@example.com' returning 1) select to_jsonb(1)", "error": "duplicate key value violates unique constraint"},
+      {"name": "MYMACHINE: a second worker can get a different machine", "role": "postgres", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'newworker@example.com' returning 1) select to_jsonb(1)"},
+      {"name": "MYMACHINE: the second worker now sees her own machine (SM-01, not Nila's)", "email": "newworker@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'code' = 'SM-01'"},
+      {"name": "MYMACHINE: Nila still sees SM-14", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'code' = 'SM-14'"},
+      {"name": "MYMACHINE: a worker cannot change her own machine directly", "email": "nila@example.com", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'nila@example.com' returning 1) select to_jsonb(1)", "error": "permission denied for table profiles"}
     ]$json$;
   
     t         jsonb;
