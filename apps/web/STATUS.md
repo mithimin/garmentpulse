@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the website. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-14 by Mithi's session (machine floors)
+**Last updated:** 2026-11-22 by Mithi's session (alarm sound fix)
 
 ## Done
 
@@ -23,6 +23,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
+- MACHINE MAP ALARM SOUND FIX (branch `fix/web-alarm-sound`, 2026-11-22, checks pass, NOT heard on a real report yet): the beep stayed silent because the browser keeps new sound asleep until the page is used. The map now unlocks the sound on the first click or key press and wakes it before each beep (`components/MachineMap.tsx`). Click the page once after loading, then test.
 - OWNER DASHBOARD PAGE (branch `features/web-owner-dashboard`, 2026-11-21, checks pass, looked at in a browser on fake data only; real backend, Bangla and phone not tried): the owner's three count boxes (Waiting, In progress, Resolved) and the greeting moved to their own page, Dashboard (`/owner`). The read-only report list is now its own page, Reports (`/owner/reports`). The owner sidebar has three links: Dashboard, Reports, Manager codes. `docs/mvp.md` 2.5 still says the owner has two pages and needs updating.
 
 - REAL FLOORS AND SEATS ON THE MACHINE MAP (branch `features/web-real-floors`, 2026-11-14, checks pass, NOT looked at in a browser, real backend not tried): the backend now sends a real `floor` and `seat` for every machine (Sakib, 2026-11-14). `data/machineSeats.ts` uses them when EVERY machine has both (and no two share a place): the floor tab and the row and place come from the backend, not from name order. If any machine lacks one, the old rule (floors of 15 in name order) still applies, so fake data looks the same. The real project has only 5 machines on floor 1, so the floors only show once Sakib adds more (note: `requests/sakib/2026-11-14-more-machines-for-the-map.md`).
