@@ -18,7 +18,6 @@ import { StyleSheet, Text, View } from 'react-native';
 import { getErrorCode } from '@garmentpulse/shared';
 import type { Machine, Profile } from '@garmentpulse/shared';
 import { Button } from '../../components/Button';
-import { ChooseMachine } from '../../components/ChooseMachine';
 import { FadeIn } from '../../components/FadeIn';
 import { RefreshableScroll } from '../../components/RefreshableScroll';
 import { Greeting } from '../../components/Greeting';
@@ -66,15 +65,7 @@ function cardMachine(machine: Machine, look: MyMachineLook): MapMachine {
 export function WorkerHomeScreen({ profile, onOpenReport, onLogout }: Props) {
   const { language } = useLanguage();
   const { listMyReports, createReport } = useReports();
-  const {
-    machine,
-    needsChoice,
-    machines,
-    chooseMachine,
-    changeMachine,
-    look,
-    refresh: refreshMachine,
-  } = useMyMachine(profile);
+  const { machine, look, refresh: refreshMachine } = useMyMachine(profile);
   const [cardOpen, setCardOpen] = useState(false);
   const [sendError, setSendError] = useState<ReturnType<typeof getErrorCode> | null>(null);
 
@@ -152,8 +143,6 @@ export function WorkerHomeScreen({ profile, onOpenReport, onLogout }: Props) {
             onSend={handleSend}
           />
         </>
-      ) : needsChoice ? (
-        <ChooseMachine machines={machines} onChoose={chooseMachine} />
       ) : (
         <Text style={styles.empty}>{MY_MACHINE_TEXT.noMachine[language]}</Text>
       )}
@@ -178,13 +167,6 @@ export function WorkerHomeScreen({ profile, onOpenReport, onLogout }: Props) {
       )}
 
       <View style={styles.logout}>
-        {machine && (
-          <Button
-            kind="second"
-            label={MY_MACHINE_TEXT.changeButton[language]}
-            onPress={changeMachine}
-          />
-        )}
         <Button kind="second" label={WORKER_TEXT.logoutButton[language]} onPress={onLogout} />
       </View>
     </RefreshableScroll>
@@ -202,5 +184,5 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   errorText: { color: S.errorText, fontSize: 14 },
-  logout: { marginTop: 8, gap: 10 },
+  logout: { marginTop: 8 },
 });

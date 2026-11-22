@@ -323,13 +323,6 @@ export const MY_MACHINE_TEXT = {
     bn: 'এখনো আপনার জন্য কোনো মেশিন ঠিক করা হয়নি। ম্যানেজারকে বলুন।',
   },
   reportButton: { en: 'Report a problem', bn: 'সমস্যা জানান' },
-  // choosing your own machine (DRAFT Bangla)
-  chooseTitle: { en: 'Choose your machine', bn: 'আপনার মেশিন বেছে নিন' },
-  chooseHelp: {
-    en: 'Tap the machine you work at. The phone will remember it.',
-    bn: 'আপনি যে মেশিনে কাজ করেন সেটিতে চাপ দিন। ফোন মনে রাখবে।',
-  },
-  changeButton: { en: 'Change my machine', bn: 'আমার মেশিন বদলান' },
   // one friendly sentence for each look (DRAFT Bangla)
   sentenceOk: { en: 'Your machine is running well.', bn: 'আপনার মেশিন ভালো চলছে।' },
   sentenceDown: {
