@@ -24,7 +24,14 @@ export const FAKE_MACHINES: Machine[] = [
 ];
 
 export const FAKE_PEOPLE: Profile[] = [
-  { id: 'u-worker-1', display_name: 'Nila Akter', email: 'nila@example.com', role: 'worker' },
+  {
+    id: 'u-worker-1',
+    display_name: 'Nila Akter',
+    email: 'nila@example.com',
+    role: 'worker',
+    // Nila works at Sewing machine 14 (the same as in the backend seed)
+    machine: FAKE_MACHINES.find((m) => m.id === 'm-14') ?? null,
+  },
   { id: 'u-worker-2', display_name: 'Sumon Mia', email: 'sumon@example.com', role: 'worker' },
   { id: 'u-worker-3', display_name: 'Rina Begum', email: 'rina@example.com', role: 'worker' },
   { id: 'u-tech-1', display_name: 'Tariq Hasan', email: 'tariq@example.com', role: 'technician' },

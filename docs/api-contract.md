@@ -101,6 +101,7 @@ type Profile = {
   display_name_bn?: string | null; // the name in Bangla letters, if one was written
   email: string;
   role: Role;
+  machine?: Machine | null; // a worker's own machine (added 2026-11-22); null when none is assigned
 };
 
 type Machine = {
@@ -172,7 +173,8 @@ Email and password. After login the app calls `get_my_profile()`. If the person'
 #### `get_my_profile()` — Mobile, Web
 
 - **Inputs:** none
-- **Returns:** `Profile`
+- **Returns:** `Profile`. For a worker it includes `machine`, the machine that belongs to this worker (`id`, `name`, `name_bn`, `code`, `seat`, `floor`), or `null` when none is assigned yet. `machine` is always `null` for technicians, managers and owners.
+- **Rules (added 2026-11-22):** only a worker can have a machine, and one machine belongs to at most one worker (the database enforces both). In the MVP a machine is assigned by hand in SQL; a worker who signs up with a code has none until it is set, and the phone then shows "No machine assigned yet".
 - **Errors:** `NOT_AUTHENTICATED`
 
 ### 4.2 Machines
