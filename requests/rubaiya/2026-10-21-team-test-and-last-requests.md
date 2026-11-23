@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done (2026-11-24: team test time, PR approvals and contract read were done by Rubaiya; the optional Bangla name box is built on features/mobile-signup-bangla-name)
 
 ## What I need
 

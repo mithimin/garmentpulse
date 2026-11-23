@@ -2,7 +2,7 @@
 //
 // The sign-up screen for new workers and technicians. It looks like the login
 // screen (same factory picture on top, language switch and cream card) and has
-// four boxes: full name, email, password and invite code.
+// five boxes: full name, an optional name in Bangla, email, password and invite code.
 //
 // An "I am a" Worker / Technician chooser sits at the top, like on the login
 // screen. The invite code still decides the real role (docs/api-contract.md 4.7);
@@ -60,6 +60,7 @@ type Props = {
 export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
   const { language } = useLanguage();
   const [fullName, setFullName] = useState('');
+  const [fullNameBn, setFullNameBn] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
@@ -78,7 +79,7 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
     setCodeRole(null);
     setLoading(true);
     try {
-      onSignedUp(await signUp({ fullName, email, password, code, chosenRole }));
+      onSignedUp(await signUp({ fullName, fullNameBn, email, password, code, chosenRole }));
     } catch (error) {
       if (error instanceof RoleMismatchError) {
         setCodeRole(error.codeRole);
@@ -150,6 +151,18 @@ export function SignUpScreen({ onSignedUp, onGoToLogin }: Props) {
             autoCapitalize="words"
             textContentType="name"
             maxLength={100}
+            editable={!loading}
+          />
+
+          {/* Optional: the name in Bangla letters. Empty is fine. Over 80 letters gives INVALID_INPUT. */}
+          <Text style={styles.label}>{SIGNUP_TEXT.nameBnLabel[language]}</Text>
+          <TextInput
+            style={styles.input}
+            value={fullNameBn}
+            onChangeText={setFullNameBn}
+            placeholder={SIGNUP_TEXT.nameBnHint[language]}
+            placeholderTextColor={S.inputHint}
+            maxLength={80}
             editable={!loading}
           />
 

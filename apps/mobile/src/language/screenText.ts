@@ -52,6 +52,9 @@ export const SIGNUP_TEXT = {
   },
   nameLabel: { en: 'Full name', bn: 'পুরো নাম' },
   nameHint: { en: 'Type your full name', bn: 'আপনার পুরো নাম লিখুন' },
+  // Optional box: the name in Bangla letters (Bangla words are a draft for a Bangla speaker).
+  nameBnLabel: { en: 'Your name in Bangla (optional)', bn: 'বাংলায় আপনার নাম (ঐচ্ছিক)' },
+  nameBnHint: { en: 'You can leave this empty', bn: 'চাইলে ফাঁকা রাখতে পারেন' },
   passwordHint: { en: 'At least 6 letters', bn: 'কমপক্ষে ৬টি অক্ষর' },
   codeLabel: { en: 'Invite code', bn: 'আমন্ত্রণ কোড' },
   codeHint: { en: 'The code from your manager', bn: 'ম্যানেজারের দেওয়া কোড' },
