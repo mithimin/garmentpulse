@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done (2026-11-24: read, no invoice screen built)
 
 ## What I need
 Please **do not build the invoice and receipt screen** for now. This note **replaces** `2026-11-22-invoice-is-in-the-mvp.md`, which said the opposite. That note was not my decision. Sorry for the mix-up.
