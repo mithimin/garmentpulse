@@ -43,7 +43,7 @@ Each feature below comes from [prd.md](prd.md). The number (for example FR-01) l
 ### 2.2 Report a machine problem (FR-01)
 
 - The worker picks the **machine** from a simple dropdown.
-- **Added on 2026-11-14:** the worker can also pick the machine on a **machine map** on the phone's Home screen: floors, rows and coloured seats that show which machines are down, assigned or being fixed (the same idea as the manager's Machine map). The dropdown stays as the simple way to report. The backend gives it an optional `floor` on machines and `list_machine_states()` (see `docs/api-contract.md` section 4.2). It shows only the colour of each machine, never report text or names.
+- **Added on 2026-11-22:** a worker works at **one machine** (our faculty said so). The phone's Home screen shows **only her own machine**, as a picture that changes colour with what is happening to it (running well, down, technician coming, being fixed), and a button to report a problem with it. The whole-factory map of the first idea (2026-11-14) is **not** on the worker's Home any more: the manager's Machine map on the website shows the whole factory. The dropdown stays as the simple way to report. The backend gives each worker an optional `machine` with her profile (`get_my_profile()`; one machine belongs to at most one worker and only a worker can have one) and `list_machine_states()` for the colour (see `docs/api-contract.md` sections 3 and 4.2). The colour list holds only a machine id and one of four words, never report text or names.
 - The worker types a short **description** of the problem.
 - The worker can see the **status** of their own reports (for example: waiting, in progress, resolved).
 
@@ -65,8 +65,9 @@ Each feature below comes from [prd.md](prd.md). The number (for example FR-01) l
 
 - The owner logs in on the **web app**.
 - The owner can **see all reports and their status**. This is for watching only.
-- The owner web app has **two pages**:
-  - **Reports:** a read-only list of all reports, with three count boxes on top (Waiting, In progress, Resolved).
+- The owner web app has **three pages**:
+  - **Dashboard:** a greeting and three count boxes (Waiting, In progress, Resolved).
+  - **Reports:** a read-only list of all reports.
   - **Manager codes:** a button to make a one-time **manager invite code**, and the list of unused codes (see 2.1).
 - The owner cannot approve, change or assign any report in the MVP. Approval comes later (see section 3). Making manager codes is the owner's only action that changes anything.
 
@@ -138,7 +139,7 @@ These are not decided yet. The team should answer them before building the relat
 
 - **Platform for the first test:** Decided: the worker and technician mobile apps are tested on **both Android and iPhone**. The owner uses the web app, so there is no owner mobile app.
 - **Voice input:** Decided: it waits for a later version.
-- **Chatbot, invoice and receipt, owner approval:** Decided: all three wait for a later version (see section 3).
+- **Chatbot, invoice and receipt, owner approval:** Decided: all three wait for a later version (see section 3). **Confirmed by Sakib on 2026-11-22:** invoice and receipt stay **out of the MVP** (Rubaiya asked). It needs an invoices table, storage for receipt photos, new functions and the owner's expense limit, which is too much new security work before the demo. A note on 2026-11-22 that said the opposite was wrong and is corrected in `requests/rubaiya/2026-11-22-invoice-stays-out-of-the-mvp.md`.
 - **Sign-up:** Decided on 2026-10-19: sign-up with invite codes is **in the MVP** (see 2.1). The owner makes manager codes, a manager makes worker and technician codes, a code works once and expires after 7 days, and there is no email confirmation. Owner accounts are still made by hand.
 - **Owner expense limit:** Not needed for the MVP. It comes back with owner approval later.
 - **Subscription price:** Still an estimate in [prd.md](prd.md) section 9. Not needed for the MVP.
