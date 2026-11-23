@@ -359,6 +359,21 @@ html[lang='bn'] .login-kicker {
   color: #9a8f85;
   opacity: 1;
 }
+/* Chrome puts its own look on boxes filled from a saved password (its own
+   background, colour and sometimes a bigger text size). These rules keep our
+   size, colour and see-through background, so the filled text looks the same
+   as typed text. */
+.lc-input:-webkit-autofill,
+.lc-input:-webkit-autofill:hover,
+.lc-input:-webkit-autofill:focus,
+.lc-input:autofill {
+  font: inherit;
+  font-size: max(12px, 3.7cqw);
+  -webkit-text-fill-color: #3b2418;
+  caret-color: #3b2418;
+  box-shadow: 0 0 0 100px #fbf3ea inset;
+  transition: background-color 9999s ease-out 0s;
+}
 .lc-error {
   margin: 0 0 2.4cqw;
   padding: 2cqw 3.4cqw;
@@ -462,7 +477,11 @@ html[lang='bn'] .login-kicker {
     .lc-field {
       height: 13.4cqw;
     }
-    .lc-input {
+    .lc-input,
+    .lc-input:-webkit-autofill,
+    .lc-input:-webkit-autofill:hover,
+    .lc-input:-webkit-autofill:focus,
+    .lc-input:autofill {
       font-size: 4.6cqw;
     }
     .lc-field-icon,

@@ -23,6 +23,8 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## In progress
 
+- LOGIN AUTOFILL TEXT SIZE (branch `fix/web-login-autofill`, 2026-11-21, checks pass, NOT tried with a real saved password): boxes filled from Chrome's saved password looked too big. `app/login.css` now has rules for autofilled boxes that keep our text size, colour and background.
+
 - MACHINE MAP ALARM SOUND FIX (branch `fix/web-alarm-sound`, 2026-11-22, checks pass, NOT heard on a real report yet): the beep stayed silent because the browser keeps new sound asleep until the page is used. The map now unlocks the sound on the first click or key press and wakes it before each beep (`components/MachineMap.tsx`). Click the page once after loading, then test.
 
 - MACHINE MAP COLOUR GUIDE AND RED DOWN MACHINES (branch `features/web-map-legend`, 2026-11-21, a down machine is now muted red `#a8493e` to `#8a3a31` (seat, "machines are down" pill, floor badge, Down tile, guide), as the teacher asked; looked at in a browser on fake data at 1440 wide; phone and Bangla not tried): the guide under the seats (Running, Down, Technician assigned, In progress, Selected) is shown again, with small squares in the real seat colours (cream, brown, butter yellow with a dashed stitch, baby blue, brown with a blue ring). Styles: `.map-legend` in `app/factory.css`.
