@@ -52,6 +52,8 @@ export async function login(email: string, password: string): Promise<Profile> {
  */
 export async function signUp(input: {
   fullName: string;
+  /** OPTIONAL: the name in Bangla letters. Empty means none (the English name is shown). */
+  fullNameBn?: string;
   email: string;
   password: string;
   code: string;
