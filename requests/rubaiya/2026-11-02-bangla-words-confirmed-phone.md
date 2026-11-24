@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done (2026-11-24: Rubaiya's session changed the words and error sentences in screenText.ts; the two "to confirm" sentences are changed too)
 
 ## What I need
 This replaces my earlier note `2026-11-02-bangla-words-to-change-later.md`. A Bangla speaker has now answered (the answers are in Part H of `docs/bangla-review-sheet.md`). Please change these words in `apps/mobile/src/language/screenText.ts`. Only these. The rest of the sheet (Parts D, E, F) is still unread, so do not change other words yet.

@@ -84,7 +84,7 @@ export const SIGNUP_ERROR_TEXT: Partial<Record<ApiErrorCode, Words>> = {
   },
   EMAIL_TAKEN: {
     en: 'This email already has an account. Please log in.',
-    bn: 'এই ইমেইলে আগেই অ্যাকাউন্ট আছে। অনুগ্রহ করে লগ ইন করুন।',
+    bn: 'এই ইমেইল দিয়ে আগেই একটি অ্যাকাউন্ট খোলা হয়েছে। লগ ইন পেজে যান।',
   },
   WRONG_PLATFORM: {
     en: 'This code is for the website. The phone app is for workers and technicians.',
@@ -137,7 +137,7 @@ export const WORKER_TEXT = {
   sentTitle: { en: 'Report sent', bn: 'রিপোর্ট পাঠানো হয়েছে' },
   sentBody: {
     en: 'The manager can now see it. You can follow it in My reports.',
-    bn: 'ম্যানেজার এখন এটি দেখতে পারবেন। আমার রিপোর্ট-এ এর অবস্থা দেখুন।',
+    bn: 'ম্যানেজার এখন এটি দেখতে পারবেন। আমার রিপোর্টে এর অবস্থা দেখুন।',
   },
   sentViewButton: { en: 'See my reports', bn: 'আমার রিপোর্ট দেখুন' },
   sentAnotherButton: { en: 'Report another problem', bn: 'আরেকটি সমস্যা জানান' },
@@ -148,7 +148,7 @@ export const WORKER_TEXT = {
   detailTitle: { en: 'Report details', bn: 'রিপোর্টের বিবরণ' },
   back: { en: 'Back', bn: 'ফিরে যান' },
   problemLabel: { en: 'Problem', bn: 'সমস্যা' },
-  reportedAtLabel: { en: 'Reported', bn: 'জানানো হয়েছে' },
+  reportedAtLabel: { en: 'Reported', bn: 'রিপোর্টের সময়' },
   technicianLabel: { en: 'Technician', bn: 'টেকনিশিয়ান' },
   noTechnicianYet: {
     en: 'Nobody is assigned yet. Your report is waiting in the queue.',
@@ -171,18 +171,18 @@ export const TECH_TEXT = {
   youAre: { en: 'You are', bn: 'আপনি এখন' },
   freeHint: {
     en: 'No open job. Waiting for the manager.',
-    bn: 'কোনো খোলা কাজ নেই। ম্যানেজারের অপেক্ষায়।',
+    bn: 'এখন কোনো বাকি কাজ নেই। ম্যানেজারের অপেক্ষায়।',
   },
   busyHint: { en: 'You have a job to finish.', bn: 'আপনার একটি কাজ শেষ করা বাকি।' },
-  noJobs: { en: 'You have no open jobs right now.', bn: 'এখন আপনার কোনো খোলা কাজ নেই।' },
+  noJobs: { en: 'You have no open jobs right now.', bn: 'এখন কোনো বাকি কাজ নেই' },
   noHistory: { en: 'You have no finished jobs yet.', bn: 'আপনার এখনো কোনো শেষ করা কাজ নেই।' },
-  needsAccept: { en: 'New: please accept', bn: 'নতুন: গ্রহণ করুন' },
+  needsAccept: { en: 'New: please accept', bn: 'নতুন: কাজটি নিন' },
   logoutButton: { en: 'Log out', bn: 'লগ আউট' },
 
-  reportedByLabel: { en: 'Reported by', bn: 'জানিয়েছেন' },
+  reportedByLabel: { en: 'Reported by', bn: 'রিপোর্ট করেছেন' },
   problemLabel: { en: 'Problem', bn: 'সমস্যা' },
-  reportedAtLabel: { en: 'Reported', bn: 'জানানো হয়েছে' },
-  acceptedAtLabel: { en: 'Accepted', bn: 'গ্রহণ করা হয়েছে' },
+  reportedAtLabel: { en: 'Reported', bn: 'রিপোর্টের সময়' },
+  acceptedAtLabel: { en: 'Accepted', bn: 'কাজ নেওয়া হয়েছে' },
   notAcceptedYet: { en: 'Not accepted yet', bn: 'এখনো গ্রহণ করা হয়নি' },
   progressLabel: { en: 'Progress', bn: 'অগ্রগতি' },
   whereLabel: { en: 'Where', bn: 'কোথায়' },
@@ -193,9 +193,9 @@ export const TECH_TEXT = {
   youWorking: { en: 'You are working on it', bn: 'আপনি কাজ করছেন' },
   repairTook: { en: 'Repair took', bn: 'মেরামতে সময় লেগেছে' },
 
-  acceptButton: { en: 'Accept job', bn: 'কাজটি গ্রহণ করুন' },
+  acceptButton: { en: 'Accept job', bn: 'কাজটি নিন' },
   startButton: { en: 'Start work', bn: 'কাজ শুরু করুন' },
-  fixedButton: { en: 'Mark as fixed', bn: 'ঠিক হয়েছে' },
+  fixedButton: { en: 'Mark as fixed', bn: 'মেরামত শেষ করুন' },
   working: { en: 'Saving…', bn: 'সংরক্ষণ হচ্ছে…' },
   doneNote: { en: 'This job is finished. Well done!', bn: 'কাজটি শেষ হয়েছে। চমৎকার!' },
 } satisfies Record<string, Words>;
@@ -207,7 +207,7 @@ export const TECH_TEXT = {
 export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   NOT_AUTHENTICATED: {
     en: 'We could not log you in. Check your email and password.',
-    bn: 'আপনাকে লগ ইন করা গেল না। ইমেইল ও পাসওয়ার্ড দেখে নিন।',
+    bn: 'লগ ইন করা যায়নি। ইমেইল আর পাসওয়ার্ড ঠিক আছে কি না দেখে নিন।',
   },
   WRONG_PLATFORM: {
     en: 'This phone app is for workers and technicians. Please use the website instead.',
@@ -215,15 +215,15 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   },
   NOT_ALLOWED: {
     en: 'You are not allowed to do this.',
-    bn: 'আপনার এটি করার অনুমতি নেই।',
+    bn: 'আপনার এই কাজটি করার অনুমতি নেই।',
   },
   NOT_FOUND: {
     en: 'We could not find that.',
-    bn: 'এটি খুঁজে পাওয়া যায়নি।',
+    bn: 'এটা খুঁজে পাওয়া যায়নি।',
   },
   INVALID_INPUT: {
     en: 'Please type your email and password.',
-    bn: 'অনুগ্রহ করে ইমেইল ও পাসওয়ার্ড লিখুন।',
+    bn: 'সব ঘর পূরণ করুন।',
   },
   TECHNICIAN_BUSY: {
     en: 'That technician is busy with another job.',
@@ -231,15 +231,15 @@ export const ERROR_TEXT: Record<ErrorCode | typeof UNKNOWN_ERROR, Words> = {
   },
   REPORT_ALREADY_ASSIGNED: {
     en: 'This report already has a technician.',
-    bn: 'এই রিপোর্টে আগেই একজন টেকনিশিয়ান আছেন।',
+    bn: 'এই রিপোর্টের জন্য আগেই একজন টেকনিশিয়ান আছেন।',
   },
   JOB_NOT_ACCEPTED: {
     en: 'Please accept the job first.',
-    bn: 'আগে কাজটি গ্রহণ করুন।',
+    bn: 'টেকনিশিয়ানকে আগে কাজটি নিতে হবে।',
   },
   JOB_ALREADY_ACCEPTED: {
     en: 'You already accepted this job.',
-    bn: 'আপনি এই কাজটি আগেই গ্রহণ করেছেন।',
+    bn: 'টেকনিশিয়ান এই কাজটি আগেই নিয়েছেন।',
   },
   INVALID_STATUS_CHANGE: {
     en: 'The status cannot be changed like that.',
