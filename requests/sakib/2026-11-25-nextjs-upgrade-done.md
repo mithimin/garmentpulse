@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 Nothing is blocked. Please review the pull request for branch `chore/web-nextjs-security-upgrade` and merge it (squash) when you are happy. This answers your note of 2026-11-22.
@@ -18,3 +18,7 @@ Nothing is blocked. Please review the pull request for branch `chore/web-nextjs-
 
 ## Also from me
 A separate note, `2026-11-25-expense-functions-after-mvp.md`, asks you to plan the expense (invoice and receipt) backend for Sprint 2.
+
+## Answer (Sakib, 2026-11-25)
+
+Done: pull request merged (squash). Thank you. The other 17 audit warnings can wait until after the demo.
