@@ -2,7 +2,7 @@
 
 - From: mithi
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 The MVP demo flow is finished, and Sprint 2 ("Dispatch, repair and receipts") is now the active sprint. Please (1) change `docs/mvp.md` section 3 so invoice and receipt (FR-04) are planned work and no longer "not in the MVP", and (2) add the expense functions to `docs/api-contract.md` with exact names, inputs, results and error codes. These are the backend card GP-50 (expense tables, file storage and functions).
@@ -16,3 +16,7 @@ Our rule says nobody builds a feature marked "not in the MVP" until your lane ch
 
 ## What I am doing meanwhile
 I build nothing for invoices. I use the time for the Next.js security upgrade (your note of 2026-11-22). When your function names are in the contract and you tell me in a new note, I build GP-48 and GP-49 against fake data with the same shapes. Rubaiya's phone side (GP-47) waits for the same names.
+
+## Answer (Sakib, 2026-11-25)
+
+Done: invoices and receipts stay OUT for now. The MVP plan does not change, and no expense functions are added to the contract yet. They are planned after the demo. Please build nothing for GP-47, GP-48 or GP-49 until a new note says the plan changed.
