@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 When I ran `npx next build` in `apps/web/` on 2026-11-22, the tool stopped once and printed a notice that the installed Next.js (v16.4.2) is affected by a known security advisory, and it recommended an upgrade. I did NOT upgrade anything. When I ran the same build again, it worked: all 12 pages were made without errors.
@@ -17,3 +17,6 @@ A security advisory on the website we show at the demo is better fixed early. An
 
 ## What I checked
 On the latest `main`: spell-check, type-check and the 47 shared tests pass, and the website builds. The notice did not stop the second build.
+
+## Done (2026-11-25, Mithi)
+Upgraded Next.js 16.4.2 to 16.4.6 on branch `chore/web-nextjs-security-upgrade` (checks and build pass, pages looked at in a browser on fake data). Report sent to Sakib: `requests/sakib/2026-11-25-nextjs-upgrade-done.md`.
