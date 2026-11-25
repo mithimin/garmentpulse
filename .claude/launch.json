@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web-fake-3000",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "require('child_process').spawn('npm run dev --workspace @garmentpulse/web -- -p 3000',{stdio:'inherit',shell:true,env:{...process.env,NEXT_PUBLIC_SUPABASE_URL:'',NEXT_PUBLIC_SUPABASE_ANON_KEY:''}})"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "web-real",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--workspace", "@garmentpulse/web", "--", "-p", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "web-fake",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "-e",
+        "require('child_process').spawn('npm run dev --workspace @garmentpulse/web -- -p 3100',{stdio:'inherit',shell:true,env:{...process.env,NEXT_PUBLIC_SUPABASE_URL:'',NEXT_PUBLIC_SUPABASE_ANON_KEY:''}})"
+      ],
+      "port": 3100
+    }
+  ]
+}
