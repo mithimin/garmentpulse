@@ -4,9 +4,12 @@
 
 This is the "where are we?" page for the website. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-22 by Mithi's session (alarm sound fix)
+**Last updated:** 2026-11-25 by Mithi's session (Next.js security upgrade, Sprint 2 started)
 
 ## Done
+
+- NEXT.JS SECURITY UPGRADE (branch `chore/web-nextjs-security-upgrade`, pull request 112, 2026-11-25, checks and build pass, pages looked at in a browser on fake data; real backend, Bangla and phone not tried): Next.js 16.4.2 to 16.4.6 to fix a security advisory. Sakib reviews and merges.
+- SPRINT 2 (started 2026-11-25): the MVP is done. The board cards for the finished web work (GP-21, 24, 25, 31, 32, 37) are marked done. The invoice and receipt cards (GP-48, GP-49) wait for Sakib to plan the expense backend and put its function names in `docs/api-contract.md` (note: `requests/sakib/2026-11-25-expense-functions-after-mvp.md`).
 
 - The Next.js project exists and shows a "hello" page connected to `@garmentpulse/shared`.
 - Building blocks (branch `features/web-screens`, pushed, waiting for review): fonts, one blue theme (`app/globals.css`), the web logo, top bar with Log out, language switch (English / Bangla, Bangla digits), card, buttons, status and free/busy labels, inputs, count box, table, loading / empty / error messages, and a "page not found" page.
@@ -56,6 +59,8 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 4. Check the Bangla words with a Bangla speaker.
 
 ## Waiting on someone else
+
+- Sakib: the expense (invoice and receipt) functions in the contract, then I build GP-48 and GP-49 on fake data first. Note: `requests/sakib/2026-11-25-expense-functions-after-mvp.md`.
 
 - Sakib: more test machines (up to 45, floors 1 to 3, seats A1 to C5) so the real Machine map shows several floors. Note: `requests/sakib/2026-11-14-more-machines-for-the-map.md`.
 
