@@ -4,12 +4,14 @@
   -- What this file does, in plain words:
   --   Acts as each test person (Nila the worker, Tariq and Hasan the
   --   technicians, Farhan the manager, Mr. Rahman the owner, plus "nobody")
-  --   and tries about 170 things against the real functions and tables. The
+  --   and tries about 300 things against the real functions and tables. The
   --   last part tests SIGN-UP WITH INVITE CODES: the code functions and the
   --   sign-up guard (it adds pretend new people to the login list, and the
   --   final "error" removes them again).
   --   Allowed actions must WORK. Forbidden actions must FAIL with the exact
-  --   error code from docs/api-contract.md. For example:
+  --   error code from docs/api-contract.md. The "EXPENSE:" checks at the end
+  --   cover the repair costs, the owner's limit and the photo rules (they add
+  --   pretend photo rows, which are undone too). For example:
   --     * a worker cannot assign a technician            -> NOT_ALLOWED
   --     * a busy technician cannot get a second job      -> TECHNICIAN_BUSY
   --     * nobody can write a table directly              -> permission denied
@@ -248,7 +250,127 @@
       {"name": "MYMACHINE: a second worker can get a different machine", "role": "postgres", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'newworker@example.com' returning 1) select to_jsonb(1)"},
       {"name": "MYMACHINE: the second worker now sees her own machine (SM-01, not Nila's)", "email": "newworker@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'code' = 'SM-01'"},
       {"name": "MYMACHINE: Nila still sees SM-14", "email": "nila@example.com", "call": "select public.get_my_profile()", "check": "$1->'machine'->>'code' = 'SM-14'"},
-      {"name": "MYMACHINE: a worker cannot change her own machine directly", "email": "nila@example.com", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'nila@example.com' returning 1) select to_jsonb(1)", "error": "permission denied for table profiles"}
+      {"name": "MYMACHINE: a worker cannot change her own machine directly", "email": "nila@example.com", "call": "with x as (update public.profiles set machine_id = '$M1' where email = 'nila@example.com' returning 1) select to_jsonb(1)", "error": "permission denied for table profiles"},
+
+      {"name": "EXPENSE: set up, no expenses and no limit", "role": "postgres", "call": "with a as (delete from public.expenses returning 1), b as (delete from public.expense_settings returning 1) select to_jsonb(1)"},
+      {"name": "EXPENSE: set up, a job for Tariq that he has not accepted", "role": "postgres", "call": "with x as (insert into public.reports (machine_id, reported_by, description, technician_id) values ('$M1', '$NILA', 'EXPENSE test job', '$TARIQ') returning id) select to_jsonb(x) from x", "save": "XJOB"},
+      {"name": "EXPENSE: the photo box is private, 5 MB, JPG and PNG only", "role": "postgres", "call": "select to_jsonb(b) from storage.buckets b where b.id = 'expense-photos'", "check": "$1->>'public' = 'false' and $1->>'file_size_limit' = '5242880' and $1->'allowed_mime_types' = '[\"image/jpeg\", \"image/png\"]'::jsonb"},
+      {"name": "EXPENSE: there is no rule that lets anyone change or delete a photo", "role": "postgres", "call": "select to_jsonb(count(*)) from pg_policies where schemaname = 'storage' and tablename = 'objects' and cmd in ('UPDATE', 'DELETE', 'ALL')", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: live updates are on for expenses", "role": "postgres", "call": "select to_jsonb(count(*)) from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'expenses'", "check": "($1 #>> '{}')::int = 1"},
+      {"name": "EXPENSE: a technician uploads an invoice photo into his own folder", "email": "tariq@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$TARIQ/chk-inv1.jpg') returning 1) select to_jsonb(count(*)) from x", "check": "($1 #>> '{}')::int = 1"},
+      {"name": "EXPENSE: a technician uploads a receipt photo into his own folder", "email": "tariq@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$TARIQ/chk-rec1.jpg') returning 1) select to_jsonb(count(*)) from x", "check": "($1 #>> '{}')::int = 1"},
+      {"name": "EXPENSE: a technician cannot upload into another technician's folder", "email": "tariq@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$HASAN/chk-sneaky.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: a technician cannot upload a PDF file name", "email": "tariq@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$TARIQ/chk-paper.pdf') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: a technician cannot upload outside a folder", "email": "tariq@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', 'chk-loose.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: a worker cannot upload a photo", "email": "nila@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$NILA/chk-w.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: the manager cannot upload a photo", "email": "farhan@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$FARHAN/chk-m.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: the owner cannot upload a photo", "email": "owner@example.com", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$OWNER/chk-o.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: a logged-out visitor cannot upload a photo", "role": "anon", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$TARIQ/chk-anon.jpg') returning 1) select to_jsonb(count(*)) from x", "error": "new row violates row-level security policy"},
+      {"name": "EXPENSE: cannot send a cost before accepting the job", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "JOB_NOT_ACCEPTED"},
+      {"name": "EXPENSE: set up, Tariq accepts the job", "role": "postgres", "call": "with x as (update public.reports set accepted_at = now() where id = '$XJOB' returning 1) select to_jsonb(count(*)) from x"},
+      {"name": "EXPENSE: cannot send a cost before starting the job", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_STATUS_CHANGE"},
+      {"name": "EXPENSE: set up, Tariq starts the job", "role": "postgres", "call": "with x as (update public.reports set status = 'in_progress' where id = '$XJOB' returning 1) select to_jsonb(count(*)) from x"},
+      {"name": "EXPENSE: a worker cannot send a cost", "email": "nila@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the manager cannot send a cost", "email": "farhan@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the owner cannot send a cost", "email": "owner@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a technician cannot send a cost for someone else's job", "email": "hasan@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: an unknown job is refused", "email": "tariq@example.com", "call": "select public.submit_expense('not-an-id', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: an amount of 0 is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 0, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a negative amount is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', -5, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an amount over 10,000,000 is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 10000001, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an amount with 3 decimals is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 1.005, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a missing amount is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', null, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an amount that is not a number is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 'NaN', 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an empty reason is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, '   ', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a reason over 500 letters is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, repeat('a', 501), '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: no invoice photo: refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '', '$TARIQ/chk-rec1.jpg')", "error": "RECEIPT_REQUIRED"},
+      {"name": "EXPENSE: no receipt photo: refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', null)", "error": "RECEIPT_REQUIRED"},
+      {"name": "EXPENSE: a photo that was never uploaded is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-ghost.jpg')", "error": "RECEIPT_REQUIRED"},
+      {"name": "EXPENSE: the same photo twice is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-inv1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: set up, a photo in Hasan's folder", "role": "postgres", "call": "with x as (insert into storage.objects (bucket_id, name) values ('expense-photos', '$HASAN/chk-hinv.jpg') returning 1) select to_jsonb(count(*)) from x", "check": "($1 #>> '{}')::int = 1"},
+      {"name": "EXPENSE: a photo from another person's folder is refused", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$HASAN/chk-hinv.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: the refused calls saved nothing", "role": "postgres", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: with no limit set, a cost waits for the owner", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "check": "$1->>'status' = 'waiting' and $1->'limit_at_submit' = 'null'::jsonb and ($1->>'amount')::numeric = 500 and $1->'decided_by' = 'null'::jsonb and $1->'recorded_at' = 'null'::jsonb", "save": "EXP1"},
+      {"name": "EXPENSE: set up, six more pairs of photos for Tariq", "role": "postgres", "call": "with x as (insert into storage.objects (bucket_id, name) select 'expense-photos', '$TARIQ/chk-' || i || s from generate_series(2, 7) i, (values ('a.jpg'), ('b.png')) v(s) returning 1) select to_jsonb(count(*)) from x", "check": "($1 #>> '{}')::int = 12"},
+      {"name": "EXPENSE: a photo already used cannot be used again", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-inv1.jpg', '$TARIQ/chk-rec1.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a used receipt cannot come back as an invoice", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 500, 'New needle bar', '$TARIQ/chk-rec1.jpg', '$TARIQ/chk-2a.jpg')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: the owner sees that no limit is set", "email": "owner@example.com", "call": "select public.get_expense_limit()", "check": "$1->'amount' = 'null'::jsonb and $1->'updated_at' = 'null'::jsonb"},
+      {"name": "EXPENSE: the manager cannot read the limit", "email": "farhan@example.com", "call": "select public.get_expense_limit()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a technician cannot read the limit", "email": "tariq@example.com", "call": "select public.get_expense_limit()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the manager cannot set the limit", "email": "farhan@example.com", "call": "select public.set_expense_limit(5)", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a technician cannot set the limit", "email": "tariq@example.com", "call": "select public.set_expense_limit(999999)", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a worker cannot set the limit", "email": "nila@example.com", "call": "select public.set_expense_limit(5)", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a negative limit is refused", "email": "owner@example.com", "call": "select public.set_expense_limit(-1)", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an empty limit is refused", "email": "owner@example.com", "call": "select public.set_expense_limit(null)", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a limit with 3 decimals is refused", "email": "owner@example.com", "call": "select public.set_expense_limit(10.001)", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a limit over 10,000,000 is refused", "email": "owner@example.com", "call": "select public.set_expense_limit(10000001)", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: the owner sets the limit to 1000", "email": "owner@example.com", "call": "select public.set_expense_limit(1000)", "check": "($1->>'amount')::numeric = 1000 and $1->>'updated_at' is not null"},
+      {"name": "EXPENSE: changing the limit does not change an older cost", "email": "farhan@example.com", "call": "select public.get_expense('$EXP1')", "check": "$1->>'status' = 'waiting'"},
+      {"name": "EXPENSE: a cost under the limit is approved at once", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 400, 'New needle bar', '$TARIQ/chk-2a.jpg', '$TARIQ/chk-2b.png')", "check": "$1->>'status' = 'approved' and ($1->>'limit_at_submit')::numeric = 1000 and $1->'decided_by' = 'null'::jsonb", "save": "EXP2"},
+      {"name": "EXPENSE: a cost equal to the limit is approved", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 1000, 'New needle bar', '$TARIQ/chk-3a.jpg', '$TARIQ/chk-3b.png')", "check": "$1->>'status' = 'approved'", "save": "EXP3"},
+      {"name": "EXPENSE: a cost just over the limit waits", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 1000.01, 'New needle bar', '$TARIQ/chk-4a.jpg', '$TARIQ/chk-4b.png')", "check": "$1->>'status' = 'waiting'", "save": "EXP4"},
+      {"name": "EXPENSE: the technician lists his own costs (4)", "email": "tariq@example.com", "call": "select public.list_my_expenses()", "check": "jsonb_array_length($1) = 4"},
+      {"name": "EXPENSE: another technician sees none", "email": "hasan@example.com", "call": "select public.list_my_expenses()", "check": "jsonb_array_length($1) = 0"},
+      {"name": "EXPENSE: a worker cannot list a technician's costs", "email": "nila@example.com", "call": "select public.list_my_expenses()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the manager uses the other list", "email": "farhan@example.com", "call": "select public.list_my_expenses()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the manager lists all costs (4)", "email": "farhan@example.com", "call": "select public.list_expenses()", "check": "jsonb_array_length($1) = 4"},
+      {"name": "EXPENSE: the owner filters the waiting ones (2)", "email": "owner@example.com", "call": "select public.list_expenses('waiting')", "check": "jsonb_array_length($1) = 2"},
+      {"name": "EXPENSE: a wrong status word is refused", "email": "farhan@example.com", "call": "select public.list_expenses('paid')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a technician cannot list all costs", "email": "tariq@example.com", "call": "select public.list_expenses()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a worker cannot list all costs", "email": "nila@example.com", "call": "select public.list_expenses()", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: nobody logged in cannot list costs", "call": "select public.list_expenses()", "error": "NOT_AUTHENTICATED"},
+      {"name": "EXPENSE: a logged-out visitor cannot call the functions", "role": "anon", "call": "select public.list_expenses()", "error": "permission denied for function list_expenses"},
+      {"name": "EXPENSE: one cost has all 16 fields of the contract", "email": "owner@example.com", "call": "select public.get_expense('$EXP1')", "check": "(select count(*) from jsonb_object_keys($1)) = 16 and $1 ?& array['id','report','amount','reason','status','technician','invoice_path','receipt_path','limit_at_submit','decided_by','decided_at','rejection_reason','recorded_by','recorded_at','created_at','updated_at']"},
+      {"name": "EXPENSE: a cost carries its job, machine and technician", "email": "farhan@example.com", "call": "select public.get_expense('$EXP1')", "check": "$1->'report'->>'id' = '$XJOB' and $1->'report'->>'description' = 'EXPENSE test job' and $1->'report'->'machine'->>'code' = 'SM-01' and $1->'technician'->>'display_name' = 'Tariq Hasan'"},
+      {"name": "EXPENSE: the technician opens his own cost", "email": "tariq@example.com", "call": "select public.get_expense('$EXP1')", "check": "$1->>'id' = '$EXP1'"},
+      {"name": "EXPENSE: another technician cannot open it", "email": "hasan@example.com", "call": "select public.get_expense('$EXP1')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: a worker cannot open it", "email": "nila@example.com", "call": "select public.get_expense('$EXP1')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: a bad id is not found", "email": "owner@example.com", "call": "select public.get_expense('not-an-id')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: a waiting cost cannot be recorded (blocked until the owner decides)", "email": "farhan@example.com", "call": "select public.record_expense('$EXP1')", "error": "EXPENSE_NOT_APPROVED"},
+      {"name": "EXPENSE: the manager cannot decide", "email": "farhan@example.com", "call": "select public.decide_expense('$EXP1', 'approved')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the technician cannot approve his own cost", "email": "tariq@example.com", "call": "select public.decide_expense('$EXP1', 'approved')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a worker cannot decide", "email": "nila@example.com", "call": "select public.decide_expense('$EXP1', 'approved')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the owner cannot record", "email": "owner@example.com", "call": "select public.record_expense('$EXP2')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: the technician cannot record", "email": "tariq@example.com", "call": "select public.record_expense('$EXP2')", "error": "NOT_ALLOWED"},
+      {"name": "EXPENSE: a wrong decision word is refused", "email": "owner@example.com", "call": "select public.decide_expense('$EXP1', 'maybe')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a rejection without a reason is refused", "email": "owner@example.com", "call": "select public.decide_expense('$EXP1', 'rejected')", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: a rejection reason over 300 letters is refused", "email": "owner@example.com", "call": "select public.decide_expense('$EXP1', 'rejected', repeat('a', 301))", "error": "INVALID_INPUT"},
+      {"name": "EXPENSE: an unknown cost cannot be decided", "email": "owner@example.com", "call": "select public.decide_expense('not-an-id', 'approved')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: the owner rejects with a short reason", "email": "owner@example.com", "call": "select public.decide_expense('$EXP1', 'rejected', '  Too expensive. ')", "check": "$1->>'status' = 'rejected' and $1->>'rejection_reason' = 'Too expensive.' and $1->'decided_by'->>'id' = '$OWNER' and $1->>'decided_at' is not null"},
+      {"name": "EXPENSE: a decision is final", "email": "owner@example.com", "call": "select public.decide_expense('$EXP1', 'approved')", "error": "EXPENSE_ALREADY_DECIDED"},
+      {"name": "EXPENSE: a rejected cost cannot be recorded", "email": "farhan@example.com", "call": "select public.record_expense('$EXP1')", "error": "EXPENSE_NOT_APPROVED"},
+      {"name": "EXPENSE: a cost approved by the limit cannot be decided again", "email": "owner@example.com", "call": "select public.decide_expense('$EXP2', 'rejected', 'No')", "error": "EXPENSE_ALREADY_DECIDED"},
+      {"name": "EXPENSE: the owner approves, and a reason is ignored", "email": "owner@example.com", "call": "select public.decide_expense('$EXP4', 'approved', 'ignored words')", "check": "$1->>'status' = 'approved' and $1->'rejection_reason' = 'null'::jsonb and $1->'decided_by'->>'id' = '$OWNER'"},
+      {"name": "EXPENSE: the manager sees the owner's decision", "email": "farhan@example.com", "call": "select public.get_expense('$EXP4')", "check": "$1->>'status' = 'approved'"},
+      {"name": "EXPENSE: the manager records the approved cost", "email": "farhan@example.com", "call": "select public.record_expense('$EXP4')", "check": "$1->'recorded_by'->>'id' = '$FARHAN' and $1->>'recorded_at' is not null and $1->>'status' = 'approved'"},
+      {"name": "EXPENSE: a cost cannot be recorded twice", "email": "farhan@example.com", "call": "select public.record_expense('$EXP4')", "error": "EXPENSE_ALREADY_RECORDED"},
+      {"name": "EXPENSE: the manager records a cost approved by the limit", "email": "farhan@example.com", "call": "select public.record_expense('$EXP2')", "check": "$1->>'recorded_at' is not null and $1->'decided_by' = 'null'::jsonb"},
+      {"name": "EXPENSE: an unknown cost cannot be recorded", "email": "farhan@example.com", "call": "select public.record_expense('not-an-id')", "error": "NOT_FOUND"},
+      {"name": "EXPENSE: a technician cannot write the table", "email": "tariq@example.com", "call": "with x as (update public.expenses set status = 'approved' returning 1) select to_jsonb(count(*)) from x", "error": "permission denied for table expenses"},
+      {"name": "EXPENSE: the owner cannot write the table", "email": "owner@example.com", "call": "with x as (update public.expenses set amount = 1 returning 1) select to_jsonb(count(*)) from x", "error": "permission denied for table expenses"},
+      {"name": "EXPENSE: the manager cannot delete from the table", "email": "farhan@example.com", "call": "with x as (delete from public.expenses returning 1) select to_jsonb(count(*)) from x", "error": "permission denied for table expenses"},
+      {"name": "EXPENSE: nobody reads the limit table directly", "email": "owner@example.com", "call": "select to_jsonb(count(*)) from public.expense_settings", "error": "permission denied for table expense_settings"},
+      {"name": "EXPENSE: the technician sees his own rows (4) in the table (live updates use this)", "email": "tariq@example.com", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 4"},
+      {"name": "EXPENSE: another technician sees no rows in the table (live updates use this)", "email": "hasan@example.com", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: a worker sees no rows in the table (live updates use this)", "email": "nila@example.com", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: the manager sees every row (4) in the table (live updates use this)", "email": "farhan@example.com", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 4"},
+      {"name": "EXPENSE: the owner sees every row (4) in the table (live updates use this)", "email": "owner@example.com", "call": "select to_jsonb(count(*)) from public.expenses", "check": "($1 #>> '{}')::int = 4"},
+      {"name": "EXPENSE: the technician can open only his own photos (14)", "email": "tariq@example.com", "call": "select to_jsonb(count(*)) from storage.objects where bucket_id = 'expense-photos' and name like '%/chk-%'", "check": "($1 #>> '{}')::int = 14"},
+      {"name": "EXPENSE: another technician sees only his 1 photo", "email": "hasan@example.com", "call": "select to_jsonb(count(*)) from storage.objects where bucket_id = 'expense-photos' and name like '%/chk-%'", "check": "($1 #>> '{}')::int = 1"},
+      {"name": "EXPENSE: a worker can open no photo", "email": "nila@example.com", "call": "select to_jsonb(count(*)) from storage.objects where bucket_id = 'expense-photos' and name like '%/chk-%'", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: the manager can open every photo (15)", "email": "farhan@example.com", "call": "select to_jsonb(count(*)) from storage.objects where bucket_id = 'expense-photos' and name like '%/chk-%'", "check": "($1 #>> '{}')::int = 15"},
+      {"name": "EXPENSE: the owner can open every photo (15)", "email": "owner@example.com", "call": "select to_jsonb(count(*)) from storage.objects where bucket_id = 'expense-photos' and name like '%/chk-%'", "check": "($1 #>> '{}')::int = 15"},
+      {"name": "EXPENSE: a technician cannot change a sent photo", "email": "tariq@example.com", "call": "with x as (update storage.objects set name = name where bucket_id = 'expense-photos' returning 1) select to_jsonb(count(*)) from x", "check": "($1 #>> '{}')::int = 0"},
+      {"name": "EXPENSE: after a rejection the technician sends a new cost", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 600, 'New needle bar', '$TARIQ/chk-5a.jpg', '$TARIQ/chk-5b.png')", "check": "$1->>'status' = 'approved'"},
+      {"name": "EXPENSE: the rejected cost stays in the list with its reason", "email": "farhan@example.com", "call": "select public.list_expenses('rejected')", "check": "jsonb_array_length($1) = 1 and $1->0->>'rejection_reason' = 'Too expensive.'"},
+      {"name": "EXPENSE: set up, Tariq finishes the job", "role": "postgres", "call": "with x as (update public.reports set status = 'resolved' where id = '$XJOB' returning 1) select to_jsonb(count(*)) from x"},
+      {"name": "EXPENSE: a cost can still be sent after the job is fixed", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 50, 'New needle bar', '$TARIQ/chk-6a.jpg', '$TARIQ/chk-6b.png')", "check": "$1->>'status' = 'approved'"},
+      {"name": "EXPENSE: the owner sets the limit to 0", "email": "owner@example.com", "call": "select public.set_expense_limit(0)", "check": "($1->>'amount')::numeric = 0"},
+      {"name": "EXPENSE: with a limit of 0 even 1 taka waits", "email": "tariq@example.com", "call": "select public.submit_expense('$XJOB', 1, 'New needle bar', '$TARIQ/chk-7a.jpg', '$TARIQ/chk-7b.png')", "check": "$1->>'status' = 'waiting'"},
+      {"name": "EXPENSE: the database refuses a recorded rejected cost", "role": "postgres", "call": "with x as (update public.expenses set recorded_by = '$FARHAN', recorded_at = now() where id = '$EXP1' returning 1) select to_jsonb(count(*)) from x", "error": "new row for relation"},
+      {"name": "EXPENSE: the database refuses a rejection without a reason", "role": "postgres", "call": "with x as (update public.expenses set rejection_reason = null where id = '$EXP1' returning 1) select to_jsonb(count(*)) from x", "error": "new row for relation"},
+      {"name": "EXPENSE: there can only be one limit row", "role": "postgres", "call": "with x as (insert into public.expense_settings (only_row, limit_amount) values (false, 5) returning 1) select to_jsonb(count(*)) from x", "error": "new row for relation"},
+      {"name": "EXPENSE: a job that has a cost cannot be deleted", "role": "postgres", "call": "with x as (delete from public.reports where id = '$XJOB' returning 1) select to_jsonb(count(*)) from x", "error": "update or delete on table"}
     ]$json$;
   
     t         jsonb;
@@ -316,6 +438,10 @@
       v_check := t ->> 'check';
       -- The id of Sewing machine 01 can be used inside a check too (the machine map checks).
       v_check := replace(v_check, '$M1', v_m1::text);
+    -- And the ids of the test people (the expense checks compare who did what).
+    v_check := replace(v_check, '$TARIQ', v_tariq::text);
+    v_check := replace(v_check, '$FARHAN', v_farhan::text);
+    v_check := replace(v_check, '$OWNER', v_owner::text);
       for v_key in
         select k from jsonb_object_keys(v_vars) as k order by length(k) desc
       loop

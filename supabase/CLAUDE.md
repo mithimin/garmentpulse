@@ -18,11 +18,11 @@ The **backend** is the hidden part of GarmentPulse that stores information and e
 
 | Where | What is in it |
 |---|---|
-| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions, the sign-up guard, Bangla names, machine codes, machine seats, machine floors and states, seats per floor). The newest file is the last change. |
-| `tests/` | `api_rules_check.sql` (184 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (30 checks through the real login service, run in a terminal) |
+| `migrations/` | Database changes, one new file per change, in order (tables, security rules, functions, the sign-up guard, Bangla names, machine codes, machine seats, machine floors and states, seats per floor, the worker's machine, expenses and their photos). The newest file is the last change. |
+| `tests/` | `api_rules_check.sql` (303 checks, run by hand in the SQL Editor) and `real_client.check.ts` with its starter `run_real_check.mjs` (38 checks through the real login service, run in a terminal) |
 | `seed.sql` | The test story: 5 people, 45 machines (3 floors of 3 rows of 5 seats), 4 reports |
 | `approve_test_accounts.sql` | Puts the 5 test emails on the approved list, so their logins can be created by hand (see the sign-up guard rule below) |
-| `reset_demo_data.sql` | Deletes all reports and all invite codes and empties the Bangla names, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
+| `reset_demo_data.sql` | Deletes all expenses, the expense limit, all reports and all invite codes and empties the Bangla names, so the checks and the demo start clean. It refuses to run if any account is not an `@example.com` test account. |
 | `fill_bangla_test_names.sql` | Writes the reviewed Bangla names of the 5 test people and the 45 machines. Run it **after** the rules check (which expects them empty), before the demo. |
 | `functions/` | Edge Functions (small server programs). Empty on purpose: not needed in the MVP; the chatbot and camera alerts will use them later |
 
@@ -58,4 +58,4 @@ To rebuild the backend from nothing, in the Supabase dashboard: (1) paste each f
 
 ## Status
 
-The backend is built and tested: 15 migration files, 184 database checks and 30 real client checks. For the live picture (what is done, in progress and waiting), read [`STATUS.md`](./STATUS.md).
+18 migration files, 303 database checks and 38 real client checks. The newest 3 (expenses) are on the real project and both checks pass (2026-11-26). For the live picture (what is done, in progress and waiting), read [`STATUS.md`](./STATUS.md).
