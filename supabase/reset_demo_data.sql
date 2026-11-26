@@ -3,18 +3,24 @@
 -- =============================================================================
 -- What this file does, in plain words:
 --   Every test and every rehearsal leaves clutter behind: extra reports,
---   changed statuses, busy technicians, and invite codes that nobody used.
---   This file puts the REPORTS and the INVITE CODES back to a clean slate, so
---   you can start from the story in supabase/seed.sql again.
+--   changed statuses, busy technicians, repair costs, and invite codes that
+--   nobody used. This file puts the REPORTS, the EXPENSES, the owner's
+--   EXPENSE LIMIT and the INVITE CODES back to a clean slate, so you can start
+--   from the story in supabase/seed.sql again.
+--
+--   It does NOT delete the uploaded invoice and receipt photos (Supabase does
+--   not allow deleting stored files with SQL). To remove them: dashboard >
+--   Storage > expense-photos. Leftover photos do no harm to the checks.
 --
 -- HOW TO USE (two steps, in this order):
---   1. Run THIS file.   (it deletes all reports and all invite codes)
+--   1. Run THIS file.   (it deletes all expenses, reports and invite codes)
 --   2. Run supabase/seed.sql.  (it puts the 4 story reports back)
 --
 -- AFTER BOTH STEPS the database holds exactly:
 --   * the 5 test people and 5 machines, with EMPTY Bangla names (fill them after
 --     the checks with supabase/fill_bangla_test_names.sql),
 --   * no invite codes at all (the rules check makes its own and counts them),
+--   * no expenses and no expense limit,
 --   * 4 reports: one in progress with Tariq (so he is busy), two waiting in
 --     the queue, and one resolved by Hasan (a past job). Hasan is free.
 --
@@ -40,6 +46,11 @@ begin
   end if;
 end;
 $$;
+
+-- Delete every expense first (a report with an expense cannot be deleted), and
+-- forget the owner's limit.
+delete from public.expenses;
+delete from public.expense_settings;
 
 -- Delete every report. People, machines and logins stay.
 delete from public.reports;

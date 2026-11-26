@@ -19,7 +19,10 @@
 //        owner and a manager make codes, pretend new people sign up with
 //        them with `signUpWithCode`, and every cheat is refused (a used code,
 //        the wrong app, a made-up code, the same email twice, no code at all,
-//        and a role typed into the sign-up form).
+//        and a role typed into the sign-up form),
+//     7. EXPENSES work through the real services: real photo uploads into the
+//        private box, wrong files refused, the owner's approval, the manager's
+//        record, and who may open a photo.
 //
 // HOW TO RUN (on your own computer; nothing secret is ever saved in a file)
 //   1. In your terminal, type the values. `read -s` hides what you type and
@@ -51,6 +54,11 @@
 //   and invite codes. At the end of the run it prints the exact lines to
 //   delete them. Sign-up must be switched ON in the Supabase dashboard
 //   (Authentication, Email, with email confirmation OFF) for this part.
+//
+//   The expense part leaves one expense, two photos and the owner's limit (100)
+//   behind. supabase/reset_demo_data.sql removes the first and the last; delete
+//   the photos in the dashboard under Storage > expense-photos. Run the reset
+//   BEFORE any line that deletes reports: a report with an expense is protected.
 //
 // Owned by Sakib. It is never run by `npm run check` or by CI.
 
@@ -571,6 +579,164 @@ describe.skipIf(missing.length > 0)('real client check', () => {
       });
       expect(profile.display_name).toBe('Real Check Bangla');
       expect(profile.display_name_bn).toBe('রিয়েল চেক');
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Expenses and the owner's approval, through the REAL database and storage
+  // ---------------------------------------------------------------------------
+  // The database check uses pretend photo rows. This part uploads real files, so
+  // it proves the size limit, the file types and who may open a photo. The
+  // shared toolbox has no expense helpers yet, so it calls the functions by name.
+  describe('expenses', () => {
+    const BUCKET = 'expense-photos';
+    // The smallest possible real PNG picture (one pixel).
+    const PNG = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      'base64',
+    );
+    const folder = {} as Record<'hasan' | 'tariq' | 'nila', string>;
+    const paths = { invoice: '', receipt: '' };
+    let jobId = '';
+    let expenseId = '';
+
+    /** Call a database function; give back its answer, or throw its error code. */
+    async function call<T>(who: PersonName, name: string, args?: Record<string, unknown>) {
+      const { data, error } = await clients[who].rpc(name, args);
+      if (error) throw new Error(error.message);
+      return data as T;
+    }
+
+    /** Try an upload and say whether the storage service accepted it. */
+    async function uploads(who: PersonName, path: string, body = PNG, contentType = 'image/png') {
+      const { error } = await clients[who].storage.from(BUCKET).upload(path, body, { contentType });
+      return error === null;
+    }
+
+    /** True when this person can get a link to the photo AND the link really opens. */
+    async function canOpen(client: SupabaseClient, path: string): Promise<boolean> {
+      const { data } = await client.storage.from(BUCKET).createSignedUrl(path, 60);
+      if (!data) return false;
+      return (await fetch(data.signedUrl)).ok;
+    }
+
+    type ExpenseRow = {
+      id: string;
+      status: string;
+      recorded_at: string | null;
+    };
+
+    beforeAll(async () => {
+      for (const name of ['hasan', 'tariq', 'nila'] as const) {
+        folder[name] = (await apis[name].getMyProfile()).id;
+      }
+      const stamp = crypto.randomUUID();
+      paths.invoice = `${folder.hasan}/${stamp}-invoice.png`;
+      paths.receipt = `${folder.hasan}/${stamp}-receipt.png`;
+
+      // A job for Hasan: reported, assigned, accepted and started.
+      const machines = await apis.nila.listMachines();
+      const report = await apis.nila.createReport(
+        machines[0].id,
+        `Real client check (expense) ${new Date().toISOString()}`,
+      );
+      jobId = report.id;
+      // Needs Hasan to be free: run the reset and the seed first.
+      await apis.farhan.assignTechnician(jobId, folder.hasan);
+      await apis.hasan.acceptJob(jobId);
+      await apis.hasan.updateJobStatus(jobId, 'in_progress');
+    });
+
+    afterAll(async () => {
+      // Finish the job so Hasan is free again.
+      if (jobId) await apis.hasan.updateJobStatus(jobId, 'resolved').catch(() => undefined);
+      console.log(
+        `\nThis run left an expense, two photos and an expense limit behind.\n` +
+          `  Run supabase/reset_demo_data.sql, then delete the photos under Storage > ${BUCKET}.\n`,
+      );
+    });
+
+    it('a technician uploads real invoice and receipt photos into his own folder', async () => {
+      expect(await uploads('hasan', paths.invoice)).toBe(true);
+      expect(await uploads('hasan', paths.receipt)).toBe(true);
+    });
+
+    it('wrong uploads are refused: type, size, folder, person and overwriting', async () => {
+      const mine = `${folder.hasan}/${crypto.randomUUID()}`;
+      const tooBig = Buffer.alloc(5 * 1024 * 1024 + 1);
+      expect(await uploads('hasan', `${mine}.png`, PNG, 'application/pdf')).toBe(false);
+      expect(await uploads('hasan', `${mine}.png`, tooBig)).toBe(false);
+      expect(await uploads('hasan', `${folder.tariq}/${crypto.randomUUID()}.png`)).toBe(false);
+      expect(await uploads('nila', `${folder.nila}/${crypto.randomUUID()}.png`)).toBe(false);
+      expect(await uploads('hasan', paths.receipt)).toBe(false);
+      const { error } = await clients.hasan.storage
+        .from(BUCKET)
+        .upload(paths.receipt, PNG, { contentType: 'image/png', upsert: true });
+      expect(error).not.toBeNull();
+    });
+
+    it('a cost over the limit waits, and the manager hears about it within 5 seconds', async () => {
+      await call('owner', 'set_expense_limit', { amount: 100 });
+
+      const { data } = await clients.farhan.auth.getSession();
+      await clients.farhan.realtime.setAuth(data.session!.access_token);
+      let heardAt = 0;
+      await new Promise<void>((resolve, reject) => {
+        clients.farhan
+          .channel(`check-expenses-${Math.random().toString(36).slice(2)}`)
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'expenses' }, () => {
+            heardAt = Date.now();
+          })
+          .subscribe((status, error) => {
+            if (status === 'SUBSCRIBED') resolve();
+            if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+              reject(new Error(`Live updates failed: ${status} ${error?.message ?? ''}`));
+            }
+          });
+      });
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const sentAt = Date.now();
+      const expense = await call<ExpenseRow>('hasan', 'submit_expense', {
+        report_id: jobId,
+        amount: 500,
+        reason: 'Real client check part',
+        invoice_path: paths.invoice,
+        receipt_path: paths.receipt,
+      });
+      expenseId = expense.id;
+      expect(expense.status).toBe('waiting');
+
+      while (heardAt === 0 && Date.now() - sentAt < 5000) {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }
+      expect(heardAt).toBeGreaterThan(0);
+    });
+
+    it('the manager is blocked until the owner approves, then records it', async () => {
+      const args = { expense_id: expenseId };
+      await expect(call('farhan', 'record_expense', args)).rejects.toThrow('EXPENSE_NOT_APPROVED');
+      const approved = await call<ExpenseRow>('owner', 'decide_expense', {
+        ...args,
+        decision: 'approved',
+      });
+      expect(approved.status).toBe('approved');
+      const recorded = await call<ExpenseRow>('farhan', 'record_expense', args);
+      expect(recorded.recorded_at).not.toBeNull();
+    });
+
+    it('the technician, the manager and the owner can open the receipt photo', async () => {
+      for (const name of ['hasan', 'farhan', 'owner'] as const) {
+        expect(await canOpen(clients[name], paths.receipt)).toBe(true);
+      }
+    });
+
+    it('a worker, another technician and a visitor cannot open it', async () => {
+      for (const client of [clients.nila, clients.tariq, newClient()]) {
+        expect(await canOpen(client, paths.receipt)).toBe(false);
+      }
+      const { data } = newClient().storage.from(BUCKET).getPublicUrl(paths.receipt);
+      expect((await fetch(data.publicUrl)).ok).toBe(false);
     });
   });
 });
