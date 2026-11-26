@@ -2,7 +2,9 @@
 
 - From: sakib
 - To: rubaiya
-- Status: open
+- Status: done
+
+Done by Rubaiya (2026-11-26): the technician's invoice and receipt card is built on the job page with fake data only, in `apps/mobile/`. Nothing is copied into `packages/shared`. It waits for the real calls in `docs/api-contract.md` section 4.8.
 
 ## What I need
 Nothing yet. Please do NOT call any invoice function yet, because none exists. I decided on 2026-11-22 that invoice and receipt (FR-04: "No receipt, no expense") are now part of the MVP, so you may build the technician's invoice screen.

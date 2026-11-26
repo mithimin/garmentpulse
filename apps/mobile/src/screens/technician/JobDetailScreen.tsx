@@ -20,6 +20,7 @@ import type { Profile, Report } from '@garmentpulse/shared';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { DownTimer } from '../../components/DownTimer';
+import { ExpensesCard } from '../../components/ExpensesCard';
 import { FloorMiniMap } from '../../components/FloorMiniMap';
 import { StatusLabel } from '../../components/StatusLabel';
 import { VerticalSteps } from '../../components/VerticalSteps';
@@ -150,6 +151,11 @@ export function JobDetailScreen({ profile, job }: Props) {
           <VerticalSteps steps={steps} />
         </View>
       </Card>
+
+      <ExpensesCard
+        reportId={job.id}
+        canAdd={job.accepted_at !== null && job.status !== 'waiting'}
+      />
 
       {errorCode && (
         <View style={styles.errorBox} accessibilityRole="alert">

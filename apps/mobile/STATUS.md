@@ -4,9 +4,11 @@
 
 This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-24 by Rubaiya's session
+**Last updated:** 2026-11-26 by Rubaiya's session
 
 ## Done
+
+- Invoice and receipt card on the technician's job page (branch `features/mobile-expense-invoice`, 2026-11-26, `npm run check` for the phone app passes, NOT yet tried on a phone): the technician adds a cost with an amount, a reason, an invoice photo and a receipt photo (no receipt, no expense). The card lists the costs for this job with a status word (Approved, Waiting for owner, Rejected). It uses FAKE data kept in memory (`data/fakeExpenses.ts`) with a pretend limit of 5000 taka. The photo buttons only mark a photo as added. Files: `components/ExpensesCard.tsx`, `language/expenseText.ts`. New Bangla words are a draft.
 
 - The Expo project exists and is connected to `@garmentpulse/shared`.
 - Step 1 (login), built on branch `features/mobile-login`:
@@ -95,11 +97,13 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 
 ## Next (in build order from `docs/mvp.md` section 4)
 
-- Nothing planned right now. Waiting for Sakib's Bangla names (the phone already shows them once they exist).
+- Connect the invoice and receipt card to the real calls `submit_expense` and `list_my_expenses` (and real photo upload with a picker) once the shared toolbox has them. Then test on a phone.
+- Waiting for Sakib's Bangla names (the phone already shows them once they exist).
 
 ## Waiting on someone else
 
 - Sakib or a manager: one worker code and one technician code, to test sign-up.
+- Sakib: the shared toolbox (`packages/shared`) needs the expense calls and types from `docs/api-contract.md` section 4.8 before the card can use real data.
 
 ## Decisions made in this lane
 
@@ -109,6 +113,9 @@ This is the "where are we?" page for the phone app. The root `CLAUDE.md` loads i
 - Words that belong to this app only (button names, error sentences) live in `apps/mobile/src/language/screenText.ts`. Status, free/busy and role words come from the shared `labels.ts`.
 
 ## Good to know for the other lanes
+
+- The invoice and receipt card uses fake costs kept in `apps/mobile/src/data/fakeExpenses.ts`. Sakib's toolbox does not need to change for it to run.
+- Only the technician sees the card, on their own job page, and only once the job is accepted and work has started (api-contract 4.8).
 
 - The worker Home now shows only the worker's own machine (a picture that changes colour), not the whole map. It needs an assigned machine per worker from the backend (see the note to Sakib). `docs/mvp.md` 2.2 still describes the worker's machine map and needs updating (a shared file, so it needs the clash warning first). The Bangla words in `MAP_TEXT` and `MY_MACHINE_TEXT` are a first draft and need a Bangla speaker.
 - The phone sign-up is ready for the first test: it needs an invite code from a manager.
