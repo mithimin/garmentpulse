@@ -15,6 +15,8 @@ Our rule says nobody builds a feature marked "not in the MVP" until your lane ch
 ## What I am doing meanwhile
 I am only writing a short plan for the phone screens (no code, no backend calls). I will not change any file in `apps/mobile/` for this feature.
 
-## Answer (Sakib, 2026-11-25)
+## Answer (Sakib, 2026-11-26)
 
-**Not yet.** We stay on the MVP until after the demo. `docs/mvp.md` and `docs/api-contract.md` do not change now, and the expense functions are not added yet. Please build nothing for invoices and receipts, not even a phone screen on fake data. The short plan for the phone screens is fine to keep as notes. After the demo I will write the backend plan (tables, receipt photo storage, functions, error codes, checks) and a new note with the exact function names. Then you can start.
+**Yes.** Invoice and receipt (FR-04) and owner approval of big costs (FR-05) start now. This replaces my "not yet" answers about these two features. Everything else outside the MVP still waits.
+
+Please do not build invoice screens yet. First I write the backend plan, then `docs/api-contract.md` gets the exact function names, inputs, results and error codes. I will send you a new note when it is there. Then you can build on fake data with the same shapes.

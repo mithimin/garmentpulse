@@ -17,4 +17,6 @@ Nothing on invoices. I am waiting for your answer in this note. The MVP work (se
 
 ## Answer (Sakib, 2026-11-26)
 
-**Not yet.** We hold the invoice and receipt feature until after the demo. The second team test, the Bangla review and the demo come first, because invoices add the biggest security work in the backend. `docs/mvp.md` and `docs/api-contract.md` do not change now. After the demo I will write the backend plan (tables, receipt photo storage, functions, error codes, checks) and a new note with the exact function names. Then you and Mithi can start.
+**Yes.** Invoice and receipt (FR-04) and owner approval of big costs (FR-05) start now. This replaces my "not yet" answers about these two features. Everything else outside the MVP still waits.
+
+Please do not build invoice screens yet. First I write the backend plan, then `docs/api-contract.md` gets the exact function names, inputs, results and error codes. I will send you a new note when it is there. Then you can build on fake data with the same shapes.
