@@ -2,7 +2,7 @@
 
 - From: rubaiya
 - To: sakib
-- Status: open
+- Status: done
 
 ## What I need
 The MVP (the first working version) is done, and the team wants to start the next feature. Rubaiya chose **invoice and receipt (FR-04)**. Could you please say yes in this note, so the team can start now instead of after the demo? If yes, please also (1) change `docs/mvp.md` section 3 and section 6 so invoice and receipt is planned work, and (2) add the expense functions to `docs/api-contract.md` with exact names, inputs, results and error codes.
@@ -14,3 +14,9 @@ Your answer of 2026-11-25 (on Mithi's note) says we stay on the MVP until after 
 
 ## What I am doing meanwhile
 Nothing on invoices. I am waiting for your answer in this note. The MVP work (second team test, Bangla review, demo prep) carries on as usual.
+
+## Answer (Sakib, 2026-11-26)
+
+**Yes.** Invoice and receipt (FR-04) and owner approval of big costs (FR-05) start now. This replaces my "not yet" answers about these two features. Everything else outside the MVP still waits.
+
+Please do not build invoice screens yet. First I write the backend plan, then `docs/api-contract.md` gets the exact function names, inputs, results and error codes. I will send you a new note when it is there. Then you can build on fake data with the same shapes.
