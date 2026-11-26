@@ -2,7 +2,8 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Last updated:** 2026-11-15
+**Expenses and owner approval (sections 3, 4.8, 6 and 7): AGREED NAMES, NOT BUILT YET** (decided 2026-11-26). Do not call these functions on the real project until `supabase/STATUS.md` says they are built.
+**Last updated:** 2026-11-26
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
 ---
@@ -22,7 +23,7 @@ Rules for this file:
 - Function names, input names, and error codes here are **exact**. Do not rename them in app code.
 - **Adding** a new function is allowed through a pull request that Sakib reviews. **Changing or removing** an existing one must be announced to Rubaiya and Mithi first.
 - Items marked **(proposed)** are new ideas added while writing this contract. They are not in `architecture.md` yet. Sakib must confirm them.
-- This contract covers **only the MVP** (see [`mvp.md`](./mvp.md)). Invoices, owner approval, the chatbot, voice, and camera alerts get their own functions later.
+- This contract covers the MVP and the **second step** (expenses and owner approval, section 4.8; see [`mvp.md`](./mvp.md) section 3.1). The chatbot, voice, and camera alerts get their own functions later.
 
 ---
 
@@ -65,9 +66,9 @@ A new or changed report must reach the manager's screen **within 5 seconds** (FR
 | Role | App | Short meaning |
 |---|---|---|
 | `worker` | Mobile | Reports broken machines |
-| `technician` | Mobile | Repairs machines |
-| `manager` | Web | Sees all reports, assigns technicians |
-| `owner` | Web | Watches everything, read-only in the MVP |
+| `technician` | Mobile | Repairs machines, sends repair costs (4.8) |
+| `manager` | Web | Sees all reports, assigns technicians, records expenses (4.8) |
+| `owner` | Web | Watches everything; cannot change reports; approves big expenses and sets the limit (4.8) |
 
 A role may only use its own app. Logging in on the wrong app fails with `WRONG_PLATFORM`.
 
@@ -81,7 +82,7 @@ Everyone uses the same three words: `waiting`, `in_progress`, `resolved`.
 
 ### 2.7 Not in the MVP
 
-Invoices and receipts, owner approval and the expense limit, the AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, and the 12-month history limit. (Sign-up with invite codes **is** in the MVP: see section 4.7. Only **owner** accounts are still made by hand.)
+The AI chatbot, voice input, camera presence alerts, push notifications, free/paid plans, and the 12-month history limit. (Sign-up with invite codes **is** in the MVP: see section 4.7. Only **owner** accounts are still made by hand. Invoices, receipts and owner approval were not in the MVP; they are the second step, section 4.8.)
 
 ---
 
@@ -144,6 +145,29 @@ type MachineState = 'ok' | 'down' | 'waiting' | 'in_progress';
 type MachineStateRow = { machine_id: string; state: MachineState }; // nothing else is ever sent
 
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
+
+// Expenses and owner approval (section 4.8) - NOT BUILT YET
+type ExpenseStatus = 'waiting' | 'approved' | 'rejected';
+type Person = { id: string; display_name: string; display_name_bn?: string | null };
+type Expense = {
+  id: string;
+  report: { id: string; description: string; machine: Machine };
+  amount: number; // taka, more than 0, at most 2 decimals
+  reason: string; // what the money was for
+  status: ExpenseStatus;
+  technician: Person; // who sent it
+  invoice_path: string; // where the invoice photo is stored
+  receipt_path: string; // where the receipt photo is stored
+  limit_at_submit: number | null; // the owner's limit when it was sent; null = no limit was set
+  decided_by: Person | null; // the owner; null when nobody had to decide, or not decided yet
+  decided_at: string | null;
+  rejection_reason: string | null; // set only when rejected
+  recorded_by: Person | null; // the manager
+  recorded_at: string | null; // null = not recorded yet
+  created_at: string;
+  updated_at: string;
+};
+type ExpenseLimit = { amount: number | null; updated_at: string | null }; // null = the owner has not set one
 
 // Sign-up with invite codes (section 4.7)
 type InviteRole = 'worker' | 'technician' | 'manager'; // the owner is never created by sign-up
@@ -271,7 +295,7 @@ Added on 2026-11-14 for the worker's machine map. A worker may not read other pe
 - **Returns:** `OwnerSummary` (the three count boxes: Waiting, In progress, Resolved)
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
-The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's only action that changes anything is making manager invite codes, section 4.7.)
+The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's actions that change anything are making manager invite codes, section 4.7, and, once built, deciding on expenses and setting the expense limit, section 4.8.)
 
 ### 4.7 Sign-up with invite codes (decided and built on 2026-10-19)
 
@@ -313,6 +337,87 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 - **Returns:** `InviteCode[]` (only the codes **this person made** that are not yet used and not yet expired, newest first)
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
+### 4.8 Expenses and owner approval (FR-04, FR-05) — NOT BUILT YET
+
+Added on 2026-11-26. The names below are agreed, so screens can be built on fake data. The backend does not have them yet.
+
+**The flow**
+
+1. The **technician** sends a cost for their own job, with a photo of the **invoice** and a photo of the **receipt**.
+2. The database compares the amount with the **owner's limit** and sets the status:
+   - `approved`: the amount is **at or under** the limit;
+   - `waiting`: the amount is **over** the limit, **or the owner has not set a limit yet**.
+3. For a `waiting` expense the **owner** says yes (`approved`) or no (`rejected`, with a short reason).
+4. The **manager** records the expense. Only an `approved` expense can be recorded.
+
+**Rules**
+
+- Every expense needs both photos. No receipt, no expense.
+- The status is decided **when the expense is sent**. Changing the limit later does not change older expenses.
+- `approved` and `rejected` are final. After a rejection the technician may send a **new** expense; the rejected one stays in the list with the owner's reason.
+- One job may have several expenses.
+- Nothing is edited or deleted by any app. Recording is not a status: it sets `recorded_by` and `recorded_at`.
+- Workers see no expenses.
+
+#### The photos (Supabase Storage, no custom function)
+
+- A **private** storage box (called a bucket) named `expense-photos`.
+- The technician **uploads both photos first**, then calls `submit_expense` with the two paths. (This upload is the only thing an app writes without a function. No app writes a table.)
+- **Path:** `<the technician's own profile id>/<a new random file name>.jpg` (or `.jpeg`, `.png`).
+- Only JPG and PNG, at most **5 MB** each.
+- A technician may upload only into their own folder. Nobody may replace or delete a photo.
+- **Who may open a photo:** the technician who uploaded it, the manager, the owner. Apps ask for a short-lived link (`createSignedUrl`) each time and never save the link.
+
+#### `submit_expense(report_id, amount, reason, invoice_path, receipt_path)` — Mobile (technician)
+
+- **Inputs:** `report_id`; `amount` (number in taka, more than 0, at most 10,000,000, at most 2 decimals); `reason` (text, 1 to 500 characters after trimming); `invoice_path` and `receipt_path` (the uploaded photos)
+- **Returns:** `Expense` (status `approved` or `waiting`)
+- **Rules:** the report must be assigned to this technician and be `in_progress` or `resolved`. The two paths must be different, must be in the technician's own folder, and must not be used by another expense.
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED` (not a technician, or the report is assigned to someone else), `NOT_FOUND` (no such report), `JOB_NOT_ACCEPTED`, `INVALID_STATUS_CHANGE` (accepted but not started), `RECEIPT_REQUIRED` (a path is empty, or no photo was uploaded there), `INVALID_INPUT`
+
+#### `list_my_expenses()` — Mobile (technician)
+
+- **Inputs:** none
+- **Returns:** `Expense[]` (only the ones this technician sent, newest first)
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
+
+#### `list_expenses(status?)` — Web (manager, owner)
+
+- **Inputs:** `status` (optional: `waiting`, `approved` or `rejected`)
+- **Returns:** `Expense[]` (newest first)
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`, `INVALID_INPUT`
+
+#### `get_expense(expense_id)` — Mobile, Web
+
+- **Inputs:** `expense_id`
+- **Returns:** `Expense`
+- **Who may see it:** the technician who sent it, the manager, the owner.
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_FOUND` (also used when the person may not see it)
+
+#### `decide_expense(expense_id, decision, reason?)` — Web (owner)
+
+- **Inputs:** `expense_id`; `decision` (`approved` or `rejected`); `reason` (text, 1 to 300 characters after trimming; **required** for `rejected`, ignored for `approved`)
+- **Returns:** `Expense`
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`, `NOT_FOUND`, `EXPENSE_ALREADY_DECIDED` (the status is not `waiting`), `INVALID_INPUT`
+
+#### `record_expense(expense_id)` — Web (manager)
+
+- **Inputs:** `expense_id`
+- **Returns:** `Expense` (with `recorded_by` and `recorded_at` set)
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`, `NOT_FOUND`, `EXPENSE_NOT_APPROVED` (still waiting, or rejected), `EXPENSE_ALREADY_RECORDED`
+
+#### `get_expense_limit()` — Web (owner)
+
+- **Inputs:** none
+- **Returns:** `ExpenseLimit`
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
+
+#### `set_expense_limit(amount)` — Web (owner)
+
+- **Inputs:** `amount` (number in taka, 0 to 10,000,000, at most 2 decimals). `0` means every expense waits for the owner. A limit cannot be removed once set, only changed.
+- **Returns:** `ExpenseLimit`
+- **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`, `INVALID_INPUT`
+
 ---
 
 ## 5. Who Calls What
@@ -335,6 +440,14 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 | `check_invite_code` | before login | before login | before login | no (owners never sign up) |
 | `create_invite_code` | no | no | yes (worker and technician codes) | yes (manager codes) |
 | `list_invite_codes` | no | no | yes (own codes) | yes (own codes) |
+| `submit_expense` | no | yes (own jobs) | no | no |
+| `list_my_expenses` | no | yes | no | no |
+| `list_expenses` | no | no | yes | yes |
+| `get_expense` | no | own | yes | yes |
+| `decide_expense` | no | no | no | yes |
+| `record_expense` | no | no | yes | no |
+| `get_expense_limit` | no | no | no | yes |
+| `set_expense_limit` | no | no | no | yes |
 
 ---
 
@@ -354,6 +467,12 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 | `INVALID_STATUS_CHANGE` | That status move is not allowed (backwards, or the report is already resolved). |
 | `INVALID_CODE` | The invite code is wrong, already used, or expired. |
 | `EMAIL_TAKEN` | That email already has an account. (Both sign-up codes live in their own list, `SIGN_UP_ERROR_CODES`, until both apps have their sentences. Read them with `getApiErrorCode`.) |
+| `RECEIPT_REQUIRED` | An expense needs an uploaded invoice photo and receipt photo. (Section 4.8, not built yet) |
+| `EXPENSE_NOT_APPROVED` | Only an approved expense can be recorded. (Section 4.8, not built yet) |
+| `EXPENSE_ALREADY_DECIDED` | The expense is not waiting for the owner any more. (Section 4.8, not built yet) |
+| `EXPENSE_ALREADY_RECORDED` | The manager already recorded this expense. (Section 4.8, not built yet) |
+
+The four expense codes will live in their own list, `EXPENSE_ERROR_CODES`, until both apps have their sentences.
 
 These codes live in `packages/shared/src/errors.ts`.
 
@@ -364,6 +483,7 @@ These codes live in `packages/shared/src/errors.ts`.
 - **Realtime (live updates):** the apps subscribe to changes on `reports`. A new report, a new assignment, and every status change reach the worker, technician, manager, and owner who are allowed to see that report, within 5 seconds.
 - **Machine states:** the apps may also subscribe to changes on `machine_states` (every logged-in person may read it). A new report, an assignment, a start and a resolve change a machine's state, and the change reaches every open map within 5 seconds. The table holds only a machine id and one of four words.
 - **Technician availability** changes whenever a job is assigned or resolved. The manager's screen must refresh the free/busy list when a report changes.
+- **Expenses (not built yet):** apps may also subscribe to changes on `expenses`. The technician (own ones), the manager and the owner receive them, so the manager sees the owner's decision without a refresh.
 - **Push notifications** are not in the MVP. In-app live updates are enough.
 
 ---
@@ -376,6 +496,13 @@ These codes live in `packages/shared/src/errors.ts`.
 2. **The queue is not a status.** A queued report is `waiting` with no technician.
 3. **One factory in the MVP.** Everyone belongs to one factory, so no function takes a factory id. Several factories can be added later.
 4. **No auto-assign.** When a technician becomes free, the manager assigns the next queued report by hand.
+
+### Decided for expenses (by Sakib, 2026-11-26)
+
+- Expenses and owner approval are the **second step** and start now.
+- **Both photos are required** (invoice and receipt).
+- **Before the owner sets a limit, every expense waits for the owner.**
+- **A rejected expense stays**, and the technician may send a new one.
 
 ### Answered (by Sakib, 2026-10-18)
 
