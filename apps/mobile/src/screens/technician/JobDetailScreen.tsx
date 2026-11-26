@@ -20,7 +20,6 @@ import type { Profile, Report } from '@garmentpulse/shared';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { DownTimer } from '../../components/DownTimer';
-import { ExpensesCard } from '../../components/ExpensesCard';
 import { FloorMiniMap } from '../../components/FloorMiniMap';
 import { StatusLabel } from '../../components/StatusLabel';
 import { VerticalSteps } from '../../components/VerticalSteps';
@@ -30,6 +29,7 @@ import { useLanguage } from '../../language/LanguageContext';
 import { formatDateTime } from '../../language/format';
 import { machinePlace } from '../../language/machinePlace';
 import { repairTime } from '../../language/repairTime';
+import { EXPENSE_TEXT } from '../../language/expenseText';
 import { ERROR_TEXT, TECH_TEXT, TRACK_TEXT } from '../../language/screenText';
 import { COLORS as C, SHARED_COLORS as S, SIZES } from '../../theme';
 import { machineName, personName } from '../../language/localNames';
@@ -37,9 +37,11 @@ import { machineName, personName } from '../../language/localNames';
 type Props = {
   profile: Profile;
   job: Report;
+  /** Opens the cost screen for this job (used right after "Mark as fixed", and later from this page). */
+  onOpenCost: (reportId: string) => void;
 };
 
-export function JobDetailScreen({ profile, job }: Props) {
+export function JobDetailScreen({ profile, job, onOpenCost }: Props) {
   const { language } = useLanguage();
   const { acceptJob, updateJobStatus } = useReports();
   const [saving, setSaving] = useState(false);
@@ -80,7 +82,12 @@ export function JobDetailScreen({ profile, job }: Props) {
     nextButton = {
       label: TECH_TEXT.fixedButton[language],
       icon: <Wrench color={iconColor} size={20} strokeWidth={1.8} />,
-      onPress: () => run(() => updateJobStatus(profile, job.id, 'resolved')),
+      // After "Mark as fixed" works, the technician goes straight to the cost screen.
+      onPress: () =>
+        run(async () => {
+          await updateJobStatus(profile, job.id, 'resolved');
+          onOpenCost(job.id);
+        }),
     };
   }
 
@@ -152,11 +159,6 @@ export function JobDetailScreen({ profile, job }: Props) {
         </View>
       </Card>
 
-      <ExpensesCard
-        reportId={job.id}
-        canAdd={job.accepted_at !== null && job.status !== 'waiting'}
-      />
-
       {errorCode && (
         <View style={styles.errorBox} accessibilityRole="alert">
           <Text style={styles.errorText}>{ERROR_TEXT[errorCode][language]}</Text>
@@ -171,7 +173,14 @@ export function JobDetailScreen({ profile, job }: Props) {
           disabled={saving}
         />
       ) : (
-        <Text style={styles.doneNote}>{TECH_TEXT.doneNote[language]}</Text>
+        <>
+          <Text style={styles.doneNote}>{TECH_TEXT.doneNote[language]}</Text>
+          <Button
+            kind="second"
+            label={EXPENSE_TEXT.addCostButton[language]}
+            onPress={() => onOpenCost(job.id)}
+          />
+        </>
       )}
     </ScrollView>
   );

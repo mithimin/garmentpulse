@@ -18,7 +18,7 @@ This file is read when a session works inside `apps/mobile/`. It adds to the roo
 - **Both languages (Bangla and English)** are needed on the main screens. The language switch is a small pill button in the **top-right corner of every screen**.
 - Buttons are **48 px tall**, nothing tappable is smaller than 44 px, and status colours always come with a word. Follow [`docs/design-system.md`](../../docs/design-system.md) for colours, fonts and icons.
 - Not in the MVP: voice input, the AI chatbot, push notifications, dark mode. Do not build them.
-- Invoices and receipts (costs with photos) are the second step (`docs/mvp.md` section 3.1). Build them only from `docs/api-contract.md` section 4.8, and keep any fake data inside `apps/mobile/`.
+- Job costs are the second step (`docs/mvp.md` section 3.1). The technician types the cost after a job is marked as fixed, on its own cost screen. No photos for now (decided 2026-11-26). Build them only from `docs/api-contract.md` section 4.8, and keep any fake data inside `apps/mobile/`.
 
 ## Read before you build
 
