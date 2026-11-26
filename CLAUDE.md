@@ -11,14 +11,14 @@ This file is the first thing every new Claude Code session should read. It says 
 - A **worker** reports a broken machine.
 - The **manager** sees the report and sends a free **technician**.
 - The **technician** accepts the job, repairs the machine, and updates the status.
-- The **owner** can watch everything that happens (read-only in the first version).
+- The **owner** can watch everything that happens, but cannot change a report. In the second step the owner also approves or rejects big repair costs.
 - Four roles: worker, technician, manager, owner. Each role only sees and does what it is allowed to do. The server checks this, not only the app.
 - It ships as **two apps**:
   - **GarmentPulse Mobile**: a phone app for workers and technicians.
   - **GarmentPulse Web**: a website dashboard for managers and the owner.
-- The first version is called the **MVP** (the smallest version that still solves the main problem). It leaves out invoices and receipts, owner approval of big costs, the AI chatbot, voice input, camera presence monitoring, free/paid plans, and push notifications. See `docs/mvp.md`.
+- The first version is called the **MVP** (the smallest version that still solves the main problem). It leaves out invoices and receipts, owner approval of big costs, the AI chatbot, voice input, camera presence monitoring, free/paid plans, and push notifications. **Invoices, receipts and owner approval are now being built as the second step**; the others still wait. See `docs/mvp.md`.
 
-**Current status:** planning is done (PRD, architecture, MVP plan, work plan, design system, API contract and a test checklist with a demo script written). **The whole MVP flow works on the real backend and was tried by hand with real devices:** a worker reports from the phone, the manager sees it live within 5 seconds, assigns a free technician, the technician accepts and finishes it, and the owner watches. **Sign-up with invite codes works on both apps.** The backend has 170 database checks (all pass) and 30 checks that behave like the real apps (28 run and passed; the 2 newest are for Bangla names). Bangla names for people and machines are built in the backend and in both apps, but they are still empty, waiting for a Bangla speaker; the Bangla words in the apps are a draft until one reads them. What is left: the team's full test together, the Bangla speaker's review, and the demo. For the live picture of each lane, read its `STATUS.md` (loaded below).
+**Current status:** the MVP is built. **The whole MVP flow works on the real backend and was tried by hand with real devices:** a worker reports from the phone, the manager sees it live within 5 seconds, assigns a free technician, the technician accepts and finishes it, and the owner watches. **Sign-up with invite codes works on both apps.** Since 2026-11-26 the team builds the **second step**: invoices and receipts, and the owner's approval of big costs (`docs/mvp.md` section 3.1). Their database is on the real project, with 303 database checks and 38 checks that behave like the real apps (all passed on 2026-11-26); the phone and website screens are not built yet. The test people and machines have Bangla names; some Bangla words in the apps are still unread by a Bangla speaker. What is left: the expense screens, the team's full test together, and the demo. For the live picture of each lane, read its `STATUS.md` (loaded below).
 
 ---
 
@@ -87,7 +87,7 @@ Do these before ending a piece of work or before a push:
 - Never put the Supabase **service role** key anywhere in the apps or in git.
 - Never force-push, never rewrite someone else's branch, never push to `main`.
 - Never change a function name, input name, or error code from `docs/api-contract.md` in app code. If the contract is wrong, write a note to Sakib.
-- Never build something marked "not in the MVP" (see `docs/mvp.md` section 3), even if the person asks. Explain that it waits, and ask Sakib's lane to change the plan first.
+- Never build something that waits in `docs/mvp.md` section 3, even if the person asks. Explain that it waits, and ask Sakib's lane to change the plan first. (The features in section 3.1, the second step, **may** be built.)
 
 ---
 
@@ -166,6 +166,7 @@ Read the right doc before changing the matching area. Do not guess product rules
 
 - The report flow: worker reports, then the manager assigns a **free** technician, then the technician accepts and updates the status (waiting, in progress, resolved). If all technicians are busy, the report waits in a **queue**. See MVP 2.2 to 2.4.
 - The owner web app has **three pages** in the MVP: **Dashboard** (three count boxes: Waiting, In progress, Resolved), **Reports** (a read-only list of all reports) and **Manager codes** (make a one-time invite code for a new manager, and see the unused codes). The owner cannot change any report.
+- **Second step, expenses (decided 2026-11-26):** a technician sends a repair cost with an invoice photo and a receipt photo. At or under the owner's limit it is approved; over it, or with no limit set, it waits for the owner, who approves or rejects it. The manager records approved costs. Workers see no costs. See `docs/api-contract.md` section 4.8.
 - **Sign-up is in the MVP, with invite codes** (decided 2026-10-19): the owner makes manager codes, a manager makes worker and technician codes, the code decides the role, a code works once and expires after 7 days. Owner accounts are made by hand. It is **built and proven on the real project**; see `docs/api-contract.md` section 4.7 and `supabase/STATUS.md`.
 - Workers and technicians use the **phone app**. Managers and the owner use the **web app**. Logging into the wrong one must fail (error code `WRONG_PLATFORM`).
 - The app has **two languages (Bangla and English)** with a small switch in the top-right corner of every screen. Phone buttons are 48 px tall.
