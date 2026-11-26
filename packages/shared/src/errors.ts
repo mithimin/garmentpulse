@@ -61,18 +61,42 @@ export function isSignUpErrorCode(value: unknown): value is SignUpErrorCode {
   return typeof value === 'string' && (SIGN_UP_ERROR_CODES as readonly string[]).includes(value);
 }
 
+// -----------------------------------------------------------------------------
+// Expense error codes (docs/api-contract.md section 4.8)
+// -----------------------------------------------------------------------------
+// Kept in their OWN list for the same reason as the sign-up codes: adding them
+// to ERROR_CODES would stop both apps from compiling until each app has written
+// the four sentences. They move into ERROR_CODES once both apps have them.
+
+export const EXPENSE_ERROR_CODES = [
+  'RECEIPT_REQUIRED',
+  'EXPENSE_NOT_APPROVED',
+  'EXPENSE_ALREADY_DECIDED',
+  'EXPENSE_ALREADY_RECORDED',
+] as const;
+
+export type ExpenseErrorCode = (typeof EXPENSE_ERROR_CODES)[number];
+
+/** True when the text is one of the expense error codes. */
+export function isExpenseErrorCode(value: unknown): value is ExpenseErrorCode {
+  return typeof value === 'string' && (EXPENSE_ERROR_CODES as readonly string[]).includes(value);
+}
+
 /** Every code a backend call or a sign-up can fail with. */
-export type ApiErrorCode = ErrorCode | SignUpErrorCode | typeof UNKNOWN_ERROR;
+export type ApiErrorCode = ErrorCode | SignUpErrorCode | ExpenseErrorCode | typeof UNKNOWN_ERROR;
 
 /**
  * Like getErrorCode, but it also recognises the sign-up codes
- * (INVALID_CODE and EMAIL_TAKEN). Anything unrecognised becomes 'UNKNOWN'.
+ * (INVALID_CODE and EMAIL_TAKEN) and the expense codes.
+ * Anything unrecognised becomes 'UNKNOWN'.
  */
 export function getApiErrorCode(error: unknown): ApiErrorCode {
   const message =
     typeof error === 'object' && error !== null && 'message' in error
       ? (error as { message: unknown }).message
       : undefined;
-  if (isErrorCode(message) || isSignUpErrorCode(message)) return message;
+  if (isErrorCode(message) || isSignUpErrorCode(message) || isExpenseErrorCode(message)) {
+    return message;
+  }
   return UNKNOWN_ERROR;
 }

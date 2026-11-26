@@ -9,7 +9,7 @@
 // After that, change the words HERE only. Never copy them into an app.
 // Owned by Sakib.
 
-import type { ReportStatus, Role, TechnicianAvailability } from './types';
+import type { ExpenseStatus, ReportStatus, Role, TechnicianAvailability } from './types';
 
 export type Language = 'en' | 'bn';
 
@@ -23,6 +23,14 @@ export const STATUS_LABELS: Record<ReportStatus, Words> = {
   waiting: { en: 'Waiting', bn: 'অপেক্ষায়' },
   in_progress: { en: 'In progress', bn: 'কাজ চলছে' },
   resolved: { en: 'Resolved', bn: 'সমাধান হয়েছে' },
+};
+
+// The Bangla words for expense statuses come from docs/design-system.md section 4.2.
+// A Bangla speaker has not read them on a screen yet.
+export const EXPENSE_STATUS_LABELS: Record<ExpenseStatus, Words> = {
+  waiting: { en: 'Waiting', bn: 'অপেক্ষমাণ' },
+  approved: { en: 'Approved', bn: 'অনুমোদিত' },
+  rejected: { en: 'Rejected', bn: 'প্রত্যাখ্যাত' },
 };
 
 export const AVAILABILITY_LABELS: Record<TechnicianAvailability, Words> = {

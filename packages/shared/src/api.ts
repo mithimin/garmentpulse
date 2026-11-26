@@ -24,6 +24,10 @@ import { getApiErrorCode, UNKNOWN_ERROR, type ApiErrorCode } from './errors';
 import { PLATFORM_FOR_ROLE } from './types';
 import type {
   CodeCheck,
+  Expense,
+  ExpenseDecision,
+  ExpenseLimit,
+  ExpenseStatus,
   InviteCode,
   InviteRole,
   Machine,
@@ -57,6 +61,17 @@ export class ApiError extends Error {
 
 /** The two statuses a technician may move a job to (contract section 4.5). */
 export type JobStatusUpdate = Extract<ReportStatus, 'in_progress' | 'resolved'>;
+
+/** What a technician sends for one repair cost (contract section 4.8). */
+export type NewExpense = {
+  reportId: string;
+  /** Taka: more than 0, at most 2 decimals. */
+  amount: number;
+  reason: string;
+  /** The paths `uploadExpensePhoto` gave back. */
+  invoicePath: string;
+  receiptPath: string;
+};
 
 /** Builds the wrappers around a Supabase client (or anything with `rpc`). */
 export function createApi(client: RpcClient) {
@@ -106,6 +121,37 @@ export function createApi(client: RpcClient) {
     createInviteCode: (role: InviteRole) => call<InviteCode>('create_invite_code', { role }),
     /** The caller's own codes that are not used and not expired. */
     listInviteCodes: () => call<InviteCode[]>('list_invite_codes'),
+
+    // 4.8 Expenses and owner approval
+    /** Technician. Upload both photos first (`uploadExpensePhoto`). */
+    submitExpense: (expense: NewExpense) =>
+      call<Expense>('submit_expense', {
+        report_id: expense.reportId,
+        amount: expense.amount,
+        reason: expense.reason,
+        invoice_path: expense.invoicePath,
+        receipt_path: expense.receiptPath,
+      }),
+    /** Technician: the costs this person sent. */
+    listMyExpenses: () => call<Expense[]>('list_my_expenses'),
+    /** Manager and owner: every cost, newest first. */
+    listExpenses: (status?: ExpenseStatus) =>
+      call<Expense[]>('list_expenses', { status: status ?? null }),
+    getExpense: (expenseId: string) => call<Expense>('get_expense', { expense_id: expenseId }),
+    /** Owner. A short `reason` is required to reject. */
+    decideExpense: (expenseId: string, decision: ExpenseDecision, reason?: string) =>
+      call<Expense>('decide_expense', {
+        expense_id: expenseId,
+        decision,
+        reason: reason ?? null,
+      }),
+    /** Manager. Only an approved cost can be recorded. */
+    recordExpense: (expenseId: string) =>
+      call<Expense>('record_expense', { expense_id: expenseId }),
+    /** Owner. */
+    getExpenseLimit: () => call<ExpenseLimit>('get_expense_limit'),
+    /** Owner. 0 means every cost waits for the owner. */
+    setExpenseLimit: (amount: number) => call<ExpenseLimit>('set_expense_limit', { amount }),
   };
 }
 

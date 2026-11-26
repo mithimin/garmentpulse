@@ -64,7 +64,15 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { ApiError, createApi, signUpWithCode, type Api, type Role } from '@garmentpulse/shared';
+import {
+  ApiError,
+  createApi,
+  getExpensePhotoUrl,
+  signUpWithCode,
+  uploadExpensePhoto,
+  type Api,
+  type Role,
+} from '@garmentpulse/shared';
 
 const URL = process.env.GP_SUPABASE_URL;
 const ANON_KEY = process.env.GP_SUPABASE_ANON_KEY;
@@ -586,8 +594,8 @@ describe.skipIf(missing.length > 0)('real client check', () => {
   // Expenses and the owner's approval, through the REAL database and storage
   // ---------------------------------------------------------------------------
   // The database check uses pretend photo rows. This part uploads real files, so
-  // it proves the size limit, the file types and who may open a photo. The
-  // shared toolbox has no expense helpers yet, so it calls the functions by name.
+  // it proves the size limit, the file types and who may open a photo. It uses
+  // the shared toolbox (uploadExpensePhoto, createApi), exactly like the apps.
   describe('expenses', () => {
     const BUCKET = 'expense-photos';
     // The smallest possible real PNG picture (one pixel).
@@ -600,13 +608,6 @@ describe.skipIf(missing.length > 0)('real client check', () => {
     let jobId = '';
     let expenseId = '';
 
-    /** Call a database function; give back its answer, or throw its error code. */
-    async function call<T>(who: PersonName, name: string, args?: Record<string, unknown>) {
-      const { data, error } = await clients[who].rpc(name, args);
-      if (error) throw new Error(error.message);
-      return data as T;
-    }
-
     /** Try an upload and say whether the storage service accepted it. */
     async function uploads(who: PersonName, path: string, body = PNG, contentType = 'image/png') {
       const { error } = await clients[who].storage.from(BUCKET).upload(path, body, { contentType });
@@ -615,25 +616,20 @@ describe.skipIf(missing.length > 0)('real client check', () => {
 
     /** True when this person can get a link to the photo AND the link really opens. */
     async function canOpen(client: SupabaseClient, path: string): Promise<boolean> {
-      const { data } = await client.storage.from(BUCKET).createSignedUrl(path, 60);
-      if (!data) return false;
-      return (await fetch(data.signedUrl)).ok;
+      let url: string;
+      try {
+        url = await getExpensePhotoUrl(client, path);
+      } catch (error) {
+        if (error instanceof ApiError && error.code === 'NOT_FOUND') return false;
+        throw error;
+      }
+      return (await fetch(url)).ok;
     }
-
-    type ExpenseRow = {
-      id: string;
-      status: string;
-      recorded_at: string | null;
-    };
 
     beforeAll(async () => {
       for (const name of ['hasan', 'tariq', 'nila'] as const) {
         folder[name] = (await apis[name].getMyProfile()).id;
       }
-      const stamp = crypto.randomUUID();
-      paths.invoice = `${folder.hasan}/${stamp}-invoice.png`;
-      paths.receipt = `${folder.hasan}/${stamp}-receipt.png`;
-
       // A job for Hasan: reported, assigned, accepted and started.
       const machines = await apis.nila.listMachines();
       const report = await apis.nila.createReport(
@@ -657,8 +653,13 @@ describe.skipIf(missing.length > 0)('real client check', () => {
     });
 
     it('a technician uploads real invoice and receipt photos into his own folder', async () => {
-      expect(await uploads('hasan', paths.invoice)).toBe(true);
-      expect(await uploads('hasan', paths.receipt)).toBe(true);
+      const photo = { technicianId: folder.hasan, data: PNG, contentType: 'image/png' as const };
+      paths.invoice = await uploadExpensePhoto(clients.hasan, photo);
+      paths.receipt = await uploadExpensePhoto(clients.hasan, photo);
+      expect(paths.invoice).not.toBe(paths.receipt);
+      // The real storage refusal becomes our own error code.
+      const other = { ...photo, technicianId: folder.tariq };
+      expect(await codeOf(uploadExpensePhoto(clients.hasan, other))).toBe('NOT_ALLOWED');
     });
 
     it('wrong uploads are refused: type, size, folder, person and overwriting', async () => {
@@ -676,7 +677,7 @@ describe.skipIf(missing.length > 0)('real client check', () => {
     });
 
     it('a cost over the limit waits, and the manager hears about it within 5 seconds', async () => {
-      await call('owner', 'set_expense_limit', { amount: 100 });
+      expect((await apis.owner.setExpenseLimit(100)).amount).toBe(100);
 
       const { data } = await clients.farhan.auth.getSession();
       await clients.farhan.realtime.setAuth(data.session!.access_token);
@@ -697,12 +698,12 @@ describe.skipIf(missing.length > 0)('real client check', () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const sentAt = Date.now();
-      const expense = await call<ExpenseRow>('hasan', 'submit_expense', {
-        report_id: jobId,
+      const expense = await apis.hasan.submitExpense({
+        reportId: jobId,
         amount: 500,
         reason: 'Real client check part',
-        invoice_path: paths.invoice,
-        receipt_path: paths.receipt,
+        invoicePath: paths.invoice,
+        receiptPath: paths.receipt,
       });
       expenseId = expense.id;
       expect(expense.status).toBe('waiting');
@@ -714,15 +715,14 @@ describe.skipIf(missing.length > 0)('real client check', () => {
     });
 
     it('the manager is blocked until the owner approves, then records it', async () => {
-      const args = { expense_id: expenseId };
-      await expect(call('farhan', 'record_expense', args)).rejects.toThrow('EXPENSE_NOT_APPROVED');
-      const approved = await call<ExpenseRow>('owner', 'decide_expense', {
-        ...args,
-        decision: 'approved',
-      });
-      expect(approved.status).toBe('approved');
-      const recorded = await call<ExpenseRow>('farhan', 'record_expense', args);
+      expect(await codeOf(apis.farhan.recordExpense(expenseId))).toBe('EXPENSE_NOT_APPROVED');
+      expect((await apis.owner.decideExpense(expenseId, 'approved')).status).toBe('approved');
+      const recorded = await apis.farhan.recordExpense(expenseId);
       expect(recorded.recorded_at).not.toBeNull();
+      // Every list shows it to the right people.
+      expect((await apis.hasan.listMyExpenses()).map((e) => e.id)).toContain(expenseId);
+      expect((await apis.farhan.listExpenses('approved')).map((e) => e.id)).toContain(expenseId);
+      expect((await apis.owner.getExpense(expenseId)).amount).toBe(500);
     });
 
     it('the technician, the manager and the owner can open the receipt photo', async () => {
