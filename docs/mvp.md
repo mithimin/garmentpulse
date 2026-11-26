@@ -69,7 +69,7 @@ Each feature below comes from [prd.md](prd.md). The number (for example FR-01) l
   - **Dashboard:** a greeting and three count boxes (Waiting, In progress, Resolved).
   - **Reports:** a read-only list of all reports.
   - **Manager codes:** a button to make a one-time **manager invite code**, and the list of unused codes (see 2.1).
-- The owner cannot approve, change or assign any report in the MVP. Approval comes later (see section 3). Making manager codes is the owner's only action that changes anything.
+- The owner cannot approve, change or assign any report in the MVP. Making manager codes is the owner's only action that changes anything in the MVP. Approving **expenses** is added in the second step (see section 3.1).
 
 ### 2.6 Simple language support (section 5 of PRD)
 
@@ -86,8 +86,6 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 
 | Feature | PRD reference | Why it waits |
 |---|---|---|
-| Invoice and receipt for expenses (technician uploads the cost, manager records it, "no receipt, no expense") | FR-04 | Money handling is a second step. The first version proves the report-and-repair flow. |
-| Owner approval for big costs (expense limit set by the owner, blocked until approved) | FR-05 | It depends on expenses, which are not in the MVP yet. |
 | Simple AI chatbot (worker help, technician tips, manager and owner questions) | FR-07 | Not needed to prove the main flow. It is added after the core flow works. |
 | Voice input for reports | FR-01 | Speech in Bangla and English is extra work. Typing works first. |
 | Camera presence monitoring | FR-06 | Needs camera hardware and a detection service. It is also a paid-only feature. |
@@ -96,6 +94,17 @@ These are in the full PRD but are **moved to later versions** to keep the first 
 | Push notifications to phones | FR-05, FR-06 | Can start with in-app status updates only. |
 | Several factories in one system (an invite code would also decide the factory, and each factory would see only its own machines, reports and people) | Section 6 | The MVP proves the flow for **one** factory. Many factories would add a factory column to every table and rework every security rule and function. The invite code is the natural place to add it later, next to the role. |
 | AI factory layout (an AI agent designs each new factory's floors, rows, seats and machines, so the owner does not build them by hand) | FR-08 | Every factory has a different layout, so this only matters once several factories join. The MVP has one factory, whose layout the team types in as test data. |
+
+### 3.1 Second step: being built now (decided 2026-11-26)
+
+The MVP flow is built, so the team starts these two features. They are **not** part of the MVP checklist in section 5, and the MVP must keep working while they are added. Nothing else in the table above has started.
+
+| Feature | PRD reference | What it means |
+|---|---|---|
+| Invoice and receipt for expenses | FR-04 | The technician sends a repair cost with an invoice photo and a receipt photo. The manager records it. No receipt, no expense. |
+| Owner approval for big costs | FR-05 | The owner sets a limit. A cost over the limit waits until the owner approves or rejects it. |
+
+**Order:** (1) the function names in [api-contract.md](api-contract.md) section 4.8, (2) the database and its checks, (3) the shared toolbox and fake data, (4) the phone and website screens. The apps wait for step 3 before building on fake data, and for the database before using real data.
 
 **Out of scope everywhere (already in PRD section 7):** stock, production planning, payroll, face recognition.
 
@@ -139,7 +148,7 @@ These are not decided yet. The team should answer them before building the relat
 
 - **Platform for the first test:** Decided: the worker and technician mobile apps are tested on **both Android and iPhone**. The owner uses the web app, so there is no owner mobile app.
 - **Voice input:** Decided: it waits for a later version.
-- **Chatbot, invoice and receipt, owner approval:** Decided: all three wait for a later version (see section 3). **Confirmed by Sakib on 2026-11-22:** invoice and receipt stay **out of the MVP** (Rubaiya asked). It needs an invoices table, storage for receipt photos, new functions and the owner's expense limit, which is too much new security work before the demo. A note on 2026-11-22 that said the opposite was wrong and is corrected in `requests/rubaiya/2026-11-22-invoice-stays-out-of-the-mvp.md`.
+- **Chatbot, invoice and receipt, owner approval:** Decided: all three wait for a later version (see section 3). **Changed by Sakib on 2026-11-26:** invoice, receipt and owner approval are now being built as the second step (section 3.1); the chatbot still waits. Earlier history: **confirmed by Sakib on 2026-11-22:** invoice and receipt stay **out of the MVP** (Rubaiya asked). It needs an invoices table, storage for receipt photos, new functions and the owner's expense limit, which is too much new security work before the demo. A note on 2026-11-22 that said the opposite was wrong and is corrected in `requests/rubaiya/2026-11-22-invoice-stays-out-of-the-mvp.md`.
 - **Sign-up:** Decided on 2026-10-19: sign-up with invite codes is **in the MVP** (see 2.1). The owner makes manager codes, a manager makes worker and technician codes, a code works once and expires after 7 days, and there is no email confirmation. Owner accounts are still made by hand.
-- **Owner expense limit:** Not needed for the MVP. It comes back with owner approval later.
+- **Owner expense limit:** The owner sets it in the app (second step). Until one is set, every expense waits for the owner. The amount itself is the owner's choice.
 - **Subscription price:** Still an estimate in [prd.md](prd.md) section 9. Not needed for the MVP.
