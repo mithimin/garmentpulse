@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Expenses and owner approval (sections 3, 4.8, 6 and 7): AGREED NAMES, NOT BUILT YET** (decided 2026-11-26). Do not call these functions on the real project until `supabase/STATUS.md` says they are built.
+**Expenses and owner approval (sections 3, 4.8, 6 and 7): BUILT IN THE DATABASE and tested on the real project (2026-11-26).** The apps still wait for the ready-made calls and fake data in `packages/shared` and for Sakib's note before building screens.
 **Last updated:** 2026-11-26
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
@@ -146,7 +146,7 @@ type MachineStateRow = { machine_id: string; state: MachineState }; // nothing e
 
 type OwnerSummary = { waiting: number; in_progress: number; resolved: number };
 
-// Expenses and owner approval (section 4.8) - NOT BUILT YET
+// Expenses and owner approval (section 4.8)
 type ExpenseStatus = 'waiting' | 'approved' | 'rejected';
 type Person = { id: string; display_name: string; display_name_bn?: string | null };
 type Expense = {
@@ -295,7 +295,7 @@ Added on 2026-11-14 for the worker's machine map. A worker may not read other pe
 - **Returns:** `OwnerSummary` (the three count boxes: Waiting, In progress, Resolved)
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
-The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's actions that change anything are making manager invite codes, section 4.7, and, once built, deciding on expenses and setting the expense limit, section 4.8.)
+The owner's list of reports uses `list_reports(status?)`. The owner has no function that changes a **report**. (The owner's actions that change anything are making manager invite codes, section 4.7, and deciding on expenses and setting the expense limit, section 4.8.)
 
 ### 4.7 Sign-up with invite codes (decided and built on 2026-10-19)
 
@@ -337,9 +337,9 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 - **Returns:** `InviteCode[]` (only the codes **this person made** that are not yet used and not yet expired, newest first)
 - **Errors:** `NOT_AUTHENTICATED`, `NOT_ALLOWED`
 
-### 4.8 Expenses and owner approval (FR-04, FR-05) — NOT BUILT YET
+### 4.8 Expenses and owner approval (FR-04, FR-05)
 
-Added on 2026-11-26. The names below are agreed, so screens can be built on fake data. The backend does not have them yet.
+Added and built in the database on 2026-11-26. The ready-made calls and fake data for the apps are not in `packages/shared` yet: wait for them and for Sakib's note before building screens.
 
 **The flow**
 
@@ -364,6 +364,7 @@ Added on 2026-11-26. The names below are agreed, so screens can be built on fake
 - A **private** storage box (called a bucket) named `expense-photos`.
 - The technician **uploads both photos first**, then calls `submit_expense` with the two paths. (This upload is the only thing an app writes without a function. No app writes a table.)
 - **Path:** `<the technician's own profile id>/<a new random file name>.jpg` (or `.jpeg`, `.png`).
+- **File name:** only the letters A to Z (small or capital), numbers, dashes and underscores, 1 to 100 of them, before the ending. The ending is written in small letters. No spaces, dots or Bangla letters, so do not reuse the phone's own file name. A random id works well.
 - Only JPG and PNG, at most **5 MB** each.
 - A technician may upload only into their own folder. Nobody may replace or delete a photo.
 - **Who may open a photo:** the technician who uploaded it, the manager, the owner. Apps ask for a short-lived link (`createSignedUrl`) each time and never save the link.
@@ -467,10 +468,10 @@ Added on 2026-11-26. The names below are agreed, so screens can be built on fake
 | `INVALID_STATUS_CHANGE` | That status move is not allowed (backwards, or the report is already resolved). |
 | `INVALID_CODE` | The invite code is wrong, already used, or expired. |
 | `EMAIL_TAKEN` | That email already has an account. (Both sign-up codes live in their own list, `SIGN_UP_ERROR_CODES`, until both apps have their sentences. Read them with `getApiErrorCode`.) |
-| `RECEIPT_REQUIRED` | An expense needs an uploaded invoice photo and receipt photo. (Section 4.8, not built yet) |
-| `EXPENSE_NOT_APPROVED` | Only an approved expense can be recorded. (Section 4.8, not built yet) |
-| `EXPENSE_ALREADY_DECIDED` | The expense is not waiting for the owner any more. (Section 4.8, not built yet) |
-| `EXPENSE_ALREADY_RECORDED` | The manager already recorded this expense. (Section 4.8, not built yet) |
+| `RECEIPT_REQUIRED` | An expense needs an uploaded invoice photo and receipt photo. (Section 4.8) |
+| `EXPENSE_NOT_APPROVED` | Only an approved expense can be recorded. (Section 4.8) |
+| `EXPENSE_ALREADY_DECIDED` | The expense is not waiting for the owner any more. (Section 4.8) |
+| `EXPENSE_ALREADY_RECORDED` | The manager already recorded this expense. (Section 4.8) |
 
 The four expense codes will live in their own list, `EXPENSE_ERROR_CODES`, until both apps have their sentences.
 
@@ -483,7 +484,7 @@ These codes live in `packages/shared/src/errors.ts`.
 - **Realtime (live updates):** the apps subscribe to changes on `reports`. A new report, a new assignment, and every status change reach the worker, technician, manager, and owner who are allowed to see that report, within 5 seconds.
 - **Machine states:** the apps may also subscribe to changes on `machine_states` (every logged-in person may read it). A new report, an assignment, a start and a resolve change a machine's state, and the change reaches every open map within 5 seconds. The table holds only a machine id and one of four words.
 - **Technician availability** changes whenever a job is assigned or resolved. The manager's screen must refresh the free/busy list when a report changes.
-- **Expenses (not built yet):** apps may also subscribe to changes on `expenses`. The technician (own ones), the manager and the owner receive them, so the manager sees the owner's decision without a refresh.
+- **Expenses:** apps may also subscribe to changes on `expenses`. The technician (own ones), the manager and the owner receive them, so the manager sees the owner's decision without a refresh.
 - **Push notifications** are not in the MVP. In-app live updates are enough.
 
 ---
