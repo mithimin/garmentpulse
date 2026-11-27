@@ -12,13 +12,14 @@ This file is read when a session works inside `apps/web/`. It adds to the root [
 
 **GarmentPulse Web** is the website dashboard for **managers** and the **owner**. It is built with Next.js (a tool for building websites with React) and TypeScript.
 
-- **Manager** can: log in, see all reports in one live list (new reports appear within 5 seconds), see each technician as free or busy, assign a free technician to a report, and see the queue (reports waiting because every technician is busy).
-- **Owner** can: log in and see all reports and their status. This is **one read-only screen** with three count boxes on top (Waiting, In progress, Resolved) and no menu links. The owner cannot approve, change, or assign anything in the MVP.
+- **Manager** can: log in, see the reports and the Machine map live (new reports appear within 5 seconds), see each technician as free or busy, assign a free technician to a report, see the queue (reports waiting because every technician is busy), make worker and technician invite codes, and (second step) see repair costs with their photos and **record** the approved ones.
+- **Owner** can: log in, see the three count boxes (Waiting, In progress, Resolved) and a read-only list of all reports, make manager invite codes, and (second step) set the **expense limit** and **approve or reject** repair costs. The owner cannot change or assign any report.
 - Only **manager and owner accounts** work here. A worker or technician who logs in must be signed out with a clear message (error code `WRONG_PLATFORM`). Workers and technicians use the phone app.
 - A worker must not be able to open manager or owner pages, **even by typing the address**. The backend enforces this, but the pages must also redirect or refuse.
 - **Both languages (Bangla and English)** are needed on the main pages. The language switch is a small pill button in the **top-right corner of every page**.
 - Follow [`docs/design-system.md`](../../docs/design-system.md) for colours (manager and owner both use the manager blue), fonts and status labels.
-- Not in the MVP: expense approval, the AI chatbot, camera alerts, dark mode. Do not build them.
+- **Second step, being built since 2026-11-26** (`docs/mvp.md` section 3.1): repair costs with invoice and receipt photos, recording them, the expense limit and the owner's approval. The rules are in `docs/api-contract.md` section 4.8.
+- Still waiting, do not build: the AI chatbot, voice input, camera alerts, free/paid plans, push notifications, dark mode.
 
 ## Read before you build
 
@@ -55,4 +56,4 @@ This file is read when a session works inside `apps/web/`. It adds to the root [
 
 ## Status
 
-The Next.js project exists and shows a simple "hello" page. It is connected to `@garmentpulse/shared`. No real pages yet. Start it with `npm run dev --workspace @garmentpulse/web` and open `http://localhost:3000` (see "Getting Started" in the root `CLAUDE.md`). Docker is not needed for this app.
+The website is built and connected to the real backend; [`STATUS.md`](./STATUS.md) says where it stands. Start it with `npm run dev --workspace @garmentpulse/web` and open `http://localhost:3000` (see "Getting Started" in the root `CLAUDE.md`). Docker is not needed for this app.

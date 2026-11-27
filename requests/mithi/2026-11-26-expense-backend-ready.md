@@ -2,7 +2,7 @@
 
 - From: sakib
 - To: mithi
-- Status: open
+- Status: done
 
 ## What I need
 
@@ -37,3 +37,5 @@ Cards GP-48 and GP-49 were waiting for these names.
 ## What I am doing meanwhile
 
 Nothing else on expenses is planned in the backend. If a function or field is missing, write me a note and do not work around it.
+
+Done (2026-11-27, branch `features/web-expenses`): both screens, the limit box and the four error sentences are built and `apps/web/CLAUDE.md` is updated. Tried on fake data only; not yet tried on the real project.

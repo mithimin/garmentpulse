@@ -8,14 +8,19 @@
 //   - `error` holds the failure (the page turns it into a friendly sentence),
 //   - `reload()` asks again (used by the "Try again" button).
 // With `live` on and the real backend connected, it also listens to Supabase
-// Realtime (live updates) on the `reports` table and reloads whenever a report is
-// added or changed, so the manager sees changes within 5 seconds (FR-01).
+// Realtime (live updates) on one table (`reports` unless told otherwise, or
+// `expenses` for repair costs) and reloads whenever a row is added or changed, so
+// the manager sees changes within 5 seconds (FR-01).
 // Owned by Mithi.
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { supabase } from '../lib/backend';
 
-export function useBackendData<T>(load: () => Promise<T>, live = false) {
+export function useBackendData<T>(
+  load: () => Promise<T>,
+  live = false,
+  table: 'reports' | 'expenses' = 'reports',
+) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
@@ -41,7 +46,7 @@ export function useBackendData<T>(load: () => Promise<T>, live = false) {
     void reload();
   }, [reload]);
 
-  const channelName = `web-reports-${useId()}`;
+  const channelName = `web-${table}-${useId()}`;
   useEffect(() => {
     if (!live || !supabase) return;
     const client = supabase;
@@ -50,14 +55,14 @@ export function useBackendData<T>(load: () => Promise<T>, live = false) {
 
     void (async () => {
       // The live connection must be given the person's login first. Without it,
-      // it acts like a logged-out visitor and the security rules hide every report.
+      // it acts like a logged-out visitor and the security rules hide every row.
       const { data: sessionData } = await client.auth.getSession();
       if (cancelled || !sessionData.session) return;
       await client.realtime.setAuth(sessionData.session.access_token);
       if (cancelled) return;
       channel = client
         .channel(channelName)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, () => {
+        .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
           void reload();
         })
         .subscribe();
@@ -67,7 +72,7 @@ export function useBackendData<T>(load: () => Promise<T>, live = false) {
       cancelled = true;
       if (channel) void client.removeChannel(channel);
     };
-  }, [live, reload, channelName]);
+  }, [live, reload, channelName, table]);
 
   return { data, error, loading, reload };
 }
