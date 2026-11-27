@@ -9,8 +9,11 @@
 
 import { DataGate } from '../../../components/DataGate';
 import { ExpenseLimitCard } from '../../../components/ExpenseLimitCard';
-import { ExpensesCard } from '../../../components/ExpensesCard';
+import { PartLimitsCard } from '../../../components/PartLimitsCard';
+import { backendIsReal } from '../../../lib/backend';
+import { OwnerCostList } from '../../../components/OwnerCostList';
 import { useSharedExpenses } from '../../../data/ExpensesData';
+import './owner-costs.css';
 import { useLanguage } from '../../../language/LanguageContext';
 import { screenText } from '../../../language/screenText';
 
@@ -24,10 +27,10 @@ export default function OwnerExpensesPage() {
         <h1>{screenText('menuExpenses', language)}</h1>
         <p className="greeting-line">{screenText('expensesSubOwner', language)}</p>
       </div>
-      <div className="expense-page">
-        <ExpenseLimitCard />
+      <div className="expense-page owner-costs-page">
+        {backendIsReal ? <ExpenseLimitCard /> : <PartLimitsCard />}
         <DataGate state={expenses}>
-          {(rows) => <ExpensesCard role="owner" expenses={rows} onChanged={expenses.reload} />}
+          {(rows) => <OwnerCostList role="owner" expenses={rows} onChanged={expenses.reload} />}
         </DataGate>
       </div>
     </>
