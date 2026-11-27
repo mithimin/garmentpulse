@@ -12,7 +12,7 @@
 //   - Mou is the only free technician.
 // Owned by Sakib.
 
-import type { Machine, Profile, Report, Technician } from './types';
+import type { Expense, ExpenseLimit, Machine, Profile, Report, Technician } from './types';
 import { computeAvailability } from './helpers';
 
 export const FAKE_MACHINES: Machine[] = [
@@ -107,3 +107,80 @@ export const FAKE_TECHNICIANS: Technician[] = FAKE_PEOPLE.filter(
   display_name: p.display_name,
   availability: computeAvailability(FAKE_REPORTS, p.id),
 }));
+
+// -----------------------------------------------------------------------------
+// Fake expenses (docs/api-contract.md section 4.8)
+// -----------------------------------------------------------------------------
+// The story: the owner's limit is 1,000 taka. Tariq sent four costs, one in
+// each situation a screen must show:
+//   e-4  over the limit, WAITING for the owner
+//   e-3  under the limit, APPROVED, not recorded yet (the manager can record it)
+//   e-2  over the limit, REJECTED by the owner with a reason
+//   e-1  under the limit, approved and already RECORDED by the manager
+// The photo paths point at no real files: show a placeholder picture for them.
+
+export const FAKE_EXPENSE_LIMIT: ExpenseLimit = {
+  amount: 1000,
+  updated_at: '2026-10-14T06:00:00Z',
+};
+
+const job = (id: string): Expense['report'] => {
+  const r = FAKE_REPORTS.find((x) => x.id === id);
+  if (!r) throw new Error(`Unknown fake report: ${id}`);
+  return { id: r.id, description: r.description, machine: r.machine };
+};
+
+/** What every fake expense shares: sent by Tariq, nothing decided or recorded. */
+const sentByTariq = (id: string, at: string) => ({
+  id,
+  technician: person('u-tech-1'),
+  invoice_path: `u-tech-1/${id}-invoice.jpg`,
+  receipt_path: `u-tech-1/${id}-receipt.jpg`,
+  limit_at_submit: 1000,
+  decided_by: null,
+  decided_at: null,
+  rejection_reason: null,
+  recorded_by: null,
+  recorded_at: null,
+  created_at: at,
+  updated_at: at,
+});
+
+/** Newest first, like the real backend. */
+export const FAKE_EXPENSES: Expense[] = [
+  {
+    ...sentByTariq('e-4', '2026-10-16T09:00:00Z'),
+    report: job('r-100'),
+    amount: 2500,
+    reason: 'New needle bar for the sewing machine.',
+    status: 'waiting',
+  },
+  {
+    ...sentByTariq('e-3', '2026-10-16T08:45:00Z'),
+    report: job('r-100'),
+    amount: 450,
+    reason: 'A packet of needles.',
+    status: 'approved',
+  },
+  {
+    ...sentByTariq('e-2', '2026-10-15T11:30:00Z'),
+    report: job('r-099'),
+    amount: 6000,
+    reason: 'A new heating plate.',
+    status: 'rejected',
+    decided_by: person('u-owner-1'),
+    decided_at: '2026-10-15T14:00:00Z',
+    rejection_reason: 'Please repair the old plate first.',
+    updated_at: '2026-10-15T14:00:00Z',
+  },
+  {
+    ...sentByTariq('e-1', '2026-10-15T11:00:00Z'),
+    report: job('r-099'),
+    amount: 800,
+    reason: 'Heating wire and tape.',
+    status: 'approved',
+    recorded_by: person('u-manager-1'),
+    recorded_at: '2026-10-15T15:00:00Z',
+    updated_at: '2026-10-15T15:00:00Z',
+  },
+];

@@ -6,6 +6,7 @@
 
 export * from './api';
 export * from './errors';
+export * from './expenses';
 export * from './fixtures';
 export * from './helpers';
 export * from './labels';

@@ -126,3 +126,49 @@ export type InviteCode = {
 
 /** The answer to "is this code good?" (before sign-up). */
 export type CodeCheck = { role: InviteRole };
+
+// -----------------------------------------------------------------------------
+// Expenses and owner approval (docs/api-contract.md section 4.8)
+// -----------------------------------------------------------------------------
+
+/** What can happen to a repair cost. `approved` and `rejected` are final. */
+export type ExpenseStatus = 'waiting' | 'approved' | 'rejected';
+
+export const EXPENSE_STATUSES: readonly ExpenseStatus[] = ['waiting', 'approved', 'rejected'];
+
+/** The owner's answer to a waiting cost. */
+export type ExpenseDecision = Extract<ExpenseStatus, 'approved' | 'rejected'>;
+
+/** A person as they appear inside an expense. */
+export type Person = { id: string; display_name: string; display_name_bn?: BanglaName };
+
+export type Expense = {
+  id: string;
+  /** The repair job the money was spent on. */
+  report: { id: string; description: string; machine: Report['machine'] };
+  /** Taka: more than 0, at most 2 decimals. */
+  amount: number;
+  /** What the money was for. */
+  reason: string;
+  status: ExpenseStatus;
+  /** The technician who sent it. */
+  technician: Person;
+  /** Where the two photos are stored. Open them with `getExpensePhotoUrl`. */
+  invoice_path: string;
+  receipt_path: string;
+  /** The owner's limit at the moment it was sent. `null` = no limit was set. */
+  limit_at_submit: number | null;
+  /** The owner. `null` when nobody had to decide, or nobody has decided yet. */
+  decided_by: Person | null;
+  decided_at: string | null;
+  /** Set only when the owner rejected it. */
+  rejection_reason: string | null;
+  /** The manager who recorded it. `recorded_at` is `null` until then. */
+  recorded_by: Person | null;
+  recorded_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+/** The owner's limit. `amount: null` means the owner has not set one. */
+export type ExpenseLimit = { amount: number | null; updated_at: string | null };
