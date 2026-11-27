@@ -2,7 +2,7 @@
 
 **Status:** v1 confirmed by Sakib and **built**. The first 12 functions below exist in the backend (`supabase/migrations/`) and passed the rules check (`supabase/tests/api_rules_check.sql`). **Section 4.7 (sign-up with invite codes) is also BUILT and proven on the real project (decided and built on 2026-10-19; 12 real sign-up checks passed).** Rubaiya and Mithi still review it (plan step ★2).
 **Owner:** Sakib (backend). Changes need Sakib's review.
-**Expenses and owner approval (sections 3, 4.8, 6 and 7): BUILT IN THE DATABASE and tested on the real project (2026-11-26).** The apps still wait for the ready-made calls and fake data in `packages/shared` and for Sakib's note before building screens.
+**Expenses and owner approval (sections 3, 4.8, 6 and 7): BUILT and tested on the real project (2026-11-26).** The database, the ready-made calls and the fake data are in place; the phone and website screens are being built.
 **Last updated:** 2026-11-26
 **Source of truth for product rules:** [`prd.md`](./prd.md) and [`mvp.md`](./mvp.md). **For how things are built:** [`architecture.md`](./architecture.md).
 
@@ -339,7 +339,7 @@ Errors from the helper: `INVALID_CODE`, `EMAIL_TAKEN` (that email already has an
 
 ### 4.8 Expenses and owner approval (FR-04, FR-05)
 
-Added and built in the database on 2026-11-26. The ready-made calls and fake data for the apps are not in `packages/shared` yet: wait for them and for Sakib's note before building screens.
+Added and built on 2026-11-26. Apps use the ready-made calls in `packages/shared` (`createApi`, `uploadExpensePhoto`, `getExpensePhotoUrl`) and the fake data (`FAKE_EXPENSES`, `FAKE_EXPENSE_LIMIT`).
 
 **The flow**
 
@@ -473,7 +473,7 @@ Added and built in the database on 2026-11-26. The ready-made calls and fake dat
 | `EXPENSE_ALREADY_DECIDED` | The expense is not waiting for the owner any more. (Section 4.8) |
 | `EXPENSE_ALREADY_RECORDED` | The manager already recorded this expense. (Section 4.8) |
 
-The four expense codes will live in their own list, `EXPENSE_ERROR_CODES`, until both apps have their sentences.
+The four expense codes live in their own list, `EXPENSE_ERROR_CODES` (read them with `getApiErrorCode`), until both apps have their sentences.
 
 These codes live in `packages/shared/src/errors.ts`.
 
