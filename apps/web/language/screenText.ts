@@ -277,6 +277,23 @@ export const SCREEN_TEXT = {
   limitInputLabel: { en: 'New limit in taka', bn: 'নতুন সীমা (টাকা)' },
   limitSave: { en: 'Save the limit', bn: 'সীমা সেভ করুন' },
   limitSaved: { en: 'The new limit is saved.', bn: 'নতুন সীমা সেভ হয়েছে।' },
+  partLimitsTitle: { en: 'Limit for each part', bn: 'প্রতিটি পার্টের সীমা' },
+  partLimitsHelp: {
+    en: 'Only an outside part makes a cost. A part up to its limit is approved by itself. A bigger one waits for you. A part with no limit waits for you.',
+    bn: 'বাইরে থেকে আনা পার্টের জন্যই খরচ হয়। সীমার মধ্যে পার্ট নিজে থেকে অনুমোদিত হয়। বেশি হলে আপনার অপেক্ষায় থাকে। সীমা না থাকলেও অপেক্ষায় থাকে।',
+  },
+  partLimitsDemo: {
+    en: 'Demo only: these limits are not saved to the server yet. They reset when you reload the page.',
+    bn: 'শুধু ডেমো: এই সীমাগুলো এখনো সার্ভারে সেভ হয় না। পেজ আবার খুললে ফিরে যাবে।',
+  },
+  partNeedles: { en: 'Needles', bn: 'সূচ' },
+  partMotorBelt: { en: 'Motor belt', bn: 'মোটর বেল্ট' },
+  partHeatingPlate: { en: 'Heating plate', bn: 'হিটিং প্লেট' },
+  partHeatingWire: { en: 'Heating wire', bn: 'হিটিং ওয়্যার' },
+  partOther: { en: 'Other parts', bn: 'অন্যান্য পার্ট' },
+  partLimitSave: { en: 'Save', bn: 'সেভ করুন' },
+  filterFold: { en: 'Filter', bn: 'ফিল্টার' },
+  partChoose: { en: 'Choose a part', bn: 'একটি পার্ট বাছুন' },
   limitInvalid: {
     en: 'Type a number from 0 to 1,00,00,000, with at most 2 digits after the dot.',
     bn: '০ থেকে ১,০০,০০,০০০ এর মধ্যে একটি সংখ্যা লিখুন, দশমিকের পরে সর্বোচ্চ ২টি অঙ্ক।',
