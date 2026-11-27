@@ -8,9 +8,7 @@
 // app/owner/layout.tsx (data/ExpensesData.tsx) and update live. Owned by Mithi.
 
 import { DataGate } from '../../../components/DataGate';
-import { ExpenseLimitCard } from '../../../components/ExpenseLimitCard';
 import { PartLimitsCard } from '../../../components/PartLimitsCard';
-import { backendIsReal } from '../../../lib/backend';
 import { OwnerCostList } from '../../../components/OwnerCostList';
 import { useSharedExpenses } from '../../../data/ExpensesData';
 import './owner-costs.css';
@@ -28,7 +26,7 @@ export default function OwnerExpensesPage() {
         <p className="greeting-line">{screenText('expensesSubOwner', language)}</p>
       </div>
       <div className="expense-page owner-costs-page">
-        {backendIsReal ? <ExpenseLimitCard /> : <PartLimitsCard />}
+        <PartLimitsCard />
         <DataGate state={expenses}>
           {(rows) => <OwnerCostList role="owner" expenses={rows} onChanged={expenses.reload} />}
         </DataGate>

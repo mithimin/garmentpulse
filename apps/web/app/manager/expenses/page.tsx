@@ -23,7 +23,6 @@ export default function ManagerExpensesPage() {
     <>
       <div className="greeting">
         <h1>{screenText('menuExpenses', language)}</h1>
-        <p className="greeting-line">{screenText('expensesSubManager', language)}</p>
       </div>
       <div className="expense-page owner-costs-page">
         <DataGate state={expenses}>
