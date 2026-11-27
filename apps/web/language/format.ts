@@ -16,6 +16,24 @@ export function localizeDigits(text: string, language: Language): string {
   return text.replace(/[0-9]/g, (digit) => BANGLA_DIGITS[Number(digit)] ?? digit);
 }
 
+/**
+ * Writes an amount of money in taka, like "৳ 2,500" or "৳ 1,00,000.50" (grouped
+ * the South Asian way). Paisa are shown only when there are some.
+ */
+export function formatTaka(amount: number, language: Language): string {
+  const decimals = Number.isInteger(amount) ? 0 : 2;
+  const text = amount.toLocaleString('en-IN', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+  return `৳ ${localizeDigits(text, language)}`;
+}
+
+/** The other way round: Bangla digits typed by a person become 0-9. */
+export function englishDigits(text: string): string {
+  return text.replace(/[০-৯]/g, (digit) => String(BANGLA_DIGITS.indexOf(digit)));
+}
+
 const two = (n: number) => String(n).padStart(2, '0');
 
 /** Writes a date and time like "17/10 · 08:05" (day/month, then hours:minutes). */

@@ -5,8 +5,8 @@
 // DRAFT: the Bangla words are a first try and need a Bangla speaker to read them.
 // Owned by Mithi.
 
-import type { ErrorCode, Language } from '@garmentpulse/shared';
-import { isErrorCode, UNKNOWN_ERROR } from '@garmentpulse/shared';
+import type { ErrorCode, ExpenseErrorCode, Language } from '@garmentpulse/shared';
+import { isErrorCode, isExpenseErrorCode, UNKNOWN_ERROR } from '@garmentpulse/shared';
 
 type Words = Record<Language, string>;
 
@@ -69,10 +69,34 @@ const SIGNUP_ERROR_TEXT: Record<string, Words> = {
   },
 };
 
+/**
+ * Sentences for the repair cost problems (contract section 4.8). The shared
+ * toolbox keeps these codes in their own list (EXPENSE_ERROR_CODES).
+ */
+const EXPENSE_ERROR_TEXT: Record<ExpenseErrorCode, Words> = {
+  RECEIPT_REQUIRED: {
+    en: 'A cost needs both an invoice photo and a receipt photo.',
+    bn: 'খরচের জন্য ইনভয়েস ও রসিদ দুটোর ছবিই লাগবে।',
+  },
+  EXPENSE_NOT_APPROVED: {
+    en: 'Only an approved cost can be recorded.',
+    bn: 'শুধু অনুমোদিত খরচ নথিভুক্ত করা যায়।',
+  },
+  EXPENSE_ALREADY_DECIDED: {
+    en: 'This cost has already been decided.',
+    bn: 'এই খরচের সিদ্ধান্ত আগেই নেওয়া হয়েছে।',
+  },
+  EXPENSE_ALREADY_RECORDED: {
+    en: 'This cost has already been recorded.',
+    bn: 'এই খরচ আগেই নথিভুক্ত করা হয়েছে।',
+  },
+};
+
 /** Turns an error from a backend call into a friendly sentence. */
 export function errorSentence(error: unknown, language: Language): string {
   const message = error instanceof Error ? error.message : '';
   const signUpSentence = SIGNUP_ERROR_TEXT[message];
   if (signUpSentence) return signUpSentence[language];
+  if (isExpenseErrorCode(message)) return EXPENSE_ERROR_TEXT[message][language];
   return ERROR_TEXT[isErrorCode(message) ? message : UNKNOWN_ERROR][language];
 }

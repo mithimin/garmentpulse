@@ -4,7 +4,7 @@
 
 This is the "where are we?" page for the website. The root `CLAUDE.md` loads it into **every** teammate's Claude, so keep it short, true, and in simple words. **Update it before you finish each piece of work.**
 
-**Last updated:** 2026-11-25 by Mithi's session (Next.js security upgrade, Sprint 2 started)
+**Last updated:** 2026-11-27 by Mithi's session (repair cost screens built on fake data)
 
 ## Done
 
@@ -25,6 +25,8 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 - The temporary `/preview` page was deleted.
 
 ## In progress
+
+- REPAIR COSTS (branch `features/web-expenses`, 2026-11-27, cards GP-48 and GP-49; checks and build pass; tried in a browser on FAKE data in English at 1440 wide, and the owner page also in Bangla and phone size; real backend, real photos and live updates NOT tried): a new page for the manager (`/manager/expenses`: list, filters, photos, **Record**) and for the owner (`/owner/expenses`: **expense limit** box, list, photos, **Approve** with an "are you sure" step, **Reject** with a required reason). The action buttons are only in the pop-up. A number bubble in the menu shows the costs to record (manager) or waiting (owner). Rules follow `docs/api-contract.md` 4.8; fake costs live in `data/fakeExpenseStore.ts` and reset on reload (also when switching manager / owner login). Also fixed: every pop-up (Assign and report details too) now sits above the top bar (`components/Dialog.tsx`). The new Bangla words are a draft. A full real test needs the phone app to send a cost.
 
 - LOGIN AUTOFILL TEXT SIZE (branch `fix/web-login-autofill`, 2026-11-21, checks pass, NOT tried with a real saved password): boxes filled from Chrome's saved password looked too big. `app/login.css` now has rules for autofilled boxes that keep our text size, colour and background.
 
@@ -60,7 +62,7 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Waiting on someone else
 
-- Sakib: the expense (invoice and receipt) functions in the contract, then I build GP-48 and GP-49 on fake data first. Note: `requests/sakib/2026-11-25-expense-functions-after-mvp.md`.
+- Rubaiya: the phone screen that sends a repair cost, so the website's Repair costs pages can be tested with a real cost and real photos.
 
 - Sakib: more test machines (up to 45, floors 1 to 3, seats A1 to C5) so the real Machine map shows several floors. Note: `requests/sakib/2026-11-14-more-machines-for-the-map.md`.
 
@@ -77,5 +79,6 @@ This is the "where are we?" page for the website. The root `CLAUDE.md` loads it 
 
 ## Good to know for the other lanes
 
+- The website has English and Bangla sentences for the four expense error codes (`language/errorText.ts`). Note for Sakib: `requests/sakib/2026-11-27-web-has-expense-error-sentences.md`.
 - Sign-up with invite codes is in `docs/api-contract.md` section 4.7. The website uses the error codes `INVALID_CODE` and `EMAIL_TAKEN` from there; they live in `language/errorText.ts` until Sakib adds them to `packages/shared`.
 - The owner now uses the manager blue on the web (no dark red). The design doc change is waiting on branch `docs/owner-uses-manager-blue`.

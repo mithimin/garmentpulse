@@ -2,11 +2,17 @@
 //
 // A text box or a dropdown with a label ABOVE it and an error message right
 // UNDER it (design system section 9.4). Every input must have a visible label.
-// `Field` wraps the label and message; `TextInput` and `SelectInput` are the boxes.
+// `Field` wraps the label and message; `TextInput`, `TextAreaInput` (several lines)
+// and `SelectInput` are the boxes.
 // Owned by Mithi.
 
 import { useId } from 'react';
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react';
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from 'react';
 
 type FieldProps = {
   label: string;
@@ -32,12 +38,20 @@ export function Field({ label, error, children }: FieldProps) {
   );
 }
 
-// Both boxes sit inside a small wrapper, so a thin stitch line can be sewn just inside the edge
+// Every box sits inside a small wrapper, so a thin stitch line can be sewn just inside the edge
 // (see `.input-wrap::after` in globals.css). A box cannot hold a stitch line by itself.
 export function TextInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <span className="input-wrap">
       <input className="input" {...props} />
+    </span>
+  );
+}
+
+export function TextAreaInput(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <span className="input-wrap">
+      <textarea className="input input-area" {...props} />
     </span>
   );
 }

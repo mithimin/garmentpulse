@@ -2063,3 +2063,148 @@ html[lang='bn'] .floor-now-title {
   font-size: 13px;
   font-weight: 800;
 }
+
+/* ======================================================================================
+   REPAIR COSTS (invoice and receipt, owner approval)
+   The Repair costs pages of the manager and the owner: the red "Rejected" label, the
+   expense limit box, and the pop-up with the two photos.
+   ====================================================================================== */
+.status-rejected {
+  background: var(--error-bg);
+  color: var(--error-text);
+  box-shadow: 0 0 0 1px var(--error-border);
+}
+.filter-tab[data-filter='approved'] .filter-dot {
+  background: var(--blue);
+}
+.filter-tab[data-filter='rejected'] .filter-dot {
+  background: #a8493e;
+}
+
+/* The owner's page: the limit box, then the costs, the normal gap between them. */
+.expense-page {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.limit-card h2 {
+  margin: 0 0 8px;
+}
+.limit-now {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.limit-help {
+  max-width: 70ch;
+  margin: 6px 0 16px;
+  color: var(--soft-text);
+}
+.limit-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px;
+}
+.limit-form .field {
+  flex: 1 1 220px;
+  max-width: 360px;
+}
+/* The button lines up with the box, below the label. */
+.limit-form .btn {
+  margin-top: 28px;
+  min-height: 44px;
+}
+.limit-saved {
+  margin: 12px 0 0;
+  font-weight: 700;
+  color: var(--resolved-text);
+}
+
+/* The bigger pop-up: it scrolls inside itself when the window is small. */
+.dialog-wide {
+  max-width: 560px;
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+}
+.dialog-wide .details dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dialog-wide .dialog-actions {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.expense-amount {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+.photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.photo {
+  margin: 0;
+}
+.photo-big {
+  grid-column: 1 / -1;
+}
+.photo figcaption {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.photo-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 160px;
+  border: 1px dashed var(--input-border);
+  border-radius: 12px;
+  background: rgba(233, 218, 200, 0.45);
+}
+.photo-empty {
+  padding: 10px;
+  color: var(--soft-text);
+  text-align: center;
+}
+.photo-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+.photo-button {
+  padding: 4px;
+  cursor: zoom-in;
+}
+.photo-button img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.photo-big .photo-frame {
+  height: auto;
+}
+.photo-big .photo-button {
+  cursor: zoom-out;
+}
+.reject-box {
+  margin-top: 16px;
+}
+.input-area {
+  min-height: 88px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  resize: vertical;
+  font-family: var(--font-body);
+}
+@media (max-width: 520px) {
+  .photos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
