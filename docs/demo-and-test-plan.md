@@ -41,11 +41,11 @@ Do these in order. They take about 10 minutes. Skip none, because a leftover tes
 | # | Step | Who | How |
 |---|---|---|---|
 | 1 | Get the latest code | everyone | `git pull` on `main`, then `npm install` |
-| 2 | Put the test data back to the story | Sakib | In the Supabase SQL Editor, run `supabase/reset_demo_data.sql`, then `supabase/seed.sql`. The reset also removes repair costs and the owner's limit. Old test photos can be deleted by hand under Storage > `expense-photos` (optional) |
+| 2 | Put the test data back to the story | Sakib | In the Supabase SQL Editor, run `supabase/reset_demo_data.sql`, then `supabase/seed.sql` |
 | 3 | Delete leftover pretend accounts and codes | Sakib | Run the `delete` lines that the last real check printed (see section 5) |
 | 4 | Sign-up is **on**, email confirmation is **off** | Sakib | Supabase dashboard, Authentication, Email |
 | 5 | The apps point at the real project | Rubaiya, Mithi | Each has a private `.env` file with the web address and the public key (`.env.example` shows the names) |
-| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 303 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (38 checks). The real check leaves test data behind, so do steps 2 and 3 again afterwards |
+| 6 | The backend rules pass | Sakib | Run `supabase/tests/api_rules_check.sql` (it must say ALL 170 CHECKS PASSED), then `node supabase/tests/run_real_check.mjs` (30 checks) |
 | 6b | Fill in the Bangla names of the test people and machines | Sakib | Run `supabase/fill_bangla_test_names.sql` **after** the rules check, never before (the check expects them empty) |
 | 7 | Both apps start | Rubaiya, Mithi | Phone: `npm run start --workspace @garmentpulse/mobile`. Website: `npm run dev --workspace @garmentpulse/web`, then open `http://localhost:3000` |
 
@@ -80,7 +80,7 @@ Tick a box only when you **saw** it with your own eyes, on a real screen. Write 
 | **T11** | Mithi | Log in as the **owner**, then type `/manager` in the address bar. | "You cannot open this page" (or similar). The same the other way: log in as the manager, type `/owner`. | [ ] |
 | **T12** | Mithi | Try to log in on the website as **Nila** (a worker). | The login is refused with the "wrong app" sentence (`WRONG_PLATFORM`). | [ ] |
 | **T13** | Rubaiya | Try to log in on the phone as **Farhan** (a manager). | Refused with the "wrong app" sentence. | [ ] |
-| **T14** | Sakib | In the terminal: `node supabase/tests/run_real_check.mjs`. | `Tests 38 passed (38)`. This proves, with the real login service, that a worker cannot list all reports, assign, or make codes. | [ ] |
+| **T14** | Sakib | In the terminal: `node supabase/tests/run_real_check.mjs`. | `Tests 30 passed (30)`. This proves, with the real login service, that a worker cannot list all reports, assign, or make codes. | [ ] |
 
 ### 2.3 Languages (MVP checklist item 7)
 
@@ -122,21 +122,6 @@ When T1 to T26 are ticked, every box in [mvp.md](mvp.md) section 5 can be ticked
 | A manager makes worker and technician codes; a new worker signs up on the phone | T21, T22 |
 | Sign-up is refused with a wrong, used or expired code, and nobody picks their own role | T20, T23, T24, T14 |
 
-### 2.6 Repair costs and owner approval (second step, not part of the MVP checklist)
-
-Run these **only after the expense screens are merged** on both apps (see [mvp.md](mvp.md) section 3.1). The backend side is already covered by the automatic checks. Have two small pictures (JPG or PNG) ready on the phone, one for the invoice and one for the receipt. Start from a clean reset, so no limit is set.
-
-| ID | Who | Steps | What must happen | Result |
-|---|---|---|---|---|
-| **T27** | Mithi | As the owner, set the expense limit to **1000** taka. | The limit shows 1000. A manager and a technician have no way to change it. | [ ] |
-| **T28** | Rubaiya | As Hasan, on a job that is **in progress**, send a cost of **450** taka with both photos. | It shows as **Approved** (at or under the limit). | [ ] |
-| **T29** | Rubaiya | Try to send a cost with **only one** photo. | It is refused with a friendly sentence. Nothing is saved. | [ ] |
-| **T30** | Rubaiya | Send a cost of **2500** taka with two new photos. | It shows as **Waiting**. | [ ] |
-| **T31** | Mithi | As the manager, open the costs. Look at the 2500 one, then record the 450 one. | The 2500 one **cannot be recorded** yet. The 450 one is recorded. Both photos open. | [ ] |
-| **T32** | Mithi | As the owner, open the 2500 cost. Look at who asked, the amount, the reason and the photos. Try to reject it with no reason, then reject it with a short reason. | Without a reason it is refused. With one it shows **Rejected**, and the manager sees the reason **without a refresh**. | [ ] |
-| **T33** | Rubaiya and Mithi | Hasan sends a new cost of **3000**. The owner approves it, and the manager records it. | The new cost goes Waiting, then Approved, then recorded. The rejected one stays in the list. | [ ] |
-| **T34** | Rubaiya | Log in as Nila (worker) and look through her screens. | A worker sees **no** repair costs anywhere. | [ ] |
-
 ---
 
 ## 3. Part 2: the demo script (about 10 minutes)
@@ -156,7 +141,7 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 | 0:00 | Sakib | The login page of the phone and the website | "In a garment factory, when a sewing machine breaks, the line stops. Today the worker has to find a supervisor. GarmentPulse puts the whole chain in one place: worker, manager, technician and owner." |
 | 1:00 | Rubaiya | Phone: Nila logs in, the Home screen | "Nila is a worker. She sees only her own screens." |
 | 1:30 | Rubaiya | Report: pick **Buttonhole machine 01** (it is on floor 1, so it shows on the manager's first screen), type "Belt is loose", send | "She picks the machine from a list and writes a short problem. No phone calls." |
-| 2:00 | Mithi | **Without refreshing**, on the Dashboard's **Machine map** (click once on the page earlier so the beep can play), Buttonhole machine 01 (BH-01) turns white, glows and **beeps** | "The manager sees the broken machine itself within 5 seconds, live, with its code BH-01. It is in the queue because nobody is assigned." |
+| 2:00 | Mithi | **Without refreshing**, on the Dashboard's **Machine map** (click once on the page earlier so the beep can play), Buttonhole machine 01 (BH-01) turns white, glows and **beeps** | "The manager sees the broken machine itself within 5 seconds, live, with its code SM-01. It is in the queue because nobody is assigned." |
 | 2:45 | Mithi | Click the glowing machine, then press **Assign technician**. Tariq is greyed out (busy). Choose **Hasan** | "The system shows who is free and who is busy, so the manager never double-books a technician. The database itself refuses a second job for a busy technician." |
 | 3:30 | Rubaiya | Phone, as Hasan (technician): the job appears. Accept, Start work | "Hasan's phone shows his new job. He accepts it and starts. Everyone sees the change in a few seconds." |
 | 4:30 | Mithi | On the map, the machine changes: a stitched rim when a technician is assigned, then a fast bright beam when he is working. Show the Technicians page too: Hasan **Busy** | "The manager's screen updated by itself." |
@@ -166,8 +151,8 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 | 7:30 | Rubaiya | Phone: a manager makes a worker code, a new worker signs up with it | "The code decides the role. Nobody can choose to be a manager." |
 | 8:15 | Sakib | Try the **same code again**; try a **manager** code on the phone | "A used code, a made-up code, or the wrong app are all refused, and no account is created." |
 | 9:00 | Rubaiya | Press the language button, Bangla | "The whole app works in Bangla and English, because many workers read Bangla." |
-| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 303 + 38 checks | "Behind the screens, the database is the security guard. We tested the rules with 303 database checks and 38 checks that behave like the real apps." |
-| 10:00 | All | Final slide / Q&A | "What is next: repair costs with receipts and owner approval (the hidden part is built, the screens are on the way), then a chatbot, camera presence, several factories." (See [mvp.md](mvp.md) section 3. If the expense screens are finished and T27 to T34 pass, show them instead of saying this.) |
+| 9:30 | Sakib | The Supabase dashboard: `reports` table, and the result of the 170 + 32 checks | "Behind the screens, the database is the security guard. We tested the rules with 170 database checks and 30 checks that behave like the real apps." |
+| 10:00 | All | Final slide / Q&A | "What is next: invoices and receipts, owner approval of big costs, a chatbot, camera presence, several factories." (See [mvp.md](mvp.md) section 3.) |
 
 ### 3.3 Good answers to likely questions
 
@@ -177,7 +162,7 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 | Can a worker see another worker's reports? | No. The database only gives each person their own. We test it. |
 | What if two managers assign the same technician at once? | The database allows only one open job per technician, so only one wins. |
 | What if someone finds the sign-up page? | Without a good invite code nothing is created. Even calling the backend directly fails. |
-| What is not built yet? | See [mvp.md](mvp.md) section 3: chatbot, voice, camera, payments, several factories. Repair costs and owner approval are the second step (section 3.1): say whether their screens are finished. |
+| What is not built yet? | See [mvp.md](mvp.md) section 3: invoices, owner approval, chatbot, voice, camera, payments, several factories. |
 
 ---
 
@@ -197,13 +182,13 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 
 ## 5. After every run
 
-1. **Sakib** deletes the leftovers, in this order: first run `supabase/reset_demo_data.sql` (it removes repair costs, reports and invite codes), then this line for the pretend people of the real check:
+1. **Sakib** deletes the leftovers. The real check prints the exact lines. They look like this:
 
    ```sql
-   delete from auth.users where email like 'realcheck-%@example.com';
+   delete from auth.users where email like 'realcheck-%-<stamp>@example.com';
+   delete from public.invite_codes where code in ('...');
+   delete from public.reports where description like 'Real client check%';
    ```
-
-   Do not delete the real check's reports on their own: a report that has a repair cost is protected. Test photos can be deleted under Storage > `expense-photos` (optional).
 
 2. **Everyone** deletes the pretend people they made by sign-up in section 2.4 (Sakib can do it in the Supabase dashboard, Authentication, Users).
 3. **Sakib** runs `supabase/reset_demo_data.sql` and `supabase/seed.sql` again, so the next run starts from the story.
@@ -225,5 +210,4 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 - A report's description is shown exactly as the worker typed it. It is never translated.
 - The Machine map shows 45 machines on 3 floors (3 rows of 5 seats each). Every machine has a fixed floor and seat set in the database. The 40 machines that were added later have Bangla names that follow the reviewed pattern (the words হোল and ওভারলক were confirmed by a Bangla speaker on 2026-11-15).
 - The beep needs one click on the page first. Browsers keep pages silent until the person has used them.
-- Chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.
-- Repair costs and owner approval (second step): the database and the shared code are built and tested; the screens are being built. The three expense status words in Bangla have not been read by a Bangla speaker on a screen.
+- Expenses, invoices, owner approval, chatbot, camera presence, voice input, payments and several factories are **not** in this version on purpose.
