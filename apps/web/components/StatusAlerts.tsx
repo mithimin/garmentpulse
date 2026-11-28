@@ -15,6 +15,7 @@ import type { Report, ReportStatus } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
 import { useLanguage } from '../language/LanguageContext';
 import { screenText } from '../language/screenText';
+import { useNotifications } from '../data/NotificationsData';
 
 type Alert = { id: number; text: string };
 
@@ -26,6 +27,8 @@ export function StatusAlerts({ reports }: { reports: Report[] | null }) {
   // The last known status of each report. null until the first list has arrived.
   const knownRef = useRef<Map<string, ReportStatus> | null>(null);
   const nextIdRef = useRef(0);
+  // The same messages also go to the bell's list in the top bar.
+  const { add: addNotice } = useNotifications();
 
   useEffect(() => {
     if (!reports) return;
@@ -39,13 +42,12 @@ export function StatusAlerts({ reports }: { reports: Report[] | null }) {
       const before = previous.get(report.id);
       if (before === undefined || before === report.status) continue;
       nextIdRef.current += 1;
-      fresh.push({
-        id: nextIdRef.current,
-        text: `${report.machine.name}: ${STATUS_LABELS[report.status][language]}`,
-      });
+      const text = `${report.machine.name}: ${STATUS_LABELS[report.status][language]}`;
+      fresh.push({ id: nextIdRef.current, text });
+      addNotice(text);
     }
     if (fresh.length > 0) setAlerts((list) => [...list, ...fresh]);
-  }, [reports, language]);
+  }, [reports, language, addNotice]);
 
   // Each alert leaves by itself after a few seconds.
   useEffect(() => {
