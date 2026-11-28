@@ -394,7 +394,7 @@ A Bangla speaker filled in the short version of this sheet (Parts A, B, C and G)
 1. **Sakib** puts the corrected Part A words in `packages/shared/src/labels.ts` (the one place both apps read).
 2. **Rubaiya** puts the corrected Part C and Part D texts in `apps/mobile/src/language/screenText.ts`.
 3. **Mithi** puts the corrected Part C and Part E texts in `apps/web/language/errorText.ts` and `apps/web/language/screenText.ts`.
-4. **Sakib** adds the Bangla names of Part B to the backend (`display_name_bn` and `name_bn`, see `docs/api-contract.md` and `requests/`).
+4. **Sakib** adds the Bangla names of Part B to the backend (`display_name_bn` and `name_bn`, see `docs/api-contract.md`).
 5. Tick tests T15 to T17 in [demo-and-test-plan.md](demo-and-test-plan.md).
 6. Parts F and G were added on 2026-11-02. Part G holds the changes Claude suggested. Apply only the ones the Bangla speaker answered **yes** or gave their own version for.
 

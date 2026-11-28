@@ -6,7 +6,7 @@
 // Bangla name next to the English one:
 //   person:  display_name    + display_name_bn
 //   machine: name            + name_bn
-// (agreed in requests/mithi/2026-10-19-bangla-names-accepted.md).
+// (agreed on 2026-10-19).
 //
 // These helpers use the Bangla name when the site is in Bangla AND the backend sent one.
 // Otherwise they fall back to the English name, so nothing breaks while the Bangla names do not

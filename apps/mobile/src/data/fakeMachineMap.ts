@@ -3,7 +3,7 @@
 // FAKE data for the worker's machine map (it is NOT connected to the backend yet).
 // The real backend has no "floor" or "row" for machines, and a worker cannot read
 // other people's reports, so the team asked Sakib for both (see
-// requests/sakib/2026-11-14-worker-machine-map.md). Until that is built, the map
+// a note from 2026-11-14 asked for this). Until that is built, the map
 // uses this made-up factory:
 //   - Floor 1 has rows A to D, floor 2 has rows A to C, floor 3 has rows A to C;
 //   - every row has 6 machines, named like "F2-C4" (floor 2, row C, place 4);

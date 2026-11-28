@@ -78,7 +78,7 @@ on conflict (id) do nothing;
 -- Machines (typed in by hand for the MVP)
 -- -----------------------------------------------------------------------------
 -- 45 machines on 3 floors, each floor 3 rows (A, B, C) of 5 seats, exactly the
--- machines of the website's Machine map (requests/sakib/2026-11-14-more-machines-for-the-map.md).
+-- machines of the website's Machine map (a 2026-11-14 team request).
 -- The 5 machines of the first version (Sewing machine 01, 02, 14, Cutting machine 03,
 -- Pressing machine 01) are the SAME machines: if they already exist they MOVE to their
 -- new floor and seat (so old reports keep pointing at them), they are not copied.

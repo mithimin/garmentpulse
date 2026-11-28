@@ -50,7 +50,7 @@ There is one owner per layer of the stack. All members help with system design, 
 
 ### 3.1 Rules for working independently
 
-- One repository with one folder each: **supabase/** (Sakib, the backend), **apps/mobile/** (Rubaiya), **apps/web/** (Mithi). Code both apps use lives in **packages/shared/** (Sakib). Shared notes live in **docs/**. The strict rules for lanes are in the root `CLAUDE.md`.
+- One repository with one folder each: **supabase/** (Sakib, the backend), **apps/mobile/** (Rubaiya), **apps/web/** (Mithi). Code both apps use lives in **packages/shared/** (Sakib). Shared notes live in **docs/**. The working flow is in the root `CLAUDE.md`.
 - Each person works on their own branch and does not edit another person's folder.
 - Rubaiya and Mithi use **fake (mock) data** until the backend is ready, so nobody waits.
 - Sakib provides **test data** and a **Postman collection** early, so the apps can be checked against the real backend.

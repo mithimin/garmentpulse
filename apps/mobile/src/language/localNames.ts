@@ -3,7 +3,7 @@
 // Shows a person's name or a machine's name in the language the app is in.
 //
 // The backend will give every person and machine an OPTIONAL Bangla name next to
-// the English one (agreed in requests/rubaiya/2026-10-19-bangla-names-heads-up.md):
+// the English one (agreed on 2026-10-19):
 //   person:  display_name    + display_name_bn
 //   machine: name            + name_bn
 //

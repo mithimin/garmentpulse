@@ -207,7 +207,7 @@ Run these **only after the expense screens are merged** on both apps (see [mvp.m
 
 2. **Everyone** deletes the pretend people they made by sign-up in section 2.4 (Sakib can do it in the Supabase dashboard, Authentication, Users).
 3. **Sakib** runs `supabase/reset_demo_data.sql` and `supabase/seed.sql` again, so the next run starts from the story.
-4. **Write down the result** in the table below, and put any problem in a note in `requests/` for the person who owns it.
+4. **Write down the result** in the table below, and put any problem in a new task in Insprint.
 
 ### The result log
 

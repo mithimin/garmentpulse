@@ -15,7 +15,7 @@
 // That is the FALLBACK. When the backend gives EVERY machine a real `floor` and `seat`
 // (added by Sakib on 2026-11-14), the map uses those real places instead.
 // The machine CODE (for example "SM-14") is the real `code` the backend sends with every
-// machine (done by Sakib, see requests/mithi/2026-11-02-machine-code-ready.md). A machine
+// machine (done by Sakib on 2026-11-02). A machine
 // without a code falls back to "SM-" plus the seat name.
 // Owned by Mithi.
 
