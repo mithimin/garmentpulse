@@ -298,6 +298,8 @@ export const SCREEN_TEXT = {
     en: 'Type a number from 0 to 1,00,00,000, with at most 2 digits after the dot.',
     bn: '০ থেকে ১,০০,০০,০০০ এর মধ্যে একটি সংখ্যা লিখুন, দশমিকের পরে সর্বোচ্চ ২টি অঙ্ক।',
   },
+  alertTitle: { en: 'Report updated', bn: 'রিপোর্ট আপডেট হয়েছে' },
+  alertClose: { en: 'Close message', bn: 'বার্তাটি বন্ধ করুন' },
 } as const satisfies Record<string, Record<Language, string>>;
 
 export type ScreenTextKey = keyof typeof SCREEN_TEXT;
