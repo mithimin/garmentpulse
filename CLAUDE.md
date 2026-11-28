@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file is the first thing every new Claude Code session should read. It says what GarmentPulse is, how we build it, where the detailed docs live, and the working rules.
+This file is the first thing every new Claude Code session reads. It says what GarmentPulse is, how the team works, where the detailed docs live, and the one working flow everyone follows.
 
 ---
 
@@ -11,166 +11,49 @@ This file is the first thing every new Claude Code session should read. It says 
 - A **worker** reports a broken machine.
 - The **manager** sees the report and sends a free **technician**.
 - The **technician** accepts the job, repairs the machine, and updates the status.
-- The **owner** can watch everything that happens, but cannot change a report. In the second step the owner also approves or rejects big repair costs.
-- Four roles: worker, technician, manager, owner. Each role only sees and does what it is allowed to do. The server checks this, not only the app.
+- The **owner** can watch everything, but cannot change a report. In the second step the owner also approves or rejects big repair costs.
+- Four roles: worker, technician, manager, owner. Each role only sees and does what it is allowed to do. The server (the database) checks this, not only the app.
 - It ships as **two apps**:
   - **GarmentPulse Mobile**: a phone app for workers and technicians.
   - **GarmentPulse Web**: a website dashboard for managers and the owner.
-- The first version is called the **MVP** (the smallest version that still solves the main problem). It leaves out invoices and receipts, owner approval of big costs, the AI chatbot, voice input, camera presence monitoring, free/paid plans, and push notifications. **Invoices, receipts and owner approval are now being built as the second step**; the others still wait. See `docs/mvp.md`.
+- The first version is the **MVP** (the smallest version that still solves the main problem). See `docs/mvp.md`. Section 3.1 of that file lists the **second step** (repair costs with invoice and receipt photos, and owner approval), which is being built now.
 
-**Current status:** the MVP is built. **The whole MVP flow works on the real backend and was tried by hand with real devices:** a worker reports from the phone, the manager sees it live within 5 seconds, assigns a free technician, the technician accepts and finishes it, and the owner watches. **Sign-up with invite codes works on both apps.** Since 2026-11-26 the team builds the **second step**: invoices and receipts, and the owner's approval of big costs (`docs/mvp.md` section 3.1). Their database is on the real project, with 303 database checks and 38 checks that behave like the real apps (all passed on 2026-11-26); the phone and website screens are not built yet. The test people and machines have Bangla names; some Bangla words in the apps are still unread by a Bangla speaker. What is left: the expense screens, the team's full test together, and the demo. For the live picture of each lane, read its `STATUS.md` (loaded below).
-
----
-
-## Team and Lanes
-
-Three friends build GarmentPulse together. **None of us is a professional developer**, so every session must follow the simple-language rule in the Rules section below.
-
-| Person | What they build | Their lane (the only folders they may change) |
-|---|---|---|
-| **Rubaiya** | **GarmentPulse Mobile** (the phone app for workers and technicians) | `apps/mobile/` |
-| **Mithi** | **GarmentPulse Web** (the dashboard for managers and the owner) | `apps/web/` |
-| **Sakib** | **The backend** (the hidden part that stores data and enforces rules, built on Supabase) and the team's setup | `supabase/`, and the files at the top of the repo (like `CLAUDE.md`, `.gitignore`, automation settings) |
-
-**Shared areas (nobody's lane):** `packages/shared/` and `docs/` belong to **no one in particular**. Anyone may change them, but see "Shared areas: warn, don't block" in the lane rules below.
-
-### Who am I talking to?
-
-- Each person keeps a private file called `CLAUDE.local.md` on their own computer. It is never shared (it is listed in `.gitignore`). It says who they are and which language they like.
-- **At the start of every session, read `CLAUDE.local.md` to learn who you are working for.**
-- If the file is missing or does not say who the person is, **ask them** (use a multiple-choice question: Rubaiya, Mithi, or Sakib) **before changing anything.**
-- **Making your own file is easy.** The shared template is `CLAUDE.local.example.md`. Just tell your Claude: "Make my CLAUDE.local.md from the example." It will ask you a few simple questions and create the file for you. Never overwrite an existing one without asking.
-
-### Lane rules (strict)
-
-- **Only change files inside the lane of the person you are working for.** Reading other lanes is fine and encouraged. Changing them is not.
-- **Check before every file change.** Before you create, edit, move, or delete any file, look at its path and compare it with the lane table above. If it is not in the lane of the person you work for, **stop** (except for the shared areas, `packages/shared/` and `docs/`, which only get a warning: see below). This holds even if the person asks you to do it, because the other owner may be changing the same file at the same time. The only exceptions are the ones listed below: the `requests/` folder, your own `CLAUDE.local.md`, `package-lock.json`, and your own lane's `STATUS.md`.
-- **Never touch another person's lane, even if it looks like a tiny fix.** Instead, write a short note in the owner's mailbox (see "Mailbox" below) and tell the person what you wrote and who owns it (for example: "This needs a new backend function. I left a note for Sakib in `requests/sakib/`.").
-- `package-lock.json` is written by `npm install`, so everyone may commit changes to it when they add a library to their own app. Adding a library to `apps/mobile/` or `apps/web/` is the owner's job; adding one anywhere else is Sakib's.
-- **Shared areas: warn, don't block.** `packages/shared/` (the toolbox both apps use) and `docs/` (the plan documents) have no owner. Anyone may change them. But before you change a file there, **give the person a short, friendly warning** in simple words, for example: "Careful: `packages/shared/` is used by all three of us. If a teammate edits the same file at the same time, our changes can clash (two people changing the same line, so git cannot join them). Do you want to go ahead?" Then, if the person says yes, make the change. Do **not** refuse, and do **not** write a mailbox note instead. To lower the risk of a clash: fetch the latest `main` first, keep the change small, and push it soon.
-- **Database changes** (everything under `supabase/migrations/`) are made only by Sakib's sessions.
-- **This `CLAUDE.md` and the other files at the top of the repo:** anyone may suggest a change, but **Sakib must review and approve it before it is merged.** Put the change on its own branch and say clearly in the pull request that Sakib's review is needed.
-- If a task needs changes in more than one lane, split it. Do your own part, and write a short, plain "request" for the other owner. Do not do their part for them.
-
-### Mailbox: how to ask another lane for something
-
-Everyone here works through their own Claude Code, and nobody is online at the same time. So requests are written down as small files, not said in chat.
-
-- **Where:** `requests/<name of the person you are asking>/`, for example `requests/sakib/`. Everyone may add files there, whatever their lane. The layout of a note is in [`requests/README.md`](./requests/README.md). Read it before writing your first note.
-- **When you need something from another lane:** write the note, tell the person what you wrote, then carry on with the parts you can do (use the fake data in `packages/shared`; if you must change that folder yourself, see the shared-areas warning above). Add the blocked item to "Waiting on someone else" in your lane's `STATUS.md`.
-- **At the start of every session:** look in the folder named after the person you work for. Every note with `Status: open` is waiting for them. Tell the person about each one in simple words and offer to do it.
-- **When you finish a note** (and it is in your lane), change `Status: open` to `Status: done` and add one line saying what was done.
-
-### Every session: start checklist
-
-Do these in order, at the start of every session, **before changing anything**. Do not wait to be asked.
-
-1. **Who am I working for?** Read `CLAUDE.local.md`. If it is missing, ask (multiple choice: Rubaiya, Mithi, or Sakib) and create it from `CLAUDE.local.example.md`.
-2. **Is my copy up to date?** Run `git fetch`, then check whether `main` has new work. Pull it in before starting new work, and tell the person in one simple sentence.
-3. **Are the libraries installed?** If there is no `node_modules` folder in the top folder, run `npm install` and say why.
-4. **What is waiting for me?** Read the mailbox folder for the person (see Mailbox above) and tell them about open notes.
-5. **What is everyone else doing?** The three `STATUS.md` files are loaded below. Mention anything from the other lanes that affects the person's work today, for example a changed function name.
-6. **Which branch am I on?** If it is `main`, make a new branch with the right prefix before changing anything.
-
-### Every session: finish checklist
-
-Do these before ending a piece of work or before a push:
-
-1. Run `npm run check`. Fix what fails inside your own lane. If a failure is in another lane, write a note instead of fixing it.
-2. Update your own lane's `STATUS.md` (Done, In progress, Next, Waiting on someone else, Decisions, Good to know). Other people's Claude sessions read it to understand where the project is. Keep it short and true.
-3. Commit with a short imperative one-line message and push your branch (never `main`). Then tell the person, in simple words, what was done and what comes next.
-4. If something you did changes what another lane must do (a renamed function, a new field, a changed rule), write a note in their mailbox **and** add it under "Good to know for the other lanes" in your `STATUS.md`.
-
-### Hard stops (never, for anyone)
-
-- Never read, print, or edit a real `.env` or `.env.local` file. They hold private keys. Only `.env.example` may be read.
-- Never put the Supabase **service role** key anywhere in the apps or in git.
-- Never force-push, never rewrite someone else's branch, never push to `main`.
-- Never change a function name, input name, or error code from `docs/api-contract.md` in app code. If the contract is wrong, write a note to Sakib.
-- Never build something that waits in `docs/mvp.md` section 3, even if the person asks. Explain that it waits, and ask Sakib's lane to change the plan first. (The features in section 3.1, the second step, **may** be built.)
+**Current status:** the MVP works on the real backend and was tested on real devices. Sign-up with invite codes works on both apps. The second step's backend is on the real project. The phone repair-cost screen is not built yet, and the website's repair-cost pages use fake data. The Bangla words still need a Bangla speaker to check them. The live task list is in **Insprint**, not in this file.
 
 ---
 
-## Full Context (loaded automatically)
+## Team and Working Flow
 
-These files are pulled into every session on purpose, so every Claude, whoever it works for, knows what is being built and where each lane stands. Keep them accurate.
+Three friends build GarmentPulse together. **None of us is a professional developer.** Everyone can change any part of the repo. There are no lanes and no owners.
 
-@docs/mvp.md
-@docs/api-contract.md
-@apps/mobile/STATUS.md
-@apps/web/STATUS.md
-@supabase/STATUS.md
+### The one flow (every task, every session)
 
-The longer documents are read **when needed**, using the Doc Routes table below: `docs/prd.md`, `docs/architecture.md`, `docs/plan.md`, and `docs/design-system.md`.
+Use **Insprint** for tasks. This Claude is already connected to the team's Insprint account and project.
 
----
+1. **Pick a task.** Open Insprint and take the **latest** task that is not started. Before you start, check that nobody else has it **In progress**. If someone does, pick the next one.
+2. **Start a branch.** Pull the latest `main` first. Then make a new branch for this one task only. Use the prefixes listed in the Rules section, and put the task ID in the name (for example `features/IN-12-machine-page`).
+3. **Move the task to In progress** in Insprint.
+4. **Do all the work for that task.** Do not wait for anyone. Anyone may change any file, including files that look like another person's work.
+5. **Only if you truly need someone else's unfinished task first,** say so in one short, plain line in the chat. Say what you need and why, in simple words. Then keep doing everything else that does not depend on it. Do not write files or notes for this.
+6. **Test before you push.** Run `npm run check`. It must pass.
+7. **Commit and push** your branch. Never push to `main`.
+8. **Open a Pull Request (PR)** into `main`, and move the task to **In review**.
+9. **Never move a task to Done** unless a person explicitly says so. A PR being merged does not make a task Done.
 
-## How We Build It
+A **PR** (pull request) is a request asking the team to add your branch to `main`. A **merge** adds it. The team's GitHub rule says one other person must review a PR before it merges. CI (the automatic checks on GitHub) must also be green.
 
-- **Stack:** React Native with Expo for the phone app (one codebase for iPhone and Android), Next.js (a tool for building websites with React) for the web app, TypeScript everywhere, SQL for the database.
-- **Backend:** one Supabase project shared by both apps. It provides email and password login, Postgres (the database), and Realtime (live updates, so a new report shows on the manager's screen within 5 seconds).
-- **The database is the security guard.** Every rule that matters (who sees what, who can assign what) is enforced in Postgres using Row Level Security (a lock on each row of data) and SQL functions. The apps are only screens and must never be trusted to enforce rules.
-- **The apps never write important tables directly.** They call SQL functions (RPC, which means "ask the database to run a ready-made function"). Each function runs in one step, checks permissions, then writes.
-- **Repo layout:**
-  - `apps/mobile/`: GarmentPulse Mobile (workers and technicians)
-  - `apps/web/`: GarmentPulse Web (managers and the owner)
-  - `packages/shared/`: code both apps use (types, status names, error codes, later the Supabase client)
-  - `supabase/migrations/`: database changes, in order
-  - `supabase/functions/`: Edge Functions (small server programs, not needed in the MVP)
-  - `supabase/tests/`: database tests (security rules, dispatch rules)
-  - `docs/`: product and architecture docs
-  - `requests/`: the team mailbox, one folder per person (see "Mailbox" above)
-  - `apps/mobile/STATUS.md`, `apps/web/STATUS.md`, `supabase/STATUS.md`: one "where are we?" page per lane
-- **Database changes are always a new migration file.** Never edit an old one.
-- **Anything both apps need goes in `packages/shared`.** Never copy it.
-- **Tests come first in priority:** database security tests (for example "a worker cannot open manager screens"), then dispatch and status tests, then shared unit tests, then a few app smoke tests. Tests must pass before code goes to a remote branch.
-- **The apps now use the real backend.** The fake (mock) data in `packages/shared/src/fixtures.ts` stays for the shared tests and for any screen that has no backend connection. It has the exact shapes in `docs/api-contract.md`. Do not invent a second set of fake data. If you need more, add it to `fixtures.ts` yourself (after the shared-areas warning) or write a note to Sakib. Wiring code that reads fake data (a fake login, a fake "call") stays inside the app's own folder.
-- **Words shown to people (statuses, free/busy, roles) come from `packages/shared/src/labels.ts`,** in English and Bangla. Never type them again inside an app.
+### Database work (Supabase)
 
----
+- All database changes are **new files** in `supabase/migrations/`. Never edit an old migration file.
+- Run database changes with the scripts in this repo, using the keys in the private files. Do **not** change the database by hand in the Supabase dashboard.
+- Tests for the database are in `supabase/tests/`. Run them after any database change.
 
-## Getting Started (Running the Project)
+### Private files and keys
 
-Words explained: **Node** is the engine that runs our tools. **npm** is the tool that downloads the libraries (ready-made code) we use. A **workspace** is a repo that holds several projects together.
-
-1. Install **Node** (version 20.19 or newer) and **git**. Docker is **only for backend work** (Sakib). Rubaiya and Mithi do not need it.
-2. In the top folder, run `npm install`. This downloads everything for all projects at once.
-3. Copy `.env.example` to a new file inside your app's folder and fill it in (see the comments in `.env.example` for the exact file name). Ask Sakib for the values. Never share `.env`.
-4. Start your app:
-   - Rubaiya: `npm run start --workspace @garmentpulse/mobile`, then open it on your phone with the Expo Go app.
-   - Mithi: `npm run dev --workspace @garmentpulse/web`, then open `http://localhost:3000` in a browser.
-5. **Before every push, run `npm run check`.** It tidy-checks (Prettier), spell-checks (ESLint), type-checks (TypeScript), and runs the tests. It must pass. GitHub runs the same checks automatically on every pull request.
-
----
-
-## Where to Find Things (Doc Routes)
-
-Read the right doc before changing the matching area. Do not guess product rules.
-
-| Question | Read this |
-|---|---|
-| What should the product do? Who are the users? What are the features and rules? | [`docs/prd.md`](./docs/prd.md) |
-| How is it built? Technology, which user gets which app, quality rules? | [`docs/architecture.md`](./docs/architecture.md) |
-| Which features are in the first version (MVP) and which wait? What does "done" mean? | [`docs/mvp.md`](./docs/mvp.md) |
-| Who builds what, in which order, and what could go wrong? | [`docs/plan.md`](./docs/plan.md) |
-| How should screens look? Colours, fonts, buttons, status labels? | [`docs/design-system.md`](./docs/design-system.md) |
-| Which exact backend functions can the apps call, with what inputs, results, and error codes? (The agreement between the apps and the backend.) | [`docs/api-contract.md`](./docs/api-contract.md) |
-| I am working inside `apps/mobile/`, `apps/web/`, or `supabase/`. What are the rules for that folder? | The `CLAUDE.md` inside that folder ([`apps/mobile`](./apps/mobile/CLAUDE.md), [`apps/web`](./apps/web/CLAUDE.md), [`supabase`](./supabase/CLAUDE.md)) |
-| Where is each lane right now? What is done, in progress, blocked? | The `STATUS.md` of each lane (loaded automatically, see "Full Context") |
-| Did a teammate ask me for something? How do I ask a teammate? | [`requests/README.md`](./requests/README.md) and the Mailbox section above |
-| What are the working rules for commits, branches, and PRs? | The **Rules** section below |
-
-**Source of truth:** if the PRD and another doc disagree about a product rule, **the PRD wins** (except that `docs/mvp.md` decides what is in or out of the first version). Fix the other doc.
-
-**Quick pointers from the docs:**
-
-- The report flow: worker reports, then the manager assigns a **free** technician, then the technician accepts and updates the status (waiting, in progress, resolved). If all technicians are busy, the report waits in a **queue**. See MVP 2.2 to 2.4.
-- The owner web app has **three pages** in the MVP: **Dashboard** (three count boxes: Waiting, In progress, Resolved), **Reports** (a read-only list of all reports) and **Manager codes** (make a one-time invite code for a new manager, and see the unused codes). The owner cannot change any report.
-- **Second step, expenses (decided 2026-11-26):** a technician sends a repair cost with an invoice photo and a receipt photo. At or under the owner's limit it is approved; over it, or with no limit set, it waits for the owner, who approves or rejects it. The manager records approved costs. Workers see no costs. See `docs/api-contract.md` section 4.8.
-- **Sign-up is in the MVP, with invite codes** (decided 2026-10-19): the owner makes manager codes, a manager makes worker and technician codes, the code decides the role, a code works once and expires after 7 days. Owner accounts are made by hand. It is **built and proven on the real project**; see `docs/api-contract.md` section 4.7 and `supabase/STATUS.md`.
-- Workers and technicians use the **phone app**. Managers and the owner use the **web app**. Logging into the wrong one must fail (error code `WRONG_PLATFORM`).
-- The app has **two languages (Bangla and English)** with a small switch in the top-right corner of every screen. Phone buttons are 48 px tall.
-- Statuses are colour-coded **and** always have a word next to the colour (design system rule).
+- Each person's private settings live in `.env` files (`apps/mobile/.env`, `apps/web/.env.local`, and `.env.secret` at the top). Git ignores all of them.
+- Scripts may read these files to connect. **Never print their values, never commit them, and never paste them in chat.**
+- The Supabase **secret key** and the database password live only in `.env.secret`. They never go in an app, in git, or in a chat.
+- The **publishable key** is the public key. Apps may use it, because the database's security rules protect the data.
 
 ---
 
@@ -182,21 +65,20 @@ Rubaiya, Mithi, and Sakib are students, not professional developers. Talk to eac
 
 - **Explain a hard word before you use it.** Give a one-sentence everyday meaning first, then use the word. Example: "the *backend* (the hidden part of the app that stores information and enforces the rules)".
 - **Use everyday comparisons.** Example: "A database is like a giant school notebook where each page has neat rows."
-- **Short sentences and short paragraphs.** One idea at a time. No walls of text.
+- **Short sentences and short paragraphs.** One idea at a time.
 - **Never assume they already know something.** Do not say "obviously", "simply", "just", or "as you know".
-- **Spell out every short form** (like API, RPC, RLS, PR, CI) the first time, and explain what it means in plain words.
-- **Say what you did and why**, not only the commands or code. Show a command only if they need to run it, and say what it will do.
+- **Spell out every short form** (like API, RPC, RLS, PR, CI) the first time, and explain it in plain words.
+- **Say what you did and why**, not only the commands or code.
 - **Explain errors in plain words:** what went wrong, why, and what happens next.
-- This applies to chat replies, plans, pull request descriptions, and questions. It applies in **every language** (the language itself comes from the person's `CLAUDE.local.md`).
-- If you catch yourself writing in a technical way, stop and rewrite it simply.
+- This applies to chat replies, plans, and PR descriptions.
 
 ### Everything else
-- If you are not sure about something, ask a clarifying question before acting. Never guess.
-- Use multiple-choice questions (MCQ widgets) for clarifying questions whenever possible.
-- Explain the plan first. Before making big changes, show a short plan and wait for the user's go-ahead.
-- Never push to `main`. If code needs to go to a remote, create a new branch first and push that branch instead.
-- Before starting new work after something has been pushed, always make sure the local copy is up to date with the latest from the remote (fetch and pull first).
-- Run tests before pushing. Code should not go to a remote branch until the tests pass.
+
+- If something is unclear, make the most sensible choice, say what you chose in one line, and keep going. Ask only when a wrong choice could break something that cannot be undone.
+- Use multiple-choice questions when you ask something.
+- Never push to `main`. Always use a new branch.
+- Before you start new work, fetch and pull the latest `main`.
+- Run `npm run check` before every push. Code must not go to a remote branch until it passes.
 - Branch names must follow these prefixes:
   - `features/` for new features
   - `fix/` for bug fixes
@@ -205,14 +87,87 @@ Rubaiya, Mithi, and Sakib are students, not professional developers. Talk to eac
   - `refactor/` for restructuring code without changing behavior
   - `chore/` for maintenance tasks such as dependency updates or config changes
 - Use the user's configured git `user.name` and `user.email` for all commits.
-- Never add yourself as a co-author. No `Co-authored-by` trailers.
-- Keep commit messages fresh, short, clean, and concise.
-- Write commit subjects in the imperative mood, e.g. `Add login form`, not `Added login form`.
-- Keep commit messages to one line. Add a body only when the change truly needs explanation.
-- When creating a pull request, write the title and description neatly and in simple language, so a non-technical 12-year-old can understand them.
-- Do not add any signature or mention of Claude or Claude Code to a pull request. It should read as if a human wrote it.
-- When merging a pull request, always use squash.
-- The squash commit message must be a short, clean, one-line summary in the imperative mood. Do not include the PR number (e.g. `(#2)`).
-- Unused local branches (for example, ones already merged): ask the user whether they want them removed. Only remove them if the user says yes.
-- Never remove remote branches on your own. If the user asks for a remote branch to be removed, first give a clear, simple warning that they shouldn't do it, then follow their decision.
-- When working in a codebase, document every file well enough that someone reading it years later can still understand its purpose.
+- **Never add a co-author or Claude attribution.** No `Co-authored-by` trailers, and no mention of Claude or Claude Code in commits or PRs. A PR should read as if a human wrote it.
+- Commit subjects are short, in the imperative mood, and one line. Example: `Add login form`, not `Added login form`. Add a body only when the change truly needs one.
+- PR titles and descriptions are written in simple language, so a non-technical 12-year-old can understand them.
+- When merging a PR, always use **squash**. The squash message is a short one-line summary in the imperative mood, with no PR number.
+- Unused local branches: ask the user before removing them.
+- Never remove remote branches on your own.
+- Document every file well enough that someone reading it years later can still understand its purpose. Start each file with a short comment about what it is for.
+
+### Hard stops (never, for anyone)
+
+- Never print, paste, or commit a key, a password, or the contents of a `.env` file.
+- Never put the Supabase **secret** key in an app, in git, or in a chat.
+- Never force-push, never rewrite someone else's branch, never push to `main`.
+- Never change a function name, input name, or error code from `docs/api-contract.md` in app code without changing the contract in the same PR.
+- Never build something that waits in `docs/mvp.md` section 3. Section 3.1 (the second step) may be built.
+
+---
+
+## Full Context (loaded automatically)
+
+@docs/mvp.md
+@docs/api-contract.md
+
+The longer documents are read **when needed**, using the Doc Routes table below: `docs/prd.md`, `docs/architecture.md`, `docs/plan.md`, and `docs/design-system.md`.
+
+---
+
+## How We Build It
+
+- **Stack:** React Native with Expo for the phone app (one codebase for iPhone and Android), Next.js (a tool for building websites with React) for the web app, TypeScript everywhere, SQL for the database.
+- **Backend:** one Supabase project shared by both apps. It provides email and password login, Postgres (the database), and Realtime (live updates, so a new report shows on the manager's screen within 5 seconds).
+- **The database is the security guard.** Every rule that matters is enforced in Postgres, using Row Level Security (a lock on each row of data) and SQL functions. The apps are only screens.
+- **The apps never write important tables directly.** They call SQL functions (RPC, which means "ask the database to run a ready-made function"). Each function runs in one step, checks permissions, then writes.
+- **Repo layout:**
+  - `apps/mobile/`: GarmentPulse Mobile (workers and technicians)
+  - `apps/web/`: GarmentPulse Web (managers and the owner)
+  - `packages/shared/`: code both apps use (types, status names, error codes, fake data, the calls to the backend)
+  - `supabase/migrations/`: database changes, in order
+  - `supabase/tests/`: database tests and real-login tests
+  - `docs/`: product, architecture, the API contract, and the MVP plan
+- **Database changes are always a new migration file.** Never edit an old one.
+- **Anything both apps need goes in `packages/shared`.** Never copy it.
+- **The API contract is the agreement** between the apps and the backend: `docs/api-contract.md`. `packages/shared` must match it, and a check enforces that.
+- **Words shown to people (statuses, free/busy, roles) come from `packages/shared/src/labels.ts`,** in English and Bangla. Never type them again inside an app.
+
+---
+
+## Getting Started (Running the Project)
+
+Words explained: **Node** is the engine that runs our tools. **npm** is the tool that downloads the libraries (ready-made code) we use. A **workspace** is a repo that holds several projects together.
+
+1. Install **Node** (version 20.19 or newer) and **git**.
+2. In the top folder, run `npm install`. This downloads everything for all projects at once.
+3. Put your private keys in the `.env` files (see "Private files and keys" above). Ask the team for the values. Never share them.
+4. Start your app:
+   - Phone: `npm run start --workspace @garmentpulse/mobile`, then open it with the Expo Go app.
+   - Website: `npm run dev --workspace @garmentpulse/web`, then open `http://localhost:3000`.
+5. **Before every push, run `npm run check`.** It checks formatting (Prettier), spelling and style (ESLint), types (TypeScript), the tests, and the contract and key checks. It must pass. GitHub runs the same checks on every PR.
+
+---
+
+## Where to Find Things (Doc Routes)
+
+| Question | Read this |
+|---|---|
+| What should the product do? Who are the users? | [`docs/prd.md`](./docs/prd.md) |
+| How is it built? | [`docs/architecture.md`](./docs/architecture.md) |
+| Which features are in the first version, and which wait? | [`docs/mvp.md`](./docs/mvp.md) |
+| Who builds what, and in which order? | [`docs/plan.md`](./docs/plan.md) |
+| How should screens look? | [`docs/design-system.md`](./docs/design-system.md) |
+| Which backend functions can the apps call, with what inputs and error codes? | [`docs/api-contract.md`](./docs/api-contract.md) |
+| What is being worked on right now? | **Insprint** |
+
+**Source of truth:** if the PRD and another doc disagree about a product rule, **the PRD wins** (except that `docs/mvp.md` decides what is in or out of the first version).
+
+**Quick pointers:**
+
+- The report flow: worker reports, then the manager assigns a **free** technician, then the technician accepts and updates the status. If all technicians are busy, the report waits in a **queue**.
+- The owner web app has three pages: **Dashboard**, **Reports** (read-only), and **Manager codes**. The owner cannot change any report.
+- **Second step, repair costs:** a technician sends a repair cost with an invoice photo and a receipt photo. At or under the owner's limit it is approved; otherwise it waits for the owner, who approves or rejects it. The manager records approved costs. Workers see no costs. See `docs/api-contract.md` section 4.8.
+- **Sign-up uses invite codes:** the owner makes manager codes, a manager makes worker and technician codes. A code works once and expires after 7 days. Owner accounts are made by hand.
+- Workers and technicians use the **phone app**. Managers and the owner use the **web app**. Logging into the wrong one fails with `WRONG_PLATFORM`.
+- The app has **two languages (Bangla and English)** with a small switch in the top-right corner of every screen.
+- Statuses are colour-coded **and** always have a word next to the colour.

@@ -1,25 +1,18 @@
 # CLAUDE.md for `apps/web/` (GarmentPulse Web)
 
-This file is read when a session works inside `apps/web/`. It adds to the root [`CLAUDE.md`](../../CLAUDE.md), it does not replace it. **The root rules (simple language, lanes, git rules) still apply here.**
-
-## Whose folder is this?
-
-- **Owner of this folder: Mithi.** Only Mithi's sessions change files here.
-- If you are working for Rubaiya or Sakib, you may **read** this folder but must **not change** it. Tell the person who owns it instead.
-- Not sure who you are working for? Read `CLAUDE.local.md` in the top folder, or ask.
+This file is read when a session works inside `apps/web/`. It adds to the root [`CLAUDE.md`](../../CLAUDE.md). **The root rules (simple language, the Insprint flow, git rules) still apply here.**
 
 ## What this app is
 
 **GarmentPulse Web** is the website dashboard for **managers** and the **owner**. It is built with Next.js (a tool for building websites with React) and TypeScript.
 
-- **Manager** can: log in, see the reports and the Machine map live (new reports appear within 5 seconds), see each technician as free or busy, assign a free technician to a report, see the queue (reports waiting because every technician is busy), make worker and technician invite codes, and (second step) see repair costs with their photos and **record** the approved ones.
-- **Owner** can: log in, see the three count boxes (Waiting, In progress, Resolved) and a read-only list of all reports, make manager invite codes, and (second step) set the **expense limit** and **approve or reject** repair costs. The owner cannot change or assign any report.
-- Only **manager and owner accounts** work here. A worker or technician who logs in must be signed out with a clear message (error code `WRONG_PLATFORM`). Workers and technicians use the phone app.
-- A worker must not be able to open manager or owner pages, **even by typing the address**. The backend enforces this, but the pages must also redirect or refuse.
+- **Manager** can: log in, see reports and the Machine map live (new reports appear within 5 seconds), see each technician as free or busy, assign a free technician to a report, see the queue, make worker and technician invite codes, and (second step) see repair costs with their photos and **record** the approved ones.
+- **Owner** can: log in, see the three count boxes and a read-only list of all reports, make manager invite codes, and (second step) set the **expense limit** and **approve or reject** repair costs. The owner cannot change or assign any report.
+- Only **manager and owner accounts** work here. A worker or technician who logs in is signed out with a clear message (`WRONG_PLATFORM`).
+- A worker must not be able to open manager or owner pages, **even by typing the address**. The backend enforces this, and the pages must also redirect or refuse.
 - **Both languages (Bangla and English)** are needed on the main pages. The language switch is a small pill button in the **top-right corner of every page**.
-- Follow [`docs/design-system.md`](../../docs/design-system.md) for colours (manager and owner both use the manager blue), fonts and status labels.
-- **Second step, being built since 2026-11-26** (`docs/mvp.md` section 3.1): repair costs with invoice and receipt photos, recording them, the expense limit and the owner's approval. The rules are in `docs/api-contract.md` section 4.8.
-- Still waiting, do not build: the AI chatbot, voice input, camera alerts, free/paid plans, push notifications, dark mode.
+- Follow [`docs/design-system.md`](../../docs/design-system.md) for colours (manager and owner use the same blue), fonts and status labels.
+- Not built yet: the AI chatbot, voice input, camera alerts, free/paid plans, push notifications, dark mode.
 
 ## Read before you build
 
@@ -34,26 +27,18 @@ This file is read when a session works inside `apps/web/`. It adds to the root [
 
 - **Only call the functions listed in `docs/api-contract.md`**, with the exact names and inputs written there.
 - **Never write to database tables directly.** The backend functions do the checking.
-- Once it exists, use the ready-made wrappers in `packages/shared` instead of typing function names by hand.
-- **Turn error codes into friendly sentences** in this app's own page text (in both languages). Never show a raw code like `TECHNICIAN_BUSY` to a person.
-- Until a function is built, you may build against a fake version that returns the shapes from Section 3 of the contract. Keep fakes inside `apps/web/`.
-- **Never put secret keys in code.** Keys go in a local `.env.local` file that is not shared. Only keys starting with `NEXT_PUBLIC_` reach the browser, and only the public "anon" key may ever start that way.
-
-## Needs something outside this folder?
-
-- A new or changed backend function or a database change: **ask Sakib.** Write a short, plain note in `requests/sakib/` (layout in `requests/README.md`), tell Mithi about it, and keep going with fake data from `@garmentpulse/shared`. Do not edit `supabase/` yourself.
-- A change in `packages/shared/` or `docs/` (shared areas, nobody's lane): you may do it, but first **warn Mithi** that a teammate editing the same file at the same time could cause a clash, and go ahead only if Mithi says yes.
-- A change to the root `CLAUDE.md`: suggest it in a pull request and mark it as needing Sakib's review.
+- Use the ready-made wrappers in `packages/shared` (`createApi`) instead of typing function names by hand.
+- **Turn error codes into friendly sentences** in this app's page text (in both languages). Never show a raw code to a person.
+- **Never put secret keys in code.** Keys go in the local `.env.local` file. Only keys starting with `NEXT_PUBLIC_` reach the browser, and only the publishable key may ever start that way.
 
 ## Working style for this folder
 
-- At the start of a session, follow the start checklist in the root `CLAUDE.md` (who am I, pull, install, mailbox, status). Before you finish, update [`STATUS.md`](./STATUS.md) in this folder.
-- Use the fake data in `@garmentpulse/shared` (`FAKE_MACHINES`, `FAKE_REPORTS`, `FAKE_TECHNICIANS`) and the words in its `labels.ts`. Do not make your own copies.
+- Follow the one flow in the root `CLAUDE.md`: task in Insprint, its own branch, In progress, PR, In review.
+- Use the fake data in `@garmentpulse/shared` and the words in its `labels.ts`. Do not make your own copies.
 - Every file starts with a short comment saying what it is for, in plain words.
 - Keep pages simple. Prefer small files that do one thing.
-- Do not change the React version (`react` and `react-dom` are pinned to the same version as the mobile app on purpose, so the two apps do not fight). Ask Sakib if an upgrade is needed.
-- Work on a branch with the right prefix (see the root rules). Never push to `main`.
+- Do not change the React version casually. `react` and `react-dom` are kept on the same version as the phone app so the two apps do not clash.
 
 ## Status
 
-The website is built and connected to the real backend; [`STATUS.md`](./STATUS.md) says where it stands. Start it with `npm run dev --workspace @garmentpulse/web` and open `http://localhost:3000` (see "Getting Started" in the root `CLAUDE.md`). Docker is not needed for this app.
+The website is connected to the real backend. Manager and owner pages, invite codes, and the Machine map work. The repair-cost pages are built on fake data and wait for the real phone screen. The current picture lives in **Insprint**.
