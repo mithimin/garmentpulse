@@ -15,6 +15,7 @@ import { LogOut } from 'lucide-react';
 import { useLanguage } from '../language/LanguageContext';
 import { localizeDigits } from '../language/format';
 import { screenText } from '../language/screenText';
+import { LanguageSwitch } from './LanguageSwitch';
 
 export type MenuItem = {
   label: string;
@@ -54,6 +55,9 @@ export function Sidebar({ menu, onLogOut, onNavigate }: SidebarProps) {
           </Link>
         ))}
       </nav>
+      <div className="sidebar-language">
+        <LanguageSwitch />
+      </div>
       <button type="button" className="sidebar-logout" onClick={onLogOut}>
         <LogOut size={18} strokeWidth={1.8} aria-hidden="true" />
         {screenText('logOut', language)}

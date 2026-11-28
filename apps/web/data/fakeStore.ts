@@ -83,6 +83,21 @@ export async function assignFake(reportId: string, technicianId: string): Promis
 }
 
 /**
+ * FAKE MODE ONLY: pretends a technician just started a job. It finds the first report that
+ * is still waiting and has a technician, and moves it to "in_progress", so the manager's
+ * status pop-up can be shown. Returns false when no such report exists.
+ */
+export function advanceFakeReport(): boolean {
+  const target = reports.find((r) => r.status === 'waiting' && r.technician !== null);
+  if (!target) return false;
+  const now = new Date().toISOString();
+  reports = reports.map((r) =>
+    r.id === target.id ? { ...r, status: 'in_progress', updated_at: now } : r,
+  );
+  return true;
+}
+
+/**
  * FAKE MODE ONLY: pretends a worker just reported a broken machine, so the Machine map
  * can be shown beeping without a phone. It picks a machine that has no open report.
  * Returns false when every machine already has one. (The real backend has no such

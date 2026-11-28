@@ -211,6 +211,13 @@ export const SCREEN_TEXT = {
   soundOn: { en: 'Sound: on', bn: 'শব্দ: চালু' },
   soundOff: { en: 'Sound: off', bn: 'শব্দ: বন্ধ' },
   demoReport: { en: 'Demo: pretend a worker reports', bn: 'ডেমো: শ্রমিক রিপোর্ট করেছে ধরুন' },
+  notificationsName: { en: 'Notifications', bn: 'বিজ্ঞপ্তি' },
+  notificationsEmpty: { en: 'No notifications yet.', bn: 'এখনও কোনো বিজ্ঞপ্তি নেই।' },
+  notificationsClear: { en: 'Clear all', bn: 'সব মুছুন' },
+  demoProgress: {
+    en: 'Demo: pretend a technician starts a job',
+    bn: 'ডেমো: টেকনিশিয়ান কাজ শুরু করেছে ধরুন',
+  },
   // Repair costs (invoice and receipt, owner approval). The Bangla is a draft.
   menuExpenses: { en: 'Repair costs', bn: 'মেরামতের খরচ' },
   expensesSubManager: {
@@ -298,6 +305,8 @@ export const SCREEN_TEXT = {
     en: 'Type a number from 0 to 1,00,00,000, with at most 2 digits after the dot.',
     bn: '০ থেকে ১,০০,০০,০০০ এর মধ্যে একটি সংখ্যা লিখুন, দশমিকের পরে সর্বোচ্চ ২টি অঙ্ক।',
   },
+  alertTitle: { en: 'Report updated', bn: 'রিপোর্ট আপডেট হয়েছে' },
+  alertClose: { en: 'Close message', bn: 'বার্তাটি বন্ধ করুন' },
 } as const satisfies Record<string, Record<Language, string>>;
 
 export type ScreenTextKey = keyof typeof SCREEN_TEXT;

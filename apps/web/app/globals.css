@@ -69,8 +69,7 @@
   /* Fonts (design system 5). Bangla letters use Baloo Da 2, a rounded,
      friendly Bangla font: it is listed right after each English font, so the browser uses
      it for any Bangla letter. */
-  --font-title:
-    var(--font-lato), 'Lato', var(--font-baloo-bangla), system-ui, sans-serif;
+  --font-title: var(--font-lato), 'Lato', var(--font-baloo-bangla), system-ui, sans-serif;
   --font-body: var(--font-lato), 'Lato', var(--font-baloo-bangla), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), 'IBM Plex Mono', ui-monospace, monospace;
 }
@@ -1304,6 +1303,24 @@ html[lang='bn'] .filter-tab {
 }
 .sidebar-logout:hover {
   background: #ffffff;
+}
+/* The EN / বাং switch sits in the sidebar, just above Log out. */
+.sidebar-language {
+  margin-top: auto;
+  padding: 8px 12px 0;
+  display: flex;
+  justify-content: center;
+}
+/* The sidebar is light, so its switch uses dark text (the top bar one is light on brown). */
+.sidebar-language .lang-switch {
+  min-width: 120px;
+  min-height: 44px;
+  color: #1f2937;
+  border-color: #94a3b8;
+  background: #ffffff;
+}
+.sidebar-language .lang-switch:hover {
+  background: #f1f5f9;
 }
 html[lang='bn'] .sidebar-logout {
   font-size: 17px;

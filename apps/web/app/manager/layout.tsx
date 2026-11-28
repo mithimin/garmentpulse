@@ -24,7 +24,9 @@ import { RoleGate } from '../../auth/RoleGate';
 import type { MenuItem } from '../../components/Sidebar';
 import { SidebarShell } from '../../components/SidebarShell';
 import { ExpensesProvider, useSharedExpenses } from '../../data/ExpensesData';
-import { ManagerDataProvider } from '../../data/ManagerData';
+import { ManagerDataProvider, useManagerData } from '../../data/ManagerData';
+import { NotificationsProvider } from '../../data/NotificationsData';
+import { StatusAlerts } from '../../components/StatusAlerts';
 import { useLanguage } from '../../language/LanguageContext';
 import { screenText } from '../../language/screenText';
 
@@ -33,7 +35,9 @@ export default function ManagerLayout({ children }: { children: ReactNode }) {
     <RoleGate role="manager">
       <ManagerDataProvider>
         <ExpensesProvider>
-          <ManagerFrame>{children}</ManagerFrame>
+          <NotificationsProvider>
+            <ManagerFrame>{children}</ManagerFrame>
+          </NotificationsProvider>
         </ExpensesProvider>
       </ManagerDataProvider>
     </RoleGate>
@@ -44,6 +48,7 @@ function ManagerFrame({ children }: { children: ReactNode }) {
   const { language } = useLanguage();
   const pathname = usePathname();
   const expenses = useSharedExpenses();
+  const { reports } = useManagerData();
   const menu: MenuItem[] = [
     {
       label: screenText('menuDashboard', language),
@@ -80,6 +85,7 @@ function ManagerFrame({ children }: { children: ReactNode }) {
 
   return (
     <SidebarShell role="manager" menu={menu}>
+      <StatusAlerts reports={reports.data} />
       {children}
     </SidebarShell>
   );

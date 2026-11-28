@@ -37,7 +37,7 @@ import { HardHat, Volume2, VolumeX, X } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { Report, Technician } from '@garmentpulse/shared';
 import { STATUS_LABELS } from '@garmentpulse/shared';
-import { addFakeReport } from '../data/fakeStore';
+import { addFakeReport, advanceFakeReport } from '../data/fakeStore';
 import { groupFloors, rowLetter } from '../data/machineSeats';
 import type { Seat, SeatState } from '../data/machineSeats';
 import { backendIsReal } from '../lib/backend';
@@ -323,6 +323,16 @@ export function MachineMap({ seats, technicians, onChanged, title }: MachineMapP
                 }}
               >
                 {screenText('demoReport', language)}
+              </Button>
+            ) : null}
+            {!backendIsReal ? (
+              <Button
+                small
+                onClick={() => {
+                  if (advanceFakeReport()) onChanged();
+                }}
+              >
+                {screenText('demoProgress', language)}
               </Button>
             ) : null}
           </div>
